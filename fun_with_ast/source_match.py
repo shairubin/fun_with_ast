@@ -4,7 +4,7 @@ import _ast
 import ast
 import pprint
 import re
-from create_node import SyntaxFreeLine, Comment
+from fun_with_ast.create_node import SyntaxFreeLine, Comment
 
 
 class Error(Exception):

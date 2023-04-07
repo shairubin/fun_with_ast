@@ -1,28 +1,12 @@
-"""Copyright 2014 Google Inc. All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-Module for annotating an AST with .matcher objects. See README.
-"""
 
 import _ast
 import ast
 import pprint
 import re
 
-import create_node
 import node_tree_util
+from create_node import SyntaxFreeLine, Comment
 
 
 class Error(Exception):
@@ -411,7 +395,7 @@ class ListFieldPlaceholder(CompositePlaceholder):
         """Gets the set of node in values at index, including before and after."""
         elements = []
         child_value = values[index]
-        if isinstance(child_value, create_node.SyntaxFreeLine):
+        if isinstance(child_value, SyntaxFreeLine):
             return [NodePlaceholder(child_value)]
         if (self.before_placeholder and
                 not (self.exclude_first_before and index == 0)):
@@ -569,7 +553,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
 
     def MatchSyntaxFreeLine(self, remaining_string):
         line, remaining_string = remaining_string.split('\n', 1)
-        syntax_free_node = create_node.SyntaxFreeLine()
+        syntax_free_node = SyntaxFreeLine()
         line += '\n'
         syntax_free_node.SetFromSrcLine(line)
         GetSource(syntax_free_node, text=line)
@@ -586,7 +570,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
                 remaining_string, node, self.prefix_placeholder)
         field_value = getattr(node, self.field_name)
         for index, child in enumerate(field_value):
-            while create_node.SyntaxFreeLine.MatchesStart(remaining_string):
+            while SyntaxFreeLine.MatchesStart(remaining_string):
                 remaining_string, syntax_free_node = self.MatchSyntaxFreeLine(
                     remaining_string)
                 new_node.append(syntax_free_node)
@@ -598,7 +582,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
             remaining_string = MatchPlaceholderList(
                 remaining_string, node, value_at_index)
 
-        while (create_node.SyntaxFreeLine.MatchesStart(remaining_string) and
+        while (SyntaxFreeLine.MatchesStart(remaining_string) and
                (remaining_string.startswith(indent_level) or self.match_after)):
             remaining_string, syntax_free_node = self.MatchSyntaxFreeLine(
                 remaining_string)
@@ -1260,7 +1244,7 @@ class IfSourceMatcher(SourceMatcher):
             # Handles the case of a blank line before an elif/else statement
             # Can't pass the "match_after" kwarg to self.body_placeholder,
             # because we don't want to match after if we don't have an else.
-            while create_node.SyntaxFreeLine.MatchesStart(remaining_string):
+            while SyntaxFreeLine.MatchesStart(remaining_string):
                 remaining_string, syntax_free_node = (
                     self.body_placeholder.MatchSyntaxFreeLine(remaining_string))
                 self.node.body.append(syntax_free_node)
@@ -2092,8 +2076,8 @@ _matchers = {
     _ast.Subscript: get_Subscript_expected_parts,
     #    _ast.Str: StrSourceMatcher,
     _ast.Constant: ConstantSourceMatcher,
-    create_node.SyntaxFreeLine: get_SyntaxFreeLine_expected_parts,
-    create_node.Comment: get_Comment_expected_parts,
+    SyntaxFreeLine: get_SyntaxFreeLine_expected_parts,
+    Comment: get_Comment_expected_parts,
     _ast.Tuple: TupleSourceMatcher,
     #    _ast.TryExcept: get_TryExcept_expected_parts,
     #    _ast.Try: TryFinallySourceMatcher,

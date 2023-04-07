@@ -4,8 +4,6 @@ import _ast
 import ast
 import pprint
 import re
-
-import node_tree_util
 from create_node import SyntaxFreeLine, Comment
 
 

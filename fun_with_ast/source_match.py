@@ -4,6 +4,10 @@ import _ast
 import ast
 import pprint
 import re
+
+import create_node
+from fun_with_ast import node_tree_util
+
 from fun_with_ast.create_node import SyntaxFreeLine, Comment
 
 
@@ -2075,7 +2079,7 @@ _matchers = {
     #    _ast.Str: StrSourceMatcher,
     _ast.Constant: ConstantSourceMatcher,
     SyntaxFreeLine: get_SyntaxFreeLine_expected_parts,
-    Comment: get_Comment_expected_parts,
+    create_node.Comment: get_Comment_expected_parts,
     _ast.Tuple: TupleSourceMatcher,
     #    _ast.TryExcept: get_TryExcept_expected_parts,
     #    _ast.Try: TryFinallySourceMatcher,

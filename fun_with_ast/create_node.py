@@ -1052,6 +1052,11 @@ def With(withitems, body):
     return _ast.With(items=withitems,
                      body=body, type_comment=None)
 
+def JoinedStr(values):
+    for value in values:
+        if not isinstance(value, (ast.Constant, ast.FormattedValue)):
+            raise ValueError('JoinedStr values must be Constant or FormattedValue')
+    return _ast.JoinedStr(values=values)
 
 ###############################################################################
 # Other Creators
@@ -1159,3 +1164,5 @@ def VarReference(*parts, **kwargs):
         value=VarReference(*parts[:-1], **kwargs),
         attr=parts[-1],
         ctx=GetCtx(ctx_type))
+
+

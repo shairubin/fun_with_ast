@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -45,7 +46,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Num('2'))
         string = '\t  a - 1'
         matcher = source_match.GetMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
     def testMultBinOp(self):

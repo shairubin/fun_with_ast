@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -77,12 +78,12 @@ class ArgumentsMatcherTest(unittest.TestCase):
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    def testNioMatchArgsDefaultsConst(self):
+    def testNoMatchArgsDefaultsConst(self):
         node = create_node.arguments(
             args=['a'], defaults=[2])
         string = 'a = 1 \t  '
         matcher = source_match.GetMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
     def testArgsDefaultsVarargsKwargs(self):

@@ -114,7 +114,7 @@ class ConstantMatcherTest(unittest.TestCase):
         node = create_node.Num('2')
         string = '1'
         matcher = source_match.GetMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
         string = '2'
         matcher = source_match.GetMatcher(node)

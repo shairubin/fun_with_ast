@@ -8,7 +8,8 @@ import re
 import create_node
 from fun_with_ast import node_tree_util
 
-from fun_with_ast.create_node import SyntaxFreeLine, Comment
+from fun_with_ast.create_node import SyntaxFreeLine
+#from fun_with_ast.str_source_match import StrSourceMatcher
 
 
 class Error(Exception):
@@ -267,7 +268,7 @@ class TextPlaceholder(Placeholder):
             match_attempt = re.match(self.regex, string, re.DOTALL)
         else:
             match_attempt = re.match(self.regex, string)
-            all = re.findall(self.regex, string)
+            #all = re.findall(self.regex, string)
         if not match_attempt:
             raise BadlySpecifiedTemplateError(
                 'string "{}" does not match regex "{}" (technically, "{}")'
@@ -1540,6 +1541,13 @@ def get_Print_expected_parts():
         TextPlaceholder(r' *,? *\n', '\n')
     ]
 
+def get_JoinedStr_expected_parts():
+    return [
+        ListFieldPlaceholder(
+            r'values',
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', '))
+    ]
+
 
 def get_Raise_expected_parts():
     return [
@@ -1668,81 +1676,6 @@ class StringPartPlaceholder(Placeholder):
         return ''.join(source_list)
 
 
-class StrSourceMatcher(SourceMatcher):
-    """Class to generate the source for an _ast.Str node."""
-
-    def __init__(self, node, starting_parens=None):
-        super(StrSourceMatcher, self).__init__(node, starting_parens)
-        self.separator_placeholder = TextPlaceholder(r'\s*', '')
-        self.quote_parts = []
-        self.separators = []
-        # If set, will apply to all parts of the string.
-        self.quote_type = None
-        self.original_quote_type = None
-        self.original_s = None
-
-    def _GetMatchedInnerText(self):
-        return ''.join(p.inner_text_placeholder.GetSource(self.node)
-                       for p in self.quote_parts)
-
-    def Match(self, string):
-        remaining_string = self.MatchStartParens(string)
-        self.original_s = self.node.s
-
-        part = StringPartPlaceholder()
-        remaining_string = MatchPlaceholder(remaining_string, None, part)
-        self.quote_parts.append(part)
-
-        while True:
-            separator = self.separator_placeholder.Copy()
-            trial_string = MatchPlaceholder(remaining_string, None, separator)
-            if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
-                    not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
-                break
-            remaining_string = trial_string
-            self.separators.append(separator)
-            part = StringPartPlaceholder()
-            remaining_string = MatchPlaceholder(remaining_string, None, part)
-            self.quote_parts.append(part)
-
-        self.MatchEndParen(remaining_string)
-
-        self.original_quote_type = (
-            self.quote_parts[0].quote_match_placeholder.matched_text)
-
-        return (self.GetStartParenText() +
-                string[:-len(remaining_string)] +
-                self.GetEndParenText())
-
-    def GetSource(self):
-        # We try to preserve the formatting on a best-effort basis
-        if self.original_s is not None and self.original_s != self.node.s:
-            self.quote_parts = [self.quote_parts[0]]
-            self.quote_parts[0].inner_text_placeholder.matched_text = self.node.s
-
-        if self.original_s is None:
-            if not self.quote_type:
-                self.quote_type = self.original_quote_type or GetDefaultQuoteType()
-            return self.quote_type + self.node.s + self.quote_type
-
-        if self.quote_type:
-            for part in self.quote_parts:
-                part.quote_match_placeholder.matched_text = self.quote_type
-
-        source_list = [self.GetStartParenText()]
-        source_list.append(_GetListDefault(
-            self.quote_parts, 0, None).GetSource(None))
-        for index in range(len(self.quote_parts[1:])):
-            source_list.append(_GetListDefault(
-                self.separators, index,
-                self.separator_placeholder).GetSource(None))
-            source_list.append(_GetListDefault(
-                self.quote_parts, index + 1, None).GetSource(None))
-
-        source_list.append(self.GetEndParenText())
-        return ''.join(source_list)
-
-
 def get_Sub_expected_parts():
     return [
         TextPlaceholder(r'\-', '-'),
@@ -1815,6 +1748,7 @@ class ConstantSourceMatcher():
         if not isinstance(node, ast.Constant):
             raise ValueError
         self.constant_node = node
+        from fun_with_ast.str_source_match import StrSourceMatcher
         self.str_matcher = StrSourceMatcher(node, starting_parens)
         self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = BoolSourceMatcher(node, starting_parens)
@@ -2083,6 +2017,7 @@ _matchers = {
     _ast.Tuple: TupleSourceMatcher,
     #    _ast.TryExcept: get_TryExcept_expected_parts,
     #    _ast.Try: TryFinallySourceMatcher,
+    _ast.JoinedStr: get_JoinedStr_expected_parts,
     _ast.Try: get_TryExcept_expected_parts,
     _ast.UAdd: get_UAdd_expected_parts,
     _ast.UnaryOp: get_UnaryOp_expected_parts,

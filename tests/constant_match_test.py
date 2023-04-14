@@ -6,7 +6,7 @@ import create_node
 import source_match
 
 
-class NumMatcherTest(unittest.TestCase):
+class ConstantMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):
         node = create_node.Num('1')
@@ -15,6 +15,15 @@ class NumMatcherTest(unittest.TestCase):
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
+    def testBasicMatchStr(self):
+        node = create_node.Str('1')
+        string = "'2'"
+        matcher = source_match.GetMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertNotEqual(string, matched_string)
+
 
     def testBasicMatchWithPlusSign(self):
         node = create_node.Num('1')

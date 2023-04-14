@@ -951,15 +951,15 @@ class StrMatcherTest(unittest.TestCase):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'
         matcher = source_match.GetMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('"foo"\n"bar"', matcher.GetSource())
+        with pytest.raises(NotImplementedError):
+            matcher.Match(string)
 
     def testContinuationMatchWithPrefix(self):
         node = create_node.Str('foobar')
         string = '"foo"\nr"bar"'
         matcher = source_match.GetMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('"foo"\nr"bar"', matcher.GetSource())
+        with pytest.raises(NotImplementedError):
+            matcher.Match(string)
 
     def testBasicTripleQuoteMatch(self):
         node = create_node.Str('foobar')
@@ -994,9 +994,10 @@ class StrMatcherTest(unittest.TestCase):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'
         matcher = source_match.GetMatcher(node)
-        matcher.Match(string)
-        node.s = 'foobaz'
-        self.assertEqual('"foobaz"', matcher.GetSource())
+        with pytest.raises(NotImplementedError):
+            matcher.Match(string)
+        #node.s = 'foobaz'
+        #self.assertEqual('"foobaz"', matcher.GetSource())
 
     def testQuoteTypeChange(self):
         node = create_node.Str('foobar')

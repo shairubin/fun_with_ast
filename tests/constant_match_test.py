@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -10,7 +11,7 @@ class ConstantMatcherTest(unittest.TestCase):
 
     def testBasicMatchNum(self):
         node = create_node.Num('1')
-        string = '2'
+        string = '1'
         matcher = source_match.GetMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()
@@ -19,12 +20,26 @@ class ConstantMatcherTest(unittest.TestCase):
 
     def testBasicMatchStr(self):
         node = create_node.Str('1')
-        string = "'2'"
+        string = "'1'"
         matcher = source_match.GetMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()
-        self.assertNotEqual(string, matched_string)
+        self.assertEqual(string, matched_string)
 
+    def testBasicMatchStrWithWS(self):
+        node = create_node.Str('  1  ')
+        string = "'  1  '"
+        matcher = source_match.GetMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicNoMatchStr(self):
+        node = create_node.Str('1')
+        string = "'2'"
+        matcher = source_match.GetMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
 
     def testBasicMatchWithPlusSign(self):
         node = create_node.Num('1')

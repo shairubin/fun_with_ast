@@ -3,7 +3,7 @@ import re
 #from fun_with_ast.source_match import SourceMatcher, TextPlaceholder, StringPartPlaceholder, MatchPlaceholder, GetDefaultQuoteType, \
 #    _GetListDefault
 from fun_with_ast.source_match import SourceMatcher, TextPlaceholder, StringPartPlaceholder, MatchPlaceholder, \
-    _GetListDefault
+    _GetListDefault, BadlySpecifiedTemplateError
 
 
 class StrSourceMatcher(SourceMatcher):
@@ -44,15 +44,20 @@ class StrSourceMatcher(SourceMatcher):
             self.quote_parts.append(part)
 
         self.MatchEndParen(remaining_string)
-
+        if len(self.quote_parts) != 1 :
+            raise NotImplementedError('Multi-part strings not yet supported')
         self.original_quote_type = (
             self.quote_parts[0].quote_match_placeholder.matched_text)
         start_paran_text = self.GetStartParenText()
         end_paran_text = self.GetEndParenText()
-        string_body = string[:-len(remaining_string)]
-        return (start_paran_text +
-                string_body +
-                end_paran_text)
+        start_quote = self.original_quote_type
+        end_quote = self.original_quote_type
+#        string_body = string[:-len(remaining_string)]
+        string_body = self.quote_parts[0].inner_text_placeholder.matched_text
+        if string_body != self.original_s:
+            raise BadlySpecifiedTemplateError('String body does not match node.s')
+        parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
+        return parsed_string
 
     def GetSource(self):
         # We try to preserve the formatting on a best-effort basis

@@ -15,6 +15,7 @@ from fun_with_ast import node_tree_util
 from fun_with_ast.create_node import SyntaxFreeLine
 #from fun_with_ast.str_source_match import StrSourceMatcher
 #from num_source_match import NumSourceMatcher
+from placeholder_source_match import Placeholder
 
 
 class Error(Exception):
@@ -196,22 +197,6 @@ class StringParser(object):
                 self._MatchTextPlaceholder(element)
             else:
                 self._MatchNode(element)
-
-
-class Placeholder(object):
-    """Base class for other placeholder objects."""
-
-    def __init__(self):
-        self.starting_parens = []
-
-    def Match(self, node, string):
-        raise NotImplementedError
-
-    def GetSource(self, node):
-        raise NotImplementedError
-
-    def SetStartingParens(self, starting_parens):
-        self.starting_parens = starting_parens
 
 
 class NodePlaceholder(Placeholder):

@@ -8,13 +8,14 @@ import source_match
 
 class ConstantMatcherTest(unittest.TestCase):
 
-    def testBasicMatch(self):
+    def testBasicMatchNum(self):
         node = create_node.Num('1')
-        string = '1'
+        string = '2'
         matcher = source_match.GetMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
 
     def testBasicMatchStr(self):
         node = create_node.Str('1')
@@ -94,12 +95,17 @@ class ConstantMatcherTest(unittest.TestCase):
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    def testBasicNoMatch(self):
+    def testBasicNoMatchNum(self):
         node = create_node.Num('2')
         string = '1'
         matcher = source_match.GetMatcher(node)
         with pytest.raises(source_match.BadlySpecifiedTemplateError):
             matcher.Match(string)
+        string = '2'
+        matcher = source_match.GetMatcher(node)
+        matcher.Match(string)
+        self.assertEqual(string, matcher.GetSource())
+
 
     def testMatchBool(self):
         node = create_node.Bool(False)

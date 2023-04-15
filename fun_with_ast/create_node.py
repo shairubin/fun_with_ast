@@ -1052,6 +1052,14 @@ def With(withitems, body):
     return _ast.With(items=withitems,
                      body=body, type_comment=None)
 
+def FormattedValue(value, conversion=-1, format_spec=None):
+    if conversion !=-1 or format_spec:
+        raise NotImplementedError('conversion and format_spec not supported yet')
+    if not isinstance(value, _ast.Name):
+        raise NotImplementedError('FormattedValue value must be a Name')
+    return _ast.FormattedValue(value=value, conversion=conversion, format_spec=format_spec)
+
+
 def JoinedStr(values):
     for value in values:
         if not isinstance(value, (ast.Constant, ast.FormattedValue)):

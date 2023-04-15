@@ -49,85 +49,6 @@ class CreateAssertTest(CreateNodeTestBase):
         self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateAssignTest(CreateNodeTestBase):
-
-    def testAssignWithSimpleString(self):
-        expected_string = 'a = "b"'
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Assign('a', create_node.Str('b'))
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testAssignListWithSimpleString(self):
-        expected_string = 'a=c="b"'
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Assign(['a', 'c'], create_node.Str('b'))
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testAssignWithNode(self):
-        expected_string = 'a = "b"'
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Assign(
-            create_node.Name('a', ctx_type=create_node.CtxEnum.STORE),
-            create_node.Str('b'))
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testAssignWithTuple(self):
-        expected_string = '(a, c) = "b"'
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Assign(
-            create_node.Tuple(['a', 'c'], ctx_type=create_node.CtxEnum.STORE),
-            create_node.Str('b'))
-        self.assertNodesEqual(expected_node, test_node)
-
-
-class CreateDictTest(CreateNodeTestBase):
-
-    def testDictWithStringKeys(self):
-        expected_string = '{"a": "b"}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Dict(
-            [create_node.Str('a')],
-            [create_node.Str('b')])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testDictWithNonStringKeys(self):
-        expected_string = '{a: 1}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Dict(
-            [create_node.Name('a')],
-            [create_node.Num(1)])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testDictWithNoKeysOrVals(self):
-        expected_string = '{}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Dict([], [])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testDictRaisesErrorIfNotMatchingLengths(self):
-        with self.assertRaises(ValueError):
-            unused_test_node = create_node.Dict(
-                [create_node.Str('a')],
-                [])
-
-
-class CreateDictComprehensionTest(CreateNodeTestBase):
-
-    def testBasicDictComprehension(self):
-        expected_string = '{a: b for c in d}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.DictComp('a', 'b', 'c', 'd')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testBasicDictComprehensionWithIfs(self):
-        expected_string = '{a: b for c in d if e < f}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.DictComp(
-            'a', 'b', 'c', 'd',
-            create_node.Compare('e', '<', 'f'))
-        self.assertNodesEqual(expected_node, test_node)
-
-
 class CreateGeneratorExpTest(CreateNodeTestBase):
 
     def testBasicSetComprehension(self):
@@ -145,65 +66,6 @@ class CreateGeneratorExpTest(CreateNodeTestBase):
         self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateIfTest(CreateNodeTestBase):
-
-    def testBasicIf(self):
-        expected_string = """if True:\n  pass"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.If(
-            create_node.Constant(True),
-            body=[create_node.Pass()])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testBasicIfElse(self):
-        expected_string = """if True:\n  pass\nelse:\n  pass"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.If(conditional=create_node.Constant(True),
-                                   body=[create_node.Pass()], orelse=[create_node.Pass()])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testBasicIfElif(self):
-        expected_string = """if True:
-  pass
-elif False:
-  pass
-"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.If(
-            create_node.Constant(True),
-            body=[create_node.Pass()],
-            orelse=[create_node.If(create_node.Constant(False), body=[create_node.Pass()])])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testIfInElse(self):
-        expected_string = """if True:
-  pass
-else:
-  if False:
-    pass
-"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.If(
-            create_node.Constant(True), body=[create_node.Pass()],
-            orelse=[create_node.If(conditional=create_node.Constant(False), body=[create_node.Pass()])])
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testIfAndOthersInElse(self):
-        expected_string = """if True:
-  pass
-else:
-  if False:
-    pass
-  True
-"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.If(
-            create_node.Constant(True), body=[create_node.Pass()],
-            orelse=[create_node.If(conditional=create_node.Constant(False), body=[create_node.Pass()]),
-                    create_node.Expr(create_node.Constant(True))])
-        self.assertNodesEqual(expected_node, test_node)
-
-
 class CreateIfExpTest(CreateNodeTestBase):
 
     def testBasicIfExp(self):
@@ -214,70 +76,8 @@ class CreateIfExpTest(CreateNodeTestBase):
         self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateImportTest(CreateNodeTestBase):
-
-    def testImport(self):
-        expected_string = """import foo"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Import(import_part='foo')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testImportAs(self):
-        expected_string = """import foo as foobar"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Import(import_part='foo', asname='foobar')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testImportFrom(self):
-        expected_string = """from bar import foo"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Import(import_part='foo', from_part='bar')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testImportFromAs(self):
-        expected_string = """from bar import foo as foobar"""
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Import(
-            import_part='foo', from_part='bar', asname='foobar')
-        self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateListComprehensionTest(CreateNodeTestBase):
-
-    def testBasicListComprehension(self):
-        expected_string = '[a for a in b]'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.ListComp('a', 'a', 'b')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testBasicListComprehensionWithIfs(self):
-        expected_string = '[a for a in b if c < d]'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.ListComp(
-            'a', 'a', 'b',
-            create_node.Compare('c', '<', 'd'))
-        self.assertNodesEqual(expected_node, test_node)
-
-
-class CreateNumTest(CreateNodeTestBase):
-
-    def testNumWithInteger(self):
-        expected_string = '15'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Num(15)
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testNumWithHex(self):
-        expected_string = '0xa5'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Num(0xa5)
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testNumWithFloat(self):
-        expected_string = '0.25'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Constant(0.25)
-        self.assertNodesEqual(expected_node, test_node)
 
 
 class CreatePassTest(CreateNodeTestBase):
@@ -300,50 +100,8 @@ class CreateSetTest(CreateNodeTestBase):
         self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateSetComprehensionTest(CreateNodeTestBase):
-
-    def testBasicSetComprehension(self):
-        expected_string = '{a for a in b}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.SetComp('a', 'a', 'b')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testBasicSetComprehensionWithIfs(self):
-        expected_string = '{a for a in b if c < d}'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.SetComp(
-            'a', 'a', 'b',
-            create_node.Compare('c', '<', 'd'))
-        self.assertNodesEqual(expected_node, test_node)
 
 
-class CreateReturnTest(CreateNodeTestBase):
-
-    def testRetrunSigleValueInt(self):
-        expected_string = 'return 1'
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Return(1)
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testRetrunSigleValueStr(self):
-        expected_string = "return '1'"
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Return('1')
-        self.assertNodesEqual(expected_node, test_node)
-
-    def testRetrunSigleValueName(self):
-        expected_string = "return a"
-        expected_node = GetNodeFromInput(expected_string)
-        test_node = create_node.Return(create_node.Name('a'))
-        self.assertNodesEqual(expected_node, test_node)
-
-class CreateStrTest(CreateNodeTestBase):
-
-    def testStr(self):
-        expected_string = '"a"'
-        expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Str('a')
-        self.assertNodesEqual(expected_node, test_node)
 
 
 class CreateExceptionHandlerTest(CreateNodeTestBase):

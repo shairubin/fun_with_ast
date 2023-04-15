@@ -7,11 +7,11 @@ import re
 
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast import create_node
-from constant_source_match import ConstantSourceMatcher
+from fun_with_ast.constant_source_match import ConstantSourceMatcher
 from fun_with_ast import node_tree_util
 
 from fun_with_ast.create_node import SyntaxFreeLine, Comment
-from placeholder_source_match import Placeholder
+from fun_with_ast.placeholder_source_match import Placeholder
 
 
 # class Error(Exception):

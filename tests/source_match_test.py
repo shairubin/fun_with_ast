@@ -20,7 +20,7 @@ import unittest
 
 import pytest
 
-import create_node
+import fun_with_ast.create_node as create_node
 import source_match
 
 DEFAULT_TEXT = 'default'

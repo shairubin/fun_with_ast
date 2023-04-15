@@ -5,26 +5,22 @@ import ast
 import pprint
 import re
 
-#from fun_with_ast.num_source_match import NumSourceMatcher
-#from fun_with_ast.source_match import NumSourceMatcher, BoolSourceMatcher
-
-import create_node
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast import create_node
 from constant_source_match import ConstantSourceMatcher
 from fun_with_ast import node_tree_util
 
-from fun_with_ast.create_node import SyntaxFreeLine
-#from fun_with_ast.str_source_match import StrSourceMatcher
-#from num_source_match import NumSourceMatcher
+from fun_with_ast.create_node import SyntaxFreeLine, Comment
 from placeholder_source_match import Placeholder
 
 
-class Error(Exception):
-    def __init__(self, message):
-        self.message = message
-
-
-class BadlySpecifiedTemplateError(Error):
-    pass
+# class Error(Exception):
+#     def __init__(self, message):
+#         self.message = message
+#
+#
+# class BadlySpecifiedTemplateError(Error):
+#     pass
 
 
 def GetDefaultQuoteType():
@@ -1886,7 +1882,7 @@ _matchers = {
     #    _ast.Str: StrSourceMatcher,
     _ast.Constant: ConstantSourceMatcher,
     SyntaxFreeLine: get_SyntaxFreeLine_expected_parts,
-    create_node.Comment: get_Comment_expected_parts,
+    Comment: get_Comment_expected_parts,
     _ast.Tuple: TupleSourceMatcher,
     #    _ast.TryExcept: get_TryExcept_expected_parts,
     #    _ast.Try: TryFinallySourceMatcher,

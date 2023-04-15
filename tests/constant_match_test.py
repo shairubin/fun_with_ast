@@ -1,7 +1,7 @@
 import unittest
 
 import pytest
-from fun_with_ast.source_match import BadlySpecifiedTemplateError
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match

@@ -1441,9 +1441,11 @@ def get_Print_expected_parts():
 
 def get_JoinedStr_expected_parts():
     return [
+        TextPlaceholder(r'f\'', 'f\''),
         ListFieldPlaceholder(
             r'values',
-            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', '))
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
+        TextPlaceholder(r'\'', '\'')
     ]
 
 

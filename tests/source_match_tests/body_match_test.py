@@ -2,6 +2,7 @@ import unittest
 
 import create_node
 import source_match
+from dynamic_matcher import GetDynamicMatcher
 
 
 class BodyPlaceholderTest(unittest.TestCase):
@@ -47,7 +48,7 @@ class BodyPlaceholderTest(unittest.TestCase):
         body_node_foobar = create_node.Expr(create_node.Name('foobar'))
         body_node_a = create_node.Expr(create_node.Name('a'))
         node = create_node.FunctionDef('a', body=[body_node_foobar, body_node_a])
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         text_to_match = """def a():
   foobar
 #blah
@@ -68,7 +69,7 @@ c
         body_node_foobar = create_node.Expr(create_node.Name('foobar'))
         body_node_a = create_node.Expr(create_node.Name('a'))
         node = create_node.FunctionDef('a', body=[body_node_foobar, body_node_a])
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         text_to_match = """def a():
   foobar #blah
   a

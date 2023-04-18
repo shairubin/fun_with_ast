@@ -62,7 +62,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False):
     if hasattr(field, 'matcher') and field.matcher:
         return field.matcher.GetSource()
     else:
-        field.matcher = GetMatcher(field, starting_parens)
+        field.matcher = dynamic_matcher.GetDynamicMatcher(field, starting_parens)
         if text:
             field.matcher.Match(text)
         # TODO: Fix this to work with lambdas
@@ -84,7 +84,7 @@ def FixSourceIndentation(
     if starting_parens is None:
         starting_parens = []
     default_source = node_to_fix.matcher.GetSource()
-    node_to_fix.matcher = GetMatcher(node_to_fix, starting_parens)
+    node_to_fix.matcher = dynamic_matcher.GetDynamicMatcher(node_to_fix, starting_parens)
     starting_indent = '  ' * node_tree_util.GetIndentLevel(
         module_node, node_to_fix)
     node_to_fix.matcher.Match(starting_indent + default_source)
@@ -833,33 +833,33 @@ class DefaultSourceMatcher(SourceMatcher):
 
 
 
-def GetMatcher(node, starting_parens=None):
-    """Gets an initialized matcher for the given node (doesnt call .Match).
-
-    If there is no corresponding matcher in _matchers, this will return a
-    default matcher, which starts with a placeholder for the first field, ends
-    with a placeholder for the last field, and includes TextPlaceholders
-    with '.*' regexes between.
-
-    Args:
-      node: The node to get a matcher for.
-      starting_parens: The parens the matcher may start with.
-
-    Returns:
-      A matcher corresponding to that node, or the default matcher (see above).
-    """
-    if starting_parens is None:
-        starting_parens = []
-#    parts_or_matcher = _matchers[node.__class__]
-    parts_or_matcher_string = dynamic_matcher._dynamic_matchers[node.__class__]
-    current_module = sys.modules[__name__]
-    parts_or_matcher = getattr(current_module, parts_or_matcher_string)
-    try:
-        parts = parts_or_matcher()
-        return DefaultSourceMatcher(node, parts, starting_parens)
-    except TypeError:
-        return parts_or_matcher(node, starting_parens)
-
+# def GetMatcher(node, starting_parens=None):
+#     """Gets an initialized matcher for the given node (doesnt call .Match).
+#
+#     If there is no corresponding matcher in _matchers, this will return a
+#     default matcher, which starts with a placeholder for the first field, ends
+#     with a placeholder for the last field, and includes TextPlaceholders
+#     with '.*' regexes between.
+#
+#     Args:
+#       node: The node to get a matcher for.
+#       starting_parens: The parens the matcher may start with.
+#
+#     Returns:
+#       A matcher corresponding to that node, or the default matcher (see above).
+#     """
+#     if starting_parens is None:
+#         starting_parens = []
+# #    parts_or_matcher = _matchers[node.__class__]
+#     parts_or_matcher_string = dynamic_matcher._dynamic_matchers[node.__class__]
+#     current_module = sys.modules[__name__]
+#     parts_or_matcher = getattr(current_module, parts_or_matcher_string)
+#     try:
+#         parts = parts_or_matcher()
+#         return DefaultSourceMatcher(node, parts, starting_parens)
+#     except TypeError:
+#         matcher = parts_or_matcher(node, starting_parens)
+#         return matcher
 
 # TODO: Add an indent placeholder that respects col_offset
 def get_Add_expected_parts():

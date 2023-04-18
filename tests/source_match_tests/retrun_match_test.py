@@ -4,13 +4,14 @@ import pytest
 
 import create_node
 import source_match
+from dynamic_matcher import GetDynamicMatcher
 
 
 class PassMatcherTest(unittest.TestCase):
     def testSimpleReturn(self):
         node = create_node.Return(1)
         string = 'return 1'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -18,7 +19,7 @@ class PassMatcherTest(unittest.TestCase):
     def testReturnStr(self):
         node = create_node.Return('1')
         string = "return '1'"
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -26,7 +27,7 @@ class PassMatcherTest(unittest.TestCase):
     def testReturnName(self):
         node = create_node.Return(create_node.Name('a'))
         string = "return a"
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -34,7 +35,7 @@ class PassMatcherTest(unittest.TestCase):
     def testReturnTuple(self):
         node = create_node.Return(create_node.Tuple(['a', 'b']))
         string = "return (a,b)"
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -43,7 +44,7 @@ class PassMatcherTest(unittest.TestCase):
     def testReturnTupleNoParans(self):
         node = create_node.Return(create_node.Tuple(['a', 'b']))
         string = "return a,b"
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)

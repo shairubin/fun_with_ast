@@ -4,6 +4,7 @@ import pytest
 
 import create_node
 import source_match
+from dynamic_matcher import GetDynamicMatcher
 
 
 class UnaryOpMatcherTest(unittest.TestCase):
@@ -13,7 +14,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.UAdd(),
             create_node.Name('a'))
         string = '+a'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -22,7 +23,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.USub(),
             create_node.Name('a'))
         string = '-a'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -31,7 +32,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Not(),
             create_node.Name('a'))
         string = 'not a'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -40,7 +41,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Invert(),
             create_node.Name('a'))
         string = '~a'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -49,7 +50,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Invert(),
             create_node.Name('a'))
         string = '~a    \t '
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -59,6 +60,6 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Invert(),
             create_node.Name('a'))
         string = '~a    \t #comment'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())

@@ -2,6 +2,7 @@ import unittest
 
 import create_node
 import source_match
+from dynamic_matcher import GetDynamicMatcher
 
 
 class TryExceptMatcherTest(unittest.TestCase):
@@ -12,7 +13,7 @@ class TryExceptMatcherTest(unittest.TestCase):
             [create_node.ExceptHandler(None, None, [create_node.Pass()])])
 
         string = """try:\n\tpass\nexcept:\n\tpass\n"""
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -29,7 +30,7 @@ except TestA:
 except TestB:
   pass
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -45,7 +46,7 @@ except:
 else:
   pass
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -60,6 +61,6 @@ except Exception1 as e:
 
   pass
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())

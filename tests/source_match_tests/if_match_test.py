@@ -2,13 +2,14 @@ import unittest
 
 import create_node
 import source_match
+from dynamic_matcher import GetDynamicMatcher
 
 
 class IfMatcherTest(unittest.TestCase):
     def testSimpleIfElse(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True:   \n pass    \nelse:\n pass \n'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -16,7 +17,7 @@ class IfMatcherTest(unittest.TestCase):
     def testSimpleIfElseWithCommentAndSpeacses(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True: #comment  \n pass    \nelse: # comment    \n pass#comment\n'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -24,7 +25,7 @@ class IfMatcherTest(unittest.TestCase):
     def testSimpleIf(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()])
         string = 'if       True:\n pass         '
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
@@ -34,7 +35,7 @@ class IfMatcherTest(unittest.TestCase):
             create_node.Name('True'),
                             body=[create_node.Pass()])
         string = """if True:\n  pass"""
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -42,7 +43,7 @@ class IfMatcherTest(unittest.TestCase):
         node = create_node.If(
             create_node.Name('True'), body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = """if True:\n  pass\nelse: \t\n  pass"""
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -56,7 +57,7 @@ class IfMatcherTest(unittest.TestCase):
 elif False:
   pass
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -70,7 +71,7 @@ elif False:
     elif False:    \t # comment  
       pass \t
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -87,7 +88,7 @@ else:
   if False:
     pass
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -103,7 +104,7 @@ else:
     pass
   True
 """
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 

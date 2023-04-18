@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 import fun_with_ast.exceptions_source_match
+from dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
@@ -17,7 +18,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Add(),
             create_node.Name('b'))
         string = 'a + b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -27,7 +28,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Add(),
             create_node.Name('b'))
         string = 'b + a'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         with pytest.raises(source_match.BadlySpecifiedTemplateError):
             matcher.Match(string)
 
@@ -37,7 +38,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Sub(),
             create_node.Num('1'))
         string = '\ta - 1  \t'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -47,7 +48,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Sub(),
             create_node.Num('2'))
         string = '\t  a - 1'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError) as e:
             matcher.Match(string)
             print(e)
@@ -58,7 +59,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Mult(),
             create_node.Name('b'))
         string = 'a * b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -68,7 +69,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Div(),
             create_node.Name('b'))
         string = ' a    /        b '
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -78,7 +79,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.FloorDiv(),
             create_node.Name('b'))
         string = '  \t a // \t b  \t'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -88,7 +89,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.FloorDiv(),
             create_node.Num('1'))
         string = '  \t a // \t 1  \t #comment'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -98,7 +99,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Mod(),
             create_node.Name('b'))
         string = 'a % b    '
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -108,7 +109,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Pow(),
             create_node.Name('b'))
         string = 'a ** b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -118,7 +119,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.LShift(),
             create_node.Name('b'))
         string = 'a << b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -128,7 +129,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.RShift(),
             create_node.Name('b'))
         string = 'a >> b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -138,7 +139,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.BitOr(),
             create_node.Name('b'))
         string = 'a | b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -148,7 +149,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.BitXor(),
             create_node.Name('b'))
         string = 'a ^ b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
@@ -158,6 +159,6 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.BitAnd(),
             create_node.Name('b'))
         string = 'a & b'
-        matcher = source_match.GetMatcher(node)
+        matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())

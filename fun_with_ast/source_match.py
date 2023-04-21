@@ -10,6 +10,7 @@ from fun_with_ast import dynamic_matcher
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.create_node import SyntaxFreeLine, Comment
 from fun_with_ast.placeholder_source_match import Placeholder
+from fun_with_ast.utils_source_match import _GetListDefault
 
 
 # class Error(Exception):
@@ -19,7 +20,6 @@ from fun_with_ast.placeholder_source_match import Placeholder
 #
 # class BadlySpecifiedTemplateError(Error):
 #     pass
-from utils_source_match import _GetListDefault
 
 
 def GetSource(field, text=None, starting_parens=None, assume_no_indent=False):

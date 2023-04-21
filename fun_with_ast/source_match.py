@@ -19,7 +19,6 @@ from fun_with_ast.placeholder_source_match import Placeholder
 #
 # class BadlySpecifiedTemplateError(Error):
 #     pass
-from lazy_dict import LazyDict
 from utils_source_match import _GetListDefault
 
 

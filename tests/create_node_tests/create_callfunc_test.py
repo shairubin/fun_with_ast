@@ -23,6 +23,12 @@ class CreateCallTest(CreateNodeTestBase):
         test_node = create_node.Call(create_node.VarReference('a', 'b'))
         self.assertNodesEqual(expected_node, test_node)
 
+    def testCallWithAttributeNodeAndParam(self):
+        expected_string = 'a.b(\'fun-with-ast\')'
+        expected_node = GetNodeFromInput(expected_string).value
+        test_node = create_node.Call('a.b', args=[create_node.Str('fun-with-ast')])
+        self.assertNodesEqual(expected_node, test_node)
+
     def testCallWithArgs(self):
         expected_string = 'a(b)'
         expected_node = GetNodeFromInput(expected_string).value

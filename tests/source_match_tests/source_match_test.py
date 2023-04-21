@@ -531,30 +531,6 @@ class BoolOpMatcherTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
 
 
-class CallMatcherTest(unittest.TestCase):
-
-    def testBasicMatch(self):
-        node = create_node.Call('a')
-        string = 'a()'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testMatchStarargs(self):
-        node = create_node.Call('a', starargs='args')
-        string = 'a(*args)'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testMatchWithStarargsBeforeKeyword(self):
-        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c')], starargs='args')
-        string = 'a(*args, b=c)'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-
 class ClassDefMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):

@@ -1,5 +1,7 @@
 import unittest
 
+from fun_with_ast.create_node import SyntaxFreeLine
+
 import create_node
 import source_match
 from dynamic_matcher import GetDynamicMatcher
@@ -35,17 +37,22 @@ class IfMatcherTest(unittest.TestCase):
             create_node.Name('True'),
                             body=[create_node.Pass()])
         string = """if True:\n  pass"""
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match_to_source(node, string)
+
+    def testBasicIfwithEmptyLine(self):
+        node = create_node.If(
+            create_node.Name('True'),
+                            body=[create_node.Pass()])
+        string = """if True:\n\n  pass"""
+        self._assert_match_to_source(node, string)
+        assert node.body[0].full_line == ''
+        assert isinstance(node.body[0], SyntaxFreeLine)
 
     def testBasicIfElse2(self):
         node = create_node.If(
             create_node.Name('True'), body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = """if True:\n  pass\nelse: \t\n  pass"""
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match_to_source(node, string)
 
     def testBasicIfElif(self):
         node = create_node.If(
@@ -57,9 +64,7 @@ class IfMatcherTest(unittest.TestCase):
 elif False:
   pass
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match_to_source(node, string)
 
     def testBasicIfElifwWithWSAndComment(self):
         node = create_node.If(
@@ -71,10 +76,7 @@ elif False:
     elif False:    \t # comment  
       pass \t
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
+        self._assert_match_to_source(node, string)
 
     def testIfInElse(self):
         node = create_node.If(
@@ -88,9 +90,7 @@ else:
   if False:
     pass
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match_to_source(node, string)
 
     def testIfAndOthersInElse(self):
         node = create_node.If(
@@ -104,7 +104,10 @@ else:
     pass
   True
 """
+        self._assert_match_to_source(node, string)
+
+    def _assert_match_to_source(self, node, string):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
+        matcher_source = matcher.GetSource()
+        self.assertEqual(string, matcher_source)

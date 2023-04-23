@@ -898,7 +898,8 @@ def get_Assert_expected_parts():
 def get_Assign_expected_parts():
     return [
         SeparatedListFieldPlaceholder('targets',   after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
-        FieldPlaceholder('value')
+        FieldPlaceholder('value'),
+        TextPlaceholder(r'[ \t]*\n?', ''),
     ]
 
 # def get_Assign_expected_parts():

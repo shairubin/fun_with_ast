@@ -1,3 +1,5 @@
+import _ast
+
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 from fun_with_ast.create_node import SyntaxFreeLine
@@ -104,3 +106,44 @@ class ListFieldPlaceholder(CompositePlaceholder):
                 'and after placeholder "{}"'.format(
             self.field_name, self.before_placeholder,
             self.after_placeholder))
+
+class FieldPlaceholder(CompositePlaceholder):
+    """Placeholder for a field."""
+
+    def __init__(
+            self, field_name, before_placeholder=None):
+        super(FieldPlaceholder, self).__init__()
+        self.field_name = field_name
+        self.before_placeholder = before_placeholder
+
+    def GetElements(self, node):
+        if isinstance(node, _ast.Call) and self.field_name == 'kwargs':
+            field_value = getattr(node, self.field_name, None)
+        else:
+            field_value = getattr(node, self.field_name)
+
+        if not field_value:
+            return []
+
+        elements = []
+        if self.before_placeholder:
+            elements.append(self.before_placeholder)
+        elements.append(NodePlaceholder(field_value))
+        return elements
+
+    def Match(self, node, string):
+        return super(FieldPlaceholder, self).Match(node, string)
+
+    def Validate(self, node):
+        if isinstance(node, _ast.Call) and self.field_name == 'kwargs':
+            field_value = getattr(node, self.field_name, None)
+        else:
+            field_value = getattr(node, self.field_name)
+        if isinstance(field_value, (list, tuple)):
+            raise BadlySpecifiedTemplateError(
+                'Field {} of node {} is a list. please use a ListFieldPlaceholder'
+                'instead of a FieldPlaceholder'.format(self.field_name, node))
+
+    def __repr__(self):
+        return 'FieldPlaceholder for field "{}"'.format(
+            self.field_name)

@@ -5,6 +5,7 @@ import ast
 import pprint
 import re
 
+
 import fun_with_ast.placeholder_source_match
 from fun_with_ast import dynamic_matcher
 
@@ -12,6 +13,10 @@ from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.create_node import SyntaxFreeLine, Comment
 from fun_with_ast.placeholder_source_match import Placeholder
 from fun_with_ast.utils_source_match import _GetListDefault
+from get_source import GetSource
+from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.string_parser import StringParser
+
 
 
 # class Error(Exception):
@@ -82,9 +87,6 @@ from fun_with_ast.utils_source_match import _GetListDefault
 #     starting_indent = '  ' * node_tree_util.GetIndentLevel(
 #         module_node, node_to_fix)
 #     node_to_fix.matcher.Match(starting_indent + default_source)
-from get_source import GetSource
-from fun_with_ast.text_placeholder_source_match import TextPlaceholder
-
 
 def ValidateStart(full_string, starting_string):
     stripped_full = StripStartParens(full_string)
@@ -134,58 +136,58 @@ def StripStartParens(string):
     return remaining_string
 
 
-class StringParser(object):
-    """Class encapsulating parsing a string while matching placeholders."""
-
-    def __init__(self, string, elements, starting_parens=None):
-        if not starting_parens:
-            starting_parens = []
-        self.starting_parens = starting_parens
-        self.string = string
-        self.before_string = None
-        self.remaining_string = string
-        self.elements = elements
-        self.matched_substrings = []
-        self.Parse()
-
-    def _ProcessSubstring(self, substring):
-        """Process a substring, validating its state and calculating remaining."""
-        if not substring:
-            return
-        stripped_substring = StripStartParens(substring)
-        stripped_remaining = StripStartParens(self.remaining_string)
-        if not stripped_remaining.startswith(stripped_substring):
-            raise BadlySpecifiedTemplateError(
-                'string "{}" should be in string "{}"'
-                    .format(stripped_substring, stripped_remaining))
-        self.remaining_string = self.remaining_string.split(
-            stripped_substring, 1)[1]
-
-    def _MatchTextPlaceholder(self, element):
-        if self.remaining_string == self.string:
-            element.SetStartingParens(self.starting_parens)
-        matched_text = element.Match(None, self.remaining_string)
-        self._ProcessSubstring(matched_text)
-        self.matched_substrings.append(matched_text)
-
-    def _MatchNode(self, node):
-        starting_parens = []
-        if self.remaining_string == self.string:
-            starting_parens = self.starting_parens
-        node_src = GetSource(node, self.remaining_string, starting_parens)
-        self._ProcessSubstring(node_src)
-        self.matched_substrings.append(node_src)
-
-    def GetMatchedText(self):
-        return ''.join(self.matched_substrings)
-
-    def Parse(self):
-        """Parses the string, handling nodes and TextPlaceholders."""
-        for element in self.elements:
-            if isinstance(element, Placeholder):
-                self._MatchTextPlaceholder(element)
-            else:
-                self._MatchNode(element)
+# class StringParser(object):
+#     """Class encapsulating parsing a string while matching placeholders."""
+#
+#     def __init__(self, string, elements, starting_parens=None):
+#         if not starting_parens:
+#             starting_parens = []
+#         self.starting_parens = starting_parens
+#         self.string = string
+#         self.before_string = None
+#         self.remaining_string = string
+#         self.elements = elements
+#         self.matched_substrings = []
+#         self.Parse()
+#
+#     def _ProcessSubstring(self, substring):
+#         """Process a substring, validating its state and calculating remaining."""
+#         if not substring:
+#             return
+#         stripped_substring = StripStartParens(substring)
+#         stripped_remaining = StripStartParens(self.remaining_string)
+#         if not stripped_remaining.startswith(stripped_substring):
+#             raise BadlySpecifiedTemplateError(
+#                 'string "{}" should be in string "{}"'
+#                     .format(stripped_substring, stripped_remaining))
+#         self.remaining_string = self.remaining_string.split(
+#             stripped_substring, 1)[1]
+#
+#     def _MatchTextPlaceholder(self, element):
+#         if self.remaining_string == self.string:
+#             element.SetStartingParens(self.starting_parens)
+#         matched_text = element.Match(None, self.remaining_string)
+#         self._ProcessSubstring(matched_text)
+#         self.matched_substrings.append(matched_text)
+#
+#     def _MatchNode(self, node):
+#         starting_parens = []
+#         if self.remaining_string == self.string:
+#             starting_parens = self.starting_parens
+#         node_src = GetSource(node, self.remaining_string, starting_parens)
+#         self._ProcessSubstring(node_src)
+#         self.matched_substrings.append(node_src)
+#
+#     def GetMatchedText(self):
+#         return ''.join(self.matched_substrings)
+#
+#     def Parse(self):
+#         """Parses the string, handling nodes and TextPlaceholders."""
+#         for element in self.elements:
+#             if isinstance(element, Placeholder):
+#                 self._MatchTextPlaceholder(element)
+#             else:
+#                 self._MatchNode(element)
 
 
 class NodePlaceholder(Placeholder):

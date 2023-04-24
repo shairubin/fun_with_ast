@@ -8,11 +8,8 @@
 #
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholder_source_match import Placeholder
-from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher
 
-
-def GetStartParenMatcher():
-    return TextPlaceholder(r'[ \t]*\(\s*', '')
 
 def StripStartParens(string):
     remaining_string = string

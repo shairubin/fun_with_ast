@@ -14,7 +14,7 @@ from fun_with_ast.create_node import SyntaxFreeLine
 from fun_with_ast.placeholder_source_match import Placeholder
 from fun_with_ast.utils_source_match import _GetListDefault
 from get_source import GetSource
-from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
 from fun_with_ast.string_parser import StringParser
 from fun_with_ast.node_placeholder_source_match import NodePlaceholder, ValidateStart
 
@@ -546,16 +546,6 @@ class BodyPlaceholder(ListFieldPlaceholder):
             elements.extend(self.GetValueAtIndex(field_value, index))
         return elements
 
-
-def GetStartParenMatcher():
-    return TextPlaceholder(r'[ \t]*\(\s*', '')
-
-def GetWhiteSpaceMatcher():
-    return TextPlaceholder(r'[ \t]*', '')
-
-
-def GetEndParenMatcher():
-    return TextPlaceholder(r'\s*\)[ \t]*', '')
 
 
 class SourceMatcher(object):

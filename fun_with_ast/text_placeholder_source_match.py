@@ -74,3 +74,14 @@ class TextPlaceholder(Placeholder):
     def __repr__(self):
         return 'TextPlaceholder with regex "{}" ("{}") and default "{}"'.format(
             self.original_regex, self.regex, self.default)
+
+def GetStartParenMatcher():
+    return TextPlaceholder(r'[ \t]*\(\s*', '')
+
+def GetWhiteSpaceMatcher():
+    return TextPlaceholder(r'[ \t]*', '')
+
+
+def GetEndParenMatcher():
+    return TextPlaceholder(r'\s*\)[ \t]*', '')
+

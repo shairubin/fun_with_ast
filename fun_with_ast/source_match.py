@@ -11,7 +11,6 @@ from fun_with_ast.composite_placeholder_source_match import CompositePlaceholder
 
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.create_node import SyntaxFreeLine
-from fun_with_ast.placeholder_source_match import Placeholder
 from fun_with_ast.utils_source_match import _GetListDefault
 from get_source import GetSource
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
@@ -1447,80 +1446,8 @@ def get_Slice_expected_parts():
     ]
 
 
-def _IsBackslashEscapedQuote(string, quote_index):
-    """Checks if the quote at the given index is backslash escaped."""
-    num_preceding_backslashes = 0
-    for char in reversed(string[:quote_index]):
-        if char == '\\':
-            num_preceding_backslashes += 1
-        else:
-            break
-    return num_preceding_backslashes % 2 == 1
 
 
-def _FindQuoteEnd(string, quote_type):
-    """Recursively finds the ending index of a quote.
-
-    Args:
-      string: The string to search inside of.
-      quote_type: The quote type we're looking for.
-
-    Returns:
-      The index of the end of the first quote.
-
-    The method works by attempting to find the first instance of the end of
-    the quote, then recursing if it isn't valid. If -1 is returned at any time,
-    we can't find the end, and we return -1.
-    """
-    trial_index = string.find(quote_type)
-    if trial_index == -1:
-        return -1
-    elif not _IsBackslashEscapedQuote(string, trial_index):
-        return trial_index
-    else:
-        new_start = trial_index + 1
-        rest_index = _FindQuoteEnd(string[new_start:], quote_type)
-        if rest_index == -1:
-            return -1
-        else:  # Return the recursive sum
-            return new_start + rest_index
-
-
-class StringPartPlaceholder(Placeholder):
-    """A container object for a single string part.
-
-    Because of implicit concatination, a single _ast.Str node might have
-    multiple parts.
-    """
-
-    def __init__(self):
-        super(StringPartPlaceholder, self).__init__()
-        self.prefix_placeholder = TextPlaceholder(r'ur|uR|Ur|UR|u|r|U|R|', '')
-        self.quote_match_placeholder = TextPlaceholder(r'"""|\'\'\'|"|\'')
-        self.inner_text_placeholder = TextPlaceholder(r'.*', '')
-
-    def Match(self, node, string):
-        elements = [self.prefix_placeholder, self.quote_match_placeholder]
-        remaining_string = StringParser(string, elements).remaining_string
-
-        quote_type = self.quote_match_placeholder.matched_text
-        end_index = _FindQuoteEnd(remaining_string, quote_type)
-        if end_index == -1:
-            raise ValueError('String {} does not end properly'.format(string))
-        self.inner_text_placeholder.Match(
-            None, remaining_string[:end_index], dotall=True)
-        remaining_string = remaining_string[end_index + len(quote_type):]
-        if not remaining_string:
-            return string
-        return string[:-len(remaining_string)]
-
-    def GetSource(self, node):
-        placeholder_list = [self.prefix_placeholder,
-                            self.quote_match_placeholder,
-                            self.inner_text_placeholder,
-                            self.quote_match_placeholder]
-        source_list = [p.GetSource(node) for p in placeholder_list]
-        return ''.join(source_list)
 
 
 def get_Sub_expected_parts():

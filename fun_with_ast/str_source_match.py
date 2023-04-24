@@ -1,8 +1,9 @@
 import re
 
-from fun_with_ast.source_match import SourceMatcher, TextPlaceholder, StringPartPlaceholder, MatchPlaceholder, \
+from fun_with_ast.source_match import SourceMatcher,  StringPartPlaceholder, MatchPlaceholder, \
      BadlySpecifiedTemplateError
 from fun_with_ast.utils_source_match import _GetListDefault
+from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 
 
 class StrSourceMatcher(SourceMatcher):

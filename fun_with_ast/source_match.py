@@ -7,16 +7,15 @@ import re
 
 
 import fun_with_ast.placeholder_source_match
-from fun_with_ast import dynamic_matcher
 
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
-from fun_with_ast.create_node import SyntaxFreeLine, Comment
+from fun_with_ast.create_node import SyntaxFreeLine
 from fun_with_ast.placeholder_source_match import Placeholder
 from fun_with_ast.utils_source_match import _GetListDefault
 from get_source import GetSource
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 from fun_with_ast.string_parser import StringParser
-
+from fun_with_ast.node_placeholder_source_match import NodePlaceholder, ValidateStart
 
 
 # class Error(Exception):
@@ -88,14 +87,7 @@ from fun_with_ast.string_parser import StringParser
 #         module_node, node_to_fix)
 #     node_to_fix.matcher.Match(starting_indent + default_source)
 
-def ValidateStart(full_string, starting_string):
-    stripped_full = StripStartParens(full_string)
-    stripped_start = StripStartParens(starting_string)
-    if not stripped_full.startswith(stripped_start):
-        raise BadlySpecifiedTemplateError(
-            'String "{}" should have started with string "{}"'
-                .format(stripped_full, stripped_start))
-    return True
+
 
 
 
@@ -188,22 +180,6 @@ def StripStartParens(string):
 #                 self._MatchTextPlaceholder(element)
 #             else:
 #                 self._MatchNode(element)
-
-
-class NodePlaceholder(Placeholder):
-    """Placeholder to wrap an AST node."""
-
-    def __init__(self, node):
-        super(NodePlaceholder, self).__init__()
-        self.node = node
-
-    def Match(self, unused_node, string):
-        node_src = GetSource(self.node, string, self.starting_parens)
-        ValidateStart(string, node_src)
-        return node_src
-
-    def GetSource(self, unused_node):
-        return GetSource(self.node)
 
 
 # class TextPlaceholder(Placeholder):

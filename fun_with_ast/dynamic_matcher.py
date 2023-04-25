@@ -68,7 +68,7 @@ _dynamic_matchers = {
     _ast.Global: ['get_Global_expected_parts', 'fun_with_ast.source_match'],
     _ast.Gt: ['get_Gt_expected_parts', 'fun_with_ast.source_match'],
     _ast.GtE: ['get_GtE_expected_parts', 'fun_with_ast.source_match'],
-    _ast.If: ['IfSourceMatcher', 'fun_with_ast.source_match'],
+    _ast.If: ['IfSourceMatcher', 'fun_with_ast.if_source_match'],
     _ast.IfExp: ['get_IfExp_expected_parts', 'fun_with_ast.source_match'],
     _ast.Import: ['get_Import_expected_parts', 'fun_with_ast.source_match'],
     _ast.ImportFrom: ['get_ImportFrom_expected_parts', 'fun_with_ast.source_match'],

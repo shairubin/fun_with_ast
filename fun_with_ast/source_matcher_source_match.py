@@ -21,6 +21,14 @@ def MatchPlaceholder(string, node, placeholder):
                 .format(string, placeholder))
     return after
 
+def MatchPlaceholderList(string, node, placeholders, starting_parens=None):
+    remaining_string = string
+    for placeholder in placeholders:
+        if remaining_string == string:
+            placeholder.SetStartingParens(starting_parens)
+        remaining_string = MatchPlaceholder(
+            remaining_string, node, placeholder)
+    return remaining_string
 
 class SourceMatcher(object):
     """Base class for all SourceMatcher objects.

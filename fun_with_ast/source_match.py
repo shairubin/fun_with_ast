@@ -18,17 +18,9 @@ from fun_with_ast.string_parser import StringParser
 
 
 # TODO: Consolidate with StringParser
-from source_matcher_source_match import SourceMatcher, MatchPlaceholder
+from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
 
 
-def MatchPlaceholderList(string, node, placeholders, starting_parens=None):
-    remaining_string = string
-    for placeholder in placeholders:
-        if remaining_string == string:
-            placeholder.SetStartingParens(starting_parens)
-        remaining_string = MatchPlaceholder(
-            remaining_string, node, placeholder)
-    return remaining_string
 
 
 def StripStartParens(string):

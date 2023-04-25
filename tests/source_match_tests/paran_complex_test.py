@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -55,7 +56,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
 
@@ -83,6 +84,6 @@ class ParenWrappedTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
         string = ' c (d, (a, b))'
         matcher = GetDynamicMatcher(node)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 

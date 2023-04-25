@@ -19,7 +19,9 @@ Tests for source_match.py
 import unittest
 
 import pytest
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
+import defualt_source_matcher_source_match
 import fun_with_ast.create_node as create_node
 import source_match
 from dynamic_matcher import GetDynamicMatcher
@@ -50,7 +52,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testCantMatchThrowsError(self):
         placeholder = source_match.TextPlaceholder('doesnt match', DEFAULT_TEXT)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(None, 'to match')
 
     def testMatchWhitespace(self):
@@ -115,7 +117,7 @@ class FieldPlaceholderTest(unittest.TestCase):
         self.assertEqual(matched_text, 'foobar')
         test_output = placeholder.GetSource(node)
         self.assertEqual(test_output, 'foobar')
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matched_text = placeholder.Match(node, ' foobar\t\t\n')
             self.assertEqual(matched_text, 'foobar')
             test_output = placeholder.GetSource(node)
@@ -151,13 +153,13 @@ class FieldPlaceholderTest(unittest.TestCase):
     def testCantMatchThrowsError(self):
         node = create_node.Name('doesnt_match')
         placeholder = source_match.FieldPlaceholder('id')
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'to match')
 
     def testRaisesErrorIfFieldIsList(self):
         node = create_node.FunctionDef('function_name')
         placeholder = source_match.FieldPlaceholder('body')
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'invalid_match')
 
     def testChangingValueChangesOutput(self):
@@ -216,7 +218,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         placeholder = source_match.ListFieldPlaceholder(
             'id', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'foobar\nbaz')
 
     def testMatchRaisesErrorIfFieldDoesntMatch(self):
@@ -225,7 +227,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         placeholder = source_match.ListFieldPlaceholder(
             'body', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'no match here')
 
     def testMatchRaisesErrorIfSeparatorDoesntMatch(self):
@@ -235,7 +237,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         placeholder = source_match.ListFieldPlaceholder(
             'body', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'foobarbaz')
 
     # TODO: Renabled this after adding indent information to matchers
@@ -299,37 +301,37 @@ class TestDefaultSourceMatcher(unittest.TestCase):
     def testInvalidExpectedPartsType(self):
         node = create_node.Name('bar')
         with self.assertRaises(ValueError):
-            source_match.DefaultSourceMatcher(node, ['blah'])
+            defualt_source_matcher_source_match.DefaultSourceMatcher(node, ['blah'])
 
     def testBasicTextMatch(self):
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             None, [source_match.TextPlaceholder('blah', DEFAULT_TEXT)])
         matcher.Match('blah')
         self.assertEqual(matcher.GetSource(), 'blah')
 
     def testRaisesErrorIfNoTextMatch(self):
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             None, [source_match.TextPlaceholder('blah', DEFAULT_TEXT)])
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('bla')
 
     def testBasicFieldMatch(self):
         node = create_node.Name('bar')
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node, [source_match.FieldPlaceholder('id')])
         matcher.Match('bar')
         self.assertEqual(matcher.GetSource(), 'bar')
 
     def testRaisesErrorIfNoFieldMatch(self):
         node = create_node.Name('bar')
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node, [source_match.FieldPlaceholder('id')])
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('ba')
 
     def testBasicFieldMatchWhenChangedFieldValue(self):
         node = create_node.Name('bar')
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node, [source_match.FieldPlaceholder('id')])
         matcher.Match('bar')
         node.id = 'foo'
@@ -339,7 +341,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node, [source_match.ListFieldPlaceholder('body')])
         matcher.Match('foobar\nbaz\n')
         self.assertEqual(matcher.GetSource(), 'foobar\nbaz\n')
@@ -348,16 +350,16 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node, [source_match.ListFieldPlaceholder('body')])
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('foobar\nba\n')
 
     def testBasicListMatchWhenChangedFieldValue(self):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node,
             [source_match.ListFieldPlaceholder('body')])
         matcher.Match('foobar\nbaz\n')
@@ -368,7 +370,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node,
             [source_match.TextPlaceholder('def ', 'def '),
              source_match.FieldPlaceholder('name'),
@@ -385,7 +387,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
         module_node = create_node.Module(node)
-        matcher = source_match.DefaultSourceMatcher(
+        matcher = defualt_source_matcher_source_match.DefaultSourceMatcher(
             node,
             [source_match.TextPlaceholder('def ', 'default '),
              source_match.FieldPlaceholder('name'),
@@ -465,7 +467,7 @@ class AugAssignMatcherTest(unittest.TestCase):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Name('c'))
         string = '       \t        a += b\n'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
         #self.assertNotEqual(string, matcher.GetSource())
 

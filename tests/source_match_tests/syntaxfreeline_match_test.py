@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 from dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.create_node import SyntaxFreeLine
@@ -69,5 +70,5 @@ class SyntaxFreeLineMatcherTest(unittest.TestCase):
             comment='comment', col_offset=0, comment_indent=0)
         string = 'comment\n'
         matcher = GetDynamicMatcher(node)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)

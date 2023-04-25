@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -84,7 +85,7 @@ class AssignMatcherTest(unittest.TestCase):
         node = create_node.Assign(['a', 'b'], create_node.Num(1))
         string = 'a\t=\t     bb \t  =1 \t'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
 

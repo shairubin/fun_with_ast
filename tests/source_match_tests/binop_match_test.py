@@ -29,7 +29,7 @@ class BinOpMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'b + a'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
     def testSubBinOp(self):

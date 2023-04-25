@@ -1,6 +1,7 @@
 import re
 
-from  fun_with_ast.source_match import BadlySpecifiedTemplateError
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+
 from source_matcher_source_match import SourceMatcher
 
 

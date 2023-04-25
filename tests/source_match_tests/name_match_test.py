@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
 import source_match
@@ -42,7 +43,7 @@ class NameMatcherTest(unittest.TestCase):
         node = create_node.Name('foobar')
         string = ' \t #comment  foobar'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(source_match.BadlySpecifiedTemplateError):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
     def testIdChange(self):
@@ -91,6 +92,6 @@ class NameMatcherTest(unittest.TestCase):
         self.assertEqual(string, matched_text)
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
-        with self.assertRaises(source_match.BadlySpecifiedTemplateError):
+        with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 

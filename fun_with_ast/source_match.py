@@ -7,7 +7,8 @@ import fun_with_ast.placeholder_source_match
 from body_source_match import BodyPlaceholder
 from fun_with_ast.args_placeholder_source_match import ArgsDefaultsPlaceholder, KeysValuesPlaceholder, ArgsKeywordsPlaceholder, \
     OpsComparatorsPlaceholder
-from fun_with_ast.composite_placeholder_source_match import ListFieldPlaceholder, FieldPlaceholder
+from fun_with_ast.composite_placeholder_source_match import ListFieldPlaceholder, FieldPlaceholder, \
+    SeparatedListFieldPlaceholder
 
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.create_node import SyntaxFreeLine
@@ -36,13 +37,6 @@ def StripStartParens(string):
 
 
 
-class SeparatedListFieldPlaceholder(ListFieldPlaceholder):
-
-    def __init__(self, field_name, before_separator_placeholder=[], after__separator_placeholder=[]):
-        super(SeparatedListFieldPlaceholder, self).__init__(
-            field_name, before_placeholder=before_separator_placeholder,
-            after_placeholder=after__separator_placeholder,
-            exclude_first_before=True)
 
 
 class DefaultSourceMatcher(SourceMatcher):

@@ -147,3 +147,11 @@ class FieldPlaceholder(CompositePlaceholder):
     def __repr__(self):
         return 'FieldPlaceholder for field "{}"'.format(
             self.field_name)
+
+class SeparatedListFieldPlaceholder(ListFieldPlaceholder):
+
+    def __init__(self, field_name, before_separator_placeholder=[], after__separator_placeholder=[]):
+        super(SeparatedListFieldPlaceholder, self).__init__(
+            field_name, before_placeholder=before_separator_placeholder,
+            after_placeholder=after__separator_placeholder,
+            exclude_first_before=True)

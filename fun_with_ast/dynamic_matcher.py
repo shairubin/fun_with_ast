@@ -47,7 +47,7 @@ _dynamic_matchers = {
     _ast.BitAnd: ['get_BitAnd_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitOr: ['get_BitOr_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitXor: ['get_BitXor_expected_parts', 'fun_with_ast.source_match'],
-    _ast.BoolOp: ['BoolOpSourceMatcher', 'fun_with_ast.source_match'],
+    _ast.BoolOp: ['BoolOpSourceMatcher', 'fun_with_ast.boolop_source_match'],
     _ast.Break: ['get_Break_expected_parts', 'fun_with_ast.source_match'],
     _ast.Call: ['get_Call_expected_parts', 'fun_with_ast.source_match'],
     _ast.ClassDef: ['get_ClassDef_expected_parts', 'fun_with_ast.source_match'],

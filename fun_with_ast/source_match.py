@@ -2,6 +2,7 @@
 
 import _ast
 
+from fun_with_ast.boolop_source_match import BoolOpSourceMatcher
 from fun_with_ast.body_source_match import BodyPlaceholder
 from fun_with_ast.defualt_source_matcher_source_match import DefaultSourceMatcher
 from fun_with_ast.args_placeholder_source_match import ArgsDefaultsPlaceholder, KeysValuesPlaceholder, ArgsKeywordsPlaceholder, \
@@ -10,17 +11,17 @@ from fun_with_ast.composite_placeholder_source_match import ListFieldPlaceholder
     SeparatedListFieldPlaceholder
 
 from fun_with_ast.create_node import SyntaxFreeLine
-from fun_with_ast.utils_source_match import _GetListDefault
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher
-from fun_with_ast.string_parser import StringParser
-
-
 
 # TODO: Consolidate with StringParser
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
 
 
+class DummyNode(BoolOpSourceMatcher):
+    """A dummy node that can be used for matching."""
+    def __init__(self):
+        pass
 
 
 def StripStartParens(string):
@@ -145,59 +146,6 @@ def get_BitXor_expected_parts():
 
 
 # TODO: Handle parens better
-class BoolOpSourceMatcher(SourceMatcher):
-    """Class to generate the source for an _ast.BoolOp node."""
-
-    def __init__(self, node, starting_parens=None):
-        super(BoolOpSourceMatcher, self).__init__(node, starting_parens)
-        self.separator_placeholder = TextPlaceholder(r'\s*', ' ')
-        self.matched_placeholders = []
-
-    def GetSeparatorCopy(self):
-        copy = self.separator_placeholder.Copy()
-        self.matched_placeholders.append(copy)
-        return copy
-
-    def Match(self, string):
-        remaining_string = self.MatchStartParens(string)
-
-        elements = [self.node.values[0]]
-        for value in self.node.values[1:]:
-            elements.append(self.GetSeparatorCopy())
-            elements.append(self.node.op)
-            elements.append(self.GetSeparatorCopy())
-            elements.append(value)
-
-        parser = StringParser(remaining_string, elements, self.start_paren_matchers)
-        matched_text = ''.join(parser.matched_substrings)
-        remaining_string = parser.remaining_string
-
-        self.MatchEndParen(remaining_string)
-
-        return self.GetStartParenText() + matched_text + self.GetEndParenText()
-
-    def GetSource(self):
-        source_list = []
-        if self.paren_wrapped:
-            source_list.append(self.GetStartParenText())
-        source_list.append(GetSource(self.node.values[0]))
-        index = 0
-        for value in self.node.values[1:]:
-            source_list.append(_GetListDefault(
-                self.matched_placeholders,
-                index,
-                self.separator_placeholder).GetSource(None))
-            source_list.append(GetSource(self.node.op))
-            index += 1
-            source_list.append(_GetListDefault(
-                self.matched_placeholders,
-                index,
-                self.separator_placeholder).GetSource(None))
-            source_list.append(GetSource(value))
-            index += 1
-        if self.paren_wrapped:
-            source_list.append(self.GetEndParenText())
-        return ''.join(source_list)
 
 
 def get_Break_expected_parts():

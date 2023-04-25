@@ -3,8 +3,8 @@ import re
 from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 
 from fun_with_ast.source_match import MatchPlaceholder
-from source_matcher_source_match import SourceMatcher
-from string_part_source_match import StringPartPlaceholder
+from fun_with_ast.source_matcher_source_match import SourceMatcher
+from fun_with_ast.string_part_placeholder import StringPartPlaceholder
 from fun_with_ast.utils_source_match import _GetListDefault
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 

@@ -1,6 +1,6 @@
 import _ast
 
-from fun_with_ast.body_source_match import BodyPlaceholder
+from fun_with_ast.source_matchers.body import BodyPlaceholder
 from fun_with_ast.composite_placeholder_source_match import SeparatedListFieldPlaceholder
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList

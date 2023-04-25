@@ -16,9 +16,10 @@ class StringPartPlaceholder(Placeholder):
         self.prefix_placeholder = TextPlaceholder(r'ur|uR|Ur|UR|u|r|U|R|', '')
         self.quote_match_placeholder = TextPlaceholder(r'"""|\'\'\'|"|\'')
         self.inner_text_placeholder = TextPlaceholder(r'.*', '')
+        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
 
     def Match(self, node, string):
-        elements = [self.prefix_placeholder, self.quote_match_placeholder]
+        elements = self._get_elements()
         remaining_string = StringParser(string, elements).remaining_string
 
         quote_type = self.quote_match_placeholder.matched_text
@@ -32,6 +33,10 @@ class StringPartPlaceholder(Placeholder):
             return string
         return string[:-len(remaining_string)]
 
+    def _get_elements(self):
+        elements = [self.prefix_placeholder, self.quote_match_placeholder]
+        return elements
+
     def GetSource(self, node):
         placeholder_list = [self.prefix_placeholder,
                             self.quote_match_placeholder,
@@ -39,3 +44,15 @@ class StringPartPlaceholder(Placeholder):
                             self.quote_match_placeholder]
         source_list = [p.GetSource(node) for p in placeholder_list]
         return ''.join(source_list)
+
+class JoinedStringPartPlaceholder(StringPartPlaceholder):
+
+    def __init__(self):
+        super(JoinedStringPartPlaceholder, self).__init__()
+        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
+
+
+    def _get_elements(self):
+        elements = [self.join_str_prefix_placeholder, self.quote_match_placeholder]
+        return elements
+

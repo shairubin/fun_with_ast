@@ -28,23 +28,12 @@ class StrSourceMatcher(SourceMatcher):
 
     def Match(self, string):
         remaining_string = self.MatchStartParens(string)
-        self.original_s = self.node.s
-
-        part = StringPartPlaceholder()
+        self._get_original_string()
+        part = self._part_place_holder()
         remaining_string = MatchPlaceholder(remaining_string, None, part)
         self.quote_parts.append(part)
 
-        while True:
-            separator = self.separator_placeholder.Copy()
-            trial_string = MatchPlaceholder(remaining_string, None, separator)
-            if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
-                    not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
-                break
-            remaining_string = trial_string
-            self.separators.append(separator)
-            part = StringPartPlaceholder()
-            remaining_string = MatchPlaceholder(remaining_string, None, part)
-            self.quote_parts.append(part)
+        remaining_string = self._handle_multipart(remaining_string)
 
         self.MatchEndParen(remaining_string)
         if len(self.quote_parts) != 1 :
@@ -61,6 +50,20 @@ class StrSourceMatcher(SourceMatcher):
             raise BadlySpecifiedTemplateError('String body does not match node.s')
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
         return parsed_string
+
+    def _handle_multipart(self, remaining_string):
+        while True:
+            separator = self.separator_placeholder.Copy()
+            trial_string = MatchPlaceholder(remaining_string, None, separator)
+            if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
+                    not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
+                break
+            remaining_string = trial_string
+            self.separators.append(separator)
+            part = StringPartPlaceholder()
+            remaining_string = MatchPlaceholder(remaining_string, None, part)
+            self.quote_parts.append(part)
+        return remaining_string
 
     def GetSource(self):
         # We try to preserve the formatting on a best-effort basis
@@ -89,3 +92,9 @@ class StrSourceMatcher(SourceMatcher):
 
         source_list.append(self.GetEndParenText())
         return ''.join(source_list)
+
+    def _get_original_string(self):
+        self.original_s = self.node.s
+
+    def _part_place_holder(self):
+        return StringPartPlaceholder()

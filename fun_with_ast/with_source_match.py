@@ -1,10 +1,10 @@
 import _ast
 
 from fun_with_ast.source_matchers.body import BodyPlaceholder
-from fun_with_ast.composite_placeholder_source_match import SeparatedListFieldPlaceholder
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.list_placeholder_source_match import SeparatedListFieldPlaceholder
 
 
 class WithSourceMatcher(SourceMatcher):

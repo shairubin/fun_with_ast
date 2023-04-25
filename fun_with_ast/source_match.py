@@ -7,8 +7,8 @@ from source_matchers.body import BodyPlaceholder
 from fun_with_ast.defualt_source_matcher_source_match import DefaultSourceMatcher
 from fun_with_ast.args_placeholder_source_match import ArgsDefaultsPlaceholder, KeysValuesPlaceholder, ArgsKeywordsPlaceholder, \
     OpsComparatorsPlaceholder
-from fun_with_ast.composite_placeholder_source_match import ListFieldPlaceholder, FieldPlaceholder, \
-    SeparatedListFieldPlaceholder
+from fun_with_ast.composite_placeholder_source_match import FieldPlaceholder
+from fun_with_ast.list_placeholder_source_match import ListFieldPlaceholder, SeparatedListFieldPlaceholder
 
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher
 

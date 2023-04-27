@@ -16,9 +16,10 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStart
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
 from fun_with_ast.if_source_match import IfSourceMatcher
 from fun_with_ast.with_source_match import WithSourceMatcher
+from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 
 
-class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher):
+class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass
@@ -493,8 +494,7 @@ def get_JoinedStr_expected_parts():
     return [
         TextPlaceholder(r'f\'', 'f\''),
         ListFieldPlaceholder(
-            r'values',
-            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
+            r'values'),
         TextPlaceholder(r'\'', '\'')
     ]
 
@@ -576,34 +576,6 @@ def get_SyntaxFreeLine_expected_parts():
 def get_Comment_expected_parts():
     return [TextPlaceholder(r'#.*', '#')]
 
-
-class TupleSourceMatcher(DefaultSourceMatcher):
-    """Source matcher for _ast.Tuple nodes."""
-
-    def __init__(self, node, starting_parens=None):
-        expected_parts = [
-            TextPlaceholder(r'\s*\(', ''),
-            SeparatedListFieldPlaceholder(
-                'elts', before_separator_placeholder=TextPlaceholder(r'[ \t]*,[ \t]*', ',')),
-            TextPlaceholder(r'\s*,?\s*\)[ \t]*(#\S*)*', ')')
-        ]
-        super(TupleSourceMatcher, self).__init__(
-            node, expected_parts, starting_parens)
-
-    def Match(self, string):
-        matched_text = super(TupleSourceMatcher, self).Match(string)
-        return matched_text
-#        if not self.paren_wrapped:
-#            matched_text = matched_text.rstrip()
-#            return super(TupleSourceMatcher, self).Match(matched_text)
-
-    def MatchStartParens(self, remaining_string):
-        return remaining_string
-        # if remaining_string.startswith('(('):
-        #    raise NotImplementedError('Currently not supported')
-        # if remaining_string.startswith('('):
-        #    return remaining_string
-        # raise ValueError('Tuple does not start with (')
 
 def get_TryExcept_expected_parts():
     return [

@@ -1,6 +1,9 @@
 import unittest
 
+import pytest
+
 import create_node
+from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
@@ -12,3 +15,18 @@ class JoinStrMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
+
+    def testBasicMatchDoubleQuote(self):
+        node = create_node.JoinedStr([create_node.Str('fun-with-ast')])
+        string = "f\"fun-with-ast\""
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicnNMatchDoubleQuote(self):
+        node = create_node.JoinedStr([create_node.Str('fun_with-ast')])
+        string = "f\"fun-with-ast\""
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)

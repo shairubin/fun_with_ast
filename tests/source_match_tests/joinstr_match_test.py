@@ -30,3 +30,19 @@ class JoinStrMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
+
+    def testBasicnNMatchEmpty(self):
+        node = create_node.JoinedStr([create_node.Str('')])
+        string = "f\"\""
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicFormatedValuey(self):
+        node = create_node.JoinedStr([create_node.FormattedValue(create_node.Name('a'))])
+        string = "f'{a}'"
+#        matcher = GetDynamicMatcher(node)
+#        matcher.Match(string)
+#        matched_string = matcher.GetSource()
+#        self.assertEqual(string, matched_string)

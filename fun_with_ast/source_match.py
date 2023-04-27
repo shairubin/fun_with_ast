@@ -17,9 +17,10 @@ from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceho
 from fun_with_ast.if_source_match import IfSourceMatcher
 from fun_with_ast.with_source_match import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
+from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 
 
-class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher):
+class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass

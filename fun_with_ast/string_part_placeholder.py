@@ -31,7 +31,8 @@ class StringPartPlaceholder(Placeholder):
         remaining_string = remaining_string[end_index + len(quote_type):]
         if not remaining_string:
             return string
-        return string[:-len(remaining_string)]
+        result = string[:-len(remaining_string)]
+        return result
 
     def _get_elements(self):
         elements = [self.prefix_placeholder, self.quote_match_placeholder]

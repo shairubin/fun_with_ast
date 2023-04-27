@@ -11,4 +11,4 @@ class JoinStrMatcherTest(unittest.TestCase):
         string = "f'fun-with-ast'"
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
-#        self.assertEqual(string, matcher.GetSource())
+        self.assertEqual(string, matcher.GetSource())

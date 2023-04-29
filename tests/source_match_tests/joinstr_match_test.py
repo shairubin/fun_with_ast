@@ -55,10 +55,9 @@ class JoinStrMatcherTest(unittest.TestCase):
             matcher.Match(string)
 
     def testMatchStringsandFormatedValue(self):
-        node = create_node.JoinedStr([create_node.Str('fun'),
-                                      create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('with')])
-        string = "f'fun{a}with'"
+        node = create_node.JoinedStr([create_node.Str('x'),
+                                      create_node.FormattedValue(create_node.Name('a'))])
+        string = "f'x{a}'"
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()

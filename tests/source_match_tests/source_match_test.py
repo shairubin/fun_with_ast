@@ -935,9 +935,14 @@ class StrMatcherTest(unittest.TestCase):
         with pytest.raises(NotImplementedError):
             matcher.Match(string)
 
-    def testContinuationMatchWithPrefix(self):
+    def testContinuationMatch(self):
         node = create_node.Str('foobar')
         string = "'foo''bar'"
+        self._match_string(node, string)
+
+    def testContinuationMatch2(self):
+        node = create_node.Str('foobar')
+        string = "'fo''o''b''a''r'"
         self._match_string(node, string)
 
     def testBasicTripleQuoteMatch(self):

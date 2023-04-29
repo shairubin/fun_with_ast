@@ -40,15 +40,18 @@ class StrSourceMatcher(SourceMatcher):
         #    raise NotImplementedError('Multi-part strings not yet supported')
         self.original_quote_type = (
             self.quote_parts[0].quote_match_placeholder.matched_text)
+        parsed_string = self._get_parsed_string()
+        return parsed_string
+
+    def _get_parsed_string(self):
         start_paran_text = self.GetStartParenText()
         end_paran_text = self.GetEndParenText()
         start_quote = self.original_quote_type
         end_quote = self.original_quote_type
-#        string_body = string[:-len(remaining_string)]
+        #        string_body = string[:-len(remaining_string)]
         string_body = ''
         for part in self.quote_parts:
             string_body += part.inner_text_placeholder.matched_text
-
         if string_body != self.original_s:
             raise BadlySpecifiedTemplateError(f'String body: {string_body} does not match node.s: {self.original_s}')
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text

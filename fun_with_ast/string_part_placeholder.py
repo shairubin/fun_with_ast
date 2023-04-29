@@ -22,17 +22,21 @@ class StringPartPlaceholder(Placeholder):
         elements = self._get_elements()
         remaining_string = StringParser(string, elements).remaining_string
 
-        quote_type = self.quote_match_placeholder.matched_text
-        end_index = _FindQuoteEnd(remaining_string, quote_type)
-        if end_index == -1:
-            raise ValueError('String {} does not end properly'.format(string))
-        self.inner_text_placeholder.Match(
-            None, remaining_string[:end_index], dotall=True)
-        remaining_string = remaining_string[end_index + len(quote_type):]
+        remaining_string = self._match_inner_string_part(remaining_string, string)
         if not remaining_string:
             return string
         result = string[:-len(remaining_string)]
         return result
+
+    def _match_inner_string_part(self, remaining_string, string):
+        quote_type = self.quote_match_placeholder.matched_text
+        end_index = _FindQuoteEnd(remaining_string, quote_type)
+        if end_index == -1:
+            raise ValueError('String {} does not end properly'.format(string))
+        match_inner_string = remaining_string[:end_index]
+        self.inner_text_placeholder.Match(None, match_inner_string, dotall=True)
+        remaining_string = remaining_string[end_index + len(quote_type):]
+        return remaining_string
 
     def _get_elements(self):
         elements = [self.prefix_placeholder, self.quote_match_placeholder]

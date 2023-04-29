@@ -13,7 +13,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def __init__(self, node, starting_parens=None):
         expected_parts = [
             TextPlaceholder(r'f', 'f'),
-            ListFieldPlaceholder(r'values')
+            ListFieldPlaceholder(r'values'),
 #            TextPlaceholder(r'\'', '\'')
         ]
         super(JoinedStrSourceMatcher, self).__init__(
@@ -22,12 +22,18 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def Match(self, string):
 #        without_end_quote = _FindQuoteEnd(string[2:], "'")
         #string = string[:-1]
+        # string = string.replace('}', '}\'')
+        # if string.endswith('}\'\''):
+        #     string = string[:-1]
         matched_text = super(JoinedStrSourceMatcher, self).Match(string)
         return matched_text
 
     def MatchStartParens(self, remaining_string):
         return remaining_string
 
+    def GetSource(self):
+        matched_source = super(JoinedStrSourceMatcher, self).GetSource()
+        return matched_source
 
 # class JoinedStrSourceMatcher(StrSourceMatcher):
 #     def __init__(self, node, starting_parens=None):

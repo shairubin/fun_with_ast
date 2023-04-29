@@ -910,23 +910,23 @@ class StrMatcherTest(unittest.TestCase):
     def testBasicMatch(self):
         node = create_node.Str('foobar')
         string = '"foobar"'
+        self._match_string(node, string)
+
+    def _match_string(self, node, string):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
-        self.assertEqual('"foobar"', matcher.GetSource())
+        self.assertEqual(string, matcher.GetSource())
 
     def testPrefixMatch(self):
         node = create_node.Str('foobar')
         string = 'r"foobar"'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('r"foobar"', matcher.GetSource())
+        self._match_string(node, string)
 
     def testQuoteWrapped(self):
         node = create_node.Str('foobar')
         string = '("foobar")'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('("foobar")', matcher.GetSource())
+        self._match_string(node, string)
+
     @pytest.mark.xfail(strict=True)
     def testContinuationMatch(self):
         node = create_node.Str('foobar')
@@ -934,6 +934,7 @@ class StrMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(NotImplementedError):
             matcher.Match(string)
+
     @pytest.mark.xfail(strict=True)
     def testContinuationMatchWithPrefix(self):
         node = create_node.Str('foobar')
@@ -945,16 +946,12 @@ class StrMatcherTest(unittest.TestCase):
     def testBasicTripleQuoteMatch(self):
         node = create_node.Str('foobar')
         string = '"""foobar"""'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('"""foobar"""', matcher.GetSource())
+        self._match_string(node, string)
 
     def testMultilineTripleQuoteMatch(self):
         node = create_node.Str('foobar\n\nbaz')
         string = '"""foobar\n\nbaz"""'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('"""foobar\n\nbaz"""', matcher.GetSource())
+        self._match_string(node, string)
 
     def testQuoteTypeMismatch(self):
         node = create_node.Str('foobar')
@@ -971,15 +968,10 @@ class StrMatcherTest(unittest.TestCase):
         node.s = 'hello'
         self.assertEqual('"hello"', matcher.GetSource())
 
-    @pytest.mark.xfail(strict=True)
     def testSChangeInContinuation(self):
-        node = create_node.Str('foobar')
-        string = '"foo"\n"bar"'
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(NotImplementedError):
-            matcher.Match(string)
-        #node.s = 'foobaz'
-        #self.assertEqual('"foobaz"', matcher.GetSource())
+        node = create_node.Str('foo\nbar')
+        string = "'foo\nbar'"
+        self._match_string(node, string)
 
     def testQuoteTypeChange(self):
         node = create_node.Str('foobar')

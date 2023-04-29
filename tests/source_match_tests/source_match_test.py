@@ -935,18 +935,14 @@ class StrMatcherTest(unittest.TestCase):
         with pytest.raises(NotImplementedError):
             matcher.Match(string)
 
-    @pytest.mark.xfail(strict=True)
     def testContinuationMatchWithPrefix(self):
         node = create_node.Str('foobar')
         string = "'foo''bar'"
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('foobar', matcher.GetSource())
+        self._match_string(node, string)
 
     def testBasicTripleQuoteMatch(self):
         node = create_node.Str('foobar')
         string = '"""foobar"""'
-        self._match_string(node, string)
 
     def testMultilineTripleQuoteMatch(self):
         node = create_node.Str('foobar\n\nbaz')

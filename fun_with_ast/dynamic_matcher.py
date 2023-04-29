@@ -113,6 +113,7 @@ _dynamic_matchers = {
     #    _ast.Try: TryFinallySourceMatcher', 'fun_with_ast.source_match'],
     _ast.JoinedStr: ['JoinedStrSourceMatcher', 'fun_with_ast.source_matchers.joined_str'],
     _ast.Try: ['get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
+    _ast.FormattedValue: ['get_FormattedValue_expected_parts', 'fun_with_ast.source_match'],
     _ast.UAdd: ['get_UAdd_expected_parts', 'fun_with_ast.source_match'],
     _ast.UnaryOp: ['get_UnaryOp_expected_parts', 'fun_with_ast.source_match'],
     _ast.USub: ['get_USub_expected_parts', 'fun_with_ast.source_match'],

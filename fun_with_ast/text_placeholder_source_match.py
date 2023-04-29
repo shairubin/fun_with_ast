@@ -14,11 +14,12 @@ from fun_with_ast.placeholder_source_match  import Placeholder
 class TextPlaceholder(Placeholder):
     """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""
 
-    def __init__(self, regex, default=None):
+    def __init__(self, regex, default=None, longest_match=False):
         super(TextPlaceholder, self).__init__()
         self.original_regex = regex
 #        self.regex = regex
         self.regex = self._TransformRegex(regex)
+        self.longest_match = longest_match
         if default is None:
             self.default = regex
         else:
@@ -50,16 +51,22 @@ class TextPlaceholder(Placeholder):
         Returns:
           The substring of string that matches.
         """
+        longest_match_attempt = None
         if dotall:
             match_attempt = re.match(self.regex, string, re.DOTALL)
+        elif self.longest_match:
+            all_matches = re.findall(self.regex, string)
+            longest_match_attempt = max(all_matches)
         else:
             match_attempt = re.match(self.regex, string)
-            #all = re.findall(self.regex, string)
-        if not match_attempt:
-            raise BadlySpecifiedTemplateError(
-                'string "{}" does not match regex "{}" (technically, "{}")'
+            if not match_attempt:
+                raise BadlySpecifiedTemplateError(
+                    'string "{}" does not match regex "{}" (technically, "{}")'
                     .format(string, self.original_regex, self.regex))
-        self.matched_text = match_attempt.group(0)
+        if longest_match_attempt:
+            self.matched_text = longest_match_attempt
+        else:
+            self.matched_text = match_attempt.group(0)
         return self.matched_text
 
     def GetSource(self, unused_node):

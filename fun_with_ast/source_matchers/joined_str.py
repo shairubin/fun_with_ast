@@ -21,7 +21,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def Match(self, string):
 #        without_end_quote = _FindQuoteEnd(string[2:], "'")
-#        string = string[:-1]
+        #string = string[:-1]
         matched_text = super(JoinedStrSourceMatcher, self).Match(string)
         return matched_text
 

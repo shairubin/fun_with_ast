@@ -17,6 +17,16 @@ class AssignMatcherTest(unittest.TestCase):
         with pytest.raises(NotImplementedError):
             matcher.Match(string)
 
+    def testBasicMatchAssignString(self):
+        node = create_node.Assign('a', create_node.Str('1'))
+        string = "a='1'"
+        self._assert_matched_source(node, string)
+
+    def testBasicMatchAssignString2(self):
+        node = create_node.Assign('a', create_node.Str('12'))
+        string = "a='1''2'"
+        self._assert_matched_source(node, string)
+
     def testBasicMatchAssignTrailingWS(self):
         node = create_node.Assign('a', create_node.Num(1))
         string = 'a=1 '

@@ -28,6 +28,14 @@ class ConstantMatcherTest(unittest.TestCase):
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
+    def testBasicMatchConcatinatedString(self):
+        node = create_node.Str('1''2')
+        string = "'12'"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
     def testBasicMatchStrWithWS(self):
         node = create_node.Str('  1  ')
         string = "'  1  '"

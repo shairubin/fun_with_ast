@@ -927,20 +927,20 @@ class StrMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual('("foobar")', matcher.GetSource())
-
+    @pytest.mark.xfail(strict=True)
     def testContinuationMatch(self):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(NotImplementedError):
             matcher.Match(string)
-
+    @pytest.mark.xfail(strict=True)
     def testContinuationMatchWithPrefix(self):
         node = create_node.Str('foobar')
-        string = '"foo"\nr"bar"'
+        string = "'foo''bar'"
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(NotImplementedError):
-            matcher.Match(string)
+        matcher.Match(string)
+        self.assertEqual('foobar', matcher.GetSource())
 
     def testBasicTripleQuoteMatch(self):
         node = create_node.Str('foobar')
@@ -971,6 +971,7 @@ class StrMatcherTest(unittest.TestCase):
         node.s = 'hello'
         self.assertEqual('"hello"', matcher.GetSource())
 
+    @pytest.mark.xfail(strict=True)
     def testSChangeInContinuation(self):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'

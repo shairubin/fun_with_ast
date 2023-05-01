@@ -54,7 +54,7 @@ class JoinStrMatcherTest(unittest.TestCase):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
-    def testMatchStringsandFormatedValue(self):
+    def testMatchStringsAndFormatedValue(self):
         node = create_node.JoinedStr([
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.Str('x')])

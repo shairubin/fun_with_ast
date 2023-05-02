@@ -12,7 +12,7 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 class StrSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.Str node."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, accept_multiparts_string=True):
         super(StrSourceMatcher, self).__init__(node, starting_parens)
         self.separator_placeholder = TextPlaceholder(r'\s*', '')
         self.quote_parts = []
@@ -21,6 +21,7 @@ class StrSourceMatcher(SourceMatcher):
         self.quote_type = None
         self.original_quote_type = None
         self.original_s = None
+        self.accept_multipart_string=accept_multiparts_string
 
     def _GetMatchedInnerText(self):
         return ''.join(p.inner_text_placeholder.GetSource(self.node)

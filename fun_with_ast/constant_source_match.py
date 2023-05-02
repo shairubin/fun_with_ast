@@ -13,6 +13,11 @@ class ConstantSourceMatcher():
         self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node
+        if isinstance(self.parent_node, ast.JoinedStr):
+            self.accept_multiparts_string = False
+        else:
+            self.accept_multiparts_string = True
+
 
     def Match(self, string):
         if isinstance(self.constant_node.n, bool):
@@ -20,10 +25,7 @@ class ConstantSourceMatcher():
         if isinstance(self.constant_node.n, int) and isinstance(self.constant_node.s, int):
             return self.num_matcher.Match(string)
         if isinstance(self.constant_node.n, str) and isinstance(self.constant_node.s, str):
-            if isinstance(self.parent_node, ast.JoinedStr):
-                raise NotImplementedError
-            else:
-                return self.str_matcher.Match(string)
+            return self.str_matcher.Match(string)
 
     def GetSource(self):
         if isinstance(self.constant_node.n, bool) and isinstance(self.constant_node.s, int):

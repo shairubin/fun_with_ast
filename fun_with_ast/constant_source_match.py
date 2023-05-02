@@ -2,7 +2,7 @@ import ast
 
 
 class ConstantSourceMatcher():
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         if not isinstance(node, ast.Constant):
             raise ValueError
         self.constant_node = node

@@ -9,7 +9,7 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 class DefaultSourceMatcher(SourceMatcher):
     """Class to generate the source for a node."""
 
-    def __init__(self, node, expected_parts, starting_parens=None):
+    def __init__(self, node, expected_parts, starting_parens=None, parent_node=None):
         super(DefaultSourceMatcher, self).__init__(node, starting_parens)
         previous_was_string = False
         # We validate that the expected parts does not contain two strings in

@@ -12,7 +12,7 @@ from fun_with_ast.utils_source_match import _FindQuoteEnd
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     """Source matcher for _ast.Tuple nodes."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'f\'', 'f\''),
             ListFieldPlaceholder(r'values'),

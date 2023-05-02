@@ -8,7 +8,7 @@ from fun_with_ast.utils_source_match import _GetListDefault
 class BoolOpSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.BoolOp node."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         super(BoolOpSourceMatcher, self).__init__(node, starting_parens)
         self.separator_placeholder = TextPlaceholder(r'\s*', ' ')
         self.matched_placeholders = []

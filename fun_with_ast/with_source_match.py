@@ -10,7 +10,7 @@ from fun_with_ast.list_placeholder_source_match import SeparatedListFieldPlaceho
 class WithSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.With node."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, Parent=None):
         super(WithSourceMatcher, self).__init__(node, starting_parens)
         self.with_placeholder = TextPlaceholder(r' *(with)? *', 'with ')
         self.withitems_placeholder = SeparatedListFieldPlaceholder('items', before_separator_placeholder=TextPlaceholder(r', *', ', '))

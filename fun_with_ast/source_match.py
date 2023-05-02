@@ -659,7 +659,7 @@ def get_While_expected_parts():
 
 
 class WithItemSourceMatcher(SourceMatcher):
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         super(WithItemSourceMatcher, self).__init__(node, starting_parens)
         self.context_expr = FieldPlaceholder('context_expr')
         self.optional_vars = FieldPlaceholder(

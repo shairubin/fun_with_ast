@@ -12,7 +12,7 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 class IfSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.If node."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         super(IfSourceMatcher, self).__init__(node, starting_parens)
         self.if_placeholder = TextPlaceholder(r' *if\s*', 'if ')
         self.test_placeholder = FieldPlaceholder('test')

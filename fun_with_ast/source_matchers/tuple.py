@@ -6,7 +6,7 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder
 class TupleSourceMatcher(DefaultSourceMatcher):
     """Source matcher for _ast.Tuple nodes."""
 
-    def __init__(self, node, starting_parens=None):
+    def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'\s*\(', ''),
             SeparatedListFieldPlaceholder(

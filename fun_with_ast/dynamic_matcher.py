@@ -4,7 +4,7 @@ import sys
 
 
 import fun_with_ast.create_node
-def GetDynamicMatcher(node, starting_parens=None):
+def GetDynamicMatcher(node, starting_parens=None, parent_node=None):
     """Gets an initialized matcher for the given node (doesnt call .Match).
 
     If there is no corresponding matcher in _matchers, this will return a
@@ -28,9 +28,9 @@ def GetDynamicMatcher(node, starting_parens=None):
     try:
         parts = parts_or_matcher()
         default_source_matcher = current_module.DefaultSourceMatcher
-        return default_source_matcher(node, parts, starting_parens)
+        return default_source_matcher(node, parts, starting_parens, parent_node)
     except TypeError:
-        matcher = parts_or_matcher(node, starting_parens)
+        matcher = parts_or_matcher(node, starting_parens, parent_node)
         return matcher
 
 _dynamic_matchers = {

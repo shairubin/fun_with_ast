@@ -4,7 +4,7 @@ from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 from utils_source_match import FixSourceIndentation
 
 
-def GetSource(field, text=None, starting_parens=None, assume_no_indent=False):
+def GetSource(field, text=None, starting_parens=None, assume_no_indent=False, parent_node=None):
     """Gets the source corresponding with a given field.
 
     If the node is not a string or a node with a .matcher function,

@@ -21,6 +21,7 @@ class NodePlaceholder(Placeholder):
     def __init__(self, node):
         super(NodePlaceholder, self).__init__()
         self.node = node
+        self.parent = None
 
     def Match(self, unused_node, string):
         node_src = GetSource(self.node, string, self.starting_parens)

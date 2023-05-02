@@ -58,7 +58,16 @@ class JoinStrMatcherTest(unittest.TestCase):
         node = create_node.JoinedStr([
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.Str('x')])
-        string = "f'{a}x'"
+        string = "f'{a}{b}x'"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testMatchStringsAndFormatedValue2(self):
+        node = create_node.JoinedStr([create_node.Str('y'),
+                                      create_node.FormattedValue(create_node.Name('a'))])
+        string = "f'y{a}'"
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()

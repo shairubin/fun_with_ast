@@ -24,7 +24,7 @@ class NodePlaceholder(Placeholder):
         self.parent = None
 
     def Match(self, unused_node, string):
-        node_src = GetSource(self.node, string, self.starting_parens)
+        node_src = GetSource(self.node, string, self.starting_parens,parent_node=self.parent)
         ValidateStart(string, node_src)
         return node_src
 

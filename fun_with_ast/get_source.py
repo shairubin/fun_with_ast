@@ -37,7 +37,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False, pa
     if hasattr(field, 'matcher') and field.matcher:
         return field.matcher.GetSource()
     else:
-        field.matcher = GetDynamicMatcher(field, starting_parens)
+        field.matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
         if text:
             field.matcher.Match(text)
         # TODO: Fix this to work with lambdas

@@ -14,6 +14,8 @@ class CompositePlaceholder(Placeholder):
         """Makes sure node.(self.field_name) is in string."""
         self.Validate(node)
         elements = self.GetElements(node)
+        for element in elements:
+            element.parent = node
         parser = StringParser(
             string, elements, starting_parens=self.starting_parens)
         return parser.GetMatchedText()

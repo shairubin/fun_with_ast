@@ -1,14 +1,15 @@
 import ast
 
+from fun_with_ast.num_source_match import NumSourceMatcher, BoolSourceMatcher
+from fun_with_ast.source_matchers.str_source_match import StrSourceMatcher
+
 
 class ConstantSourceMatcher():
     def __init__(self, node, starting_parens=None, parent_node=None):
         if not isinstance(node, ast.Constant):
             raise ValueError
         self.constant_node = node
-        from source_matchers.str_source_match import StrSourceMatcher
         self.str_matcher = StrSourceMatcher(node, starting_parens)
-        from fun_with_ast.num_source_match import NumSourceMatcher, BoolSourceMatcher
         self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node

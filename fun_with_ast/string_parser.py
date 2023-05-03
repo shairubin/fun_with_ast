@@ -24,7 +24,7 @@ def StripStartParens(string):
 class StringParser(object):
     """Class encapsulating parsing a string while matching placeholders."""
 
-    def __init__(self, string, elements, starting_parens=None):
+    def __init__(self, string, elements, starting_parens=None, accept_multiparts_string=True):
         if not starting_parens:
             starting_parens = []
         self.starting_parens = starting_parens
@@ -33,6 +33,7 @@ class StringParser(object):
         self.remaining_string = string
         self.elements = elements
         self.matched_substrings = []
+        self.accept_multiparts_string = accept_multiparts_string
         self.Parse()
 
     def _ProcessSubstring(self, substring):

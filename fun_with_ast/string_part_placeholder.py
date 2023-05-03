@@ -11,16 +11,17 @@ class StringPartPlaceholder(Placeholder):
     multiple parts.
     """
 
-    def __init__(self):
+    def __init__(self, accept_multiparts_string=True):
         super(StringPartPlaceholder, self).__init__()
         self.prefix_placeholder = TextPlaceholder(r'ur|uR|Ur|UR|u|r|U|R|', '')
         self.quote_match_placeholder = TextPlaceholder(r'"""|\'\'\'|"|\'')
         self.inner_text_placeholder = TextPlaceholder(r'.*', '')
-        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
+#        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
+        self.accept_multiparts_string = accept_multiparts_string
 
     def Match(self, node, string):
         elements = self._get_elements()
-        remaining_string = StringParser(string, elements).remaining_string
+        remaining_string = StringParser(string, elements, self.accept_multiparts_string).remaining_string
 
         remaining_string = self._match_inner_string_part(remaining_string, string)
         if not remaining_string:
@@ -29,6 +30,9 @@ class StringPartPlaceholder(Placeholder):
         return result
 
     def _match_inner_string_part(self, remaining_string, string):
+
+#        if not self.accept_multiparts_string:
+#            return remaining_string
         quote_type = self.quote_match_placeholder.matched_text
         end_index = _FindQuoteEnd(remaining_string, quote_type)
         if end_index == -1:

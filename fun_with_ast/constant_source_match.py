@@ -9,7 +9,6 @@ class ConstantSourceMatcher():
         if not isinstance(node, ast.Constant):
             raise ValueError
         self.constant_node = node
-        self.str_matcher = StrSourceMatcher(node, starting_parens)
         self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node
@@ -17,6 +16,7 @@ class ConstantSourceMatcher():
             self.accept_multiparts_string = False
         else:
             self.accept_multiparts_string = True
+        self.str_matcher = StrSourceMatcher(node, starting_parens, self.accept_multiparts_string)
 
 
     def Match(self, string):

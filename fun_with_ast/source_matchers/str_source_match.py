@@ -21,7 +21,7 @@ class StrSourceMatcher(SourceMatcher):
         self.quote_type = None
         self.original_quote_type = None
         self.original_s = None
-        self.accept_multipart_string=accept_multiparts_string
+        self.accept_multiparts_string=accept_multiparts_string
 
     def _GetMatchedInnerText(self):
         return ''.join(p.inner_text_placeholder.GetSource(self.node)
@@ -59,6 +59,8 @@ class StrSourceMatcher(SourceMatcher):
         return parsed_string
 
     def _handle_multipart(self, remaining_string):
+        if not self.accept_multiparts_string:
+            return remaining_string
         while True:
             separator = self.separator_placeholder.Copy()
             trial_string = MatchPlaceholder(remaining_string, None, separator)
@@ -67,7 +69,7 @@ class StrSourceMatcher(SourceMatcher):
                 break
             remaining_string = trial_string
             self.separators.append(separator)
-            part = StringPartPlaceholder()
+            part = StringPartPlaceholder(self.accept_multiparts_string)
             remaining_string = MatchPlaceholder(remaining_string, None, part)
             self.quote_parts.append(part)
         return remaining_string
@@ -104,4 +106,4 @@ class StrSourceMatcher(SourceMatcher):
         self.original_s = self.node.s
 
     def _part_place_holder(self):
-        return StringPartPlaceholder()
+        return StringPartPlaceholder(self.accept_multiparts_string)

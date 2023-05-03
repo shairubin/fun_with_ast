@@ -50,9 +50,16 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def GetSource(self):
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()
-        matched_source = matched_source.replace('}\'\'', '}')
+        matched_source = self._convert_to_single_part_string(matched_source)
+
         return matched_source
 
+    def _convert_to_single_part_string(self, _in):
+        if _in[-2:] == '\'\'':
+            result = _in[:-1]
+        if result[0:3] == 'f\'\'':
+            result = result.replace('f\'\'', 'f\'')
+        return result
 # class JoinedStrSourceMatcher(StrSourceMatcher):
 #     def __init__(self, node, starting_parens=None):
 #         super(JoinedStrSourceMatcher, self).__init__(node, starting_parens)

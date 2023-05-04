@@ -2,12 +2,10 @@ import unittest
 
 import pytest
 
-import fun_with_ast.exceptions_source_match
 from dynamic_matcher import GetDynamicMatcher
-from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
 
 import create_node
-import source_match
 
 
 class BinOpMatcherTest(unittest.TestCase):

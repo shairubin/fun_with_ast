@@ -1,4 +1,4 @@
-from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholder_source_match import Placeholder

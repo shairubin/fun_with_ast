@@ -3,22 +3,22 @@ import unittest
 import pytest
 
 import create_node
-from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
 class JoinStrMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):
-        node = create_node.JoinedStr([create_node.Str('fun-with-ast')])
-        string = "f'fun-with-ast'"
+        node = create_node.JoinedStr([create_node.Str('X')])
+        string = "f'X'"
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchDoubleQuote(self):
-        node = create_node.JoinedStr([create_node.Str('fun-with-ast')])
-        string = "f\"fun-with-ast\""
+        node = create_node.JoinedStr([create_node.Str("X")])
+        string = "f\"X\""
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()

@@ -21,7 +21,7 @@ import unittest
 import pytest
 
 import list_placeholder_source_match
-from fun_with_ast.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
 
 import defualt_source_matcher_source_match
 import fun_with_ast.create_node as create_node

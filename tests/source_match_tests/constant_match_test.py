@@ -8,7 +8,7 @@ from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedT
 import create_node
 
 
-class ConstantMatcherTest(unittest.TestCase):
+class ConstantNumMatcherTest(unittest.TestCase):
 
     def testBasicMatchNum(self):
         node = create_node.Num('1')
@@ -19,37 +19,6 @@ class ConstantMatcherTest(unittest.TestCase):
         self.assertEqual(string, matched_string)
 
 
-    def testBasicMatchStr(self):
-        node = create_node.Str('1')
-        string = "'1'"
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
-    def testBasicMatchConcatinatedString(self):
-        node = create_node.Str('1''2')
-        string = "'12'"
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
-    def testBasicMatchStrWithWS(self):
-        node = create_node.Str('  1  ')
-        string = "'  1  '"
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
-    def testBasicNoMatchStr(self):
-        node = create_node.Str('1')
-        string = "'2'"
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
-
     def testBasicMatchWithPlusSign(self):
         node = create_node.Num('1')
         string = '+1'
@@ -57,6 +26,7 @@ class ConstantMatcherTest(unittest.TestCase):
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
 
     def testBasicMatchWithMinusSign(self):
         node = create_node.Num('-1')
@@ -144,3 +114,79 @@ class ConstantMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
+
+class ConstantStrMatcherTest(unittest.TestCase):
+
+
+
+    def testBasicMatchStr(self):
+        node = create_node.Str('1')
+        string = "'1'"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchStrDoubelQ(self):
+        node = create_node.Str("1")
+        string = "\"1\""
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchEmpty(self):
+        node = create_node.Str('')
+        string = "''"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchEmpty2(self):
+        node = create_node.Str('')
+        string = "\"\""
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchMultiPart(self):
+        node = create_node.Str("\"'1''2'\"")
+        string = "\"'1''2'\""
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testNoMatchMultiPart(self):
+        node = create_node.Str("\"'1''2'\"")
+        string = "\"'1''3'\""
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
+
+
+    def testBasicMatchConcatinatedString(self):
+        node = create_node.Str('1''2')
+        string = "'12'"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchStrWithWS(self):
+        node = create_node.Str('  1  ')
+        string = "'  1  '"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicNoMatchStr(self):
+        node = create_node.Str('1')
+        string = "'2'"
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
+

@@ -53,9 +53,14 @@ class StrSourceMatcher(SourceMatcher):
         string_body = ''
         for part in self.quote_parts:
             string_body += part.inner_text_placeholder.matched_text
-        if string_body != self.original_s:
-            raise BadlySpecifiedTemplateError(f'String body: {string_body} does not match node.s: {self.original_s}')
+        #if string_body != self.original_s:
+        #    raise BadlySpecifiedTemplateError(f'String body: {string_body} does not match node.s: {self.original_s}')
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
+        #if parsed_string != self.original_s:
+        #    raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
+        if not self.original_s in parsed_string:
+            raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
+
         return parsed_string
 
     def _handle_multipart(self, remaining_string):

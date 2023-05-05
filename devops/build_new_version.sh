@@ -1,6 +1,12 @@
 #!/bin/bash
 echo "start build new version-patch"
+echo "add shh key"
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+echo "patch a version"
 poetry version patch
-git commint -a 'new patch version update 
-git push 
+echo "adding commit message"
+git commit -m 'new patch version update'
+echo "push to git"
+git push
+echo "poetry build"
 poetry build

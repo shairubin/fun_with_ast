@@ -21,7 +21,7 @@ class StringPartPlaceholder(Placeholder):
 
     def Match(self, node, string):
         elements = self._get_elements()
-        remaining_string = StringParser(string, elements, self.accept_multiparts_string).remaining_string
+        remaining_string = StringParser(string, elements, accept_multiparts_string=self.accept_multiparts_string).remaining_string
 
         remaining_string = self._match_inner_string_part(remaining_string, string)
         if not remaining_string:

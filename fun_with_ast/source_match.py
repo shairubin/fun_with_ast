@@ -42,11 +42,11 @@ def get_Add_expected_parts():
 
 def get_FormattedValue_expected_parts():
     return [
-        TextPlaceholder(r'\{|\'\{', '{'),
+        TextPlaceholder(r'\{|[\'\"]\{', '{'),
         FieldPlaceholder('value'),
 #        FieldPlaceholder('format_spec', before_placeholder=TextPlaceholder(r':', ':')),
 #        TextPlaceholder(r"(\}\'|})", default='', longest_match=False)
-        TextPlaceholder(r"(\}\'|\})", default='', longest_match=False)
+        TextPlaceholder(r"(\}[\'\"]|\})", default='', longest_match=False)
     ]
 
 def get_alias_expected_parts():

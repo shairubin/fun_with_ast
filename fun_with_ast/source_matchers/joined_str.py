@@ -23,7 +23,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self.padding_quote = None
 
 
+
     def Match(self, string):
+        self._check_not_implemented(string)
         self.padding_quote = self._get_padding_quqte(string)
         string = self._convert_to_multi_part_string(string)
         matched_text = super(JoinedStrSourceMatcher, self).Match(string)
@@ -35,11 +37,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 #            return _in
         multi_part = _in[0:2]
         for (literal, name, format_spec, conversion) in formatted_string:
-            print(literal, name, format_spec, conversion)
             if literal:
                 multi_part += self.padding_quote + literal + self.padding_quote
             if name:
-                multi_part += '\'{' + name + '}\''
+                multi_part += self.padding_quote+ '{' + name + '}'+self.padding_quote
             if format_spec:
                 raise NotImplementedError
             if conversion:
@@ -61,6 +62,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             result = _in[:-1]
         if result[0:3] == "f" + self.padding_quote*2:
             result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
+        result=result.replace(self.padding_quote*2+'{', '{')
+        result=result.replace('}'+self.padding_quote*2, '}')
         return result
 
     def _get_padding_quqte(self, string):
@@ -69,6 +72,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         elif string.startswith("f\""):
             return "\""
         raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
+
+    def _check_not_implemented(self, string):
+        if '\"\"' in string:
+            raise NotImplementedError('Double-quotes are not supported yet')
 # class JoinedStrSourceMatcher(StrSourceMatcher):
 #     def __init__(self, node, starting_parens=None):
 #         super(JoinedStrSourceMatcher, self).__init__(node, starting_parens)

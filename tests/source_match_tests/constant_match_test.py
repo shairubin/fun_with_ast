@@ -151,13 +151,30 @@ class ConstantStrMatcherTest(unittest.TestCase):
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
+    def testBasicMatchEmpty3(self):
+        node = create_node.Str('')
+        string = "\"\"''"
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
     def testBasicMatchMultiPart(self):
-        node = create_node.Str("\"'1''2'\"")
+        node = create_node.Str("'1''2'")
         string = "\"'1''2'\""
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
+    def testBasicMatchMultiPart2(self):
+        node = create_node.Str('1''2')
+        string = '\'1\'\'2\''
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
 
     def testNoMatchMultiPart(self):
         node = create_node.Str("\"'1''2'\"")

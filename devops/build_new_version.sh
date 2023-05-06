@@ -18,3 +18,10 @@ else
 fi
 echo "poetry build"
 poetry build
+if [ $? -eq 0 ]
+then
+  echo "Poetry build succeeded"
+else
+  echo "Poetry build failed" >&2
+  exit 1
+fi

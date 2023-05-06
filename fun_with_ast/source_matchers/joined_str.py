@@ -1,9 +1,9 @@
 from string import Formatter
 
-from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.defualt_source_matcher_source_match import DefaultSourceMatcher
 from fun_with_ast.list_placeholder_source_match import ListFieldPlaceholder
-#from fun_with_ast.source_matchers.str_source_match import StrSourceMatcher
+#from fun_with_ast.source_matchers.str import StrSourceMatcher
 #from fun_with_ast.string_part_placeholder import JoinedStringPartPlaceholder
 #from fun_with_ast.source_matcher_source_match import MatchPlaceholder
 from fun_with_ast.text_placeholder_source_match import TextPlaceholder

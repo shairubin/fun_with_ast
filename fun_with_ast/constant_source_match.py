@@ -1,7 +1,7 @@
 import ast
 
 from fun_with_ast.num_source_match import NumSourceMatcher, BoolSourceMatcher
-from fun_with_ast.source_matchers.str_source_match import StrSourceMatcher
+from fun_with_ast.source_matchers.str import StrSourceMatcher
 
 
 class ConstantSourceMatcher():

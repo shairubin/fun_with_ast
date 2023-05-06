@@ -3,7 +3,7 @@ import unittest
 import pytest
 
 import create_node
-from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 

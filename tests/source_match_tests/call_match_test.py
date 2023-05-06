@@ -1,7 +1,7 @@
 import unittest
 
 import create_node as create_node
-from dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
 class CallMatcherTest(unittest.TestCase):

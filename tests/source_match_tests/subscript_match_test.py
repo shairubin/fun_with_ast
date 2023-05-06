@@ -2,7 +2,7 @@ import unittest
 
 import create_node
 import source_match
-from dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
 class SubscriptMatcherTest(unittest.TestCase):

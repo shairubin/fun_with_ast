@@ -1,6 +1,6 @@
 import re
 
-from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.source_match import MatchPlaceholder
 from fun_with_ast.source_matcher_source_match import SourceMatcher

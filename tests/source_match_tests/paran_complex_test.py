@@ -1,10 +1,10 @@
 import unittest
 
 import pytest
-from fun_with_ast.source_matchers.exceptions_source_match import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 import create_node
-from dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
 class ParenWrappedTest(unittest.TestCase):

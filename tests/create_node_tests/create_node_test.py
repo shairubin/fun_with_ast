@@ -20,7 +20,7 @@ import _ast
 import unittest
 
 import create_node
-from create_node import GetNodeFromInput
+from fun_with_ast.create_node import GetNodeFromInput
 from tests.create_node_tests.create_node_test_based import CreateNodeTestBase
 
 

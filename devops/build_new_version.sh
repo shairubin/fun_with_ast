@@ -16,7 +16,6 @@ else
   echo "Could not git push" >&2
   exit 1
 fi
-echo "poetry build"
 poetry build
 if [ $? -eq 0 ]
 then
@@ -25,3 +24,13 @@ else
   echo "Poetry build failed" >&2
   exit 1
 fi
+poetry publish -r testpypi
+if [ $? -eq 0 ]
+then
+  echo "Poetry push succeeded"
+else
+  echo "Poetry push failed" >&2
+  exit 1
+fi
+
+

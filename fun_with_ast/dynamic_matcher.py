@@ -119,7 +119,7 @@ _dynamic_matchers = {
     _ast.UnaryOp: ['get_UnaryOp_expected_parts', 'fun_with_ast.source_match'],
     _ast.USub: ['get_USub_expected_parts', 'fun_with_ast.source_match'],
     _ast.While: ['get_While_expected_parts', 'fun_with_ast.source_match'],
-    _ast.With: ['WithSourceMatcher', 'fun_with_ast.with_source_match'],
+    _ast.With: ['WithSourceMatcher', 'fun_with_ast.source_match'],
     _ast.withitem: ['WithItemSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Yield: ['get_Yield_expected_parts', 'fun_with_ast.source_match']
 }

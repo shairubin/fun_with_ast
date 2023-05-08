@@ -15,7 +15,7 @@ from fun_with_ast.text_placeholder_source_match import TextPlaceholder, GetStart
 # TODO: Consolidate with StringParser
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
 from fun_with_ast.if_source_match import IfSourceMatcher
-from fun_with_ast.with_source_match import WithSourceMatcher
+from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 

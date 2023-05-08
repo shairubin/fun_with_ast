@@ -8,10 +8,10 @@ from fun_with_ast.get_source import GetSource
 
 class GetSourceTest(unittest.TestCase):
     def testCall1(self):
-        string = "logger.info('test string')"
+        string = "logger.info('test string')\n"
         log_node = GetNodeFromInput(string)
-        GetSource(log_node.value, string)
-        self.assertEqual(string, GetSource(log_node.value))
+        source = GetSource(log_node, string)
+        self.assertEqual(string, source)
 
     def testCall2(self):
         string = 'logger.info(\'test string\')'

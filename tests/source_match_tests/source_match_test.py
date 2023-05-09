@@ -20,7 +20,7 @@ import unittest
 
 import pytest
 
-import list_placeholder_source_match
+from placeholders import list_placeholder_source_match
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 import defualt_source_matcher_source_match

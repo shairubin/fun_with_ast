@@ -2,9 +2,9 @@ import _ast
 
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
-from fun_with_ast.placeholder_source_match import Placeholder
-from fun_with_ast.string_parser import StringParser
-from fun_with_ast.node_placeholder_source_match import NodePlaceholder
+from placeholders.placeholder_source_match import Placeholder
+from placeholders.string_parser import StringParser
+from placeholders.node_placeholder_source_match import NodePlaceholder
 
 
 class CompositePlaceholder(Placeholder):

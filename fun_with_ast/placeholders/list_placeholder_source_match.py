@@ -1,7 +1,7 @@
-from fun_with_ast.composite_placeholder_source_match import CompositePlaceholder
+from placeholders.composite_placeholder_source_match import CompositePlaceholder
 from fun_with_ast.create_node import SyntaxFreeLine
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.node_placeholder_source_match import NodePlaceholder
+from placeholders.node_placeholder_source_match import NodePlaceholder
 
 
 class ListFieldPlaceholder(CompositePlaceholder):

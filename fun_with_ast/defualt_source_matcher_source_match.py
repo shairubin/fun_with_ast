@@ -1,9 +1,9 @@
 import pprint
 
-from fun_with_ast.placeholder_source_match import Placeholder
+from placeholders.placeholder_source_match import Placeholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList
-from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from placeholders.text_placeholder_source_match import TextPlaceholder
 
 
 class DefaultSourceMatcher(SourceMatcher):

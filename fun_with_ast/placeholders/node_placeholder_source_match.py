@@ -1,9 +1,9 @@
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.placeholder_source_match import Placeholder
+from placeholders.placeholder_source_match import Placeholder
 #from source_match import ValidateStart
-from fun_with_ast.string_parser import StripStartParens
+from placeholders.string_parser import StripStartParens
 
 
 def ValidateStart(full_string, starting_string):

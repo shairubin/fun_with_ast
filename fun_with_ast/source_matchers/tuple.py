@@ -1,6 +1,6 @@
 from fun_with_ast.defualt_source_matcher_source_match import DefaultSourceMatcher
-from fun_with_ast.list_placeholder_source_match import SeparatedListFieldPlaceholder
-from fun_with_ast.text_placeholder_source_match import TextPlaceholder
+from placeholders.list_placeholder_source_match import SeparatedListFieldPlaceholder
+from placeholders.text_placeholder_source_match import TextPlaceholder
 
 
 class TupleSourceMatcher(DefaultSourceMatcher):

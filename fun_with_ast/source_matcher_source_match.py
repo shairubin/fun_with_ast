@@ -1,9 +1,9 @@
 import re
 
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.node_placeholder_source_match import ValidateStart
-from fun_with_ast.string_parser import StripStartParens
-from fun_with_ast.text_placeholder_source_match import GetStartParenMatcher, GetEndParenMatcher, TextPlaceholder
+from placeholders.node_placeholder_source_match import ValidateStart
+from placeholders.string_parser import StripStartParens
+from placeholders.text_placeholder_source_match import GetStartParenMatcher, GetEndParenMatcher, TextPlaceholder
 
 
 def MatchPlaceholder(string, node, placeholder):

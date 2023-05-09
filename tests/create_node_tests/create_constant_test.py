@@ -1,5 +1,5 @@
-import create_node
-from fun_with_ast.create_node import GetNodeFromInput
+from manipulate_node import create_node
+from manipulate_node.create_node import GetNodeFromInput
 from tests.create_node_tests.create_node_test_based import CreateNodeTestBase
 
 class CreateStrTest(CreateNodeTestBase):

@@ -1,9 +1,8 @@
 import unittest
 
-from fun_with_ast.create_node import SyntaxFreeLine
+from manipulate_node.create_node import SyntaxFreeLine
 
-import create_node
-import source_match
+from manipulate_node import create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 
@@ -42,7 +41,7 @@ class IfMatcherTest(unittest.TestCase):
     def testBasicIf2(self):
         node = create_node.If(
             create_node.Name('True'),
-                            body=[create_node.Assign('a',1)])
+                            body=[create_node.Assign('a', 1)])
         string = """if True:\n  a=1"""
         self._assert_match_to_source(node, string)
 
@@ -63,7 +62,7 @@ class IfMatcherTest(unittest.TestCase):
 
     def testBasicIfElse3(self):
         node = create_node.If(
-            create_node.Name('True'), body=[create_node.Assign('a',1)], orelse=[create_node.Assign('a',2)])
+            create_node.Name('True'), body=[create_node.Assign('a', 1)], orelse=[create_node.Assign('a', 2)])
         string = """if True:\n  a=1\nelse:\n  a=2"""
         self._assert_match_to_source(node, string)
 

@@ -2,8 +2,7 @@ import unittest
 
 import pytest
 
-import create_node
-import source_match
+from manipulate_node import create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 

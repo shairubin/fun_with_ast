@@ -3,8 +3,7 @@ import fun_with_ast.node_tree_util
 
 
 
-def FixSourceIndentation(
-        module_node, node_to_fix, starting_parens=None):
+def FixSourceIndentation(module_node, node_to_fix, starting_parens=None):
     if starting_parens is None:
         starting_parens = []
     default_source = node_to_fix.matcher.GetSource()

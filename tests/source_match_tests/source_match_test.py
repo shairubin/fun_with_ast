@@ -23,7 +23,7 @@ import pytest
 from placeholders import list_placeholder_source_match
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
-import defualt_source_matcher_source_match
+from source_matchers import defualt_source_matcher_source_match
 import fun_with_ast.create_node as create_node
 import source_match
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher

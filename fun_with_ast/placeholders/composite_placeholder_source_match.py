@@ -21,9 +21,8 @@ class CompositePlaceholder(Placeholder):
         return parser.GetMatchedText()
 
     def GetSource(self, node):
-        return ''.join(
-            element.GetSource(node) for element in self.GetElements(node))
-
+        source = ''.join(element.GetSource(node) for element in self.GetElements(node))
+        return source
     def Validate(self, unused_node):
         return True
 

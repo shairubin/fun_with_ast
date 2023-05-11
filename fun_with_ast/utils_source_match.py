@@ -1,5 +1,5 @@
-import fun_with_ast.dynamic_matcher
-import fun_with_ast.node_tree_util
+from fun_with_ast import dynamic_matcher, node_tree_util
+
 
 
 

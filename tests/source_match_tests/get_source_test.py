@@ -3,7 +3,7 @@ import unittest
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.if_node import ManipulateIfNode
+from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode
 
 
 class GetSourceTest(unittest.TestCase):
@@ -51,6 +51,6 @@ class GetSourceTest(unittest.TestCase):
         self.assertEqual(source2, string2)
         manipulator = ManipulateIfNode(if_node)
         manipulator.add_nodes_to_body([call_node],1)
-        composed_source = GetSource(if_node)
+        composed_source = GetSource(if_node, assume_no_indent=True)
         expected_source = string1 + '\n   ' + string2
         self.assertEqual(expected_source, composed_source)

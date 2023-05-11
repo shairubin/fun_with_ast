@@ -10,5 +10,8 @@ class Placeholder(object):
     def GetSource(self, node):
         raise NotImplementedError
 
+    def IdentSource(self, node):
+        raise NotImplementedError
+
     def SetStartingParens(self, starting_parens):
         self.starting_parens = starting_parens

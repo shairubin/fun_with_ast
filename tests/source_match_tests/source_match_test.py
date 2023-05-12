@@ -20,7 +20,7 @@ import unittest
 
 import pytest
 
-from placeholders import list_placeholder_source_match
+from fun_with_ast.placeholders import list_placeholder_source_match
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 import manipulate_node.create_node as create_node

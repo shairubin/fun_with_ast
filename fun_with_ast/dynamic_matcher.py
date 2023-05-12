@@ -2,6 +2,7 @@
 import _ast
 import sys
 
+import fun_with_ast
 
 import manipulate_node.create_node
 def GetDynamicMatcher(node, starting_parens=None, parent_node=None):

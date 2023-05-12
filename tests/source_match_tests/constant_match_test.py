@@ -71,6 +71,9 @@ class ConstantNumMatcherTest(unittest.TestCase):
     def testWithMultiParansAndWS(self):
         node = create_node.Num('1')
         string = '((   1   )    ) '
+        self._validate_match(node, string)
+
+    def _validate_match(self, node, string):
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
@@ -79,15 +82,19 @@ class ConstantNumMatcherTest(unittest.TestCase):
         node = create_node.Num('1')
         string = '((   1   )     '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertNotEqual(string, matcher.GetSource())
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
+    def testNoMatchMultiParansAndWS2(self):
+        node = create_node.Num('1')
+        string = '(   1   )     )'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
 
     def testLargeNumberMatch(self):
         node = create_node.Num('1234567890987654321')
         string = '1234567890987654321'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
 
     def testBasicNoMatchNum(self):
         node = create_node.Num('2')
@@ -96,24 +103,18 @@ class ConstantNumMatcherTest(unittest.TestCase):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
         string = '2'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
+        self._validate_match(node, string)
 
     def testMatchBool(self):
         node = create_node.Bool(False)
         string = 'False'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
 
     def testMatchBoolParans(self):
         node = create_node.Bool(False)
         string = '(False)'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
+
 
 class ConstantStrMatcherTest(unittest.TestCase):
 
@@ -123,6 +124,9 @@ class ConstantStrMatcherTest(unittest.TestCase):
         node = create_node.Str('1')
         string = "'1'"
         matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+    def _validate_match(self, matcher, string):
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
@@ -131,50 +135,37 @@ class ConstantStrMatcherTest(unittest.TestCase):
         node = create_node.Str("1")
         string = "\"1\""
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchEmpty(self):
         node = create_node.Str('')
         string = "''"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchEmpty2(self):
         node = create_node.Str('')
         string = "\"\""
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchEmpty3(self):
         node = create_node.Str('')
         string = "\"\"''"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchMultiPart(self):
         node = create_node.Str("'1''2'")
         string = "\"'1''2'\""
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchMultiPart2(self):
         node = create_node.Str('1''2')
         string = '\'1\'\'2\''
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
+        self._validate_match(matcher, string)
 
     def testNoMatchMultiPart(self):
         node = create_node.Str("\"'1''2'\"")
@@ -188,17 +179,13 @@ class ConstantStrMatcherTest(unittest.TestCase):
         node = create_node.Str('1''2')
         string = "'12'"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicMatchStrWithWS(self):
         node = create_node.Str('  1  ')
         string = "'  1  '"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._validate_match(matcher, string)
 
     def testBasicNoMatchStr(self):
         node = create_node.Str('1')

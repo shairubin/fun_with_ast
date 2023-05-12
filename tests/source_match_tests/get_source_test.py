@@ -1,9 +1,9 @@
 import unittest
 
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
-from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode
+from manipulate_node.if_manipulator import ManipulateIfNode
 
 
 class GetSourceTest(unittest.TestCase):

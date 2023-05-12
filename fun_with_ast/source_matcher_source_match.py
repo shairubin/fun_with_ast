@@ -54,6 +54,10 @@ class SourceMatcher(object):
     def GetSource(self):
         raise NotImplementedError
 
+    def FixIndentation(self, indentation):
+        """Fix the indentation of the source."""
+        raise NotImplementedError
+
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
         remaining_string = string
@@ -84,7 +88,13 @@ class SourceMatcher(object):
                 matched_parts.append(end_paren_matcher.matched_text)
                 self.paren_wrapped = True
         except BadlySpecifiedTemplateError:
+            #if len(self.start_paren_matchers) != len(self.end_paren_matchers):
+            #    raise BadlySpecifiedTemplateError(
+            #        'string should have ended with paren')
             pass
+
+        if not remaining_string and len(self.start_paren_matchers) != len(self.end_paren_matchers):
+            raise BadlySpecifiedTemplateError('string should have ended with paren')
 
         new_end_matchers = []
         new_start_matchers = []

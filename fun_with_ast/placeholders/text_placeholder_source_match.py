@@ -8,7 +8,7 @@ import re
 
 
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from placeholders.placeholder_source_match import Placeholder
+from fun_with_ast.placeholders.base_placeholder import Placeholder
 
 
 class TextPlaceholder(Placeholder):
@@ -90,5 +90,5 @@ def GetWhiteSpaceMatcher():
 
 
 def GetEndParenMatcher():
-    return TextPlaceholder(r'\s*\)[ \t]*', '')
+    return TextPlaceholder(r'[\s]*\)[ \t]*', '')
 

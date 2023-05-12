@@ -14,36 +14,32 @@ class ArgumentsMatcherTest(unittest.TestCase):
         node = create_node.arguments()
         string = ''
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
+
 
     def testSingleArg(self):
         node = create_node.arguments(args=['a'])
         string = 'a'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testMultipleArgs(self):
         node = create_node.arguments(args=['a', 'b'])
         string = 'a, b'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testDefault(self):
         node = create_node.arguments(args=['a'], defaults=['b'])
         string = 'a=b'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testDefaults(self):
         node = create_node.arguments(args=['a', 'c'], defaults=['b', 'd'])
         string = 'a=b, c=d'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testArgsAndDefaults(self):
         node = create_node.arguments(
@@ -60,8 +56,7 @@ class ArgumentsMatcherTest(unittest.TestCase):
             vararg='args')
         string = 'e, f, a=b, c=d, *args'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testMatchArgsDefaultsBool(self):
         node = create_node.arguments(
@@ -69,16 +64,14 @@ class ArgumentsMatcherTest(unittest.TestCase):
         string = 'a = False'
 #        matcher = GetDynamicMatcher(node)
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testMatchArgsDefaultsConst(self):
         node = create_node.arguments(
             args=['a'], defaults=[1])
         string = 'a = 1 \t  '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(matcher, string)
 
     def testNoMatchArgsDefaultsConst(self):
         node = create_node.arguments(
@@ -94,5 +87,9 @@ class ArgumentsMatcherTest(unittest.TestCase):
             vararg='args', kwarg='kwargs')
         string = 'e, f, a=b, c=d, *args, **kwargs'
         matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+    def _validate_match(self, matcher, string):
         matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        matched_text = matcher.GetSource()
+        self.assertEqual(string, matched_text)

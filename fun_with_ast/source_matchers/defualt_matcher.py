@@ -1,9 +1,11 @@
 import pprint
+import re
 
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
+from  fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder
 
 
 class DefaultSourceMatcher(SourceMatcher):
@@ -47,8 +49,8 @@ class DefaultSourceMatcher(SourceMatcher):
             expected_parts and the string.
           ValueError: If there is more than one TextPlaceholder in a rwo
         """
-#        _ , remaining_string = self.MatchCommentEOL(string, True)
-        remaining_string = self.MatchStartParens(string)
+        remaining_string = self.MatchWhiteSpaces(string)
+        remaining_string = self.MatchStartParens(remaining_string)
 
         try:
             remaining_string = MatchPlaceholderList(
@@ -102,3 +104,10 @@ class DefaultSourceMatcher(SourceMatcher):
                 .format(super(DefaultSourceMatcher, self).__repr__(),
                         self.node,
                         pprint.pformat(self.expected_parts)))
+
+    def MatchWhiteSpaces(self, remaining_string):
+        if re.match(r'\S', remaining_string):
+            return remaining_string
+        ws_placeholder = WhiteSpaceTextPlaceholder()
+        string = ws_placeholder.Match(None, remaining_string)
+        return remaining_string

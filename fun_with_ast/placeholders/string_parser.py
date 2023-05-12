@@ -10,7 +10,7 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
-from fun_with_ast.placeholders.text_placeholder_source_match import GetStartParenMatcher
+from fun_with_ast.placeholders.text_placeholder import GetStartParenMatcher
 
 
 def StripStartParens(string):

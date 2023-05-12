@@ -1,7 +1,7 @@
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matcher_source_match import SourceMatcher
 from placeholders.string_parser import StringParser
-from placeholders.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 from fun_with_ast.utils_source_match import _GetListDefault
 
 

@@ -1,6 +1,6 @@
-from placeholders.composite_placeholder_source_match import CompositePlaceholder
-from placeholders.node_placeholder_source_match import NodePlaceholder
-from placeholders.text_placeholder_source_match import TextPlaceholder
+from fun_with_ast.placeholders.composite_placeholder_source_match import CompositePlaceholder
+from fun_with_ast.placeholders.node_placeholder_source_match import NodePlaceholder
+from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 
 
 class ArgsDefaultsPlaceholder(CompositePlaceholder):

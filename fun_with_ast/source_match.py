@@ -10,7 +10,7 @@ from placeholders.args_placeholder_source_match import ArgsDefaultsPlaceholder, 
 from placeholders.composite_placeholder_source_match import FieldPlaceholder
 from placeholders.list_placeholder_source_match import ListFieldPlaceholder, SeparatedListFieldPlaceholder
 
-from placeholders.text_placeholder_source_match import TextPlaceholder, GetStartParenMatcher
+from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher
 
 # TODO: Consolidate with StringParser
 from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList

@@ -1,9 +1,10 @@
 import re
 
+from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
+
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from placeholders.node_placeholder_source_match import ValidateStart
 from placeholders.string_parser import StripStartParens
-from placeholders.text_placeholder_source_match import GetStartParenMatcher, GetEndParenMatcher, TextPlaceholder
 
 
 def MatchPlaceholder(string, node, placeholder):
@@ -89,9 +90,6 @@ class SourceMatcher(object):
                 matched_parts.append(end_paren_matcher.matched_text)
                 self.paren_wrapped = True
         except BadlySpecifiedTemplateError:
-            #if len(self.start_paren_matchers) != len(self.end_paren_matchers):
-            #    raise BadlySpecifiedTemplateError(
-            #        'string should have ended with paren')
             pass
 
         if not remaining_string and len(self.start_paren_matchers) != len(self.end_paren_matchers):

@@ -80,7 +80,8 @@ class SourceMatcher(object):
         remaining_string = string
         matched_parts = []
         try:
-            for unused_i in range(len(self.start_paren_matchers)):
+            while True:
+            #for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = GetEndParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, end_paren_matcher)

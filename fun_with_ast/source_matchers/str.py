@@ -3,7 +3,7 @@ import re
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.source_match import MatchPlaceholder
-from fun_with_ast.source_matcher_source_match import SourceMatcher
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.placeholders.string_part_placeholder import StringPartPlaceholder
 from fun_with_ast.utils_source_match import _GetListDefault
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder

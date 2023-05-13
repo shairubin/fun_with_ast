@@ -1,9 +1,8 @@
 import pprint
-import re
 
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 from  fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder
 
@@ -51,6 +50,8 @@ class DefaultSourceMatcher(SourceMatcher):
         """
         remaining_string = self.MatchWhiteSpaces(string)
         remaining_string = self.MatchStartParens(remaining_string)
+
+#        remaining_string = self.MatchStartParens(string)
 
         try:
             remaining_string = MatchPlaceholderList(
@@ -106,8 +107,8 @@ class DefaultSourceMatcher(SourceMatcher):
                         pprint.pformat(self.expected_parts)))
 
     def MatchWhiteSpaces(self, remaining_string):
-        if re.match(r'\S', remaining_string):
-            return remaining_string
         ws_placeholder = WhiteSpaceTextPlaceholder()
-        string = ws_placeholder.Match(None, remaining_string)
+        match_ws = ws_placeholder.Match(None, remaining_string)
+        remaining_string = remaining_string[len(match_ws):]
+        self.start_whitespace_matchers.append(ws_placeholder)
         return remaining_string

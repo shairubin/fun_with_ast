@@ -13,14 +13,16 @@ from placeholders.list_placeholder_source_match import ListFieldPlaceholder, Sep
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher
 
 # TODO: Consolidate with StringParser
-from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
 from fun_with_ast.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
+from fun_with_ast.source_matchers.syntaxfreeline_matcher import SyntaxFreeLineMatcher
 
 
-class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher):
+class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,
+                SyntaxFreeLineMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass

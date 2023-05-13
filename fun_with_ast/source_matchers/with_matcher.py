@@ -2,7 +2,7 @@ import _ast
 
 from fun_with_ast.source_matchers.body import BodyPlaceholder
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.source_matcher_source_match import SourceMatcher, MatchPlaceholderList
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 from fun_with_ast.placeholders.list_placeholder_source_match import SeparatedListFieldPlaceholder
 

@@ -19,11 +19,11 @@ class BodyPlaceholderTest(unittest.TestCase):
     def testMatchFieldAddsEmptySyntaxFreeLine(self):
         body_node_foobar = create_node.Expr(create_node.Name('foobar'))
         body_node_a = create_node.Expr(create_node.Name('a'))
-        node = create_node.Module(body_node_foobar, body_node_a)
+        module_node = create_node.Module(body_node_foobar, body_node_a)
         placeholder = BodyPlaceholder('body')
-        matched_text = placeholder.Match(node, 'foobar\n\na\n')
+        matched_text = placeholder.Match(module_node, 'foobar\n\na\n')
         self.assertEqual(matched_text, 'foobar\n\na\n')
-        test_output = placeholder.GetSource(node)
+        test_output = placeholder.GetSource(module_node)
         self.assertEqual(test_output, 'foobar\n\na\n')
 
     def testMatchFieldAddsEmptySyntaxFreeLineWithComment(self):

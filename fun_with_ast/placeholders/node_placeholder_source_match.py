@@ -1,3 +1,6 @@
+import _ast
+import ast
+
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.get_source import GetSource
@@ -29,4 +32,9 @@ class NodePlaceholder(Placeholder):
         return node_src
 
     def GetSource(self, unused_node):
+        if isinstance(self.node, ast.Expr) :
+            #raise NotImplementedError('Expr nodes must have a matcher attribute')
+            pass
+        if isinstance(self.node, ast.Expr)  and not hasattr(self.node, 'matcher') :
+            raise NotImplementedError('Expr nodes must have a matcher attribute')
         return GetSource(self.node)

@@ -55,9 +55,13 @@ class SourceMatcher(object):
     def GetSource(self):
         raise NotImplementedError
 
-    def FixIndentation(self, indentation):
+    def FixIndentation(self, new_ident):
         """Fix the indentation of the source."""
-        raise NotImplementedError
+        current_ident = len(self.start_whitespace_matchers[0].matched_text)
+        if current_ident == new_ident:
+            return
+        else:
+            self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
 
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""

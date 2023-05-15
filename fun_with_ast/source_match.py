@@ -120,7 +120,7 @@ def get_Attribute_expected_parts():
 
 def get_AugAssign_expected_parts():
     return [
-        TextPlaceholder(r' *', ''),
+#        TextPlaceholder(r' *', ''),
         FieldPlaceholder('target'),
         TextPlaceholder(r' *', ' '),
         FieldPlaceholder('op'),

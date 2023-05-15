@@ -13,20 +13,24 @@ class ManipulateIfNode():
         self._validate_rules_for_insertion(location, nodes)
         body_ident = self._get_body_indentation()
         if isinstance(nodes[0], ast.Expr):
-           expr_node = nodes[0]
-           module_node = create_node.Module(expr_node)
-           expr_value_source = expr_node.value.matcher.GetSource()
-           if expr_value_source.endswith("\n"):
-               raise NotImplementedError("expr value source cannot end with newline")
-           else:
-                expr_value_source += "\n"
-           placeholder = BodyPlaceholder('body')
-           placeholder.Match(module_node, expr_value_source)
+           module_node = self._handle_expr_node(nodes)
            self.node.body.insert(location, module_node.body[0])
         else:
             self.node.body.insert(location, nodes[0])
         self._add_newlines()
         self._fix_indentation(body_ident)
+
+    def _handle_expr_node(self, nodes):
+        expr_node = nodes[0]
+        module_node = create_node.Module(expr_node)
+        expr_value_source = expr_node.value.matcher.GetSource()
+        if expr_value_source.endswith("\n"):
+            raise NotImplementedError("expr value source cannot end with newline")
+        else:
+            expr_value_source += "\n"
+        placeholder = BodyPlaceholder('body')
+        placeholder.Match(module_node, expr_value_source)
+        return module_node
 
     def _validate_rules_for_insertion(self, location, nodes):
         if len(nodes) > 1:

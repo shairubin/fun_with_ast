@@ -18,7 +18,7 @@ from fun_with_ast.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
-from fun_with_ast.source_matchers.syntaxfreeline_matcher import SyntaxFreeLineMatcher
+from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,

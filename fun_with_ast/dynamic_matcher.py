@@ -107,7 +107,7 @@ _dynamic_matchers = {
     _ast.SetComp: ['get_SetComp_expected_parts', 'fun_with_ast.source_match'],
     _ast.Subscript: ['get_Subscript_expected_parts', 'fun_with_ast.source_match'],
     #    _ast.Str: ['StrSourceMatcher', 'fun_with_ast.source_match'],
-    _ast.Constant: ['ConstantSourceMatcher', 'fun_with_ast.constant_source_match'],
+    _ast.Constant: ['ConstantSourceMatcher', 'fun_with_ast.source_match'],
     manipulate_node.create_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher', 'fun_with_ast.source_match'],
 #    manipulate_node.create_node.SyntaxFreeLine: ['get_SyntaxFreeLine_expected_parts', 'fun_with_ast.source_match'],
     manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],

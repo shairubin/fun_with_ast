@@ -19,10 +19,11 @@ from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
+from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,
-                SyntaxFreeLineMatcher):
+                SyntaxFreeLineMatcher, ConstantSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass

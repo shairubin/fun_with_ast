@@ -1,13 +1,5 @@
-# #from fun_with_ast.source_match import GetStartParenMatcher
-#
-# from placeholder_source_match import Placeholder
-# #from source_match import StripStartParens, BadlySpecifiedTemplateError, GetSource
-# from text_placeholder_source_match import TextPlaceholder
-#
-#
-#
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.placeholders.text_placeholder import GetStartParenMatcher

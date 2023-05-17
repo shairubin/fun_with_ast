@@ -13,18 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-Tests for source_match.py
+Tests for py
 """
 
 import unittest
 
 import pytest
-
+from fun_with_ast.placeholders.list_placeholder_source_match import SeparatedListFieldPlaceholder
+from fun_with_ast.placeholders.composite_placeholder_source_match import FieldPlaceholder
+from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 from fun_with_ast.placeholders import list_placeholder_source_match
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-
-import manipulate_node.create_node as create_node
-import source_match
+import fun_with_ast.manipulate_node.create_node as create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.source_matchers import defualt_matcher
 
@@ -34,32 +34,32 @@ DEFAULT_TEXT = 'default'
 class TextPlaceholderTest(unittest.TestCase):
 
     def testMatchSimpleText(self):
-        placeholder = source_match.TextPlaceholder('.*', DEFAULT_TEXT)
+        placeholder = TextPlaceholder('.*', DEFAULT_TEXT)
         matched_text = placeholder.Match(None, 'to match')
         self.assertEqual(matched_text, 'to match')
         test_output = placeholder.GetSource(None)
         self.assertEqual(test_output, 'to match')
 
     def testPartialMatchEnd(self):
-        placeholder = source_match.TextPlaceholder(r'def \(', DEFAULT_TEXT)
+        placeholder = TextPlaceholder(r'def \(', DEFAULT_TEXT)
         matched_text = placeholder.Match(None, 'def (foo')
         self.assertEqual(matched_text, 'def (')
         test_output = placeholder.GetSource(None)
         self.assertEqual(test_output, 'def (')
 
     def testMatchWithoutMatchingReturnsDefault(self):
-        placeholder = source_match.TextPlaceholder('.*', DEFAULT_TEXT)
+        placeholder = TextPlaceholder('.*', DEFAULT_TEXT)
         test_output = placeholder.GetSource(None)
         self.assertEqual(test_output, DEFAULT_TEXT)
 
     def testCantMatchThrowsError(self):
-        placeholder = source_match.TextPlaceholder('doesnt match', DEFAULT_TEXT)
+        placeholder = TextPlaceholder('doesnt match', DEFAULT_TEXT)
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(None, 'to match')
 
     def testMatchWhitespace(self):
         whitespace_text = '  \t \n  '
-        placeholder = source_match.TextPlaceholder(r'\s*')
+        placeholder = TextPlaceholder(r'\s*')
         matched_text = placeholder.Match(None, whitespace_text)
         self.assertEqual(matched_text, whitespace_text)
         test_output = placeholder.GetSource(None)
@@ -67,7 +67,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testWhitespaceMatchesLineContinuations(self):
         whitespace_text = '  \t \n \\\n  \\\n  '
-        placeholder = source_match.TextPlaceholder(r'\s*')
+        placeholder = TextPlaceholder(r'\s*')
         matched_text = placeholder.Match(None, whitespace_text)
         self.assertEqual(matched_text, whitespace_text)
         test_output = placeholder.GetSource(None)
@@ -75,7 +75,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testWhitespaceMatchesComments(self):
         whitespace_text = '  \t # abc\n  '
-        placeholder = source_match.TextPlaceholder(r'\s*')
+        placeholder = TextPlaceholder(r'\s*')
         matched_text = placeholder.Match(None, whitespace_text)
         self.assertEqual(matched_text, whitespace_text)
         test_output = placeholder.GetSource(None)
@@ -83,7 +83,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testMultipleStatementsSeparatedBySemicolon(self):
         whitespace_text = 'pdb;pdb'
-        placeholder = source_match.TextPlaceholder(r'pdb\npdb')
+        placeholder = TextPlaceholder(r'pdb\npdb')
         matched_text = placeholder.Match(None, whitespace_text)
         self.assertEqual(matched_text, whitespace_text)
         test_output = placeholder.GetSource(None)
@@ -91,7 +91,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testCommentAfterExpectedLinebreak(self):
         whitespace_text = 'pdb  #  \t A comment\n'
-        placeholder = source_match.TextPlaceholder(r'pdb\n')
+        placeholder = TextPlaceholder(r'pdb\n')
         matched_text = placeholder.Match(None, whitespace_text)
         self.assertEqual(matched_text, whitespace_text)
         test_output = placeholder.GetSource(None)
@@ -99,7 +99,7 @@ class TextPlaceholderTest(unittest.TestCase):
 
     def testCommentInNewLine(self):
         text = '\n   #  A comment\n'
-        placeholder = source_match.TextPlaceholder('\n   #  A comment\n')
+        placeholder = TextPlaceholder('\n   #  A comment\n')
         matched_text = placeholder.Match(None, text)
         self.assertEqual(matched_text, text)
         test_output = placeholder.GetSource(None)
@@ -110,7 +110,7 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testMatchSimpleFieldWithSpace(self):
         node = create_node.Name('foobar')
-        placeholder = source_match.FieldPlaceholder('id')
+        placeholder = FieldPlaceholder('id')
         matched_text = placeholder.Match(node, 'foobar\t')
         self.assertEqual(matched_text, 'foobar')
         test_output = placeholder.GetSource(node)
@@ -127,7 +127,7 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testMatchSimpleField(self):
         node = create_node.Name('foobar')
-        placeholder = source_match.FieldPlaceholder('id')
+        placeholder = FieldPlaceholder('id')
         matched_text = placeholder.Match(node, 'foobar')
         self.assertEqual(matched_text, 'foobar')
         test_output = placeholder.GetSource(node)
@@ -135,8 +135,8 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testPartialMatch(self):
         node = create_node.Name('bar')
-        placeholder = source_match.FieldPlaceholder(
-            'id', before_placeholder=source_match.TextPlaceholder('foo'))
+        placeholder = FieldPlaceholder(
+            'id', before_placeholder=TextPlaceholder('foo'))
         matched_text = placeholder.Match(node, 'foobarbaz')
         self.assertEqual(matched_text, 'foobar')
         test_output = placeholder.GetSource(node)
@@ -144,9 +144,9 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testBeforePlaceholder(self):
         node = create_node.Name('bar')
-        placeholder = source_match.FieldPlaceholder(
+        placeholder = FieldPlaceholder(
             'id',
-            before_placeholder=source_match.TextPlaceholder('before '))
+            before_placeholder=TextPlaceholder('before '))
         matched_text = placeholder.Match(node, 'before bar')
         self.assertEqual(matched_text, 'before bar')
         test_output = placeholder.GetSource(node)
@@ -154,20 +154,20 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testCantMatchThrowsError(self):
         node = create_node.Name('doesnt_match')
-        placeholder = source_match.FieldPlaceholder('id')
+        placeholder = FieldPlaceholder('id')
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'to match')
 
     def testRaisesErrorIfFieldIsList(self):
         node = create_node.FunctionDef('function_name')
-        placeholder = source_match.FieldPlaceholder('body')
+        placeholder = FieldPlaceholder('body')
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'invalid_match')
 
     def testChangingValueChangesOutput(self):
         node = create_node.Name('bar')
-        placeholder = source_match.FieldPlaceholder(
-            'id', before_placeholder=source_match.TextPlaceholder('foo'))
+        placeholder = FieldPlaceholder(
+            'id', before_placeholder=TextPlaceholder('foo'))
         matched_text = placeholder.Match(node, 'foobarbaz')
         self.assertEqual(matched_text, 'foobar')
         node.id = 'hello'
@@ -176,7 +176,7 @@ class FieldPlaceholderTest(unittest.TestCase):
 
     def testWithoutMatch(self):
         node = create_node.Name('bar')
-        placeholder = source_match.FieldPlaceholder('id')
+        placeholder = FieldPlaceholder('id')
         test_output = placeholder.GetSource(node)
         self.assertEqual(test_output, 'bar')
 
@@ -208,8 +208,8 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         node = create_node.FunctionDef('function_name', body=body_nodes)
         placeholder = list_placeholder_source_match.ListFieldPlaceholder(
             'body',
-            before_placeholder=source_match.TextPlaceholder('z'),
-            after_placeholder=source_match.TextPlaceholder('zz'))
+            before_placeholder=TextPlaceholder('z'),
+            after_placeholder=TextPlaceholder('zz'))
         matched_text = placeholder.Match(node, 'zfoobar\nzzzbaz\nzz')
         self.assertEqual(matched_text, 'zfoobar\nzzzbaz\nzz')
         test_output = placeholder.GetSource(node)
@@ -218,7 +218,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
     def testMatchRaisesErrorIfFieldIsNotList(self):
         node = create_node.Name('bar')
         placeholder = list_placeholder_source_match.ListFieldPlaceholder(
-            'id', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
+            'id', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'foobar\nbaz')
@@ -227,7 +227,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         body_node = create_node.Expr(create_node.Name('foobar'))
         node = create_node.FunctionDef('function_name', body=[body_node])
         placeholder = list_placeholder_source_match.ListFieldPlaceholder(
-            'body', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
+            'body', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'no match here')
@@ -237,7 +237,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
         placeholder = list_placeholder_source_match.ListFieldPlaceholder(
-            'body', before_placeholder=source_match.TextPlaceholder('\n', '\n'),
+            'body', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
             placeholder.Match(node, 'foobarbaz')
@@ -250,7 +250,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         node = create_node.FunctionDef('function_name', body=body_nodes)
         module_node = create_node.Module(node)
         placeholder = list_placeholder_source_match.ListFieldPlaceholder(
-            'body', before_placeholder=source_match.TextPlaceholder('', ', '),
+            'body', before_placeholder=TextPlaceholder('', ', '),
             exclude_first_before=True)
         test_output = placeholder.GetSource(node)
         self.assertEqual(test_output, '  foobar\n,   baz\n')
@@ -259,41 +259,41 @@ class SeparatedListFieldPlaceholderTest(unittest.TestCase):
 
     def testMatchSepertedListSingleElement(self):
         node = create_node.Assign('foo', 1)
-        placeholder = source_match.SeparatedListFieldPlaceholder('targets',
-                                                                 after__separator_placeholder=source_match.TextPlaceholder(r'[ \t]*=[ \t]*', '='))
+        placeholder = SeparatedListFieldPlaceholder('targets',
+                                                                 after__separator_placeholder=TextPlaceholder(r'[ \t]*=[ \t]*', '='))
         matched_text = placeholder.Match(node, 'foo=1')
         self.assertEqual(matched_text, 'foo=')
-        placeholder = source_match.FieldPlaceholder('value')
+        placeholder = FieldPlaceholder('value')
         matched_text = placeholder.Match(node, '1')
         self.assertEqual(matched_text, '1')
 
     def testMatchSepertedListSingleElementWithWS(self):
         node = create_node.Assign('foo', 1)
-        placeholder = source_match.SeparatedListFieldPlaceholder('targets',
-                                                                 after__separator_placeholder=source_match.TextPlaceholder(r'[ \t]*=[ \t]*', '='))
+        placeholder = SeparatedListFieldPlaceholder('targets',
+                                                                 after__separator_placeholder=TextPlaceholder(r'[ \t]*=[ \t]*', '='))
         matched_text = placeholder.Match(node, 'foo \t   =\t  1')
         self.assertEqual(matched_text, 'foo \t   =\t  ')
-        placeholder = source_match.FieldPlaceholder('value')
+        placeholder = FieldPlaceholder('value')
         matched_text = placeholder.Match(node, '1')
         self.assertEqual(matched_text, '1')
 
     def testMatchSepertedListSingleElementWithWSWithComment(self):
         node = create_node.Assign('foo', 1)
-        placeholder = source_match.SeparatedListFieldPlaceholder('targets',
-                                                                 after__separator_placeholder=source_match.TextPlaceholder(r'[ \t]*=[ \t]*', '='))
+        placeholder = SeparatedListFieldPlaceholder('targets',
+                                                                 after__separator_placeholder=TextPlaceholder(r'[ \t]*=[ \t]*', '='))
         matched_text = placeholder.Match(node, 'foo \t   =\t  1 # comment')
         self.assertEqual(matched_text, 'foo \t   =\t  ')
-        placeholder = source_match.FieldPlaceholder('value')
+        placeholder = FieldPlaceholder('value')
         matched_text = placeholder.Match(node, '1')
         self.assertEqual(matched_text, '1')
 
     def testMatchSepertedList(self):
         node = create_node.Assign(['foo', 'bar'], 2)
-        placeholder = source_match.SeparatedListFieldPlaceholder('targets',
-                                                                 after__separator_placeholder=source_match.TextPlaceholder(r'[ \t]*=[ \t]*', '='))
+        placeholder = SeparatedListFieldPlaceholder('targets',
+                                                                 after__separator_placeholder=TextPlaceholder(r'[ \t]*=[ \t]*', '='))
         matched_text = placeholder.Match(node, 'foo=bar=2')
         self.assertEqual(matched_text, 'foo=bar=')
-        placeholder = source_match.FieldPlaceholder('value')
+        placeholder = FieldPlaceholder('value')
         matched_text = placeholder.Match(node, '2')
         self.assertEqual(matched_text, '2')
 
@@ -307,34 +307,34 @@ class TestDefaultSourceMatcher(unittest.TestCase):
 
     def testBasicTextMatch(self):
         matcher = defualt_matcher.DefaultSourceMatcher(
-            None, [source_match.TextPlaceholder('blah', DEFAULT_TEXT)])
+            None, [TextPlaceholder('blah', DEFAULT_TEXT)])
         matcher.Match('blah')
         self.assertEqual(matcher.GetSource(), 'blah')
 
     def testRaisesErrorIfNoTextMatch(self):
         matcher = defualt_matcher.DefaultSourceMatcher(
-            None, [source_match.TextPlaceholder('blah', DEFAULT_TEXT)])
+            None, [TextPlaceholder('blah', DEFAULT_TEXT)])
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('bla')
 
     def testBasicFieldMatch(self):
         node = create_node.Name('bar')
         matcher = defualt_matcher.DefaultSourceMatcher(
-            node, [source_match.FieldPlaceholder('id')])
+            node, [FieldPlaceholder('id')])
         matcher.Match('bar')
         self.assertEqual(matcher.GetSource(), 'bar')
 
     def testRaisesErrorIfNoFieldMatch(self):
         node = create_node.Name('bar')
         matcher = defualt_matcher.DefaultSourceMatcher(
-            node, [source_match.FieldPlaceholder('id')])
+            node, [FieldPlaceholder('id')])
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('ba')
 
     def testBasicFieldMatchWhenChangedFieldValue(self):
         node = create_node.Name('bar')
         matcher = defualt_matcher.DefaultSourceMatcher(
-            node, [source_match.FieldPlaceholder('id')])
+            node, [FieldPlaceholder('id')])
         matcher.Match('bar')
         node.id = 'foo'
         self.assertEqual(matcher.GetSource(), 'foo')
@@ -374,9 +374,9 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         node = create_node.FunctionDef('function_name', body=body_nodes)
         matcher = defualt_matcher.DefaultSourceMatcher(
             node,
-            [source_match.TextPlaceholder('def ', 'def '),
-             source_match.FieldPlaceholder('name'),
-             source_match.TextPlaceholder(r'\(\)', r'()'),
+            [TextPlaceholder('def ', 'def '),
+             FieldPlaceholder('name'),
+             TextPlaceholder(r'\(\)', r'()'),
              list_placeholder_source_match.ListFieldPlaceholder('body')])
         matcher.Match('def function_name()foobar\nbaz\n')
         node.body[0].value.id = 'hello'
@@ -391,11 +391,11 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         module_node = create_node.Module(node)
         matcher = defualt_matcher.DefaultSourceMatcher(
             node,
-            [source_match.TextPlaceholder('def ', 'default '),
-             source_match.FieldPlaceholder('name'),
-             source_match.TextPlaceholder(r'\(\)', r'()'),
-             source_match.SeparatedListFieldPlaceholder(
-                 'body', source_match.TextPlaceholder('\n', ', '))])
+            [TextPlaceholder('def ', 'default '),
+             FieldPlaceholder('name'),
+             TextPlaceholder(r'\(\)', r'()'),
+             SeparatedListFieldPlaceholder(
+                 'body', TextPlaceholder('\n', ', '))])
         node.body[0].value.id = 'hello'
         self.assertEqual(matcher.GetSource(),
                          'default function_name()  hello\n,   baz\n')

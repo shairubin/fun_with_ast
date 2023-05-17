@@ -1,6 +1,6 @@
 import unittest
 
-from manipulate_node import create_node as create_node
+from fun_with_ast.manipulate_node import create_node as create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
 

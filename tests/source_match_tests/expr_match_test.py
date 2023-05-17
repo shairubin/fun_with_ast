@@ -1,8 +1,8 @@
 import unittest
 
-from manipulate_node import create_node as create_node
+from fun_with_ast.manipulate_node import create_node as create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
-from manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 
 
 class ExprMatcherTest(unittest.TestCase):

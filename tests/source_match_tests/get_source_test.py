@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
 
 

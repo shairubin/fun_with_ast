@@ -1,9 +1,3 @@
-# import re
-#
-# from placeholder_source_match import Placeholder
-# from exceptions_source_match import BadlySpecifiedTemplateError
-#
-#
 import re
 
 

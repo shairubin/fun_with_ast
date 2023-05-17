@@ -23,7 +23,7 @@ from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMat
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,
-                SyntaxFreeLineMatcher, ConstantSourceMatcher):
+                 ConstantSourceMatcher, SyntaxFreeLineMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass

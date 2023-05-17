@@ -2,7 +2,7 @@
 import _ast
 import sys
 
-import fun_with_ast
+import fun_with_ast.manipulate_node.create_node
 
 import manipulate_node.create_node
 def GetDynamicMatcher(node, starting_parens=None, parent_node=None):
@@ -108,7 +108,7 @@ _dynamic_matchers = {
     _ast.Subscript: ['get_Subscript_expected_parts', 'fun_with_ast.source_match'],
     #    _ast.Str: ['StrSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Constant: ['ConstantSourceMatcher', 'fun_with_ast.source_match'],
-    manipulate_node.create_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher', 'fun_with_ast.source_match'],
+    fun_with_ast.manipulate_node.create_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher', 'fun_with_ast.source_matchers.syntaxfreeline'],
 #    manipulate_node.create_node.SyntaxFreeLine: ['get_SyntaxFreeLine_expected_parts', 'fun_with_ast.source_match'],
     manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
     _ast.Tuple: ['TupleSourceMatcher', 'fun_with_ast.source_match'],

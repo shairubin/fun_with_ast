@@ -2,9 +2,8 @@ import unittest
 
 import pytest
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
-from manipulate_node.create_node import SyntaxFreeLine
+from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
 
 
 class SyntaxFreeLineMatcherTest(unittest.TestCase):

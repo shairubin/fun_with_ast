@@ -51,7 +51,6 @@ class DefaultSourceMatcher(SourceMatcher):
         remaining_string = self.MatchWhiteSpaces(string)
         remaining_string = self.MatchStartParens(remaining_string)
 
-#        remaining_string = self.MatchStartParens(string)
 
         try:
             remaining_string = MatchPlaceholderList(
@@ -107,8 +106,8 @@ class DefaultSourceMatcher(SourceMatcher):
                         pprint.pformat(self.expected_parts)))
 
     def MatchWhiteSpaces(self, remaining_string):
-        ws_placeholder = WhiteSpaceTextPlaceholder()
+        ws_placeholder = self.start_whitespace_matchers[0]
         match_ws = ws_placeholder.Match(None, remaining_string)
         remaining_string = remaining_string[len(match_ws):]
-        self.start_whitespace_matchers.append(ws_placeholder)
+        #self.start_whitespace_matchers.append(ws_placeholder)
         return remaining_string

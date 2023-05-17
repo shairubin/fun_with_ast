@@ -2,8 +2,9 @@ import re
 
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from placeholders.node_placeholder_source_match import ValidateStart
-from placeholders.string_parser import StripStartParens
+from fun_with_ast.placeholders.node_placeholder_source_match import ValidateStart
+from fun_with_ast.placeholders.string_parser import StripStartParens
+from fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder
 
 
 def MatchPlaceholder(string, node, placeholder):
@@ -39,8 +40,8 @@ class SourceMatcher(object):
     def __init__(self, node, stripped_parens=None):
         self.node = node
         self.end_paren_matchers = []
-        self.start_whitespace_matchers = []
-        self.end_whitespace_matchers = []
+        self.start_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
+        self.end_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
         self.paren_wrapped = False
         self.end_of_line_comment = ''
         if not stripped_parens:
@@ -56,9 +57,11 @@ class SourceMatcher(object):
 
     def FixIndentation(self, new_ident):
         """Fix the indentation of the source."""
-        current_ident = len(self.start_whitespace_matchers[0].matched_text)
-        if current_ident == new_ident:
-            return
+        current_ws = self.start_whitespace_matchers[0].matched_text
+        if current_ws:
+            current_ident = len(self.start_whitespace_matchers[0].matched_text)
+            if current_ident == new_ident:
+                return
         else:
             self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
 

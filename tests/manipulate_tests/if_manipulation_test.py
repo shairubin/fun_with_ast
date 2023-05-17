@@ -31,8 +31,10 @@ class TestIfManupulation:
         injected_node = GetNodeFromInput(injected_node_source)
         injected_node_matcher = GetDynamicMatcher(injected_node)
         injected_node_matcher.Match(injected_node_source)
-        source2 = injected_node_matcher.GetSource()
-        assert source2 == injected_node_source
+        source_from_matcher = injected_node_matcher.GetSource()
+        assert source_from_matcher == injected_node_source
+        source_from_get_source = GetSource(injected_node, assume_no_indent=True)
+        assert source_from_get_source == injected_node_source
         return injected_node, injected_node_source
 
     def _create_if_node(self, original_if_source):

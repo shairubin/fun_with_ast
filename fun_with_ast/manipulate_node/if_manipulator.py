@@ -1,5 +1,7 @@
 import ast
 
+from fun_with_ast.get_source import GetSource
+
 from fun_with_ast.source_matchers.body import BodyPlaceholder
 
 from fun_with_ast.manipulate_node import create_node
@@ -12,13 +14,17 @@ class ManipulateIfNode():
     def add_nodes_to_body(self, nodes: list, location: int):
         self._validate_rules_for_insertion(location, nodes)
         body_ident = self._get_body_indentation()
-        if isinstance(nodes[0], ast.Expr):
+        node_to_inject = nodes[0]
+        source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
+        node_to_inject.matcher.FixIndentation(body_ident)
+
+        if isinstance(node_to_inject, ast.Expr) and False:
            module_node = self._handle_expr_node(nodes)
            self.node.body.insert(location, module_node.body[0])
         else:
-            self.node.body.insert(location, nodes[0])
+            self.node.body.insert(location, node_to_inject)
         self._add_newlines()
-        self._fix_indentation(body_ident)
+#        self._fix_indentation(body_ident)
 
     def _handle_expr_node(self, nodes):
         expr_node = nodes[0]
@@ -41,7 +47,7 @@ class ManipulateIfNode():
             raise ValueError("location must be positive")
 
     def _add_newlines(self):
-        for node in self.node.body:
+        for node in self.node.body[:-1]:
             if isinstance(node, ast.Expr) :
                 node_source = node.matcher.GetSource()
                 node = node.value
@@ -63,9 +69,9 @@ class ManipulateIfNode():
                 raise ValueError('illegal ident')
         return ident
 
-    def _fix_indentation(self,  body_ident):
-        for node in self.node.body:
-            if isinstance(node , ast.Expr):
-                node.value.matcher.FixIndentation(body_ident)
-            else:
-                node.matcher.FixIndentation(body_ident)
+    # def _fix_indentation(self,  body_ident):
+    #     for node in self.node.body:
+    #         if isinstance(node , ast.Expr):
+    #             node.value.matcher.FixIndentation(body_ident)
+    #         else:
+    #             node.matcher.FixIndentation(body_ident)

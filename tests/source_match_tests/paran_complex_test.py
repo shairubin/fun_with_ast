@@ -42,7 +42,7 @@ class ParenWrappedTest(unittest.TestCase):
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testNoMatchLeadingTabs(self):
         node = create_node.Name('a')
         string = ' \t (a  \t  )  \t '

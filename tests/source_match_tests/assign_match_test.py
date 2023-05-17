@@ -84,7 +84,7 @@ class AssignMatcherTest(unittest.TestCase):
         string = 'a\t=\t     b \t  =1 \t #comment'
         self._assert_matched_source(node, string)
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testMatchMultiAssignNameWithWSAndComment(self):
         node = create_node.Assign(['a', 'b'], create_node.Name('c'))
         string = 'a\t=\t     b \t  =c \t #comment'

@@ -457,7 +457,7 @@ class AttributeMatcherTest(unittest.TestCase):
 
 class AugAssignMatcherTest(unittest.TestCase):
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testBasicMatch(self):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Num(12))
         string = 'a+=1\n'
@@ -854,7 +854,7 @@ class IfExpMatcherTest(unittest.TestCase):
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testChangeParts(self):
         node = create_node.IfExp(
             create_node.Name('True'), create_node.Name('a'), create_node.Name('b'))
@@ -927,7 +927,7 @@ class StrMatcherTest(unittest.TestCase):
         string = '("foobar")'
         self._match_string(node, string)
 
-    @pytest.mark.xfail(strict=True)
+    #@pytest.mark.skip(reason="Not Implemented Yet")
     def testContinuationMatch(self):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'

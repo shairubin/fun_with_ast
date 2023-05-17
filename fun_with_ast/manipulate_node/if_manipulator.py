@@ -45,6 +45,8 @@ class ManipulateIfNode():
             if isinstance(node, ast.Expr) :
                 node_source = node.matcher.GetSource()
                 node = node.value
+#            elif isinstance(node, ast.stmt) and not node.parent:
+#                raise NotImplementedError("stmts are not supported")
             else:
                 node_source = node.matcher.GetSource()
             if node_source.endswith("\n"):

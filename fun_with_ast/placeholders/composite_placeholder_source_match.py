@@ -7,17 +7,22 @@ from fun_with_ast.placeholders.node_placeholder_source_match import NodePlacehol
 
 
 class CompositePlaceholder(Placeholder):
+
     """Node which wraps one or more other nodes."""
 
     def Match(self, node, string):
         """Makes sure node.(self.field_name) is in string."""
         self.Validate(node)
         elements = self.GetElements(node)
-        for element in elements:
-            element.parent = node
+        elements = self._set_parents(elements, node)
         parser = StringParser(
             string, elements, starting_parens=self.starting_parens)
         return parser.GetMatchedText()
+
+    def _set_parents(self, elements, node):
+        for element in elements:
+            element.parent = node
+        return elements
 
     def GetSource(self, node):
         source = ''.join(element.GetSource(node) for element in self.GetElements(node))

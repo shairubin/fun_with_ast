@@ -7,7 +7,10 @@ from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode
 
 
-@pytest.fixture(params=['a.b()\n', 'a.c()\n'])
+@pytest.fixture(params=['a.b()\n', \
+                        'a.c()\n', \
+                        'a=44'
+                        ])
 def injected_source(request):
     yield request.param
 class TestIfManupulation:

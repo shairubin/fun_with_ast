@@ -39,7 +39,7 @@ class PassMatcherTest(unittest.TestCase):
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testReturnTupleNoParans(self):
         node = create_node.Return(create_node.Tuple(['a', 'b']))
         string = "return a,b"

@@ -1,9 +1,9 @@
 import unittest
 
-from fun_with_ast.dynamic_matcher import GetDynamicMatcher
+import pytest
+
 from manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
-from manipulate_node.if_manipulator import ManipulateIfNode
 
 
 class GetSourceTest(unittest.TestCase):
@@ -36,21 +36,30 @@ class GetSourceTest(unittest.TestCase):
         assert l1 != '\n'
         self.assertEqual(string, source)
 
-    def testCompose(self):
-        original_if_source = 'if (c.d()):\n   a=1'
-        if_node = GetNodeFromInput(original_if_source)
-        if_node_matcher = GetDynamicMatcher(if_node)
-        if_node_matcher.Match(original_if_source)
-        if_node_source = if_node_matcher.GetSource()
-        self.assertEqual(if_node_source, original_if_source)
-        injected_call_string = 'a.b()\n'
-        call_node = GetNodeFromInput(injected_call_string)
-        matcher2 = GetDynamicMatcher(call_node)
-        matcher2.Match(injected_call_string)
-        source2 = matcher2.GetSource()
-        self.assertEqual(source2, injected_call_string)
-        manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes_to_body([call_node],1)
-        composed_source = GetSource(if_node, assume_no_indent=True)
-        expected_source = original_if_source + '\n   ' + injected_call_string
-        self.assertEqual(expected_source, composed_source)
+    def testIAssign1(self):
+        string = "a='fun_with_east'"
+        log_node = GetNodeFromInput(string)
+        source = GetSource(log_node, string)
+        self.assertEqual(string, source)
+
+    @pytest.mark.xfail()
+    def testIAssign2(self):
+        string1 = "a='fun_with_east'"
+        n1 = GetNodeFromInput(string1)
+        source1 = GetSource(n1, string1)
+        self.assertEqual(string1, source1)
+        string2 = "b='more_fun_with_east'"
+        n2 = GetNodeFromInput(string2)
+        source2 = GetSource(n2, string2)
+        self.assertEqual(string2, source2)
+        if_string = 'if True:\n   pass\n   a=1'
+        if_node = GetNodeFromInput(if_string)
+        if_source = GetSource(if_node, if_string)
+        self.assertEqual(if_string, if_source)
+        if_node.body[0] = n1
+        if_node.body[1] = n2
+        if_source = GetSource(if_node)
+        if_modified_string = if_string.replace('  pass',string1)
+        if_modified_string = if_modified_string.replace('  a=1', string2)
+        self.assertEqual(if_modified_string, if_source)
+

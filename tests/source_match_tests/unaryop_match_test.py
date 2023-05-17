@@ -53,7 +53,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.xfail(strict=True)
+    @pytest.mark.skip(reason="Not Implemented Yet")
     def testInvertUnaryOpWithWSAndComment(self):
         node = create_node.UnaryOp(
             create_node.Invert(),

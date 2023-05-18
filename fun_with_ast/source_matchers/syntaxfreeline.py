@@ -1,6 +1,6 @@
 
 
-from fun_with_ast.placeholders.composite_placeholder_source_match import FieldPlaceholder
+from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 from fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder

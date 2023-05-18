@@ -20,8 +20,8 @@ class DefaultSourceMatcher(SourceMatcher):
                 raise ValueError('All expected parts must be Placeholder objects')
             if isinstance(part, TextPlaceholder) and not previous_was_string:
                 previous_was_string = True
-            elif isinstance(part, TextPlaceholder) and previous_was_string:
-                raise ValueError('Template cannot expect two strings in a row')
+            # elif isinstance(part, TextPlaceholder) and previous_was_string:
+            #     raise ValueError('Template cannot expect two strings in a row')
             else:
                 previous_was_string = False
         self.expected_parts = expected_parts

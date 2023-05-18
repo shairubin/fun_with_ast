@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 
@@ -9,6 +11,13 @@ class FunctionDefMatcherTest(unittest.TestCase):
     def testEmpty(self):
         node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
         string = 'def test_fun():\n\t\t\t\tpass\n'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        self.assertEqual(string, matcher.GetSource())
+
+    def testEmptyWithDocString(self):
+        node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
+        string = "def test_fun():\n\t\t\t'''docstring'''\n\t\t\tpass\n"
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())

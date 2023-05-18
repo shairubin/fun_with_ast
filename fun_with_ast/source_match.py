@@ -20,6 +20,7 @@ from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
 from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
+from fun_with_ast.placeholders.docstring import DocStringTextPlaceholder
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,
@@ -314,6 +315,7 @@ def get_FunctionDef_expected_parts():
         TextPlaceholder(r'\(\s*', '('),
         FieldPlaceholder('args'),
         TextPlaceholder(r'\s*,?\s*\):\n?', '):\n'),
+        DocStringTextPlaceholder(),
         BodyPlaceholder('body')
     ]
 

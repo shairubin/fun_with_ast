@@ -4,7 +4,6 @@ from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
-from  fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder
 
 
 class DefaultSourceMatcher(SourceMatcher):

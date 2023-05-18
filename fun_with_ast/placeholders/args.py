@@ -1,5 +1,5 @@
 from fun_with_ast.placeholders.composite import CompositePlaceholder
-from fun_with_ast.placeholders.node_placeholder_source_match import NodePlaceholder
+from fun_with_ast.placeholders.node import NodePlaceholder
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
 
 

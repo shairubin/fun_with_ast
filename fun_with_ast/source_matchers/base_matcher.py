@@ -2,7 +2,7 @@ import re
 
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.placeholders.node_placeholder_source_match import ValidateStart
+from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
 from fun_with_ast.placeholders.whitespace_placeholder import WhiteSpaceTextPlaceholder
 

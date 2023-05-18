@@ -19,10 +19,10 @@ Tests for py
 import unittest
 
 import pytest
-from fun_with_ast.placeholders.list_placeholder_source_match import SeparatedListFieldPlaceholder
+from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
+from fun_with_ast.placeholders.list_placeholder import SeparatedListFieldPlaceholder
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
-from fun_with_ast.placeholders import list_placeholder_source_match
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 import fun_with_ast.manipulate_node.create_node as create_node
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
@@ -186,7 +186,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
     def testMatchSimpleField(self):
         body_node = create_node.Expr(create_node.Name('foobar'))
         node = create_node.FunctionDef('function_name', body=[body_node])
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder('body')
+        placeholder = ListFieldPlaceholder('body')
         matched_text = placeholder.Match(node, 'foobar\n')
         self.assertEqual(matched_text, 'foobar\n')
         test_output = placeholder.GetSource(node)
@@ -196,7 +196,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder('body')
+        placeholder = ListFieldPlaceholder('body')
         matched_text = placeholder.Match(node, 'foobar\nbaz\n')
         self.assertEqual(matched_text, 'foobar\nbaz\n')
         test_output = placeholder.GetSource(node)
@@ -206,7 +206,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder(
+        placeholder = ListFieldPlaceholder(
             'body',
             before_placeholder=TextPlaceholder('z'),
             after_placeholder=TextPlaceholder('zz'))
@@ -217,7 +217,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
 
     def testMatchRaisesErrorIfFieldIsNotList(self):
         node = create_node.Name('bar')
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder(
+        placeholder = ListFieldPlaceholder(
             'id', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
@@ -226,7 +226,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
     def testMatchRaisesErrorIfFieldDoesntMatch(self):
         body_node = create_node.Expr(create_node.Name('foobar'))
         node = create_node.FunctionDef('function_name', body=[body_node])
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder(
+        placeholder = ListFieldPlaceholder(
             'body', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
@@ -236,7 +236,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder(
+        placeholder = ListFieldPlaceholder(
             'body', before_placeholder=TextPlaceholder('\n', '\n'),
             exclude_first_before=True)
         with self.assertRaises(BadlySpecifiedTemplateError):
@@ -249,7 +249,7 @@ class ListFieldPlaceholderTest(unittest.TestCase):
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
         module_node = create_node.Module(node)
-        placeholder = list_placeholder_source_match.ListFieldPlaceholder(
+        placeholder = ListFieldPlaceholder(
             'body', before_placeholder=TextPlaceholder('', ', '),
             exclude_first_before=True)
         test_output = placeholder.GetSource(node)
@@ -344,7 +344,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
         matcher = defualt_matcher.DefaultSourceMatcher(
-            node, [list_placeholder_source_match.ListFieldPlaceholder('body')])
+            node, [ListFieldPlaceholder('body')])
         matcher.Match('foobar\nbaz\n')
         self.assertEqual(matcher.GetSource(), 'foobar\nbaz\n')
 
@@ -353,7 +353,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
                       create_node.Expr(create_node.Name('baz'))]
         node = create_node.FunctionDef('function_name', body=body_nodes)
         matcher = defualt_matcher.DefaultSourceMatcher(
-            node, [list_placeholder_source_match.ListFieldPlaceholder('body')])
+            node, [ListFieldPlaceholder('body')])
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match('foobar\nba\n')
 
@@ -363,7 +363,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         node = create_node.FunctionDef('function_name', body=body_nodes)
         matcher = defualt_matcher.DefaultSourceMatcher(
             node,
-            [list_placeholder_source_match.ListFieldPlaceholder('body')])
+            [ListFieldPlaceholder('body')])
         matcher.Match('foobar\nbaz\n')
         node.body[0].value.id = 'hello'
         self.assertEqual(matcher.GetSource(), 'hello\nbaz\n')
@@ -377,7 +377,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
             [TextPlaceholder('def ', 'def '),
              FieldPlaceholder('name'),
              TextPlaceholder(r'\(\)', r'()'),
-             list_placeholder_source_match.ListFieldPlaceholder('body')])
+             ListFieldPlaceholder('body')])
         matcher.Match('def function_name()foobar\nbaz\n')
         node.body[0].value.id = 'hello'
         self.assertEqual(matcher.GetSource(), 'def function_name()hello\nbaz\n')

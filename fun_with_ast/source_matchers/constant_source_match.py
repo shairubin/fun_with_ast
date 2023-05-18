@@ -1,6 +1,6 @@
 import ast
 
-from source_matchers.number import NumSourceMatcher, BoolSourceMatcher
+from fun_with_ast.source_matchers.number import NumSourceMatcher, BoolSourceMatcher
 from fun_with_ast.source_matchers.str import StrSourceMatcher
 
 

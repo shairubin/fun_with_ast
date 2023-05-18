@@ -1,4 +1,4 @@
-from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
+from fun_with_ast.placeholders.text import TextPlaceholder
 
 class DocStringTextPlaceholder(TextPlaceholder):
     """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""

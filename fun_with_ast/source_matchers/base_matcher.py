@@ -1,6 +1,6 @@
 import re
 
-from fun_with_ast.placeholders.text_placeholder import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
+from fun_with_ast.placeholders.text import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens

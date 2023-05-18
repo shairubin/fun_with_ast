@@ -1,6 +1,6 @@
 from fun_with_ast.placeholders.composite import CompositePlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
-from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
+from fun_with_ast.placeholders.text import TextPlaceholder
 
 
 class ArgsDefaultsPlaceholder(CompositePlaceholder):

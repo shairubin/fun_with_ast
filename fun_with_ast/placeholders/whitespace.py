@@ -1,11 +1,7 @@
 
 import re
 
-from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
-
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.placeholders.base_placeholder import Placeholder
-
+from fun_with_ast.placeholders.text import TextPlaceholder
 
 class WhiteSpaceTextPlaceholder(TextPlaceholder):
     """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""

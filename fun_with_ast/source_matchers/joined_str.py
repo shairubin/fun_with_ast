@@ -3,10 +3,7 @@ from string import Formatter
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
-#from fun_with_ast.source_matchers.str import StrSourceMatcher
-#from fun_with_ast.string_part_placeholder import JoinedStringPartPlaceholder
-#from fun_with_ast.source_matcher_source_match import MatchPlaceholder
-from fun_with_ast.placeholders.text_placeholder import TextPlaceholder
+from fun_with_ast.placeholders.text import TextPlaceholder
 
 
 class JoinedStrSourceMatcher(DefaultSourceMatcher):

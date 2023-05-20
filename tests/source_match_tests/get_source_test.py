@@ -8,20 +8,23 @@ from fun_with_ast.get_source import GetSource
 
 class GetSourceTest(unittest.TestCase):
     def testCall1(self):
-        string = "logger.info('test string')\n"
-        self._verify_source(string)
+        string = "logger.info(\"test string\")\n"
+        self._verify_source(string, default_quote='\'')
 
     def testCall2(self):
         string = 'logger.info(\'test string\')\n'
-        self._verify_source(string)
+        self._verify_source(string,default_quote='\"')
 
-    def _verify_source(self, string):
-        log_node = GetNodeFromInput(string)
-        source = GetSource(log_node, string)
-        self.assertEqual(string, source)
+    @pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
+    def testCall3(self):
+        string = 'logger.info(\'test string\')\n'
+        self._verify_source(string,default_quote='\'')
 
     def testIf(self):
         string = 'if True:\n   a=1'
+        self._verify_match_and_no_new_line(string)
+
+    def _verify_match_and_no_new_line(self, string):
         log_node = GetNodeFromInput(string)
         GetSource(log_node, string)
         l1 = GetSource(log_node.body[0])
@@ -30,17 +33,17 @@ class GetSourceTest(unittest.TestCase):
 
     def testIf2(self):
         string = 'if True:\n   b.a(c)\n   a=1'
-        log_node = GetNodeFromInput(string)
-        source = GetSource(log_node, string)
-        l1 = GetSource(log_node.body[0])
-        assert l1 != '\n'
-        self.assertEqual(string, source)
+        self._verify_match_and_no_new_line(string)
 
     def testIAssign1(self):
         string = "a='fun_with_east'"
         log_node = GetNodeFromInput(string)
         source = GetSource(log_node, string)
         self.assertEqual(string, source)
+
+    def testConstant(self):
+        string = "\"fun_with_east\"\n"
+        self._verify_source(string, default_quote='\"')
 
     @pytest.mark.xfail()
     def testIAssign2(self):
@@ -63,3 +66,12 @@ class GetSourceTest(unittest.TestCase):
         if_modified_string = if_modified_string.replace('  a=1', string2)
         self.assertEqual(if_modified_string, if_source)
 
+    def _verify_source(self, string, default_quote):
+        log_node = GetNodeFromInput(string)
+        source = GetSource(log_node, string)
+        self.assertEqual(string, source)
+        log_node = GetNodeFromInput(string)
+        source = GetSource(log_node, assume_no_indent=True)
+        if default_quote == '\"':
+            string = string.replace("\'", '\"')
+        self.assertEqual(string, source)

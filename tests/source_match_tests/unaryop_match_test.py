@@ -13,52 +13,71 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.UAdd(),
             create_node.Name('a'))
         string = '+a'
+        self._validate_match(node, string)
+
+    def _validate_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        source = matcher.Match(string)
+        self.assertEqual(string, source)
 
     def testUSubUnaryOp(self):
         node = create_node.UnaryOp(
             create_node.USub(),
             create_node.Name('a'))
         string = '-a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
+
+    def testUSubUnaryOWithParans(self):
+        node = create_node.UnaryOp(
+            create_node.USub(),
+            create_node.Name('a'))
+        string = '-(a)'
+        self._validate_match(node, string)
+
+    @pytest.mark.xfail(reason='not implemented yet')
+    def testUSubUnaryOWithExternalParans(self):
+        node = create_node.UnaryOp(
+            create_node.USub(),
+            create_node.Name('a'))
+        string = '(-(a))'
+        self._validate_match(node, string)
 
     def testNotUnaryOp(self):
         node = create_node.UnaryOp(
             create_node.Not(),
             create_node.Name('a'))
         string = 'not a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
 
     def testInvertUnaryOp(self):
         node = create_node.UnaryOp(
             create_node.Invert(),
             create_node.Name('a'))
         string = '~a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
+
+    def testInvertUnaryOpWithParans(self):
+        node = create_node.UnaryOp(
+            create_node.Invert(),
+            create_node.Name('a'))
+        string = '~(a) #comment'
+        self._validate_match(node, string)
 
     def testInvertUnaryOpWithWS(self):
         node = create_node.UnaryOp(
             create_node.Invert(),
             create_node.Name('a'))
         string = '~a    \t '
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._validate_match(node, string)
 
-    @pytest.mark.skip(reason="Not Implemented Yet")
     def testInvertUnaryOpWithWSAndComment(self):
         node = create_node.UnaryOp(
             create_node.Invert(),
             create_node.Name('a'))
-        string = '~a    \t #comment'
+        string = '~(a)    \t #comment'
+        self._validate_match(node, string)
+
+    def _validate_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        source = matcher.Match(string)
+        self.assertEqual(string, source)

@@ -1,11 +1,25 @@
 
+# Mission
+## Why Fun with ASTs
+1. The intellectual problem: 
+2. it is fun
+2. it is a great learning experience 
+3. enables smart and complex manipulations 
+
+## How it works
 
 
 
-# Pre-Release Versions
-### 0.01.15 (2023-4-15)
-1. Bug fix: import not working outside package. 
-2. move errors/exceptions to a seperate file.  
-### 0.01.13 (2023-4-15)
-1. Bug fix: support for source matching of type Constant-String. 
-2. start refactoring source_match files into modules. 
+## Comparing ast.parse and ast.unparse
+| parse               | unparse                 | comments  |
+|---------------------|-------------------------|-----------|
+| `if (a<7) or (b>6):` | `if  a < 7  or  b > 6:` | ccomments |
+| a=7 # comment       | a = 7||
+
+
+
+## examples
+
+
+
+# Get started 

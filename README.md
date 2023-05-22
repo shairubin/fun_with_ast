@@ -21,6 +21,10 @@ This repository contains a library to analyze and manipulate python [Abstract Sy
 
 
 ## examples
+### Fun #1: Keep source to source transformations
+### Fun #2: add log
+### Fun #3: switch else / if 
+
 
 
 

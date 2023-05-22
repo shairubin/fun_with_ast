@@ -24,7 +24,7 @@ else
   echo "Poetry build failed" >&2
   exit 1
 fi
-poetry publish -r test-pypi
+poetry publish -r testpypi
 if [ $? -eq 0 ]
 then
   echo "Poetry push succeeded"

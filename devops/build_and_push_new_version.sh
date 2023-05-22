@@ -24,7 +24,7 @@ else
   echo "Poetry build failed" >&2
   exit 1
 fi
-poetry publish -u __token__ -p $ POETRY_PYPI_TOKEN_PYPI -r test-pypi
+poetry publish -u __token__ -p $POETRY_PYPI_TOKEN_PYPI -r test-pypi
 if [ $? -eq 0 ]
 then
   echo "Poetry push succeeded"

@@ -1,5 +1,7 @@
+# Fun with ASTs
+This repository contains a library to analyze and manipulate python [Abstract Systax Tress](TBD).
 
-# Mission
+
 ## Why Fun with ASTs
 1. The intellectual problem: 
 2. it is fun
@@ -11,10 +13,10 @@
 
 
 ## Comparing ast.parse and ast.unparse
-| parse               | unparse                 | comments  |
-|---------------------|-------------------------|-----------|
+| parse                | unparse                 | comments  |
+|----------------------|-------------------------|-----------|
 | `if (a<7) or (b>6):` | `if  a < 7  or  b > 6:` | ccomments |
-| a=7 # comment       | a = 7||
+| `a=7 # comment`      | `a = 7`                 |           |
 
 
 

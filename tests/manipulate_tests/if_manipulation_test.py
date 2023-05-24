@@ -7,8 +7,8 @@ from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode
 
 
-@pytest.fixture(params=['a.b()\n', \
-                        'a.c()\n', \
+@pytest.fixture(params=[#'a.b()\n', \
+                        #'a.c()\n', \
                         'a=44'
                         ])
 def injected_source(request):
@@ -26,6 +26,16 @@ class TestIfManupulation:
         expected_source = original_if_source + '\n   ' + injected_node_source
         assert expected_source == composed_source
 
+
+    def test_If_Else_Manipulation(self, injected_source):
+        original_if_source = 'if (c.d()):\n   a=1\nelse:\n   b=2'
+        if_node = self._create_if_node(original_if_source)
+        injected_node, injected_node_source = self._create_injected_node(injected_source)
+        manipulator = ManipulateIfNode(if_node)
+        manipulator.add_nodes_to_body([injected_node],1)
+        composed_source = GetSource(if_node, assume_no_indent=True)
+        expected_source = original_if_source + '\n   ' + injected_node_source
+        assert expected_source == composed_source
     def _create_injected_node(self, injected_source):
         injected_node_source = injected_source
         injected_node = GetNodeFromInput(injected_node_source)

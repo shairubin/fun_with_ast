@@ -47,7 +47,7 @@ class ManipulateIfNode():
             raise ValueError("location must be positive")
 
     def _add_newlines(self):
-        for node in self.node.body[:-1]:
+        for node in self.node.body:
             if isinstance(node, ast.Expr) :
                 node_source = node.matcher.GetSource()
                 node = node.value

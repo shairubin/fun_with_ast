@@ -94,7 +94,10 @@ class DefaultSourceMatcher(SourceMatcher):
     def add_newline_to_source(self):
         part = self.expected_parts[-1]
         if isinstance(part, TextPlaceholder):
-            part.matched_text += '\n'
+            if part.matched_text:
+                part.matched_text += '\n'
+            else:
+                part.matched_text = '\n'
         else:
             raise NotImplementedError('Cannot add newline to non-text placeholder')
 

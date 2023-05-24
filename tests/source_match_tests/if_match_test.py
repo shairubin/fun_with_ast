@@ -9,7 +9,7 @@ from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 class IfMatcherTest(unittest.TestCase):
     def testSimpleIfElse(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
-        string = 'if       True:   \n pass    \nelse:\n pass \n'
+        string = 'if       True:   \n   pass    \nelse:\n   pass \n'
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matcher_source = matcher.GetSource()

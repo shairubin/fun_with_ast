@@ -645,6 +645,7 @@ def get_UnaryOp_expected_parts():
         FieldPlaceholder('op'),
         TextPlaceholder(r' *', ' '),
         FieldPlaceholder('operand'),
+        TextPlaceholder(r'[ \t]*#*.*\n*', '')
     ]
 
 

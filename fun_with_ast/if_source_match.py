@@ -18,7 +18,7 @@ class IfSourceMatcher(SourceMatcher):
         self.test_placeholder = FieldPlaceholder('test')
         self.if_colon_placeholder = TextPlaceholder(r'[ \t]*:[ \t]*\n', ':\n')
         self.body_placeholder = BodyPlaceholder('body')
-        self.else_placeholder = TextPlaceholder(r' *else:\s*', 'else:\n')
+        self.else_placeholder = TextPlaceholder(r' *else:[ \t]*\n', 'else:\n')
         self.orelse_placeholder = BodyPlaceholder('orelse')
         self.is_elif = False
         self.if_indent = 0

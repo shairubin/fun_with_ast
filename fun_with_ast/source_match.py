@@ -695,12 +695,6 @@ class WithItemSourceMatcher(SourceMatcher):
 
 
 
-# def get_withitem_expected_parts():
-#  return [
-#    FieldPlaceholder('context_expr'),
-#    TextPlaceholder(r' *as *', ' as '),
-#    FieldPlaceholder('optional_vars'),
-#  ]
 
 
 def get_Yield_expected_parts():

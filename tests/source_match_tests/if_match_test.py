@@ -18,10 +18,7 @@ class IfMatcherTest(unittest.TestCase):
     def testSimpleIfElseWithCommentAndSpeacses(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True: #comment  \n pass    \nelse: # comment    \n pass#comment\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        self._assert_match_to_source(node, string)
 
     def testSimpleIf(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()])

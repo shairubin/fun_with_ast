@@ -23,7 +23,8 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node)
         manipulator.add_nodes_to_body([injected_node],1)
         composed_source = GetSource(if_node, assume_no_indent=True)
-        expected_source = original_if_source + '\n   ' + injected_node_source
+        add_new_line = '' if injected_source.endswith('\n') else '\n'
+        expected_source = original_if_source + '\n   ' + injected_node_source + add_new_line
         assert expected_source == composed_source
 
 

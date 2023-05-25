@@ -16,19 +16,20 @@ class ManipulateIfNode():
     def __init__(self, node):
         self.node = node
 
-    def add_nodes_to_body(self, nodes: list, location: IfManipulatorConfig):
+    def add_nodes(self, nodes: list, location: IfManipulatorConfig):
         self._validate_rules_for_insertion(location, nodes)
-        body_ident = self._get_body_indentation()
+        body_block_to_manipulate = self._get_block(location.body_index)
+        ident = self._get_node_indentation(body_block_to_manipulate)
         node_to_inject = nodes[0]
         source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
-        node_to_inject.matcher.FixIndentation(body_ident)
+        node_to_inject.matcher.FixIndentation(ident)
 
         if isinstance(node_to_inject, ast.Expr) and False:
            module_node = self._handle_expr_node(nodes)
-           self.node.body.insert(location, module_node.body[0])
+           body_block_to_manipulate.insert(location, module_node.body[0])
         else:
-            self.node.body.insert(location.location_in_body_index, node_to_inject)
-        self._add_newlines()
+            body_block_to_manipulate.insert(location.location_in_body_index, node_to_inject)
+        self._add_newlines(body_block_to_manipulate)
 
 
     def _handle_expr_node(self, nodes):
@@ -50,24 +51,25 @@ class ManipulateIfNode():
             raise ValueError("location is out of range")
         if location.location_in_body_index < 0:
             raise ValueError("location must be positive")
-        if location.body_index != 0:
-            raise NotImplementedError
-    def _add_newlines(self):
-        for node in self.node.body:
+        if location.body_index < 0:
+            raise ValueError('Illegal body index')
+        if location.body_index > 1:
+            raise NotImplementedError('elif not supported yet')
+
+    def _add_newlines(self, body_block):
+        for node in body_block:
             if isinstance(node, ast.Expr) :
                 node_source = node.matcher.GetSource()
                 node = node.value
-#            elif isinstance(node, ast.stmt) and not node.parent:
-#                raise NotImplementedError("stmts are not supported")
             else:
                 node_source = node.matcher.GetSource()
             if node_source.endswith("\n"):
                 continue
             node.matcher.add_newline_to_source()
 
-    def _get_body_indentation(self):
+    def _get_node_indentation(self, node):
         ident = 0
-        for stmt in self.node.body:
+        for stmt in node:
             stmt_ident = stmt.col_offset
             if stmt_ident > ident and ident == 0:
                 ident = stmt_ident
@@ -75,9 +77,9 @@ class ManipulateIfNode():
                 raise ValueError('illegal ident')
         return ident
 
-    # def _fix_indentation(self,  body_ident):
-    #     for node in self.node.body:
-    #         if isinstance(node , ast.Expr):
-    #             node.value.matcher.FixIndentation(body_ident)
-    #         else:
-    #             node.matcher.FixIndentation(body_ident)
+    def _get_block(self, body_index):
+        if body_index == 0:
+            return self.node.body
+        if body_index == 1:
+            return self.node.orelse
+        return self._get_block(self.node.orelse, body_index-2)

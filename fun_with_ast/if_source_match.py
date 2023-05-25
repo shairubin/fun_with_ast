@@ -25,10 +25,7 @@ class IfSourceMatcher(SourceMatcher):
 
     def Match(self, string):
         self.if_indent = len(string) - len(string.lstrip())
-        placeholder_list = [self.if_placeholder,
-                            self.test_placeholder,
-                            self.if_colon_placeholder,
-                            self.body_placeholder]
+        placeholder_list = self.expected_parts
         remaining_string = MatchPlaceholderList(
             string, self.node, placeholder_list)
         if not self.node.orelse:
@@ -60,11 +57,15 @@ class IfSourceMatcher(SourceMatcher):
             return string
         return string[:len(remaining_string)]
 
-    def GetSource(self):
-        placeholder_list = [self.if_placeholder,
+    @property
+    def expected_parts(self):
+        return  [self.if_placeholder,
                             self.test_placeholder,
                             self.if_colon_placeholder,
                             self.body_placeholder]
+
+    def GetSource(self):
+        placeholder_list = self.expected_parts
         source_list = [p.GetSource(self.node) for p in placeholder_list]
         if not self.node.orelse:
             return ''.join(source_list)
@@ -82,3 +83,9 @@ class IfSourceMatcher(SourceMatcher):
                 source_list.append('else:\n')
             source_list.append(self.orelse_placeholder.GetSource(self.node))
         return ''.join(source_list)
+
+    def add_newline_to_source(self):
+        if not self.node.orelse:
+            self.node.body[-1].matcher.add_newline_to_source()
+        else:
+            raise NotImplementedError('IfSourceMatcher does not support adding newlines to source')

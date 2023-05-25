@@ -27,6 +27,9 @@ class ManipulateIfNode():
         body_block_to_manipulate.insert(location.location_in_body_index, node_to_inject)
         self._add_newlines(body_block_to_manipulate)
 
+    def get_body_source(self, IFManipulatorConfig):
+        body_block = self._get_block(IFManipulatorConfig.body_index)
+        return GetSource(body_block)
 
     def _handle_expr_node(self, nodes):
         expr_node = nodes[0]
@@ -70,8 +73,13 @@ class ManipulateIfNode():
         return ident
 
     def _get_block(self, body_index):
-        if body_index == 0:
-            return self.node.body
-        if body_index == 1:
-            return self.node.orelse
-        return self._get_block(self.node.orelse, body_index-2)
+        while True:
+            if body_index < 0:
+                raise ValueError('Illegal body index')
+            if body_index == 0:
+                return self.node.body
+            if body_index == 1 and not self.node.orelse:
+                ValueError('No oresle in If')
+            if body_index == 1:
+                return self.node.orelse
+            body_index -= 2

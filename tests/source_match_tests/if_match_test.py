@@ -1,5 +1,6 @@
 import unittest
 
+from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
 
 from fun_with_ast.manipulate_node import create_node
@@ -121,3 +122,5 @@ else:
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
         self.assertEqual(len(node.body),lines_in_body)
+        source = GetSource(node, assume_no_indent=True)
+        print(source)

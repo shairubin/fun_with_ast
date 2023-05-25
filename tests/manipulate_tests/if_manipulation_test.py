@@ -32,9 +32,7 @@ class TestIfManupulation:
 
     def test_If_Manipulation(self, injected_source, capsys):
         original_if_source = 'if (c.d()):\n   a=1'
-        self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
-        if_node = self._create_if_node(original_if_source)
-        injected_node, injected_node_source = self._create_injected_node(injected_source)
+        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
         manipulator = ManipulateIfNode(if_node)
         manipulator.add_nodes([injected_node],IfManipulatorConfig(body_index=0, location_in_body_index=0))
         composed_source = GetSource(if_node, assume_no_indent=True)
@@ -46,15 +44,29 @@ class TestIfManupulation:
 
     def test_If_Else_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
-        self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
-        if_node = self._create_if_node(original_if_source)
-        injected_node, injected_node_source = self._create_injected_node(injected_source)
+        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
         manipulator = ManipulateIfNode(if_node)
         manipulator.add_nodes([injected_node], IfManipulatorConfig(body_index=1, location_in_body_index=1))
         composed_source = GetSource(if_node, assume_no_indent=True)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
         expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
         assert composed_source == expected_source
+
+    def test_If_elif_Manipulation(self, injected_source, capsys):
+        original_if_source = 'if ( c.d() ):\n   a=1\nelif 1==2:\n   b=2'
+        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
+        manipulator = ManipulateIfNode(if_node)
+        manipulator.add_nodes([injected_node], IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        composed_source = GetSource(if_node, assume_no_indent=True)
+        add_new_line = '\n' if not injected_source.endswith('\n') else ''
+        expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
+        assert composed_source == expected_source
+
+    def _create_nodes(self, capsys, injected_source, original_if_source):
+        self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
+        if_node = self._create_if_node(original_if_source)
+        injected_node, injected_node_source = self._create_injected_node(injected_source)
+        return if_node, injected_node
 
     def _create_injected_node(self, injected_source):
         injected_node_source = injected_source
@@ -73,6 +85,7 @@ class TestIfManupulation:
         if_node_matcher.Match(original_if_source)
         if_node_source = if_node_matcher.GetSource()
         assert if_node_source == original_if_source
+        if_node.matcher = if_node_matcher
         return if_node
 
     def _capture_source(self, capsys, source, title , color):

@@ -25,6 +25,8 @@ CtxEnum = Enum(
 def GetNodeFromInput(string, body_index=0):
     result = ast.parse(string)
     body = result.body[body_index]
+    if isinstance(body, ast.If) and 'elif' in string:
+        body.is_elif = True if 'elif' in string else False
     return body
 
 

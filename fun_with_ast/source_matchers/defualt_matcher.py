@@ -91,15 +91,15 @@ class DefaultSourceMatcher(SourceMatcher):
         if self.end_of_line_comment:
             source = '{}{}'.format(source, self.end_of_line_comment)
         return source
-    def add_newline_to_source(self):
-        part = self.expected_parts[-1]
-        if isinstance(part, TextPlaceholder):
-            if part.matched_text:
-                part.matched_text += '\n'
-            else:
-                part.matched_text = '\n'
-        else:
-            raise NotImplementedError('Cannot add newline to non-text placeholder')
+    # def add_newline_to_source(self):
+    #     part = self.expected_parts[-1]
+    #     if isinstance(part, TextPlaceholder):
+    #         if part.matched_text:
+    #             part.matched_text += '\n'
+    #         else:
+    #             part.matched_text = '\n'
+    #     else:
+    #         raise NotImplementedError('Cannot add newline to non-text placeholder')
 
     def __repr__(self):
         return ('DefaultSourceMatcher "{}" for node "{}" expecting to match "{}"'

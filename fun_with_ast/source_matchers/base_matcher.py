@@ -176,3 +176,13 @@ class SourceMatcher(object):
             return ''.join(matcher.GetSource(None)
                            for matcher in self.end_paren_matchers)
         return ''
+
+    def add_newline_to_source(self):
+        part = self.expected_parts[-1]
+        if isinstance(part, TextPlaceholder):
+            if part.matched_text:
+                part.matched_text += '\n'
+            else:
+                part.matched_text = '\n'
+        else:
+            raise NotImplementedError('Cannot add newline to non-text placeholder')

@@ -24,11 +24,7 @@ class ManipulateIfNode():
         source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
         node_to_inject.matcher.FixIndentation(ident)
 
-        if isinstance(node_to_inject, ast.Expr) and False:
-           module_node = self._handle_expr_node(nodes)
-           body_block_to_manipulate.insert(location, module_node.body[0])
-        else:
-            body_block_to_manipulate.insert(location.location_in_body_index, node_to_inject)
+        body_block_to_manipulate.insert(location.location_in_body_index, node_to_inject)
         self._add_newlines(body_block_to_manipulate)
 
 
@@ -58,11 +54,7 @@ class ManipulateIfNode():
 
     def _add_newlines(self, body_block):
         for node in body_block:
-            if isinstance(node, ast.Expr) :
-                node_source = node.matcher.GetSource()
-                node = node.value
-            else:
-                node_source = node.matcher.GetSource()
+            node_source = node.matcher.GetSource()
             if node_source.endswith("\n"):
                 continue
             node.matcher.add_newline_to_source()

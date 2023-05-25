@@ -4,7 +4,7 @@ import pytest
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
-from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode
+from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfManipulatorConfig
 
 
 @pytest.fixture(params=['a.b()\n', \
@@ -21,7 +21,7 @@ class TestIfManupulation:
         if_node = self._create_if_node(original_if_source)
         injected_node, injected_node_source = self._create_injected_node(injected_source)
         manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes_to_body([injected_node],1)
+        manipulator.add_nodes_to_body([injected_node],IfManipulatorConfig(body_index=0, location_in_body_index=1))
         composed_source = GetSource(if_node, assume_no_indent=True)
         add_new_line = '' if injected_source.endswith('\n') else '\n'
         expected_source = original_if_source + '\n   ' + injected_node_source + add_new_line
@@ -33,7 +33,7 @@ class TestIfManupulation:
         if_node = self._create_if_node(original_if_source)
         injected_node, injected_node_source = self._create_injected_node(injected_source)
         manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes_to_body([injected_node],1)
+        manipulator.add_nodes_to_body([injected_node], IfManipulatorConfig(body_index=0, location_in_body_index=1))
         composed_source = GetSource(if_node, assume_no_indent=True)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
         expected_source = original_if_source.replace('a=1\n', 'a=1\n   '+injected_source + add_new_line )

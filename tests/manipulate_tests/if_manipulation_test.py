@@ -76,8 +76,7 @@ class TestIfManupulation:
         return if_node
 
     def _capture_source(self, capsys, source, title , color):
-        compiled_code = compile('source', '<string>', mode='exec')
-        assert compiled_code.__class__.__name__ == 'code'
+        compile(source, '<string>', mode='exec')
         print(color + '\n' + title + '\n' + source + bcolors.ENDC)
         out, _ = capsys.readouterr()
         sys.stdout.write(out)

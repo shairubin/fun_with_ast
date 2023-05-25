@@ -28,7 +28,7 @@ This repository contains a library to analyze and manipulate python [Abstract Sy
 ### Fun #5: for to while 
 ### Fun #6: for loop into tail recursion 
 ### Fun #7: Add node AND comment 
-
+### Fun #8: Sort methods public to private
 
 
 

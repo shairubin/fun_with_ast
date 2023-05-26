@@ -10,16 +10,37 @@ This repository contains a library to analyze and manipulate python [Abstract Sy
 
 ## How it works
 
+## AST Parse and unparse examples
 
-
-## Comparing ast.parse and ast.unparse
-| parse                | unparse                 | comments  |
-|----------------------|-------------------------|-----------|
-| `if (a<7) or (b>6):` | `if  a < 7  or  b > 6:` | ccomments |
-| `a=7 # comment`      | `a = 7`                 |           |
-
-
+### example #1 
 ```python
+import ast
+code = """
+a=7 # A is 7"""  
+print(ast.unparse(ast.parse(code)))
+```
+# Output: 
+```python
+a = 7 
+```
+
+
+### example #2 
+```python
+import ast
+code = """
+if a<7 or b>9:
+    pass"""  
+print(ast.unparse(ast.parse(code)))
+```
+Output: 
+```python 
+if 6 < 7 or 6 > 9:
+    pass
+```
+### example 3
+```python
+import ast
 print(ast.unparse(ast.parse("""if True:\n  a=2\nelse:\n  if d==8:\n    c=7""")))
 if True:
     a = 2
@@ -28,6 +49,7 @@ elif d == 8:
 ```    
 
 ```python
+import ast
 print(ast.unparse(ast.parse("""if True:\n  a=2\nelse:\n  if d==8:\n    c=7\n  else:\n    c =8""")))
 if True:
     a = 2
@@ -36,7 +58,9 @@ elif d == 8:
 else:
     c = 8
 ```
+### example #1
 ```python
+import ast
 code = """
 if True:
    a=2
@@ -46,6 +70,8 @@ else:
   elif d==9:
     c=8"""   
 print(ast.unparse(ast.parse(code)))
+```
+``python
 if True:
     a = 2
 elif d == 8:

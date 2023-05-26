@@ -33,8 +33,10 @@ elif False:
             orelse=[create_node.If(create_node.Constant(False), body=[create_node.Pass()])])
         self.assertNodesEqual(expected_node, test_node)
 
+
     def testIfInElse(self):
-        expected_string = """if True:
+        expected_string = \
+"""if True:
   pass
 else:
   if False:
@@ -44,6 +46,22 @@ else:
         test_node = create_node.If(
             create_node.Constant(True), body=[create_node.Pass()],
             orelse=[create_node.If(conditional=create_node.Constant(False), body=[create_node.Pass()])])
+        self.assertNodesEqual(expected_node, test_node)
+
+    def testIfInElse2(self):
+        expected_string = \
+"""if True:
+  pass
+else:
+  if False:
+    pass
+  else:
+    return 2
+"""
+        expected_node = GetNodeFromInput(expected_string)
+        test_node = create_node.If(
+            create_node.Constant(True), body=[create_node.Pass()],
+            orelse=[create_node.If(conditional=create_node.Constant(False), body=[create_node.Pass()], orelse=[create_node.Return(2)])])
         self.assertNodesEqual(expected_node, test_node)
 
     def testIfAndOthersInElse(self):

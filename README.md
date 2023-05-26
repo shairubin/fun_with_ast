@@ -19,7 +19,40 @@ This repository contains a library to analyze and manipulate python [Abstract Sy
 | `a=7 # comment`      | `a = 7`                 |           |
 
 
+```python
+print(ast.unparse(ast.parse("""if True:\n  a=2\nelse:\n  if d==8:\n    c=7""")))
+if True:
+    a = 2
+elif d == 8:
+    c = 7
+```    
 
+```python
+print(ast.unparse(ast.parse("""if True:\n  a=2\nelse:\n  if d==8:\n    c=7\n  else:\n    c =8""")))
+if True:
+    a = 2
+elif d == 8:
+    c = 7
+else:
+    c = 8
+```
+```python
+code = """
+if True:
+   a=2
+else:
+  if d==8:
+    c = 7
+  elif d==9:
+    c=8"""   
+print(ast.unparse(ast.parse(code)))
+if True:
+    a = 2
+elif d == 8:
+    c = 7
+elif d == 9:
+    c = 8
+```    
 ## examples
 ### Fun #1: Keep source to source transformations
 ### Fun #2: add log

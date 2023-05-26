@@ -4,7 +4,8 @@ from fun_with_ast.dynamic_matcher import GetDynamicMatcher
 from fun_with_ast.utils_source_match import FixSourceIndentation
 
 
-def GetSource(field, text=None, starting_parens=None, assume_no_indent=False, parent_node=None):
+def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
+              parent_node=None, assume_elif=False):
     """Gets the source corresponding with a given field.
 
     If the node is not a string or a node with a .matcher function,
@@ -38,17 +39,22 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False, pa
         return field.matcher.GetSource()
     else:
         field.matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
-        if text:
-            field.matcher.Match(text)
-        # TODO: Fix this to work with lambdas
-        elif isinstance(field, _ast.stmt) and not assume_no_indent:
-            if not hasattr(field, 'module_node'):
-                raise ValueError(
-                    'No text was provided, and we try to get source from node {} which'
-                    'is a statement, so it must have a .module_node field defined. '
-                    'To add this automatically, call ast_annotate.AddBasicAnnotations'
-                        .format(field))
-            FixSourceIndentation(field.module_node, field)
-
+        _match_text(assume_no_indent, field, text)
+        if isinstance(field, _ast.If) and assume_elif:
+            field.matcher.is_elif = assume_elif
         source_code = field.matcher.GetSource()
         return source_code
+
+
+def _match_text(assume_no_indent, field, text):
+    if text:
+        field.matcher.Match(text)
+    # TODO: Fix this to work with lambdas
+    elif isinstance(field, _ast.stmt) and not assume_no_indent:
+        if not hasattr(field, 'module_node'):
+            raise ValueError(
+                'No text was provided, and we try to get source from node {} which'
+                'is a statement, so it must have a .module_node field defined. '
+                'To add this automatically, call ast_annotate.AddBasicAnnotations'
+                .format(field))
+        FixSourceIndentation(field.module_node, field)

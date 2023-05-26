@@ -53,7 +53,7 @@ class TestIfManupulation:
         assert composed_source == expected_source
 
     def test_If_elif_Manipulation(self, injected_source, capsys):
-        original_if_source = 'if ( c.d() ):\n   a=1\nelif 1==2:\n   b=2'
+        original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
         manipulator = ManipulateIfNode(if_node)
         manipulator.add_nodes([injected_node], IfManipulatorConfig(body_index=1, location_in_body_index=1))

@@ -40,10 +40,15 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
     else:
         field.matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
         _match_text(assume_no_indent, field, text)
-        if isinstance(field, _ast.If) and assume_elif:
-            field.matcher.is_elif = assume_elif
+        _set_elif(assume_elif, field)
         source_code = field.matcher.GetSource()
         return source_code
+
+
+def _set_elif(assume_elif, field):
+    if isinstance(field, _ast.If):
+        if (assume_elif or (hasattr(field, 'is_alif') and field.is_alif)):
+            field.matcher.is_elif = assume_elif
 
 
 def _match_text(assume_no_indent, field, text):

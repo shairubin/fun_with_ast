@@ -12,9 +12,14 @@ class IfManipulatorConfig():
     body_index: int
     location_in_body_index: int
 
+
 class ManipulateIfNode():
     def __init__(self, node):
         self.node = node
+        if not isinstance(node, ast.If):
+            raise ValueError('node must be ast.If')
+        self.is_elif = True if hasattr(node, 'is_elif') and node.is_elif else False
+
 
     def add_nodes(self, nodes: list, location: IfManipulatorConfig):
         self._validate_rules_for_insertion(location, nodes)
@@ -54,6 +59,14 @@ class ManipulateIfNode():
             raise ValueError('Illegal body index')
         if location.body_index > 1:
             raise NotImplementedError('elif not supported yet')
+        if location.body_index == 1:
+            if self.is_elif:
+                if not isinstance(self.node.orelse[0], ast.If):
+                    raise ValueError('orelse is not ast.If and is_elif is True')
+                if len(self.node.orelse) > 1:
+                    raise ValueError('orelse length is larger than 1 and is_elif is True')
+        if location.body_index == 1 and not self.node.orelse:
+            raise ValueError('No oresle in If but index body is 1')
 
     def _add_newlines(self, body_block):
         for node in body_block:
@@ -81,5 +94,7 @@ class ManipulateIfNode():
             if body_index == 1 and not self.node.orelse:
                 ValueError('No oresle in If')
             if body_index == 1:
+                if self.is_elif:
+                    return self.node.orelse[0].body
                 return self.node.orelse
             body_index -= 2

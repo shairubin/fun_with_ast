@@ -1,5 +1,6 @@
 # Fun with ASTs
-This repository contains a library to analyze and manipulate python [Abstract Systax Tress](TBD).
+Provides developers with a rogrammatic tool to change our own code.
+This repository contains a library to analyze and manipulate python code using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation. 
 
 
 ## Why Fun with ASTs

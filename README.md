@@ -10,16 +10,17 @@ This repository contains a library to analyze and manipulate python [Abstract Sy
 
 ## How it works
 
-## AST Parse and unparse examples
+## AST Parse and Unparse Examples
 
-### example #1 
+### example #1: losing comments 
 ```python
 import ast
 code = """
-a=7 # A is 7"""  
+a=7 # A is 7
+"""  
 print(ast.unparse(ast.parse(code)))
 ```
-###### Output: 
+*Output:* 
 ```python
 a = 7 
 ```

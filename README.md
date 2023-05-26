@@ -26,17 +26,17 @@ a = 7
 ```
 
 
-### example #2 
-```python
+### example #2: Losing parentheses 
+```python 
 import ast
-code = """
-if a<7 or b>9:
-    pass"""  
+code ="""if (a<7) or (b>9):
+    pass
+"""
 print(ast.unparse(ast.parse(code)))
 ```
-Output: 
-```python 
-if 6 < 7 or 6 > 9:
+*Output:* 
+```python
+if a < 7 or b > 9:
     pass
 ```
 ### example 3

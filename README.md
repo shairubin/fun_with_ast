@@ -24,12 +24,11 @@ print(ast.unparse(ast.parse(code)))
 ```python
 a = 7 
 ```
-
-
 ### example #2: Losing parentheses 
 ```python 
 import ast
-code ="""if (a<7) or (b>9):
+code ="""
+if (a<7) or (b>9):
     pass
 """
 print(ast.unparse(ast.parse(code)))
@@ -39,10 +38,20 @@ print(ast.unparse(ast.parse(code)))
 if a < 7 or b > 9:
     pass
 ```
-### example 3
+### Example 3: Losing `elif`, losing indentation  
 ```python
 import ast
-print(ast.unparse(ast.parse("""if True:\n  a=2\nelse:\n  if d==8:\n    c=7""")))
+code = """
+if True:  
+  a=2
+else:
+  if d==8:
+    c=7
+"""
+print(ast.unparse(ast.parse(code)))
+```
+*output:*
+```python
 if True:
     a = 2
 elif d == 8:

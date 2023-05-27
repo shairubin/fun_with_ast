@@ -1,9 +1,7 @@
 import unittest
 
-import pytest
-
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.source_matchers.dynamic_matcher import GetDynamicMatcher
 
 
 class FunctionDefMatcherTest(unittest.TestCase):

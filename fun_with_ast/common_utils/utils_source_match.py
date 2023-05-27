@@ -1,5 +1,4 @@
-from fun_with_ast import node_tree_util
-from fun_with_ast.source_matchers import matcher_resolver
+from fun_with_ast.common_utils import node_tree_util
 
 
 def FixSourceIndentation(module_node, node_to_fix, starting_parens=None):

@@ -1,7 +1,7 @@
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.placeholders.string_parser import StringParser
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.utils_source_match import _FindQuoteEnd
+from fun_with_ast.common_utils.utils_source_match import _FindQuoteEnd
 
 
 class StringPartPlaceholder(Placeholder):

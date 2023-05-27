@@ -1,7 +1,7 @@
 import _ast
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.utils_source_match import FixSourceIndentation
+from fun_with_ast.common_utils.utils_source_match import FixSourceIndentation
 
 
 def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,

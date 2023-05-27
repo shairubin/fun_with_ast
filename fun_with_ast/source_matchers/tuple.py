@@ -8,10 +8,10 @@ class TupleSourceMatcher(DefaultSourceMatcher):
 
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
-            TextPlaceholder(r'\s*\(', ''),
+            TextPlaceholder(r'(\s*\(|\s*)', ''),
             SeparatedListFieldPlaceholder(
                 'elts', before_separator_placeholder=TextPlaceholder(r'[ \t]*,[ \t]*', ',')),
-            TextPlaceholder(r'\s*,?\s*\)[ \t]*(#\S*)*', ')')
+            TextPlaceholder(r'(\s*,?\s*\)|\s*)[ \t]*(#\S*)*', ')')
         ]
         super(TupleSourceMatcher, self).__init__(
             node, expected_parts, starting_parens)

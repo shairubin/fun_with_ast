@@ -19,7 +19,6 @@ class NameMatcherTest(unittest.TestCase):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t'
         self._assert_match(node, string)
-    #pytest.mark.skip(reason="Not implemented yet")
     def testBasicMatchWithWSAndComment(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t #comment'
@@ -56,30 +55,18 @@ class NameMatcherTest(unittest.TestCase):
         string = 'a '
         self._assert_match(node, string)
 
-    #@pytest.mark.skip(reason="Not Implemented Yet")
     def testMatchWithComment(self):
         node = create_node.Name('a')
         string = 'a # comment'
         self._assert_match(node, string)
-#        matcher = GetDynamicMatcher(node)
-#        matcher.Match(string)
-#        matched_string = matcher.GetSource()
-#        self.assertEqual(string, matched_string)
+
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')
         string = '  a'
         self._assert_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # matcher.Match(string)
-        # matched_text = matcher.GetSource()
-        # self.assertEqual(string, matched_text)
         string = ' \t  a'
         self._assert_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # matcher.Match(string)
-        # matched_text = matcher.GetSource()
-        # self.assertEqual(string, matched_text)
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):

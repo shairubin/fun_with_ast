@@ -451,7 +451,7 @@ def get_Mult_expected_parts():
 def get_Name_expected_parts():
     return [TextPlaceholder(r'[ \t]*', ''),
             FieldPlaceholder('id'),
-            TextPlaceholder(r'([ \t]*)', '')]
+            TextPlaceholder(r'([ \t]*)(#.*)*', '')]
 #            TextPlaceholder(r'[ \t]+|[ \t]*#.*', '')]
 #    return [FieldPlaceholder('id')]
 

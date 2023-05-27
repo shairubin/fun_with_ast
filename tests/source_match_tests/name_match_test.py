@@ -12,31 +12,23 @@ class NameMatcherTest(unittest.TestCase):
     def testBasicMatch(self):
         node = create_node.Name('foobar')
         string = 'foobar'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
+
 
     def testBasicMatchWithWS(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    @pytest.mark.skip(reason="Not implemented yet")
+        self._assert_match(node, string)
+    #pytest.mark.skip(reason="Not implemented yet")
     def testBasicMatchWithWSAndComment(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t #comment'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testBasicMatchOnlyComment(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar#comment'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testBasicMatchOnlyComment(self):
         node = create_node.Name('foobar')
@@ -57,40 +49,44 @@ class NameMatcherTest(unittest.TestCase):
     def testBasicMatch2(self):
         node = create_node.Name('a')
         string = 'a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testMatchWithWS(self):
         node = create_node.Name('a')
         string = 'a '
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
-    @pytest.mark.skip(reason="Not Implemented Yet")
+    #@pytest.mark.skip(reason="Not Implemented Yet")
     def testMatchWithComment(self):
         node = create_node.Name('a')
         string = 'a # comment'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
+#        matcher = GetDynamicMatcher(node)
+#        matcher.Match(string)
+#        matched_string = matcher.GetSource()
+#        self.assertEqual(string, matched_string)
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')
         string = '  a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._assert_match(node, string)
+        # matcher = GetDynamicMatcher(node)
+        # matcher.Match(string)
+        # matched_text = matcher.GetSource()
+        # self.assertEqual(string, matched_text)
         string = ' \t  a'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._assert_match(node, string)
+        # matcher = GetDynamicMatcher(node)
+        # matcher.Match(string)
+        # matched_text = matcher.GetSource()
+        # self.assertEqual(string, matched_text)
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
+    def _assert_match(self, node, string):
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_source = matcher.GetSource()
+        self.assertEqual(string, matched_source)

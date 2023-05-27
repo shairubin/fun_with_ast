@@ -3,7 +3,7 @@ import unittest
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.source_matchers.dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class PassMatcherTest(unittest.TestCase):

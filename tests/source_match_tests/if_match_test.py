@@ -4,7 +4,7 @@ from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.source_matchers.dynamic_matcher import GetDynamicMatcher
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class IfMatcherTest(unittest.TestCase):

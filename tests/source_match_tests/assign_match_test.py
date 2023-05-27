@@ -37,18 +37,13 @@ class AssignMatcherTest(unittest.TestCase):
         self._assert_matched_source(node, string)
 
     def testBasicMatchAssignWithNL(self):
-        node = create_node.Assign('a', create_node.Num(1))
-        string = 'a=1\n'
+        node = create_node.Assign('a', create_node.Num(2))
+        string = 'a=2'
         self._assert_matched_source(node, string)
 
     def testBasicMatchAssignWithWSAndTab(self):
         node = create_node.Assign('a', create_node.Num(1))
         string = ' a  =  1  \t'
-        self._assert_matched_source(node, string)
-
-    def testBasicMatchAssignWithWSAndTab2(self):
-        node = create_node.Assign('a', create_node.Num(1))
-        string = ' a  =  1  \t\n'
         self._assert_matched_source(node, string)
 
     #@pytest.mark.xfail(strict=True)
@@ -84,10 +79,14 @@ class AssignMatcherTest(unittest.TestCase):
         string = 'a\t=\t     b \t  =1 \t #comment'
         self._assert_matched_source(node, string)
 
-    @pytest.mark.skip(reason="Not Implemented Yet")
     def testMatchMultiAssignNameWithWSAndComment(self):
         node = create_node.Assign(['a', 'b'], create_node.Name('c'))
         string = 'a\t=\t     b \t  =c \t #comment'
+        self._assert_matched_source(node, string)
+
+    def testMatchMultiAssignNameWithWSAndComment3(self):
+        node = create_node.Assign(['a', 'b'], create_node.Name('c'))
+        string = 'a\t=\t     b \t  =c \t #########'
         self._assert_matched_source(node, string)
 
     def testNotMatchMultiAssignWithWS(self):

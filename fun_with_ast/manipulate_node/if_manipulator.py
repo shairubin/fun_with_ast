@@ -14,22 +14,23 @@ class IfManipulatorConfig():
 
 
 class ManipulateIfNode():
-    def __init__(self, node):
+    def __init__(self, node, config: IfManipulatorConfig):
         self.node = node
+        self.config = config
         if not isinstance(node, ast.If):
             raise ValueError('node must be ast.If')
         self.is_elif = True if hasattr(node, 'is_elif') and node.is_elif else False
 
 
-    def add_nodes(self, nodes: list, location: IfManipulatorConfig):
-        self._validate_rules_for_insertion(location, nodes)
-        body_block_to_manipulate = self._get_block(location.body_index)
+    def add_nodes(self, nodes: list):
+        self._validate_rules_for_insertion(nodes)
+        body_block_to_manipulate = self._get_block(self.config.body_index)
         ident = self._get_node_indentation(body_block_to_manipulate)
         node_to_inject = nodes[0]
         source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
         node_to_inject.matcher.FixIndentation(ident)
 
-        body_block_to_manipulate.insert(location.location_in_body_index, node_to_inject)
+        body_block_to_manipulate.insert(self.config.location_in_body_index, node_to_inject)
         self._add_newlines(body_block_to_manipulate)
 
     def get_body_source(self, IFManipulatorConfig):
@@ -48,24 +49,24 @@ class ManipulateIfNode():
         placeholder.Match(module_node, expr_value_source)
         return module_node
 
-    def _validate_rules_for_insertion(self, location, nodes):
+    def _validate_rules_for_insertion(self, nodes):
         if len(nodes) > 1:
             raise NotImplementedError("only one node can be added at a time")
-        if location.location_in_body_index > len(self.node.body):
+        if self.config.location_in_body_index > len(self.node.body):
             raise ValueError("location is out of range")
-        if location.location_in_body_index < 0:
+        if self.config.location_in_body_index < 0:
             raise ValueError("location must be positive")
-        if location.body_index < 0:
+        if self.config.body_index < 0:
             raise ValueError('Illegal body index')
-        if location.body_index > 1:
+        if self.config.body_index > 1:
             raise NotImplementedError('elif not supported yet')
-        if location.body_index == 1:
+        if self.config.body_index == 1:
             if self.is_elif:
                 if not isinstance(self.node.orelse[0], ast.If):
                     raise ValueError('orelse is not ast.If and is_elif is True')
                 if len(self.node.orelse) > 1:
                     raise ValueError('orelse length is larger than 1 and is_elif is True')
-        if location.body_index == 1 and not self.node.orelse:
+        if self.config.body_index == 1 and not self.node.orelse:
             raise ValueError('No oresle in If but index body is 1')
 
     def _add_newlines(self, body_block):

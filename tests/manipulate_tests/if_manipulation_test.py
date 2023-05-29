@@ -31,8 +31,8 @@ class TestIfManupulation:
     def test_If_Manipulation(self, injected_source, capsys):
         original_if_source = 'if (c.d()):\n   a=1'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes([injected_node],IfManipulatorConfig(body_index=0, location_in_body_index=0))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=0))
+        manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         self._capture_source(capsys, composed_source, 'modified source:', bcolors.OKCYAN)
         add_new_line = '' if injected_source.endswith('\n') else '\n'
@@ -43,8 +43,8 @@ class TestIfManupulation:
     def test_If_Else_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes([injected_node], IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator = ManipulateIfNode(if_node,IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
         expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
@@ -53,8 +53,8 @@ class TestIfManupulation:
     def test_If_elif_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node)
-        manipulator.add_nodes([injected_node], IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
         expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )

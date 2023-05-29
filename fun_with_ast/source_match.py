@@ -48,8 +48,6 @@ def get_FormattedValue_expected_parts():
     return [
         TextPlaceholder(r'\{|[\'\"]\{', '{'),
         FieldPlaceholder('value'),
-#        FieldPlaceholder('format_spec', before_placeholder=TextPlaceholder(r':', ':')),
-#        TextPlaceholder(r"(\}\'|})", default='', longest_match=False)
         TextPlaceholder(r"(\}[\'\"]|\})", default='', longest_match=False)
     ]
 
@@ -98,7 +96,7 @@ def get_Assign_expected_parts():
     return [
         SeparatedListFieldPlaceholder('targets',   after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', ''),
+        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 
 
@@ -517,7 +515,6 @@ def get_Return_expected_parts():
     return [
         TextPlaceholder(r'[ \t]*return[ \t]*', 'return '),
         FieldPlaceholder('value'),
-#        TextPlaceholder(r'\n', '\n'),
     ]
 
 
@@ -636,7 +633,8 @@ def get_UnaryOp_expected_parts():
         FieldPlaceholder('op'),
         TextPlaceholder(r' *', ' '),
         FieldPlaceholder('operand'),
-        TextPlaceholder(r'[ \t]*#*.*\n*', '')
+        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')
+#        TextPlaceholder(r'[ \t]*#*.*\n*', '')
     ]
 
 
@@ -663,7 +661,6 @@ class WithItemSourceMatcher(SourceMatcher):
             'optional_vars',
             before_placeholder=TextPlaceholder(r' *as *', ' as '))
 
-        #self.compound_separator = TextPlaceholder(r'\s*,\s*', ', ')
 
     def Match(self, string):
         #    if 'as' not in string:

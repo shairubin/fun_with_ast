@@ -49,6 +49,13 @@ class UnaryOpMatcherTest(unittest.TestCase):
         string = 'not a'
         self._validate_match(node, string)
 
+    def testNotUnaryOpIllegal(self):
+        node = create_node.UnaryOp(
+            create_node.Not(),
+            create_node.Name('a'))
+        string = 'not a:\n'
+        self._validate_no_match(node, string)
+
     def testInvertUnaryOp(self):
         node = create_node.UnaryOp(
             create_node.Invert(),
@@ -81,3 +88,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         source = matcher.Match(string)
         self.assertEqual(string, source)
+    def _validate_no_match(self, node, string):
+        matcher = GetDynamicMatcher(node)
+        source = matcher.Match(string)
+        self.assertNotEqual(string, source)

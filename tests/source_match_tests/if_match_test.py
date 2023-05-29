@@ -1,7 +1,7 @@
 import unittest
 
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
+from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFromInput
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -128,3 +128,15 @@ else:
         if match_get_source:
             source = GetSource(node, assume_no_indent=True, assume_elif=assume_elif)
             self.assertEqual(string, source)
+
+    def testIfFromSource(self):
+        string = "if (a and b):\n     a = 1\nelse:\n    a=2"
+        if_node = GetNodeFromInput(string)
+        if_node_matcher = GetDynamicMatcher(if_node)
+        if_node_matcher.Match(string)
+
+    def testIfFromSource(self):
+        string = "if not a:\n     a = 1\nelse:\n    a=2"
+        if_node = GetNodeFromInput(string)
+        if_node_matcher = GetDynamicMatcher(if_node)
+        if_node_matcher.Match(string)

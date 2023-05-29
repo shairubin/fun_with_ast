@@ -1,11 +1,8 @@
 import ast
-import dataclasses
 
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 
-from fun_with_ast.source_matchers.body import BodyPlaceholder
-
-from fun_with_ast.manipulate_node import create_node
 from dataclasses import dataclass
 @dataclass
 class IfManipulatorConfig():
@@ -13,7 +10,7 @@ class IfManipulatorConfig():
     location_in_body_index: int
 
 
-class ManipulateIfNode():
+class ManipulateIfNode(BodyManipulator):
     def __init__(self, node, config: IfManipulatorConfig):
         self.node = node
         self.config = config
@@ -24,30 +21,25 @@ class ManipulateIfNode():
 
     def add_nodes(self, nodes: list):
         self._validate_rules_for_insertion(nodes)
-        body_block_to_manipulate = self._get_block(self.config.body_index)
-        ident = self._get_node_indentation(body_block_to_manipulate)
         node_to_inject = nodes[0]
-        source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
-        node_to_inject.matcher.FixIndentation(ident)
+        body_block_to_manipulate = self._get_block(self.config.body_index)
+        self.inject_to_body(body_block_to_manipulate, node_to_inject, self.config.location_in_body_index)
 
-        body_block_to_manipulate.insert(self.config.location_in_body_index, node_to_inject)
-        self._add_newlines(body_block_to_manipulate)
+    # def get_body_source(self, IFManipulatorConfig):
+    #     body_block = self._get_block(IFManipulatorConfig.body_index)
+    #     return GetSource(body_block)
 
-    def get_body_source(self, IFManipulatorConfig):
-        body_block = self._get_block(IFManipulatorConfig.body_index)
-        return GetSource(body_block)
-
-    def _handle_expr_node(self, nodes):
-        expr_node = nodes[0]
-        module_node = create_node.Module(expr_node)
-        expr_value_source = expr_node.value.matcher.GetSource()
-        if expr_value_source.endswith("\n"):
-            raise NotImplementedError("expr value source cannot end with newline")
-        else:
-            expr_value_source += "\n"
-        placeholder = BodyPlaceholder('body')
-        placeholder.Match(module_node, expr_value_source)
-        return module_node
+    # def _handle_expr_node(self, nodes):
+    #     expr_node = nodes[0]
+    #     module_node = create_node.Module(expr_node)
+    #     expr_value_source = expr_node.value.matcher.GetSource()
+    #     if expr_value_source.endswith("\n"):
+    #         raise NotImplementedError("expr value source cannot end with newline")
+    #     else:
+    #         expr_value_source += "\n"
+    #     placeholder = BodyPlaceholder('body')
+    #     placeholder.Match(module_node, expr_value_source)
+    #     return module_node
 
     def _validate_rules_for_insertion(self, nodes):
         if len(nodes) > 1:
@@ -68,23 +60,6 @@ class ManipulateIfNode():
                     raise ValueError('orelse length is larger than 1 and is_elif is True')
         if self.config.body_index == 1 and not self.node.orelse:
             raise ValueError('No oresle in If but index body is 1')
-
-    def _add_newlines(self, body_block):
-        for node in body_block:
-            node_source = node.matcher.GetSource()
-            if node_source.endswith("\n"):
-                continue
-            node.matcher.add_newline_to_source()
-
-    def _get_node_indentation(self, node):
-        ident = 0
-        for stmt in node:
-            stmt_ident = stmt.col_offset
-            if stmt_ident > ident and ident == 0:
-                ident = stmt_ident
-            elif stmt_ident != ident and ident != 0:
-                raise ValueError('illegal ident')
-        return ident
 
     def _get_block(self, body_index):
         while True:

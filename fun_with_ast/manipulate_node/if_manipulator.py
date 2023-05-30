@@ -4,13 +4,17 @@ from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 
 from dataclasses import dataclass
+
+from fun_with_ast.source_matchers.body import BodyPlaceholder
+
+
 @dataclass
 class IfManipulatorConfig():
     body_index: int
     location_in_body_index: int
 
 
-class ManipulateIfNode(BodyManipulator):
+class ManipulateIfNode():
     def __init__(self, node, config: IfManipulatorConfig):
         self.node = node
         self.config = config
@@ -23,12 +27,17 @@ class ManipulateIfNode(BodyManipulator):
         self._validate_rules_for_insertion(nodes)
         node_to_inject = nodes[0]
         body_block_to_manipulate = self._get_block(self.config.body_index)
-        self.inject_to_body(body_block_to_manipulate, node_to_inject, self.config.location_in_body_index)
+        body_manipulator = BodyManipulator(body_block_to_manipulate)
+        body_manipulator.inject_node(node_to_inject, self.config.location_in_body_index)
 
-    # def get_body_source(self, IFManipulatorConfig):
-    #     body_block = self._get_block(IFManipulatorConfig.body_index)
-    #     return GetSource(body_block)
-
+    def get_body_orelse_source(self):
+        if self.config.body_index ==0:
+            source = self.node.matcher.body_placeholder.GetSource(self.node)
+        elif self.config.body_index ==1:
+            source = self.node.matcher.orelse_placeholder.GetSource(self.node)
+        else:
+            raise ValueError('Illegal body index')
+        return source
     # def _handle_expr_node(self, nodes):
     #     expr_node = nodes[0]
     #     module_node = create_node.Module(expr_node)

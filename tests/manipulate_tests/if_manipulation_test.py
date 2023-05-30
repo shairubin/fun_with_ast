@@ -25,9 +25,18 @@ class bcolors:
                         ])
 def injected_source(request):
     yield request.param
+
+@pytest.fixture(params=[('   pass\n', '   a=1', 0),
+                        ('   a=1\n', '   pass', 0),
+                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n", '  a=1', 0),
+                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0),
+                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1),
+                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1)
+
+                        ])
+def body_and_orelse(request):
+    yield request.param
 class TestIfManupulation:
-
-
     def test_If_Manipulation(self, injected_source, capsys):
         original_if_source = 'if (c.d()):\n   a=1'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
@@ -60,6 +69,22 @@ class TestIfManupulation:
         expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
         assert composed_source == expected_source
 
+    def test_get_source_body_Manipulation(self, body_and_orelse, capsys):
+        body = body_and_orelse[0]
+        orelse = body_and_orelse[1]
+        body_index = body_and_orelse[2]
+        original_if_source = 'if ( c.d() ):\n'   + body + 'else:\n' + orelse
+        if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=body_index, location_in_body_index=1))
+        the_source = manipulator.get_body_orelse_source()
+        title = 'Body source:' if body_index == 0 else 'Else source:'
+        self._capture_source(capsys, the_source, title, bcolors.OKGREEN, True)
+        if body_index == 0:
+            assert the_source == body
+        elif body_index == 1:
+            assert the_source == orelse
+        else:
+            raise ValueError("body index can be only 0 or 1")
 
     def _create_nodes(self, capsys, injected_source, original_if_source):
         self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
@@ -87,8 +112,9 @@ class TestIfManupulation:
         if_node.matcher = if_node_matcher
         return if_node
 
-    def _capture_source(self, capsys, source, title , color):
-        compile(source, '<string>', mode='exec')
+    def _capture_source(self, capsys, source, title , color, ignore_ident=False):
+        if not ignore_ident:
+            compile(source, '<string>', mode='exec')
         print(color + '\n' + title + '\n' + source + bcolors.ENDC)
         out, _ = capsys.readouterr()
         sys.stdout.write(out)

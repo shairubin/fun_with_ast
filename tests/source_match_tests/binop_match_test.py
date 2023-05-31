@@ -111,6 +111,22 @@ class BinOpMatcherTest(unittest.TestCase):
         string = 'a % b    '
         self._validate_match(node, string)
 
+    def testModBinOpWithComment(self):
+        node = create_node.BinOp(
+            create_node.Name('a'),
+            create_node.Mod(),
+            create_node.Name('b'))
+        string = 'a % b    #comment'
+        self._validate_match(node, string)
+
+    def testModBinOpWithCommentNoMatch(self):
+        node = create_node.BinOp(
+            create_node.Name('a'),
+            create_node.Mod(),
+            create_node.Name('b'))
+        string = 'a % c    #comment'
+        self._validate_no_match(node, string)
+
     def testPowBinOp(self):
         node = create_node.BinOp(
             create_node.Name('a'),

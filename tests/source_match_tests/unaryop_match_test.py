@@ -14,11 +14,19 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Name('a'))
         string = '+a'
         self._validate_match(node, string)
+    def testUAddUnaryOp2(self):
+        node = create_node.UnaryOp(
+            create_node.UAdd(),
+            create_node.Num('1'))
+        string = '+1'
+        self._validate_match(node, string)
 
-    def _validate_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        source = matcher.Match(string)
-        self.assertEqual(string, source)
+    def testUAddUnaryOp3(self):
+        node = create_node.UnaryOp(
+            create_node.USub(),
+            create_node.Num('1'))
+        string = '-1'
+        self._validate_match(node, string)
 
     def testUSubUnaryOp(self):
         node = create_node.UnaryOp(
@@ -92,3 +100,4 @@ class UnaryOpMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         source = matcher.Match(string)
         self.assertNotEqual(string, source)
+

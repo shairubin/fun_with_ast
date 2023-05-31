@@ -46,8 +46,10 @@ class FieldPlaceholder(CompositePlaceholder):
         else:
             field_value = getattr(node, self.field_name)
 
-        if not field_value:
+        if not field_value and field_value != 0:
             return []
+        #if field_value is None:
+        #    return []
 
         elements = []
         if self.before_placeholder:

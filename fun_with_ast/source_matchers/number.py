@@ -37,17 +37,18 @@ class NumSourceMatcher(SourceMatcher):
             raise BadlySpecifiedTemplateError(
                 'String "{}" should have started with string "{}"'
                 .format(int_as_str, node_string_val))
-        remaining_string = self.MatchEndParen(end_parans)
+        self.MatchEndParen(end_parans)
 
         self.matched_num = self.node.n
         start_parans_text = self.GetStartParenText()
         end_parans_text = self.GetEndParenText()
         self.matched_as_str = start_parans_text +  int_as_str + end_parans_text  + comment_as_str
 
-#        unused_before, after = string.split(node_as_str, 1)
+        unused_before, after = string.split(int_as_str, 1)
 #        if after and after[0] in ('l', 'L', 'j', 'J'):
 #            self.suffix = after[0]
 #            node_as_str += after[0]
+
         return int_as_str
 
     def GetSource(self):

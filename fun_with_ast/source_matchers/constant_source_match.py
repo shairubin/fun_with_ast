@@ -1,5 +1,8 @@
 import ast
 
+from fun_with_ast.placeholders.composite import FieldPlaceholder
+from fun_with_ast.placeholders.text import TextPlaceholder
+from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.source_matchers.number import NumSourceMatcher, BoolSourceMatcher
 from fun_with_ast.source_matchers.str import StrSourceMatcher
 
@@ -9,7 +12,11 @@ class ConstantSourceMatcher():
         if not isinstance(node, ast.Constant):
             raise ValueError
         self.constant_node = node
-        self.num_matcher = NumSourceMatcher(node, starting_parens)
+        self.num_matcher = DefaultSourceMatcher(node, [#TextPlaceholder(r'[\+-]*', ''),
+                                                       FieldPlaceholder('value'),
+                                                       TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
+
+        #        self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node
         if isinstance(self.parent_node, ast.JoinedStr):

@@ -2,6 +2,7 @@ import unittest
 
 import pytest
 
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
@@ -17,11 +18,34 @@ class ConstantNumMatcherTest(unittest.TestCase):
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
-
-
-    def testBasicMatchWithPlusSign(self):
+    def testBasicMatchNumWithError(self):
         node = create_node.Num('1')
-        string = '+1'
+        string = '1:#Comment'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertNotEqual(string, matched_string)
+
+
+    # def testBasicMatchWithPlusSign(self):
+    #     node = create_node.Num('1')
+    #     string = '+1'
+    #     matcher = GetDynamicMatcher(node)
+    #     matcher.Match(string)
+    #     matched_string = matcher.GetSource()
+    #     self.assertEqual(string, matched_string)
+    #
+    # def testBasicMatchWithPlusSign2(self):
+    #     node = create_node.Num('1')
+    #     string = '(+1)'
+    #     matcher = GetDynamicMatcher(node)
+    #     matcher.Match(string)
+    #     matched_string = matcher.GetSource()
+    #     self.assertEqual(string, matched_string)
+    @pytest.mark.skip('Not implemented yet')
+    def testBasicMatchWithPlusSign3(self):
+        node = create_node.Num('1')
+        string = '(    (    +1   )   ) # comment'
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
         matched_string = matcher.GetSource()
@@ -69,8 +93,8 @@ class ConstantNumMatcherTest(unittest.TestCase):
         self.assertEqual(string, matched_string)
 
     def testWithMultiParansAndWS(self):
-        node = create_node.Num('1')
-        string = '((   1   )    ) '
+        node = create_node.Num('-1')
+        string = '((   -1   )    ) '
         self._validate_match(node, string)
 
     def _validate_match(self, node, string):

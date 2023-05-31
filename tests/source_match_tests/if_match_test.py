@@ -15,6 +15,23 @@ class IfMatcherTest(unittest.TestCase):
         matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
+    def testSimpleIfElse2(self):
+        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num(2)),
+                              body=[create_node.Pass()], orelse=[create_node.Pass()])
+        string = 'if       a==2:   \n   pass    \nelse:\n   pass \n'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matcher_source = matcher.GetSource()
+        self.assertEqual(string, matcher_source)
+
+    def testSimpleIfElse2WithComment(self):
+        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num(2)),
+                              body=[create_node.Pass()], orelse=[create_node.Pass()])
+        string = 'if       a==2:#comment   \n   pass    \nelse:\n   pass \n'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matcher_source = matcher.GetSource()
+        self.assertEqual(string, matcher_source)
 
     def testSimpleIfElseWithCommentAndSpeacses(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])

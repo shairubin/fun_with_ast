@@ -38,17 +38,6 @@ class ManipulateIfNode():
         else:
             raise ValueError('Illegal body index')
         return source
-    # def _handle_expr_node(self, nodes):
-    #     expr_node = nodes[0]
-    #     module_node = create_node.Module(expr_node)
-    #     expr_value_source = expr_node.value.matcher.GetSource()
-    #     if expr_value_source.endswith("\n"):
-    #         raise NotImplementedError("expr value source cannot end with newline")
-    #     else:
-    #         expr_value_source += "\n"
-    #     placeholder = BodyPlaceholder('body')
-    #     placeholder.Match(module_node, expr_value_source)
-    #     return module_node
 
     def _validate_rules_for_insertion(self, nodes):
         if len(nodes) > 1:

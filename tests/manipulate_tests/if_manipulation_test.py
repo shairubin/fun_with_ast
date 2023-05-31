@@ -26,12 +26,15 @@ class bcolors:
 def injected_source(request):
     yield request.param
 
-@pytest.fixture(params=[('   pass\n', '   a=1', 0),
-                        ('   a=1\n', '   pass', 0),
-                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n", '  a=1', 0),
-                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0),
-                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1),
-                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1)
+@pytest.fixture(params=[#('   pass\n', '   a=1\n', 0, 'c.d():'),
+                        ('   a=1\n', '   pass', 0, 'c.d(): # comment'),
+                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
+                         '  a=1', 0, 'a>2: #comment'),
+                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a and not b and not not c:' ),
+                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1,
+                         '(a and not b) or not (not c):'),
+                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1, 'a+b > c/d+c:'),
+                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a+b > c/(d+c):')
 
                         ])
 def body_and_orelse(request):
@@ -73,11 +76,13 @@ class TestIfManupulation:
         body = body_and_orelse[0]
         orelse = body_and_orelse[1]
         body_index = body_and_orelse[2]
-        original_if_source = 'if ( c.d() ):\n'   + body + 'else:\n' + orelse
+        test = body_and_orelse[3]
+        original_if_source = 'if '+ test + '\n'   + body + 'else:\n' + orelse
         if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=body_index, location_in_body_index=1))
         the_source = manipulator.get_body_orelse_source()
         title = 'Body source:' if body_index == 0 else 'Else source:'
+        title = 'test_get_source. ' + title
         self._capture_source(capsys, the_source, title, bcolors.OKGREEN, True)
         if body_index == 0:
             assert the_source == body

@@ -178,10 +178,12 @@ def Assign(left, right):
             new_targets.append(_WrapWithName(target, ctx_type=CtxEnum.STORE))
         else:
             new_targets.append(target)
-    return _ast.Assign(
-        targets=new_targets,
-        value=right)
-
+    base = _extract_base(right)
+    result = _ast.Assign(
+            targets=new_targets,
+            value=right)
+    result.base = base
+    return result
 
 def AugAssign(left, op, right):
     """Creates an _ast.AugAssign node.
@@ -817,7 +819,25 @@ def NotIn():
 
 def Num(number):
     """Creates an _ast.Constant node."""
-    return _ast.Constant(int(number))
+    if not isinstance(number, str):
+        raise ValueError(f'number must be a str to support bases')
+    base = _extract_base(number)
+    result =  _ast.Constant(value=int(number, base))
+    result.base = base
+    return result
+
+
+def _extract_base(number):
+    if str(number).startswith('0b'):
+        base = 2
+    elif str(number).startswith('0o'):
+        base = 8
+    elif str(number).startswith('0x'):
+        base = 16
+    else:
+        base = 10
+    return base
+
 
 def Bool(boolean):
     """Creates an _ast.Constant node."""
@@ -838,7 +858,7 @@ def Pow():
 
 def Return(value):
     if isinstance(value, int):
-        value_node = Num(value)
+        value_node = Num(str(value))
     elif isinstance(value, str):
         value_node = Str(value)
     elif isinstance(value, _ast.AST):
@@ -907,8 +927,15 @@ def Sub():
 
 def Subscript(value, upper=None, lower=None, step=None, ctx=CtxEnum.LOAD):
     value = _WrapWithName(value, ctx)
+    new_bound = [None,None,None]
+    for index, item in enumerate([upper, lower, step]):
+        if item is not None:
+            if not isinstance(item, int):
+                raise ValueError('Subscript must be an int')
+            item = _WrapWithName(item, ctx_type=CtxEnum.LOAD)
+            new_bound[index] = item
     return _ast.Subscript(
-        value=value, slice=Slice(upper, lower, step), ctx=GetCtx(ctx))
+        value=value, slice=Slice(new_bound[0], new_bound[1], new_bound[2]), ctx=GetCtx(ctx))
 
 
 class Comment(_ast.stmt):
@@ -983,10 +1010,10 @@ def Tuple(items, **kwargs):
 
     new_items = []
     for item in items:
-        if isinstance(item, str):
+        if isinstance(item, (str, int, ast.Constant)):
             new_items.append(_WrapWithName(item))
         else:
-            new_items.append(item)
+            raise NotImplementedError('Tuple item type not implemented')
 
     for item in new_items:
         if isinstance(item, _ast.Name):

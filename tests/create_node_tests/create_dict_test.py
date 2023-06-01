@@ -18,7 +18,7 @@ class CreateDictTest(CreateNodeTestBase):
         expected_node = GetNodeFromInput(expected_string).value
         test_node = create_node.Dict(
             [create_node.Name('a')],
-            [create_node.Num(1)])
+            [create_node.Num('1')])
         self.assertNodesEqual(expected_node, test_node)
 
     def testDictWithNoKeysOrVals(self):

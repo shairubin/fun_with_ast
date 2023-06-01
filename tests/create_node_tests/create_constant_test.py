@@ -16,13 +16,13 @@ class CreateNumTest(CreateNodeTestBase):
     def testNumWithInteger(self):
         expected_string = '15'
         expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Num(15)
+        test_node = create_node.Num('15')
         self.assertNodesEqual(expected_node, test_node)
 
     def testNumWithHex(self):
         expected_string = '0xa5'
         expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Num(0xa5)
+        test_node = create_node.Num('0xa5')
         self.assertNodesEqual(expected_node, test_node)
 
     def testNumWithFloat(self):

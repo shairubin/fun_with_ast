@@ -1,7 +1,9 @@
 import _ast
+import ast
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.common_utils.utils_source_match import FixSourceIndentation
+
 
 
 def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
@@ -33,8 +35,10 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         starting_parens = []
     if isinstance(field, str):
         return field
-    if isinstance(field, int):
+    if isinstance(field, bool):
         return str(field)
+    if isinstance(field, int):
+        return _str_from_int(field, parent_node)
     if hasattr(field, 'matcher') and field.matcher:
         return field.matcher.GetSource()
     else:
@@ -63,3 +67,19 @@ def _match_text(assume_no_indent, field, text):
                 'To add this automatically, call ast_annotate.AddBasicAnnotations'
                 .format(field))
         FixSourceIndentation(field.module_node, field)
+
+def _str_from_int(field, parent_node):
+    if parent_node is None:
+        return str(field)
+    if not isinstance(parent_node, (ast.Constant, ast.Assign)):
+        raise ValueError('not a Constant node, not supported')
+    if not hasattr(parent_node, 'base') or parent_node is None:
+        return str(field)
+    if parent_node.base == 2:
+        return bin(field)
+    if parent_node.base == 8:
+        return oct(field)
+    if parent_node.base == 16:
+        return hex(field)
+    return str(field)
+

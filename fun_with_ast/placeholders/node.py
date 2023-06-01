@@ -34,4 +34,4 @@ class NodePlaceholder(Placeholder):
     def GetSource(self, unused_node):
         if isinstance(self.node, ast.Expr)  and not hasattr(self.node, 'matcher') :
             raise NotImplementedError('Expr nodes must have a matcher attribute')
-        return GetSource(self.node)
+        return GetSource(self.node, parent_node=unused_node)

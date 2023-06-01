@@ -11,6 +11,7 @@ from fun_with_ast.manipulate_node import create_node
 
 class ConstantNumMatcherTest(unittest.TestCase):
 
+
     def testBasicMatchNum(self):
         node = create_node.Num('1')
         string = '1'
@@ -18,6 +19,15 @@ class ConstantNumMatcherTest(unittest.TestCase):
         matcher.Match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
+    def testBasicMatchNumBinary(self):
+        node = create_node.Num('0b0')
+        string = '0b0'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
     def testBasicMatchNumWithError(self):
         node = create_node.Num('1')
         string = '1:#Comment'

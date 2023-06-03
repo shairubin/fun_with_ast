@@ -66,3 +66,4 @@ class StringParser(object):
                 self._MatchTextPlaceholder(element)
             else:
                 self._MatchNode(element)
+        return

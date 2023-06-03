@@ -7,9 +7,10 @@ from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.manipulate_node import create_node
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class ConstantNumMatcherTest(unittest.TestCase):
+class ConstantNumMatcherTest(BaseTestUtils):
 
 
     def testBasicMatchNum(self):
@@ -105,12 +106,8 @@ class ConstantNumMatcherTest(unittest.TestCase):
     def testWithMultiParansAndWS(self):
         node = create_node.Num('-1')
         string = '((   -1   )    ) '
-        self._validate_match(node, string)
+        self._verify_match(node, string)
 
-    def _validate_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
 
     def testNoMatchMultiParansAndWS(self):
         node = create_node.Num('1')
@@ -128,7 +125,19 @@ class ConstantNumMatcherTest(unittest.TestCase):
     def testLargeNumberMatch(self):
         node = create_node.Num('1234567890987654321')
         string = '1234567890987654321'
-        self._validate_match(node, string)
+        self._verify_match(node, string)
+
+    def testLargeNumberMatchHex(self):
+        node = create_node.Num('0xffaa')
+        string = '\t0xffaa\t #comment'
+        self._verify_match(node, string)
+
+    def testLargeNumberMatchHexNoMatch(self):
+        node = create_node.Num('0xffab')
+        string = '\t0xffaa\t #comment'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.Match(string)
 
     def testBasicNoMatchNum(self):
         node = create_node.Num('2')
@@ -137,16 +146,16 @@ class ConstantNumMatcherTest(unittest.TestCase):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.Match(string)
         string = '2'
-        self._validate_match(node, string)
+        self._verify_match(node, string)
 
     def testMatchBool(self):
         node = create_node.Bool(False)
         string = 'False'
-        self._validate_match(node, string)
+        self._verify_match(node, string)
 
     def testMatchBoolParans(self):
         node = create_node.Bool(False)
         string = '(False)'
-        self._validate_match(node, string)
+        self._verify_match(node, string)
 
 

@@ -38,7 +38,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
     if isinstance(field, bool):
         return str(field)
     if isinstance(field, int):
-        return _str_from_int(field, parent_node)
+        return _str_from_int(field, parent_node, text)
     if hasattr(field, 'matcher') and field.matcher:
         return field.matcher.GetSource()
     else:
@@ -68,13 +68,27 @@ def _match_text(assume_no_indent, field, text):
                 .format(field))
         FixSourceIndentation(field.module_node, field)
 
-def _str_from_int(field, parent_node):
+
+def _guess_base_from_string(string, field):
+    if string.startswith('0x'):
+        return hex(field)
+    if string.startswith('0b'):
+        return bin(field)
+    if string.startswith('0o'):
+        return oct(field)
+    return str(field)
+
+
+def _str_from_int(field, parent_node, string):
     if parent_node is None:
         return str(field)
     if not isinstance(parent_node, (ast.Constant, ast.Assign)):
         raise ValueError('not a Constant node, not supported')
     if not hasattr(parent_node, 'base') or parent_node is None:
-        return str(field)
+        if string is not None:
+            return _guess_base_from_string(string, field)
+        else:
+            return str(field)
     if parent_node.base == 2:
         return bin(field)
     if parent_node.base == 8:

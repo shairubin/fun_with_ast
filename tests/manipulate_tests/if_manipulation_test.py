@@ -46,7 +46,7 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=0))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        self._capture_source(capsys, composed_source, 'modified source:', bcolors.OKCYAN)
+        #self._capture_source(capsys, composed_source, 'modified source:', bcolors.OKCYAN)
         add_new_line = '' if injected_source.endswith('\n') else '\n'
         expected_source = original_if_source.replace('   a=1',  '   '+injected_source + add_new_line +'   a=1\n')
         assert expected_source == composed_source

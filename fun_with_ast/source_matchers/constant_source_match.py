@@ -2,22 +2,27 @@ import ast
 
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.source_matchers.number import NumSourceMatcher, BoolSourceMatcher
 from fun_with_ast.source_matchers.str import StrSourceMatcher
 
 
-class ConstantSourceMatcher():
+class ConstantSourceMatcher(SourceMatcher):
     def __init__(self, node, starting_parens=None, parent_node=None):
+        SourceMatcher.__init__(self, node)
         if not isinstance(node, ast.Constant):
             raise ValueError
-        self.constant_node = node
-        self.num_matcher = DefaultSourceMatcher(node, [#TextPlaceholder(r'[\+-]*', ''),
+#        self.node = node
+        self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
                                                        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
 
         #        self.num_matcher = NumSourceMatcher(node, starting_parens)
-        self.bool_matcher = BoolSourceMatcher(node, starting_parens)
+        self.bool_matcher = DefaultSourceMatcher(node, [
+                                                       FieldPlaceholder('value'),
+                                                       TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
+            #BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node
         if isinstance(self.parent_node, ast.JoinedStr):
             self.accept_multiparts_string = False
@@ -27,19 +32,22 @@ class ConstantSourceMatcher():
 
 
     def Match(self, string):
-        if isinstance(self.constant_node.n, bool):
+        if isinstance(self.node.n, bool):
             return self.bool_matcher.Match(string)
-        if isinstance(self.constant_node.n, int) and isinstance(self.constant_node.s, int):
+        if isinstance(self.node.n, int) and isinstance(self.node.s, int):
             return self.num_matcher.Match(string)
-        if isinstance(self.constant_node.n, str) and isinstance(self.constant_node.s, str):
+        if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher.Match(string)
 
     def GetSource(self):
-        if isinstance(self.constant_node.n, bool) and isinstance(self.constant_node.s, int):
+        self.validated_call_to_match()
+        if self.matched:
+            return self.matched_text
+        if isinstance(self.node.n, bool) and isinstance(self.node.s, int):
             return self.bool_matcher.GetSource()
-        if isinstance(self.constant_node.n, int) and isinstance(self.constant_node.s, int):
+        if isinstance(self.node.n, int) and isinstance(self.node.s, int):
             return self.num_matcher.GetSource()
-        if isinstance(self.constant_node.n, str) and isinstance(self.constant_node.s, str):
+        if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher.GetSource()
 
         raise NotImplementedError

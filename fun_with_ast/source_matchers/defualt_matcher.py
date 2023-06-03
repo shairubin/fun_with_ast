@@ -24,7 +24,7 @@ class DefaultSourceMatcher(SourceMatcher):
             else:
                 previous_was_string = False
         self.expected_parts = expected_parts
-        self.matched = False
+
 
     def Match(self, string):
         """Matches the string against self.expected_parts.
@@ -63,21 +63,29 @@ class DefaultSourceMatcher(SourceMatcher):
                 'When attempting to match string "{}" with {}, this '
                 'error resulted:\n\n{}'
                     .format(string, self, e.message))
-        matched_string = string
+#        matched_string = self.GetSource()
+        matched_string = DefaultSourceMatcher.GetSource(self)
         if remaining_string:
             matched_string = string[:-len(remaining_string)]
-        leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
-        start_parens = self.GetStartParenText()
+        #leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
+        #start_parens = self.GetStartParenText()
         end_parans = self.GetEndParenText()
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
-        result =  (leading_ws + start_parens + matched_string + end_parans + end_ws + self.end_of_line_comment)
+#        result =  (leading_ws + start_parens + matched_string + end_parans + end_ws + self.end_of_line_comment)
+        result =  (matched_string + end_parans + end_ws + self.end_of_line_comment)
+        self.matched = True
+        self.matched_source = result
         return result
 
 
     def GetSource(self):
+        self.validated_call_to_match()
+        if self.matched:
+            return self.matched_source
         source_list = []
         for part in self.expected_parts:
-            source_list.append(part.GetSource(self.node))
+            part_source = part.GetSource(self.node)
+            source_list.append(part_source)
         source = ''.join(source_list)
         if self.paren_wrapped:
             source = '{}{}{}'.format(

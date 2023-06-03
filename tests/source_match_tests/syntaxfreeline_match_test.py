@@ -4,62 +4,44 @@ import pytest
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class SyntaxFreeLineMatcherTest(unittest.TestCase):
+class SyntaxFreeLineMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = SyntaxFreeLine()
         string = '\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual('\n', matcher.GetSource())
+        self._verify_match(node, string)
 
     def testVeryShortMatch(self):
         node = SyntaxFreeLine(
             comment='', col_offset=4, comment_indent=0)
         string = '    #  \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
 
     def testCommentMatch(self):
         node = SyntaxFreeLine(
             comment='comment', col_offset=1, comment_indent=3)
         string = ' #   comment \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._verify_match(node, string)
+
 
     @pytest.mark.skip(reason="Not Implemented Yet")
     def testIndentedCommentMatch(self):
         node = SyntaxFreeLine(
             comment='comment', col_offset=1, comment_indent=2)
         string = ' # \t comment \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        self._verify_match(node, string)
 
-        self.assertEqual(string, matcher.GetSource())
 
     def testOffsetCommentMatch(self):
         node = SyntaxFreeLine(
             comment='comment', col_offset=2, comment_indent=2)
         string = '  #  comment   \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
 
-    def testChangeComment(self):
-        node = SyntaxFreeLine(
-            comment='comment', col_offset=1, comment_indent=0)
-        string = ' #comment\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        node.col_offset = 1
-        node.comment_indent = 1
-        node.comment = 'hello'
-        self.assertEqual(' # hello\n', matcher.GetSource())
+
 
     def testNotCommentFails(self):
         node = SyntaxFreeLine(

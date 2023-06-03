@@ -35,6 +35,10 @@ class GetSourceTest(unittest.TestCase):
         string = 'if True:\n   b.a(c)\n   a=1'
         self._verify_match_and_no_new_line(string)
 
+    def testIf3(self):
+        string = 'if x%2 == 0xff:\n   b.a(c)\n   a=1'
+        self._verify_match_and_no_new_line(string)
+
     def testIAssign1(self):
         string = "a='fun_with_east'"
         log_node = GetNodeFromInput(string)

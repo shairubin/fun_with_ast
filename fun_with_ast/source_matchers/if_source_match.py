@@ -31,31 +31,35 @@ class IfSourceMatcher(SourceMatcher):
         if not self.node.orelse:
             return string[:len(remaining_string)]
         else:
-            # Handles the case of a blank line before an elif/else statement
-            # Can't pass the "match_after" kwarg to self.body_placeholder,
-            # because we don't want to match after if we don't have an else.
-            while SyntaxFreeLine.MatchesStart(remaining_string):
-                remaining_string, syntax_free_node = (
-                    self.body_placeholder.MatchSyntaxFreeLine(remaining_string))
-                self.node.body.append(syntax_free_node)
-            if remaining_string.lstrip().startswith('elif'):
-                self.is_elif = True
-                indent = len(remaining_string) - len(remaining_string.lstrip())
-                remaining_string = (remaining_string[:indent] +
-                                    remaining_string[indent + 2:])
-                # This is a hack to handle the fact that elif is a special case
-                # BodyPlaceholder uses the indent of the other child statements
-                # to match SyntaxFreeLines, which breaks in this case, because the
-                # child isn't indented
-                self.orelse_placeholder = ListFieldPlaceholder('orelse')
-            else:
-                remaining_string = MatchPlaceholder(
-                    remaining_string, self.node, self.else_placeholder)
+            remaining_string = self._match_orelse(remaining_string)
         remaining_string = self.orelse_placeholder.Match(
             self.node, remaining_string)
         if not remaining_string:
             return string
         return string[:len(remaining_string)]
+
+    def _match_orelse(self, remaining_string):
+        # Handles the case of a blank line before an elif/else statement
+        # Can't pass the "match_after" kwarg to self.body_placeholder,
+        # because we don't want to match after if we don't have an else.
+        while SyntaxFreeLine.MatchesStart(remaining_string):
+            remaining_string, syntax_free_node = (
+                self.body_placeholder.MatchSyntaxFreeLine(remaining_string))
+            self.node.body.append(syntax_free_node)
+        if remaining_string.lstrip().startswith('elif'):
+            self.is_elif = True
+            indent = len(remaining_string) - len(remaining_string.lstrip())
+            remaining_string = (remaining_string[:indent] +
+                                remaining_string[indent + 2:])
+            # This is a hack to handle the fact that elif is a special case
+            # BodyPlaceholder uses the indent of the other child statements
+            # to match SyntaxFreeLines, which breaks in this case, because the
+            # child isn't indented
+            self.orelse_placeholder = ListFieldPlaceholder('orelse')
+        else:
+            remaining_string = MatchPlaceholder(
+                remaining_string, self.node, self.else_placeholder)
+        return remaining_string
 
     @property
     def expected_parts(self):

@@ -47,6 +47,8 @@ class SourceMatcher(object):
         if not stripped_parens:
             stripped_parens = []
         self.start_paren_matchers = stripped_parens
+        self.matched = False
+        self.matched_source = None
 
 
     def Match(self, string):
@@ -54,6 +56,7 @@ class SourceMatcher(object):
 
     def GetSource(self):
         raise NotImplementedError
+
 
     def FixIndentation(self, new_ident):
         """Fix the indentation of the source."""
@@ -186,3 +189,12 @@ class SourceMatcher(object):
                 part.matched_text = '\n'
         else:
             raise NotImplementedError('Cannot add newline to non-text placeholder')
+        self.matched_source = None
+        self.matched = False
+    def validated_call_to_match(self):
+        if self.matched and self.matched_source is None:
+            raise ValueError('Internal Error: matched_text must be set if is_matched is True')
+        if not self.matched and self.matched_source is not None:
+            raise ValueError('Internal Error: matched_text must be None if is_matched is False')
+        if hasattr(self, 'matched_text'):
+            raise ValueError('Internal Error: dont have this field - ever')

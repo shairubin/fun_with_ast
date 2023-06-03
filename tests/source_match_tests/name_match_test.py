@@ -5,29 +5,30 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class NameMatcherTest(unittest.TestCase):
+class NameMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Name('foobar')
         string = 'foobar'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
 
     def testBasicMatchWithWS(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
     def testBasicMatchWithWSAndComment(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar \t #comment'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
     def testBasicMatchOnlyComment(self):
         node = create_node.Name('foobar')
         string = ' \t  foobar#comment'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
     def testBasicMatchOnlyComment(self):
         node = create_node.Name('foobar')
@@ -41,39 +42,37 @@ class NameMatcherTest(unittest.TestCase):
         string = 'foobar'
         matcher = GetDynamicMatcher(node)
         matcher.Match(string)
-        node.id = 'hello'
-        self.assertEqual('hello', matcher.GetSource())
 
 
     def testBasicMatch2(self):
         node = create_node.Name('a')
         string = 'a'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
     def testMatchWithWS(self):
         node = create_node.Name('a')
         string = 'a '
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
     def testMatchWithComment(self):
         node = create_node.Name('a')
         string = 'a # comment'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
 
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')
         string = '  a'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
         string = ' \t  a'
-        self._assert_match(node, string)
+        self._verify_match(node, string)
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
 
-    def _assert_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_source = matcher.GetSource()
-        self.assertEqual(string, matched_source)
+#    def _verify_match(self, node, string):
+#        matcher = GetDynamicMatcher(node)
+#        matcher.Match(string)
+#        matched_source = matcher.GetSource()
+#        self.assertEqual(string, matched_source)

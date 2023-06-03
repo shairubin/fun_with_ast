@@ -16,6 +16,27 @@ class BoolOpMatcherTest(unittest.TestCase):
         matcher.Match(string)
         self.assertEqual(string, matcher.GetSource())
 
+    def testAndBoolOp2(self):
+        node = create_node.BoolOp(
+            create_node.Name('a'),
+            create_node.And(),
+            create_node.Name('b'))
+        string = '(a and b)'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        self.assertEqual(string, matcher.GetSource())
+
+    def testAndBoolOp3(self):
+        node = create_node.BoolOp(
+            create_node.Name('a'),
+            create_node.And(),
+            create_node.Name('b'))
+        string = '(a and (b))'
+        matcher = GetDynamicMatcher(node)
+        matcher.Match(string)
+        self.assertEqual(string, matcher.GetSource())
+
+
     def testOrBoolOp(self):
         node = create_node.BoolOp(
             create_node.Name('a'),

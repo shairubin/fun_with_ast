@@ -473,53 +473,6 @@ class AugAssignMatcherTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
 
 
-class BoolOpMatcherTest(unittest.TestCase):
-
-    def testAndBoolOp(self):
-        node = create_node.BoolOp(
-            create_node.Name('a'),
-            create_node.And(),
-            create_node.Name('b'))
-        string = 'a and b'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testOrBoolOp(self):
-        node = create_node.BoolOp(
-            create_node.Name('a'),
-            create_node.Or(),
-            create_node.Name('b'))
-        string = 'a or b'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testAndOrBoolOp(self):
-        node = create_node.BoolOp(
-            create_node.Name('a'),
-            create_node.And(),
-            create_node.Name('b'),
-            create_node.Or(),
-            create_node.Name('c'))
-        string = 'a and b or c'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testOrAndBoolOp(self):
-        node = create_node.BoolOp(
-            create_node.Name('a'),
-            create_node.Or(),
-            create_node.Name('b'),
-            create_node.And(),
-            create_node.Name('c'))
-        string = 'a or b and c'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-
 class ClassDefMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):

@@ -57,6 +57,13 @@ class UnaryOpMatcherTest(unittest.TestCase):
         string = 'not a'
         self._validate_match(node, string)
 
+    def testNotUnaryOp2(self):
+        node = create_node.UnaryOp(
+            create_node.Not(),
+            create_node.Name('a'))
+        string = '(not a)'
+        self._validate_match(node, string)
+
     def testNotUnaryOpIllegal(self):
         node = create_node.UnaryOp(
             create_node.Not(),

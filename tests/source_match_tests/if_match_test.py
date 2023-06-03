@@ -5,9 +5,10 @@ from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFrom
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class IfMatcherTest(unittest.TestCase):
+class IfMatcherTest(BaseTestUtils):
     def testSimpleIfElse(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True:   \n   pass    \nelse:\n   pass \n'
@@ -136,9 +137,10 @@ else:
     def _assert_match_to_source(self, node, string, lines_in_body=1, match_get_source=True):
         assume_elif = False
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        source_from_matcher  = matcher.Match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
+        self.assertEqual(string, source_from_matcher)
         self.assertEqual(len(node.body),lines_in_body)
         if 'elif' in string:
             assume_elif = True
@@ -149,11 +151,19 @@ else:
     def testIfFromSource(self):
         string = "if (a and b):\n     a = 1\nelse:\n    a=2"
         if_node = GetNodeFromInput(string)
-        if_node_matcher = GetDynamicMatcher(if_node)
-        if_node_matcher.Match(string)
+        self._verify_match(if_node, string)
 
-    def testIfFromSource(self):
+
+    def testIfFromSource2(self):
+        string = "if not a:\n     a = 1"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource3(self):
         string = "if not a:\n     a = 1\nelse:\n    a=2"
         if_node = GetNodeFromInput(string)
-        if_node_matcher = GetDynamicMatcher(if_node)
-        if_node_matcher.Match(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource4(self):
+        string = "if a and ((not c) and d):\n   pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+

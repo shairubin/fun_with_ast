@@ -29,19 +29,29 @@ class IfSourceMatcher(SourceMatcher):
         remaining_string = MatchPlaceholderList(
             string, self.node, placeholder_list)
         if not self.node.orelse:
-            return string[:len(remaining_string)]
+            return self._return_from_match()
         else:
             remaining_string = self._match_orelse(remaining_string)
-        remaining_string = self.orelse_placeholder.Match(
-            self.node, remaining_string)
-        if not remaining_string:
-            return string
-        return string[:len(remaining_string)]
+            remaining_string = self.orelse_placeholder.Match(
+                self.node, remaining_string)
+            if not remaining_string:
+                raise ValueError('Can we get here?')
+            return self._return_from_match()
+
+    def _return_from_match(self):
+        result = IfSourceMatcher.GetSource(self)
+        self.matched = True
+        self.matched_source = result
+        return result
 
     def _match_orelse(self, remaining_string):
         # Handles the case of a blank line before an elif/else statement
         # Can't pass the "match_after" kwarg to self.body_placeholder,
         # because we don't want to match after if we don't have an else.
+        self.validated_call_to_match()
+        if self.matched:
+            return self.matched_source
+
         while SyntaxFreeLine.MatchesStart(remaining_string):
             remaining_string, syntax_free_node = (
                 self.body_placeholder.MatchSyntaxFreeLine(remaining_string))

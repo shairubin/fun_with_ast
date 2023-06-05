@@ -1,7 +1,7 @@
 import re
 
 from fun_with_ast.common_utils.stack import Stack, EmptyStackException
-from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, GetEndParenMatcher
+from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, EndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
@@ -94,7 +94,7 @@ class SourceMatcher(object):
         try:
             #while True:
             for unused_i in range(len(self.start_paren_matchers)):
-                end_paren_matcher = GetEndParenMatcher()
+                end_paren_matcher = EndParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, end_paren_matcher)
                 self.end_paren_matchers.append(end_paren_matcher)

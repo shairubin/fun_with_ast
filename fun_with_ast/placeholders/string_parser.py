@@ -2,13 +2,13 @@
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
-from fun_with_ast.placeholders.text import GetStartParenMatcher
+from fun_with_ast.placeholders.text import StartParenMatcher
 
 
 def StripStartParens(string):
     remaining_string = string
     while remaining_string.startswith('('):
-        matcher = GetStartParenMatcher()
+        matcher = StartParenMatcher()
         matched_text = matcher.Match(None, remaining_string)
         remaining_string = remaining_string[len(matched_text):]
     return remaining_string

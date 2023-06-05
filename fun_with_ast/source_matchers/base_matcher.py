@@ -1,6 +1,7 @@
 import re
 
-from fun_with_ast.placeholders.text import TextPlaceholder, GetStartParenMatcher, GetEndParenMatcher
+from fun_with_ast.common_utils.stack import Stack, EmptyStackException
+from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, GetEndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
@@ -36,7 +37,7 @@ class SourceMatcher(object):
 
     These are designed to match the source that corresponds to a given node.
     """
-
+    parentheses_stack = Stack()
     def __init__(self, node, stripped_parens=None):
         self.node = node
         self.end_paren_matchers = []
@@ -74,11 +75,12 @@ class SourceMatcher(object):
         matched_parts = []
         try:
             while True:
-                start_paren_matcher = GetStartParenMatcher()
+                start_paren_matcher = StartParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, start_paren_matcher)
                 self.start_paren_matchers.append(start_paren_matcher)
                 matched_parts.append(start_paren_matcher.matched_text)
+#                self.parentheses_stack.Push(start_paren_matcher)
         except BadlySpecifiedTemplateError:
             pass
         return remaining_string
@@ -90,8 +92,8 @@ class SourceMatcher(object):
         remaining_string = string
         matched_parts = []
         try:
-            while True:
-            #for unused_i in range(len(self.start_paren_matchers)):
+            #while True:
+            for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = GetEndParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, end_paren_matcher)
@@ -100,9 +102,11 @@ class SourceMatcher(object):
                 self.paren_wrapped = True
         except BadlySpecifiedTemplateError:
             pass
+        except EmptyStackException:
+            raise
 
-        if not remaining_string and len(self.start_paren_matchers) != len(self.end_paren_matchers):
-            raise BadlySpecifiedTemplateError('string should have ended with paren')
+        if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
+            raise BadlySpecifiedTemplateError('missing end paren at end of string')
 
         new_end_matchers = []
         new_start_matchers = []

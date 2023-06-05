@@ -76,8 +76,12 @@ class TextPlaceholder(Placeholder):
         return 'TextPlaceholder with regex "{}" ("{}") and default "{}"'.format(
             self.original_regex, self.regex, self.default)
 
-def GetStartParenMatcher():
-    return TextPlaceholder(r'[ \t]*\(\s*', '')
+class StartParenMatcher(TextPlaceholder):
+    def  __init__(self):
+        super(StartParenMatcher, self).__init__(r'[ \t]*\(\s*', '')
+
+#def GetStartParenMatcher():
+#    return TextPlaceholder(r'[ \t]*\(\s*', '')
 
 def GetWhiteSpaceMatcher():
     return TextPlaceholder(r'[ \t]*', '')

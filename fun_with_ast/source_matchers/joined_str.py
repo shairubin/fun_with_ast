@@ -46,6 +46,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return multi_part
 
     def MatchStartParens(self, remaining_string):
+#        raise NotImplementedError('use main stack')
         return remaining_string
 
     def GetSource(self):

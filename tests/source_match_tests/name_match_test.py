@@ -70,9 +70,3 @@ class NameMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
             matcher.Match(string)
-
-#    def _verify_match(self, node, string):
-#        matcher = GetDynamicMatcher(node)
-#        matcher.Match(string)
-#        matched_source = matcher.GetSource()
-#        self.assertEqual(string, matched_source)

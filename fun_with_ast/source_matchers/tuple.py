@@ -24,6 +24,7 @@ class TupleSourceMatcher(DefaultSourceMatcher):
 #            return super(TupleSourceMatcher, self).Match(matched_text)
 
     def MatchStartParens(self, remaining_string):
+        #raise NotImplementedError('use main stack')
         return remaining_string
         # if remaining_string.startswith('(('):
         #    raise NotImplementedError('Currently not supported')

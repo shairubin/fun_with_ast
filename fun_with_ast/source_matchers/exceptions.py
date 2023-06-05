@@ -5,3 +5,6 @@ class Error(Exception):
 
 class BadlySpecifiedTemplateError(Error):
     pass
+
+class EmptyStackException(Exception):
+  pass

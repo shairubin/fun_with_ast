@@ -65,7 +65,7 @@ class DefaultSourceMatcher(SourceMatcher):
                     .format(string, self, e.message))
 #        matched_string = self.GetSource()
         matched_string = DefaultSourceMatcher.GetSource(self)
-        if remaining_string:
+        if remaining_string :
             matched_string = string[:-len(remaining_string)]
         #leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
         #start_parens = self.GetStartParenText()

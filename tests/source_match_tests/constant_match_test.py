@@ -3,12 +3,17 @@ import unittest
 import pytest
 
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
 
 from fun_with_ast.manipulate_node import create_node
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+@pytest.fixture(autouse=True)
+def run_around_tests(): # TODO not very smart global variable
+    SourceMatcher.parentheses_stack.reset()
+    yield
 
 class ConstantNumMatcherTest(BaseTestUtils):
 
@@ -119,7 +124,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '(   1   )     )'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(BadlySpecifiedTemplateError):
+        with pytest.raises(EmptyStackException):
             matcher.Match(string)
 
     def testLargeNumberMatch(self):

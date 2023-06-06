@@ -34,7 +34,7 @@ def StripStartParens(string):
     remaining_string = string
     while remaining_string.startswith('('):
         matcher = GetStartParenMatcher()
-        matched_text = matcher.Match(None, remaining_string)
+        matched_text = matcher._match(None, remaining_string)
         remaining_string = remaining_string[len(matched_text):]
     return remaining_string
 
@@ -662,7 +662,7 @@ class WithItemSourceMatcher(SourceMatcher):
             before_placeholder=TextPlaceholder(r' *as *', ' as '))
 
 
-    def Match(self, string):
+    def _match(self, string):
         #    if 'as' not in string:
         #      return MatchPlaceholder(string, self.node, self.context_expr)
         placeholder_list = [self.context_expr,

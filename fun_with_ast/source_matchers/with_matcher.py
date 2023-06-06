@@ -24,7 +24,7 @@ class WithSourceMatcher(SourceMatcher):
         self.is_compound_with = False
         self.starting_with = True
 
-    def Match(self, string):
+    def _match(self, string):
         if string.lstrip().startswith('with'):
             self.starting_with = True
         placeholder_list = [self.with_placeholder,

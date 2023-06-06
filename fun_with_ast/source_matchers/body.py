@@ -19,7 +19,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
         GetSource(syntax_free_node, text=line)
         return remaining_string, syntax_free_node
 
-    def Match(self, node, string):
+    def _match(self, node, string):
         remaining_string = string
         new_node = []
         if not getattr(node, self.field_name):

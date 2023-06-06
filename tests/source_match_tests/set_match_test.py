@@ -10,5 +10,5 @@ class SetMatcherTest(unittest.TestCase):
         node = create_node.Set('c', 'a', 'b')
         string = '{c, a, b}'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())

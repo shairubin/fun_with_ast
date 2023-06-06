@@ -57,7 +57,7 @@ def _set_elif(assume_elif, field):
 
 def _match_text(assume_no_indent, field, text):
     if text:
-        field.matcher.Match(text)
+        field.matcher._match(text)
     # TODO: Fix this to work with lambdas
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
         if not hasattr(field, 'module_node'):

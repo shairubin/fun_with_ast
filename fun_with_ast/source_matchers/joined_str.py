@@ -21,11 +21,11 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
 
-    def Match(self, string):
+    def _match(self, string):
         self._check_not_implemented(string)
         self.padding_quote = self._get_padding_quqte(string)
         string = self._convert_to_multi_part_string(string)
-        matched_text = super(JoinedStrSourceMatcher, self).Match(string)
+        matched_text = super(JoinedStrSourceMatcher, self)._match(string)
         return matched_text
 
     def _convert_to_multi_part_string(self, _in):

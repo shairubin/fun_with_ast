@@ -28,7 +28,7 @@ class BinOpMatcherTest(BaseTestUtils):
         self._validate_no_match(node, string)
 #        matcher = GetDynamicMatcher(node)
 #        with pytest.raises(BadlySpecifiedTemplateError):
-#            matcher.Match(string)
+#            matcher._match(string)
 
     def testSubBinOp(self):
         node = create_node.BinOp(
@@ -179,4 +179,4 @@ class BinOpMatcherTest(BaseTestUtils):
     def _validate_no_match(self, node, string):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError) as e:
-            matcher.Match(string)
+            matcher._match(string)

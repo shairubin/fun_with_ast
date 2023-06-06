@@ -26,7 +26,7 @@ class DefaultSourceMatcher(SourceMatcher):
         self.expected_parts = expected_parts
 
 
-    def Match(self, string):
+    def _match(self, string):
         """Matches the string against self.expected_parts.
 
         Note that this is slightly peculiar in that it first matches fields,
@@ -117,7 +117,7 @@ class DefaultSourceMatcher(SourceMatcher):
 
     def MatchWhiteSpaces(self, remaining_string):
         ws_placeholder = self.start_whitespace_matchers[0]
-        match_ws = ws_placeholder.Match(None, remaining_string)
+        match_ws = ws_placeholder._match(None, remaining_string)
         remaining_string = remaining_string[len(match_ws):]
         #self.start_whitespace_matchers.append(ws_placeholder)
         return remaining_string

@@ -17,7 +17,7 @@ class BoolOpMatcherTest(BaseTestUtils):
 
     def _assert_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testAndBoolOp2(self):

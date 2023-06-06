@@ -10,7 +10,7 @@ from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder
 
 def MatchPlaceholder(string, node, placeholder):
     """Match a placeholder against a string."""
-    matched_text = placeholder.Match(node, string)
+    matched_text = placeholder._match(node, string)
     if not matched_text:
         return string
     ValidateStart(string, matched_text)
@@ -53,7 +53,7 @@ class SourceMatcher(object):
         self.parentheses_stack_depth = self.parentheses_stack.size
 
 
-    def Match(self, string):
+    def _match(self, string):
         raise NotImplementedError
 
     def GetSource(self):
@@ -147,7 +147,7 @@ class SourceMatcher(object):
     #                 remaining_string, None, ws_matcher)
     #         if remaining_string != string:
     #             in_matcher.append(ws_matcher)
-    #             matched_parts.append(ws_matcher.matched_text)
+    #             matched_parts.append(ws_matcher._matched_text)
     #     except BadlySpecifiedTemplateError:
     #         pass
     #     return remaining_string
@@ -163,7 +163,7 @@ class SourceMatcher(object):
     #                 remaining_string, None, start_ws_matcher)
     #         if remaining_string != string:
     #             self.start_whitespace_matchers.append(start_ws_matcher)
-    #             matched_parts.append(start_ws_matcher.matched_text)
+    #             matched_parts.append(start_ws_matcher._matched_text)
     #     except BadlySpecifiedTemplateError:
     #         pass
     #     return remaining_string

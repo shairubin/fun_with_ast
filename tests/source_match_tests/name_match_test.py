@@ -35,13 +35,12 @@ class NameMatcherTest(BaseTestUtils):
         string = ' \t #comment  foobar'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 
     def testIdChange(self):
         node = create_node.Name('foobar')
         string = 'foobar'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        self._verify_match(node, string)
 
 
     def testBasicMatch2(self):
@@ -69,4 +68,4 @@ class NameMatcherTest(BaseTestUtils):
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)

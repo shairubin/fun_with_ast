@@ -4,7 +4,7 @@ class Placeholder(object):
     def __init__(self):
         self.starting_parens = []
 
-    def Match(self, node, string):
+    def _match(self, node, string):
         raise NotImplementedError
 
     def GetSource(self, node):

@@ -10,28 +10,28 @@ class FunctionDefMatcherTest(unittest.TestCase):
         node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
         string = 'def test_fun():\n\t\t\t\tpass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testEmptyWithDocString(self):
         node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
         string = "def test_fun():\n\t\t\t'''docstring'''\n\t\t\tpass\n"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testSingleArg(self):
         node = create_node.FunctionDef('test_fun', create_node.arguments(args=['a']), body=[create_node.Pass()])
         string = 'def test_fun(a):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMultipleArgs(self):
         node = create_node.FunctionDef('test_fun', create_node.arguments(args=['a', 'b']), body=[create_node.Pass()])
         string = 'def test_fun(a, b):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testDefaultBool(self):
@@ -42,7 +42,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
     pass
 """
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_source = matcher.GetSource()
         self.assertEqual(string, matched_source)
 
@@ -54,7 +54,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
 
         string = "def test_fun(a=b):\npass\n"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_source = matcher.GetSource()
         self.assertEqual(string, matched_source)
 
@@ -66,7 +66,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
 
         string = "def test_fun(a=3):\npass\n"
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_source = matcher.GetSource()
         self.assertEqual(string, matched_source)
 
@@ -77,7 +77,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
 
         string = 'def test_fun(e, f, a =b, c= d):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testArgsDefaultsVarargs(self):
@@ -90,7 +90,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
 
         string = 'def test_fun(e, f, a=b, c=d, *d):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testArgsDefaultsVarargsKwargs(self):
@@ -103,7 +103,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
 
         string = 'def test_fun(e, f, a=b, c=d, *d, **a):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testDecoratorList(self):
@@ -114,7 +114,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
             body=[create_node.Pass()])
         string = '@dec\n@call_dec()\ndef test_fun():\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testCommentInDecoratorList(self):
@@ -125,7 +125,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
             body=[create_node.Pass()])
         string = '@dec\n#hello world\n@call_dec()\ndef test_fun():\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testCommentAfterDecorator(self):
@@ -135,7 +135,7 @@ class FunctionDefMatcherTest(unittest.TestCase):
             body=[create_node.Pass()])
         string = '@dec\n #comment\ndef test_fun():\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matcher_result = matcher.GetSource()
         self.assertEqual(string, matcher_result)
 
@@ -145,5 +145,5 @@ class FunctionDefMatcherTest(unittest.TestCase):
             body=(create_node.Expr(create_node.Name('a')),))
         string = 'def test_fun():\n  a\n'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())

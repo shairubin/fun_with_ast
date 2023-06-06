@@ -46,9 +46,7 @@ class ArgumentsMatcherTest(unittest.TestCase):
             args=['e', 'f', 'a', 'c'], defaults=['b', 'd'])
         string = 'e, f, a=b, c=d'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matched_source = matcher.GetSource()
-        self.assertEqual(string, matched_source)
+        self._validate_match(matcher, string)
 
     def testArgsDefaultsVarargs(self):
         node = create_node.arguments(
@@ -79,7 +77,7 @@ class ArgumentsMatcherTest(unittest.TestCase):
         string = 'a = 1 \t  '
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 
     def testArgsDefaultsVarargsKwargs(self):
         node = create_node.arguments(
@@ -90,6 +88,6 @@ class ArgumentsMatcherTest(unittest.TestCase):
         self._validate_match(matcher, string)
 
     def _validate_match(self, matcher, string):
-        matcher.Match(string)
+        matcher._match(string)
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)

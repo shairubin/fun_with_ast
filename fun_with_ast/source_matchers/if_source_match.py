@@ -23,7 +23,7 @@ class IfSourceMatcher(SourceMatcher):
         self.is_elif = False
         self.if_indent = 0
 
-    def Match(self, string):
+    def _match(self, string):
         self.if_indent = len(string) - len(string.lstrip())
         placeholder_list = self.expected_parts
         remaining_string = MatchPlaceholderList(
@@ -32,7 +32,7 @@ class IfSourceMatcher(SourceMatcher):
             return self._return_from_match()
         else:
             remaining_string = self._match_orelse(remaining_string)
-            remaining_string = self.orelse_placeholder.Match(
+            remaining_string = self.orelse_placeholder._match(
                 self.node, remaining_string)
             if not remaining_string:
                 raise ValueError('Can we get here?')

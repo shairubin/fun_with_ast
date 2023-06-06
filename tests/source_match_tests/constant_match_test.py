@@ -22,7 +22,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '1'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -30,7 +30,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('0b0')
         string = '0b0'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -38,7 +38,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '1:#Comment'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertNotEqual(string, matched_string)
 
@@ -47,7 +47,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
     #     node = create_node.Num('1')
     #     string = '+1'
     #     matcher = GetDynamicMatcher(node)
-    #     matcher.Match(string)
+    #     matcher._match(string)
     #     matched_string = matcher.GetSource()
     #     self.assertEqual(string, matched_string)
     #
@@ -55,7 +55,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
     #     node = create_node.Num('1')
     #     string = '(+1)'
     #     matcher = GetDynamicMatcher(node)
-    #     matcher.Match(string)
+    #     matcher._match(string)
     #     matched_string = matcher.GetSource()
     #     self.assertEqual(string, matched_string)
     @pytest.mark.skip('Not implemented yet')
@@ -63,7 +63,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '(    (    +1   )   ) # comment'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -72,7 +72,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('-1')
         string = '  -1   \t'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -80,7 +80,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '   1   '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -88,7 +88,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '   1   #comment'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -96,7 +96,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '(1)'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -104,7 +104,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '(   1   )     '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -119,13 +119,13 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '((   1   )     '
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
     def testNoMatchMultiParansAndWS2(self):
         node = create_node.Num('1')
         string = '(   1   )     )'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(EmptyStackException):
-            matcher.Match(string)
+            matcher._match(string)
 
     def testLargeNumberMatch(self):
         node = create_node.Num('1234567890987654321')
@@ -142,14 +142,14 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '\t0xffaa\t #comment'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 
     def testBasicNoMatchNum(self):
         node = create_node.Num('2')
         string = '1'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
         string = '2'
         self._verify_match(node, string)
 

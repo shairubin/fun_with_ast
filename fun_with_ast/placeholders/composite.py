@@ -10,7 +10,7 @@ class CompositePlaceholder(Placeholder):
 
     """Node which wraps one or more other nodes."""
 
-    def Match(self, node, string):
+    def _match(self, node, string):
         """Makes sure node.(self.field_name) is in string."""
         self.Validate(node)
         elements = self.GetElements(node)
@@ -57,8 +57,8 @@ class FieldPlaceholder(CompositePlaceholder):
         elements.append(NodePlaceholder(field_value))
         return elements
 
-    def Match(self, node, string):
-        return super(FieldPlaceholder, self).Match(node, string)
+    def _match(self, node, string):
+        return super(FieldPlaceholder, self)._match(node, string)
 
     def Validate(self, node):
         if isinstance(node, _ast.Call) and self.field_name == 'kwargs':

@@ -18,7 +18,7 @@ class BoolOpSourceMatcher(SourceMatcher):
         self.matched_placeholders.append(copy)
         return copy
 
-    def Match(self, string):
+    def _match(self, string):
         remaining_string = self.MatchStartParens(string)
 
         elements = [self.node.values[0]]

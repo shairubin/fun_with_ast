@@ -10,6 +10,6 @@ class ExprMatcherTest(unittest.TestCase):
         string2 = 'a.b()\n'
         call_node = GetNodeFromInput(string2)
         matcher2 = GetDynamicMatcher(call_node)
-        matcher2.Match(string2)
+        matcher2._match(string2)
         source2 = matcher2.GetSource()
         self.assertEqual(source2, string2)

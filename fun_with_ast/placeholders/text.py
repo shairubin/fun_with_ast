@@ -29,7 +29,7 @@ class TextPlaceholder(Placeholder):
 #        regex = r'( *;| *\n)'.join(non_linebreak_parts)
         return regex
 
-    def Match(self, unused_node, string, dotall=False):
+    def _match(self, unused_node, string, dotall=False):
         """Attempts to match string against self.regex.
 
         Saves the matched section for use in GetSource.

@@ -59,7 +59,7 @@ class ConstantStrMatcherTest(unittest.TestCase):
         string = "\"'1''3'\""
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError) as e:
-            matcher.Match(string)
+            matcher._match(string)
 
 
     def testBasicMatchConcatinatedString(self):
@@ -79,9 +79,9 @@ class ConstantStrMatcherTest(unittest.TestCase):
         string = "'2'"
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 
     def _validate_match(self, matcher, string):
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)

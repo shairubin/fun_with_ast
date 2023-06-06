@@ -27,7 +27,7 @@ class StrSourceMatcher(SourceMatcher):
         return ''.join(p.inner_text_placeholder.GetSource(self.node)
                        for p in self.quote_parts)
 
-    def Match(self, string):
+    def _match(self, string):
         remaining_string = self.MatchStartParens(string)
         self._get_original_string()
         part = self._part_place_holder()

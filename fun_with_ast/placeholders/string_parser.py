@@ -9,7 +9,7 @@ def StripStartParens(string):
     remaining_string = string
     while remaining_string.startswith('('):
         matcher = StartParenMatcher()
-        matched_text = matcher.Match(None, remaining_string)
+        matched_text = matcher._match(None, remaining_string)
         remaining_string = remaining_string[len(matched_text):]
     return remaining_string
 
@@ -44,7 +44,7 @@ class StringParser(object):
     def _MatchTextPlaceholder(self, element):
         if self.remaining_string == self.string:
             element.SetStartingParens(self.starting_parens)
-        matched_text = element.Match(None, self.remaining_string)
+        matched_text = element._match(None, self.remaining_string)
         self._ProcessSubstring(matched_text)
         self.matched_substrings.append(matched_text)
 

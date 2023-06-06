@@ -19,7 +19,7 @@ class StringPartPlaceholder(Placeholder):
 #        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
         self.accept_multiparts_string = accept_multiparts_string
 
-    def Match(self, node, string):
+    def _match(self, node, string):
         elements = self._get_elements()
         remaining_string = StringParser(string, elements, accept_multiparts_string=self.accept_multiparts_string).remaining_string
 
@@ -38,7 +38,7 @@ class StringPartPlaceholder(Placeholder):
         if end_index == -1:
             raise ValueError('String {} does not end properly'.format(string))
         match_inner_string = remaining_string[:end_index]
-        self.inner_text_placeholder.Match(None, match_inner_string, dotall=True)
+        self.inner_text_placeholder._match(None, match_inner_string, dotall=True)
         remaining_string = remaining_string[end_index + len(quote_type):]
         return remaining_string
 

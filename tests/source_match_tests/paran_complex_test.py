@@ -13,7 +13,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = '(a)'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -21,7 +21,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = '(\na\n)'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)
 
@@ -30,7 +30,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = '  a'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)
 
@@ -38,7 +38,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = '(a  \t  )  \t '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)
 
@@ -47,7 +47,7 @@ class ParenWrappedTest(unittest.TestCase):
         node = create_node.Name('a')
         string = ' \t (a  \t  )  \t '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_text = matcher.GetSource()
         self.assertNotEqual(string, matched_text)
 
@@ -56,21 +56,21 @@ class ParenWrappedTest(unittest.TestCase):
         string = ' \t\n  a'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 
 
     def testWithOperatorAndLineBreaks(self):
         node = create_node.Compare('a', '<', 'c')
         string = '(a < \n c\n)'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testWithOperatorAndLineBreaksAndTabs(self):
         node = create_node.Compare('a', '<', 'c')
         string = ' (a < \n\t  c\n)'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -79,10 +79,10 @@ class ParenWrappedTest(unittest.TestCase):
                                            create_node.Tuple(['a', 'b'])])
         string = ' c(d, (a, b))'
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         self.assertEqual(string, matcher.GetSource())
         string = ' c (d, (a, b))'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher.Match(string)
+            matcher._match(string)
 

@@ -43,6 +43,6 @@ class ModuleMatcherTest(unittest.TestCase):
 
     def _validate_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)

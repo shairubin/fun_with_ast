@@ -101,10 +101,10 @@ class UnaryOpMatcherTest(unittest.TestCase):
 
     def _validate_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        source = matcher.Match(string)
+        source = matcher._match(string)
         self.assertEqual(string, source)
     def _validate_no_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        source = matcher.Match(string)
+        source = matcher._match(string)
         self.assertNotEqual(string, source)
 

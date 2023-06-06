@@ -12,27 +12,22 @@ class IfMatcherTest(BaseTestUtils):
     def testSimpleIfElse(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True:   \n   pass    \nelse:\n   pass \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        self._assert_match_to_source(node, string, match_get_source=False)
+        # matcher = GetDynamicMatcher(node)
+        # matcher._match(string)
+        # matcher_source = matcher.GetSource()
+        # self.assertEqual(string, matcher_source)
     def testSimpleIfElse2(self):
         node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num('2')),
                               body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       a==2:   \n   pass    \nelse:\n   pass \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        self._assert_match_to_source(node, string, match_get_source=False)
 
     def testSimpleIfElse2WithComment(self):
         node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num('2')),
                               body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       a==2:#comment   \n   pass    \nelse:\n   pass \n'
-        matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        self._assert_match_to_source(node, string, match_get_source=False)
 
     def testSimpleIfElseWithCommentAndSpeacses(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
@@ -43,7 +38,7 @@ class IfMatcherTest(BaseTestUtils):
         node = create_node.If(conditional=True, body=[create_node.Pass()])
         string = 'if       True:\n pass         '
         matcher = GetDynamicMatcher(node)
-        matcher.Match(string)
+        matcher._match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
 
@@ -137,7 +132,7 @@ else:
     def _assert_match_to_source(self, node, string, lines_in_body=1, match_get_source=True):
         assume_elif = False
         matcher = GetDynamicMatcher(node)
-        source_from_matcher  = matcher.Match(string)
+        source_from_matcher  = matcher._match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
         self.assertEqual(string, source_from_matcher)

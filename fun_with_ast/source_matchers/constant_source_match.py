@@ -31,13 +31,13 @@ class ConstantSourceMatcher(SourceMatcher):
         self.str_matcher = StrSourceMatcher(node, starting_parens, self.accept_multiparts_string)
 
 
-    def Match(self, string):
+    def _match(self, string):
         if isinstance(self.node.n, bool):
-            return self.bool_matcher.Match(string)
+            return self.bool_matcher._match(string)
         if isinstance(self.node.n, int) and isinstance(self.node.s, int):
-            return self.num_matcher.Match(string)
+            return self.num_matcher._match(string)
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
-            return self.str_matcher.Match(string)
+            return self.str_matcher._match(string)
 
     def GetSource(self):
         self.validated_call_to_match()

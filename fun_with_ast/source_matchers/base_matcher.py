@@ -1,5 +1,8 @@
 import re
+from contextvars import ContextVar
 
+from fun_with_ast.common_utils.exampl_cm import example_cm
+from fun_with_ast.common_utils.match_cm import MatchCM
 from fun_with_ast.common_utils.stack import Stack
 from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, EndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
@@ -7,7 +10,7 @@ from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
 from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder
 
-
+full_string = ContextVar('full_string')
 def MatchPlaceholder(string, node, placeholder):
     """Match a placeholder against a string."""
     matched_text = placeholder._match(node, string)
@@ -54,7 +57,12 @@ class SourceMatcher(object):
 
 
     def do_match(self, string):
-        return self._match(string)
+        #global full_string
+        token = full_string.set('test string')
+        result = self._match(string)
+        full_string.reset(token)
+        return result
+
 
     def _match(self, string):
         raise NotImplementedError
@@ -75,6 +83,8 @@ class SourceMatcher(object):
 
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
+        if full_string.get() != 'test string':
+            raise
         remaining_string = string
         matched_parts = []
         try:
@@ -91,6 +101,7 @@ class SourceMatcher(object):
 
     def MatchEndParen(self, string):
         """Matches the ending parens in a string."""
+
         if not self.start_paren_matchers:
             return
         remaining_string = string

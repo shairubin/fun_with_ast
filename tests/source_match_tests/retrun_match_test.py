@@ -35,6 +35,6 @@ class RetrunMatcherTest(unittest.TestCase):
 
     def _assert_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)

@@ -77,7 +77,7 @@ class ArgumentsMatcherTest(unittest.TestCase):
         string = 'a = 1 \t  '
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher._match(string)
+            matcher.do_match(string)
 
     def testArgsDefaultsVarargsKwargs(self):
         node = create_node.arguments(
@@ -88,6 +88,6 @@ class ArgumentsMatcherTest(unittest.TestCase):
         self._validate_match(matcher, string)
 
     def _validate_match(self, matcher, string):
-        matcher._match(string)
+        matcher.do_match(string)
         matched_text = matcher.GetSource()
         self.assertEqual(string, matched_text)

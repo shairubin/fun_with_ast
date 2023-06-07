@@ -308,20 +308,20 @@ class TestDefaultSourceMatcher(unittest.TestCase):
     def testBasicTextMatch(self):
         matcher = defualt_matcher.DefaultSourceMatcher(
             None, [TextPlaceholder('blah', DEFAULT_TEXT)])
-        matcher._match('blah')
+        matcher.do_match('blah')
         self.assertEqual(matcher.GetSource(), 'blah')
 
     def testRaisesErrorIfNoTextMatch(self):
         matcher = defualt_matcher.DefaultSourceMatcher(
             None, [TextPlaceholder('blah', DEFAULT_TEXT)])
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher._match('bla')
+            matcher.do_match('bla')
 
     def testBasicFieldMatch(self):
         node = create_node.Name('bar')
         matcher = defualt_matcher.DefaultSourceMatcher(
             node, [FieldPlaceholder('id')])
-        matcher._match('bar')
+        matcher.do_match('bar')
         self.assertEqual(matcher.GetSource(), 'bar')
 
     def testRaisesErrorIfNoFieldMatch(self):
@@ -329,7 +329,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         matcher = defualt_matcher.DefaultSourceMatcher(
             node, [FieldPlaceholder('id')])
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher._match('ba')
+            matcher.do_match('ba')
 
     def testBasicListMatch(self):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
@@ -337,7 +337,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         node = create_node.FunctionDef('function_name', body=body_nodes)
         matcher = defualt_matcher.DefaultSourceMatcher(
             node, [ListFieldPlaceholder('body')])
-        matcher._match('foobar\nbaz\n')
+        matcher.do_match('foobar\nbaz\n')
         self.assertEqual(matcher.GetSource(), 'foobar\nbaz\n')
 
     def testRaisesErrorWhenNoMatchInBasicList(self):
@@ -347,7 +347,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         matcher = defualt_matcher.DefaultSourceMatcher(
             node, [ListFieldPlaceholder('body')])
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher._match('foobar\nba\n')
+            matcher.do_match('foobar\nba\n')
 
     def testBasicListMatchWhenChangedFieldValue(self):
         body_nodes = [create_node.Expr(create_node.Name('foobar')),
@@ -356,7 +356,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
         matcher = defualt_matcher.DefaultSourceMatcher(
             node,
             [ListFieldPlaceholder('body')])
-        matcher._match('foobar\nbaz\n')
+        matcher.do_match('foobar\nbaz\n')
         self.assertEqual(matcher.GetSource(), 'foobar\nbaz\n')
 
     def testAdvancedMatch(self):
@@ -369,7 +369,7 @@ class TestDefaultSourceMatcher(unittest.TestCase):
              FieldPlaceholder('name'),
              TextPlaceholder(r'\(\)', r'()'),
              ListFieldPlaceholder('body')])
-        matcher._match('def function_name()foobar\nbaz\n')
+        matcher.do_match('def function_name()foobar\nbaz\n')
         self.assertEqual(matcher.GetSource(), 'def function_name()foobar\nbaz\n')
 
     # TODO: Renabled this after adding indent information to matchers
@@ -396,7 +396,7 @@ class TestGetMatcher(unittest.TestCase):
     def testDefaultMatcher(self):
         node = create_node.VarReference('foo', 'bar')
         matcher = GetDynamicMatcher(node)
-        matcher._match('foo.bar')
+        matcher.do_match('foo.bar')
         self.assertEqual(matcher.GetSource(), 'foo.bar')
 
 
@@ -411,7 +411,7 @@ class AssertMatcherTest(unittest.TestCase):
         node = create_node.Assert(create_node.Name('a'))
         string = 'assert a\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchWithMessage(self):
@@ -419,7 +419,7 @@ class AssertMatcherTest(unittest.TestCase):
                                   create_node.Str('message'))
         string = 'assert a, "message"\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -429,14 +429,14 @@ class AttributeMatcherTest(unittest.TestCase):
         node = create_node.VarReference('a', 'b')
         string = 'a.b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testTripleReferenceMatch(self):
         node = create_node.VarReference('a', 'b', 'c')
         string = 'a.b.c'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -447,7 +447,7 @@ class AugAssignMatcherTest(unittest.TestCase):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Num(12))
         string = 'a+=1\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testNotMatchWithVarAndTab(self):
@@ -455,21 +455,21 @@ class AugAssignMatcherTest(unittest.TestCase):
         string = '       \t        a += b\n'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher._match(string)
+            matcher.do_match(string)
         #self.assertNotEqual(string, matcher.GetSource())
 
     def testMatchWithVarAndTab(self):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
         string = '       \t        a += b\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithVarAndTab2(self):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
         string = '               a +=\tb\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -479,7 +479,7 @@ class ClassDefMatcherTest(unittest.TestCase):
         node = create_node.ClassDef('TestClass', body=[create_node.Pass()])
         string = 'class TestClass():\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchBases(self):
@@ -487,7 +487,7 @@ class ClassDefMatcherTest(unittest.TestCase):
             'TestClass', bases=['Base1', 'Base2'], body=[create_node.Pass()])
         string = 'class TestClass(Base1, Base2):\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchBody(self):
@@ -495,7 +495,7 @@ class ClassDefMatcherTest(unittest.TestCase):
             'TestClass', body=[create_node.Expr(create_node.Name('a'))])
         string = 'class TestClass():\n  a\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchDecoratorList(self):
@@ -505,7 +505,7 @@ class ClassDefMatcherTest(unittest.TestCase):
                             create_node.Call('dec2')], body=[create_node.Pass()])
         string = '@dec\n@dec2()\nclass TestClass():\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testComplete(self):
@@ -517,7 +517,7 @@ class ClassDefMatcherTest(unittest.TestCase):
                             create_node.Call('dec2')])
         string = '@dec\n@dec2()\nclass TestClass(Base1, Base2):\n  a\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -532,7 +532,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a < b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMultiMatch(self):
@@ -544,7 +544,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('c'))
         string = 'a < b < c'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testEq(self):
@@ -554,7 +554,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a == b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testNotEq(self):
@@ -564,7 +564,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a != b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testLt(self):
@@ -574,7 +574,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a < b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testLtE(self):
@@ -584,7 +584,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a <= b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testGt(self):
@@ -594,7 +594,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a > b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testGtE(self):
@@ -604,7 +604,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a >= b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testIs(self):
@@ -614,7 +614,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a is b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testIsNot(self):
@@ -624,7 +624,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a is not b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testIn(self):
@@ -634,7 +634,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a in b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testNotIn(self):
@@ -644,7 +644,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Name('b'))
         string = 'a not in b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -654,7 +654,7 @@ class ComprehensionMatcherTest(unittest.TestCase):
         node = create_node.comprehension('a', 'b', False)
         string = 'for a in b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithIf(self):
@@ -663,7 +663,7 @@ class ComprehensionMatcherTest(unittest.TestCase):
             create_node.Compare('c', '<', 'd'))
         string = 'for a in b if c < d'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -674,14 +674,14 @@ class DictMatcherTest(unittest.TestCase):
                                 [create_node.Name('b')])
         string = '{a: b}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testEmptyMatch(self):
         node = create_node.Dict()
         string = '{}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testTwoItemMatch(self):
@@ -690,7 +690,7 @@ class DictMatcherTest(unittest.TestCase):
             [create_node.Name('b'), create_node.Str('d')])
         string = '{a: b, "c": "d"}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -700,7 +700,7 @@ class DictComprehensionMatcherTest(unittest.TestCase):
         node = create_node.DictComp('e', 'f', 'a', 'b')
         string = '{e: f for a in b}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithIf(self):
@@ -709,7 +709,7 @@ class DictComprehensionMatcherTest(unittest.TestCase):
             create_node.Compare('c', '<', 'd'))
         string = '{e: f for a in b if c < d}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -719,21 +719,21 @@ class ExceptHandlerMatcherTest(unittest.TestCase):
         node = create_node.ExceptHandler()
         string = 'except:\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchWithType(self):
         node = create_node.ExceptHandler('TestException')
         string = 'except TestException:\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchWithName(self):
         node = create_node.ExceptHandler('TestException', name='as_part')
         string = 'except TestException as as_part:\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchWithBody(self):
@@ -741,7 +741,7 @@ class ExceptHandlerMatcherTest(unittest.TestCase):
             body=[create_node.Expr(create_node.Name('a'))])
         string = 'except:\n  a\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -752,7 +752,7 @@ class IfExpMatcherTest(unittest.TestCase):
             create_node.Name('True'), create_node.Name('a'), create_node.Name('b'))
         string = 'a if True else b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     @pytest.mark.skip(reason="Not Implemented Yet")
@@ -761,7 +761,7 @@ class IfExpMatcherTest(unittest.TestCase):
             create_node.Name('True'), create_node.Name('a'), create_node.Name('b'))
         string = 'a if True else b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         node.test = create_node.Name('False')
         node.body = create_node.Name('c')
         node.orelse = create_node.Name('d')
@@ -774,7 +774,7 @@ class ListComprehensionMatcherTest(unittest.TestCase):
         node = create_node.ListComp('c', 'a', 'b')
         string = '[c for a in b]'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithIf(self):
@@ -783,7 +783,7 @@ class ListComprehensionMatcherTest(unittest.TestCase):
             create_node.Compare('c', '<', 'd'))
         string = '[c for a in b if c < d]'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -793,7 +793,7 @@ class SetComprehensionMatcherTest(unittest.TestCase):
         node = create_node.SetComp('c', 'a', 'b')
         string = '{c for a in b}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithIf(self):
@@ -802,7 +802,7 @@ class SetComprehensionMatcherTest(unittest.TestCase):
             create_node.Compare('c', '<', 'd'))
         string = '{c for a in b if c < d}'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -815,7 +815,7 @@ class StrMatcherTest(unittest.TestCase):
 
     def _match_string(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testPrefixMatch(self):
@@ -834,7 +834,7 @@ class StrMatcherTest(unittest.TestCase):
         string = '"foo"\n"bar"'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(NotImplementedError):
-            matcher._match(string)
+            matcher.do_match(string)
 
     def testContinuationMatch(self):
         node = create_node.Str('foobar')
@@ -860,13 +860,13 @@ class StrMatcherTest(unittest.TestCase):
         string = '"foobar\''
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(ValueError):
-            matcher._match(string)
+            matcher.do_match(string)
 
     def testSChange(self):
         node = create_node.Str('foobar')
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         node.s = 'hello'
         self.assertEqual('"hello"', matcher.GetSource())
 
@@ -879,7 +879,7 @@ class StrMatcherTest(unittest.TestCase):
         node = create_node.Str('foobar')
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matcher.str_matcher.quote_type = "'"
         self.assertEqual("'foobar'", matcher.GetSource())
 
@@ -887,7 +887,7 @@ class StrMatcherTest(unittest.TestCase):
         node = create_node.Str('foobar')
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matcher.str_matcher.quote_type = "'''"
         matched_source = matcher.GetSource()
         self.assertEqual("'''foobar'''", matched_source)
@@ -898,14 +898,14 @@ class CommentMatcherTest(unittest.TestCase):
         node = create_node.Comment('#comment')
         string = '#comment'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchSpecialChars(self):
         string = '##\t#   c \to m \t  m e n t ? # $'
         node = create_node.Comment(string)
         matcher = GetDynamicMatcher(node)
-        matched_text = matcher._match(string)
+        matched_text = matcher.do_match(string)
         self.assertEqual(string, matched_text)
 
 
@@ -921,7 +921,7 @@ class TryFinallyMatcherTest(unittest.TestCase):
     #   c
     # """
     #    matcher = GetDynamicMatcher(node)
-    #    matcher._match(string)
+    #    matcher.do_match(string)
     #    self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithExcept(self):
@@ -939,7 +939,7 @@ finally:
   c
 """
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithExceptAndAs(self):
@@ -958,7 +958,7 @@ finally:
       c 
 """
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -968,7 +968,7 @@ class WithItemMatcherTest(unittest.TestCase):
         node = create_node.withitem('a')
         string = 'a'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -976,7 +976,7 @@ class WithItemMatcherTest(unittest.TestCase):
         node = create_node.withitem('a', optional_vars='b')
         string = 'a    as     b'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -988,7 +988,7 @@ class WithMatcherTest(unittest.TestCase):
             [create_node.withitem('a')], [create_node.Pass()])
         string = 'with a:\n  pass\n'
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
@@ -1005,7 +1005,7 @@ class WithMatcherTest(unittest.TestCase):
 
     def _assert_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     # not relevant when using withitem
@@ -1014,7 +1014,7 @@ class WithMatcherTest(unittest.TestCase):
     #                             [create_node.Pass()])
     #     string = 'with a as (b, c):\n  pass\n'
     #     matcher = GetDynamicMatcher(node)
-    #     matcher._match(string)
+    #     matcher.do_match(string)
     #     node.context_expr = create_node.Name('d')
     #     node.optional_vars.elts[0] = create_node.Name('e')
     #     node.optional_vars.elts[1] = create_node.Name('f')
@@ -1053,7 +1053,7 @@ class WithMatcherTest(unittest.TestCase):
     #     module_node = create_node.Module(node)
     #     string = 'with a as c, b as d:\n  pass\n'
     #     node.matcher = GetDynamicMatcher(node)
-    #     node.matcher._match(string)
+    #     node.matcher.do_match(string)
     #     node.body[0] = create_node.With(
     #         create_node.Name('e'),
     #         as_part=create_node.Name('f')

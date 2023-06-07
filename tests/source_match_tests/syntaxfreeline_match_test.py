@@ -49,4 +49,4 @@ class SyntaxFreeLineMatcherTest(BaseTestUtils):
         string = 'comment\n'
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(BadlySpecifiedTemplateError):
-            matcher._match(string)
+            matcher.do_match(string)

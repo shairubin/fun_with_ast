@@ -53,6 +53,9 @@ class SourceMatcher(object):
         self.parentheses_stack_depth = self.parentheses_stack.size
 
 
+    def do_match(self, string):
+        return self._match(string)
+
     def _match(self, string):
         raise NotImplementedError
 

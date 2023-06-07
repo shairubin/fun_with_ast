@@ -14,7 +14,7 @@ class AssignMatcherTest(unittest.TestCase):
         string = 'a=0x1F'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher._match(string)
+            matcher.do_match(string)
     def testBasicMatchAssignHexWithLower(self):
         node = create_node.Assign('a', create_node.Num('0x1f'))
         string = 'a=0x1f'
@@ -99,11 +99,11 @@ class AssignMatcherTest(unittest.TestCase):
         string = 'a\t=\t     bb \t  =1 \t'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher._match(string)
+            matcher.do_match(string)
 
 
     def _assert_matched_source(self, node, string):
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)

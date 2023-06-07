@@ -57,7 +57,7 @@ class BodyPlaceholderTest(unittest.TestCase):
 # end comment
 c
 """
-        matched_text = matcher._match(text_to_match)
+        matched_text = matcher.do_match(text_to_match)
         expected_match = """def a():
   foobar
 #blah
@@ -77,7 +77,7 @@ c
 # end comment
 c
 """
-        matched_text = matcher._match(text_to_match)
+        matched_text = matcher.do_match(text_to_match)
         expected_match = """def a():
   foobar #blah
   a

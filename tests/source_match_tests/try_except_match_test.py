@@ -13,7 +13,7 @@ class TryExceptMatcherTest(unittest.TestCase):
 
         string = """try:\n\tpass\nexcept:\n\tpass\n"""
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
 
@@ -30,7 +30,7 @@ except TestB:
   pass
 """
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchExceptAndOrElse(self):
@@ -46,7 +46,7 @@ else:
   pass
 """
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testMatchWithEmptyLine(self):
@@ -61,5 +61,5 @@ except Exception1 as e:
   pass
 """
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())

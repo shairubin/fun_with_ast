@@ -14,7 +14,7 @@ class IfMatcherTest(BaseTestUtils):
         string = 'if       True:   \n   pass    \nelse:\n   pass \n'
         self._assert_match_to_source(node, string, match_get_source=False)
         # matcher = GetDynamicMatcher(node)
-        # matcher._match(string)
+        # matcher.do_match(string)
         # matcher_source = matcher.GetSource()
         # self.assertEqual(string, matcher_source)
     def testSimpleIfElse2(self):
@@ -38,7 +38,7 @@ class IfMatcherTest(BaseTestUtils):
         node = create_node.If(conditional=True, body=[create_node.Pass()])
         string = 'if       True:\n pass         '
         matcher = GetDynamicMatcher(node)
-        matcher._match(string)
+        matcher.do_match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
 
@@ -132,7 +132,7 @@ else:
     def _assert_match_to_source(self, node, string, lines_in_body=1, match_get_source=True):
         assume_elif = False
         matcher = GetDynamicMatcher(node)
-        source_from_matcher  = matcher._match(string)
+        source_from_matcher  = matcher.do_match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
         self.assertEqual(string, source_from_matcher)

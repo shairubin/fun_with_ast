@@ -10,10 +10,10 @@ from fun_with_ast.placeholders.args import ArgsDefaultsPlaceholder, KeysValuesPl
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder, SeparatedListFieldPlaceholder
 
-from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher
+from fun_with_ast.placeholders.text import TextPlaceholder
 
 # TODO: Consolidate with StringParser
-from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholder, MatchPlaceholderList
+from fun_with_ast.source_matchers.base_matcher import MatchPlaceholder
 from fun_with_ast.source_matchers.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher
@@ -21,10 +21,11 @@ from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
 from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
 from fun_with_ast.placeholders.docstring import DocStringTextPlaceholder
+from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher, TupleSourceMatcher, JoinedStrSourceMatcher,
-                 ConstantSourceMatcher, SyntaxFreeLineMatcher):
+                 ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass
@@ -651,38 +652,6 @@ def get_While_expected_parts():
         TextPlaceholder(r'[ \t]*:[ \t]*\n', ':\n'),
         BodyPlaceholder('body'),
     ]
-
-
-class WithItemSourceMatcher(SourceMatcher):
-    def __init__(self, node, starting_parens=None, parent=None):
-        super(WithItemSourceMatcher, self).__init__(node, starting_parens)
-        self.context_expr = FieldPlaceholder('context_expr')
-        self.optional_vars = FieldPlaceholder(
-            'optional_vars',
-            before_placeholder=TextPlaceholder(r' *as *', ' as '))
-
-
-    def _match(self, string):
-        #    if 'as' not in string:
-        #      return MatchPlaceholder(string, self.node, self.context_expr)
-        placeholder_list = [self.context_expr,
-                            self.optional_vars]
-        remaining_string = MatchPlaceholderList(
-            string, self.node, placeholder_list)
-
-        if not remaining_string:
-            return string
-        return string[:len(remaining_string)]
-
-    def GetSource(self):
-        source_list = []
-        placeholder_list = [self.context_expr,
-                            self.optional_vars]
-        source_list = [p.GetSource(self.node) for p in placeholder_list]
-        return ''.join(source_list)
-
-
-
 
 
 def get_Yield_expected_parts():

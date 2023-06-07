@@ -1,8 +1,6 @@
 import re
 from contextvars import ContextVar
 
-from fun_with_ast.common_utils.exampl_cm import example_cm
-from fun_with_ast.common_utils.match_cm import MatchCM
 from fun_with_ast.common_utils.stack import Stack
 from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, EndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
@@ -57,8 +55,7 @@ class SourceMatcher(object):
 
 
     def do_match(self, string):
-        #global full_string
-        token = full_string.set('test string')
+        token = full_string.set(string)
         result = self._match(string)
         full_string.reset(token)
         return result
@@ -83,8 +80,8 @@ class SourceMatcher(object):
 
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
-        if full_string.get() != 'test string':
-            raise
+        original_source_code =  full_string.get()
+
         remaining_string = string
         matched_parts = []
         try:
@@ -94,7 +91,6 @@ class SourceMatcher(object):
                     remaining_string, None, start_paren_matcher)
                 self.start_paren_matchers.append(start_paren_matcher)
                 matched_parts.append(start_paren_matcher.matched_text)
-                self.parentheses_stack.push(start_paren_matcher)
         except BadlySpecifiedTemplateError:
             pass
         return remaining_string
@@ -115,10 +111,11 @@ class SourceMatcher(object):
                 self.end_paren_matchers.append(end_paren_matcher)
                 matched_parts.append(end_paren_matcher.matched_text)
                 self.paren_wrapped = True
-                if isinstance(self.parentheses_stack.peek(), StartParenMatcher):
-                    self.parentheses_stack.pop()
-                else:
-                    self.parentheses_stack.push(end_paren_matcher)
+                # if isinstance(self.parentheses_stack.peek(), StartParenMatcher):
+                #     self.parentheses_stack.pop()
+                #     pass
+                # else:
+                #     self.parentheses_stack.push(end_paren_matcher)
         except BadlySpecifiedTemplateError:
             pass
         except EmptyStackException:

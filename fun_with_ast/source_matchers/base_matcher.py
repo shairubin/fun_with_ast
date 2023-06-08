@@ -55,10 +55,10 @@ class SourceMatcher(object):
 
 
     def do_match(self, string):
-        token = full_string.set(string)
-        result = self._match(string)
-        full_string.reset(token)
         SourceMatcher.parentheses_stack.reset()
+        result = self._match(string)
+        if SourceMatcher.parentheses_stack.size != 0:
+            raise BadlySpecifiedTemplateError('Un matched parenthesis')
         return result
 
 
@@ -101,7 +101,7 @@ class SourceMatcher(object):
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
 
-        original_source_code =  full_string.get()
+        #original_source_code =  full_string.get()
 
         remaining_string = string
         #matched_parts = []
@@ -166,23 +166,24 @@ class SourceMatcher(object):
         except BadlySpecifiedTemplateError:
             return
 
-        original_source_code =  full_string.get()
+        #original_source_code =  full_string.get()
 
         remaining_string = string
         #matched_parts = []
         try:
-            while True:
+            while True :
             #for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = EndParenMatcher()
+                #remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
                 matcher_type = self.parentheses_stack.peek()
                 if isinstance(matcher_type[0], StartParenMatcher):
                     #if matcher_type[1] == str(self.node):
-                    remaining_string = MatchPlaceholder( remaining_string, None, end_paren_matcher)
-                    paired_matcher_info=   self.parentheses_stack.pop()
+                    remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
+                    paired_matcher_info = self.parentheses_stack.pop()
                     original_node_matcher = paired_matcher_info[1]
                     start_paren_matcher = paired_matcher_info[0]
                     self.end_paren_matchers.append(end_paren_matcher)
-                    original_node_matcher.start_paren_matchers.append(start_paren_matcher)
+                    original_node_matcher.start_paren_matchers.insert(0,start_paren_matcher)
                 else:
                     break
                         #self.parentheses_stack.push((end_paren_matcher, str(self.node)))
@@ -191,6 +192,7 @@ class SourceMatcher(object):
             pass
         except EmptyStackException:
             pass
+            #raise EmptyStackException('unmatched end paren')
         if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
             raise BadlySpecifiedTemplateError('missing end paren at end of string')
         return remaining_string

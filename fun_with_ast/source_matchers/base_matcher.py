@@ -58,10 +58,12 @@ class SourceMatcher(object):
         token = full_string.set(string)
         result = self._match(string)
         full_string.reset(token)
+        SourceMatcher.parentheses_stack.reset()
         return result
 
 
     def _match(self, string):
+        #SourceMatcher.parentheses_stack.push(self)
         raise NotImplementedError
 
     def GetSource(self):
@@ -78,62 +80,120 @@ class SourceMatcher(object):
         else:
             self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
 
+    # def MatchStartParens(self, string):
+    #     """Matches the starting parens in a string."""
+    #     original_source_code =  full_string.get()
+    #
+    #     remaining_string = string
+    #     matched_parts = []
+    #     try:
+    #         while True:
+    #             start_paren_matcher = StartParenMatcher()
+    #             remaining_string = MatchPlaceholder(
+    #                 remaining_string, None, start_paren_matcher)
+    #             self.start_paren_matchers.append(start_paren_matcher)
+    #             matched_parts.append(start_paren_matcher.matched_text)
+    #             self.parentheses_stack.push(start_paren_matcher)
+    #     except BadlySpecifiedTemplateError:
+    #         pass
+    #     return remaining_string
+
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
+
         original_source_code =  full_string.get()
 
         remaining_string = string
-        matched_parts = []
+        #matched_parts = []
         try:
             while True:
                 start_paren_matcher = StartParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, start_paren_matcher)
-                self.start_paren_matchers.append(start_paren_matcher)
-                matched_parts.append(start_paren_matcher.matched_text)
+                #self.start_paren_matchers.append(start_paren_matcher)
+                #matched_parts.append(start_paren_matcher.matched_text)
+                #node_name = str(self.node)
+                self.parentheses_stack.push((start_paren_matcher, self))
         except BadlySpecifiedTemplateError:
             pass
         return remaining_string
 
+    # def MatchEndParen(self, string):
+    #     """Matches the ending parens in a string."""
+    #
+    #     if not self.start_paren_matchers:
+    #         return
+    #     remaining_string = string
+    #     matched_parts = []
+    #     try:
+    #         while True:
+    #         #for unused_i in range(len(self.start_paren_matchers)):
+    #             end_paren_matcher = EndParenMatcher()
+    #             remaining_string = MatchPlaceholder(
+    #                 remaining_string, None, end_paren_matcher)
+    #             self.end_paren_matchers.append(end_paren_matcher)
+    #             matched_parts.append(end_paren_matcher.matched_text)
+    #             self.paren_wrapped = True
+    #             if isinstance(self.parentheses_stack.peek(), StartParenMatcher):
+    #                 self.parentheses_stack.pop()
+    #             else:
+    #                 self.parentheses_stack.push(end_paren_matcher)
+    #     except BadlySpecifiedTemplateError:
+    #         pass
+    #     except EmptyStackException:
+    #         #raise BadlySpecifiedTemplateError('unmatched end paren')
+    #         raise
+    #     if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
+    #         raise BadlySpecifiedTemplateError('missing end paren at end of string')
+    #
+    #     new_end_matchers = []
+    #     new_start_matchers = []
+    #     min_size = min(len(self.start_paren_matchers), len(self.end_paren_matchers))
+    #     if min_size == 0:
+    #         return
+    #     for end_matcher in self.end_paren_matchers[:min_size]:
+    #         new_start_matchers.append(self.start_paren_matchers.pop())
+    #         new_end_matchers.append(end_matcher)
+    #     self.start_paren_matchers = new_start_matchers[::-1]
+    #     self.end_paren_matchers = new_end_matchers
+
     def MatchEndParen(self, string):
         """Matches the ending parens in a string."""
 
-        if not self.start_paren_matchers:
+        end_paren_matcher = EndParenMatcher()
+        try:
+            MatchPlaceholder(string, None, end_paren_matcher)
+        except BadlySpecifiedTemplateError:
             return
+
+        original_source_code =  full_string.get()
+
         remaining_string = string
-        matched_parts = []
+        #matched_parts = []
         try:
             while True:
             #for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = EndParenMatcher()
-                remaining_string = MatchPlaceholder(
-                    remaining_string, None, end_paren_matcher)
-                self.end_paren_matchers.append(end_paren_matcher)
-                matched_parts.append(end_paren_matcher.matched_text)
-                self.paren_wrapped = True
-                # if isinstance(self.parentheses_stack.peek(), StartParenMatcher):
-                #     self.parentheses_stack.pop()
-                #     pass
-                # else:
-                #     self.parentheses_stack.push(end_paren_matcher)
+                matcher_type = self.parentheses_stack.peek()
+                if isinstance(matcher_type[0], StartParenMatcher):
+                    #if matcher_type[1] == str(self.node):
+                    remaining_string = MatchPlaceholder( remaining_string, None, end_paren_matcher)
+                    paired_matcher_info=   self.parentheses_stack.pop()
+                    original_node_matcher = paired_matcher_info[1]
+                    start_paren_matcher = paired_matcher_info[0]
+                    self.end_paren_matchers.append(end_paren_matcher)
+                    original_node_matcher.start_paren_matchers.append(start_paren_matcher)
+                else:
+                    break
+                        #self.parentheses_stack.push((end_paren_matcher, str(self.node)))
+                #self.paren_wrapped = True
         except BadlySpecifiedTemplateError:
             pass
         except EmptyStackException:
-            #raise BadlySpecifiedTemplateError('unmatched end paren')
-            raise
+            pass
         if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
             raise BadlySpecifiedTemplateError('missing end paren at end of string')
-
-        new_end_matchers = []
-        new_start_matchers = []
-        min_size = min(len(self.start_paren_matchers), len(self.end_paren_matchers))
-        if min_size == 0:
-            return
-        for end_matcher in self.end_paren_matchers[:min_size]:
-            new_start_matchers.append(self.start_paren_matchers.pop())
-            new_end_matchers.append(end_matcher)
-        self.start_paren_matchers = new_start_matchers[::-1]
-        self.end_paren_matchers = new_end_matchers
+        return remaining_string
 
     # nice example for creating unit test
     def MatchCommentEOL(self, string, remove_comment=False):
@@ -182,9 +242,12 @@ class SourceMatcher(object):
 
     def GetStartParenText(self):
         result = ''
-        if self.paren_wrapped:
-            for matcher in self.start_paren_matchers:
-                result += matcher.GetSource(None)
+        # if self.paren_wrapped:
+        #     for matcher in self.start_paren_matchers:
+        #         result += matcher.GetSource(None)
+#        if self.paren_wrapped:
+        for matcher in self.start_paren_matchers:
+            result += matcher.GetSource(None)
         return result
 
     def GetWhiteSpaceText(self, in_matcher):
@@ -195,9 +258,9 @@ class SourceMatcher(object):
         return result
 
     def GetEndParenText(self):
-        if self.paren_wrapped:
-            return ''.join(matcher.GetSource(None)
-                           for matcher in self.end_paren_matchers)
+#        if self.paren_wrapped:
+        return ''.join(matcher.GetSource(None)
+                       for matcher in self.end_paren_matchers)
         return ''
 
     def add_newline_to_source(self):

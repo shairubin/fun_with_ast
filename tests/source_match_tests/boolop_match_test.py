@@ -16,9 +16,7 @@ class BoolOpMatcherTest(BaseTestUtils):
         self._assert_match(node, string)
 
     def _assert_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
 
     def testAndBoolOp2(self):
         node = create_node.BoolOp(
@@ -48,7 +46,7 @@ class BoolOpMatcherTest(BaseTestUtils):
             create_node.Name('a'),
             create_node.Or(),
             create_node.Name('b'))
-        string = 'a or b'
+        string = '(((a or b)))'
         self._assert_match(node, string)
 
     def testAndOrBoolOp(self):
@@ -61,12 +59,27 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = 'a and b or c'
         self._assert_match(node, string)
 
-    def testOrAndBoolOp(self):
+    def testOrAndBoolOp2(self):
         node = create_node.BoolOp(
             create_node.Name('a'),
             create_node.Or(),
             create_node.Name('b'),
             create_node.And(),
             create_node.Name('c'))
-        string = 'a or b and c'
+        string = '(a or b) and c'
+        self._assert_match(node, string)
+    def testOrAndBoolOp3(self):
+        node = create_node.BoolOp(
+            create_node.Name('a'),
+            'and',
+            create_node.BoolOp(create_node.Name('b'), 'or', create_node.Name('c')))
+        string = 'a and (b or c)'
+        self._assert_match(node, string)
+
+    def testOrAndBoolOp4(self):
+        node = create_node.BoolOp(
+            create_node.Name('a'),
+            'and',
+            create_node.BoolOp(create_node.Name('b'), 'or', create_node.Name('c')))
+        string = '(a and (b or c))'
         self._assert_match(node, string)

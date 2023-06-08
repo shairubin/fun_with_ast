@@ -44,3 +44,12 @@ class CreateBoolOpTest(CreateNodeTestBase):
             'and',
             create_node.Name('c'))
         self.assertNodesEqual(expected_node, test_node)
+
+    def testBoolOpWithOrAnd2(self):
+        expected_string = '(a or b) and c'
+        expected_node = GetNodeFromInput(expected_string).value
+        test_node = create_node.BoolOp(
+            create_node.BoolOp(create_node.Name('a'), 'or', create_node.Name('b')),
+            'and',
+            create_node.Name('c'))
+        self.assertNodesEqual(expected_node, test_node)

@@ -1,9 +1,9 @@
 import pprint
 
 from fun_with_ast.placeholders.base_placeholder import Placeholder
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList
-from fun_with_ast.placeholders.text  import TextPlaceholder
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList, MatchPlaceholder, full_string
+from fun_with_ast.placeholders.text import TextPlaceholder, EndParenMatcher, StartParenMatcher
 
 
 class DefaultSourceMatcher(SourceMatcher):
@@ -55,7 +55,7 @@ class DefaultSourceMatcher(SourceMatcher):
             remaining_string = MatchPlaceholderList(
                 remaining_string, self.node, self.expected_parts,
                 self.start_paren_matchers)
-            self.MatchEndParen(remaining_string)
+            remaining_string = self.MatchEndParen(remaining_string)
 #            remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers)
 
         except BadlySpecifiedTemplateError as e:
@@ -65,14 +65,15 @@ class DefaultSourceMatcher(SourceMatcher):
                     .format(string, self, e.message))
 #        matched_string = self.GetSource()
         matched_string = DefaultSourceMatcher.GetSource(self)
-        if remaining_string :
-            matched_string = string[:-len(remaining_string)]
+        #if remaining_string :
+        #    matched_string = string[:-len(remaining_string)]
         #leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
         #start_parens = self.GetStartParenText()
-        end_parans = self.GetEndParenText()
+        #end_parans = self.GetEndParenText()
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
 #        result =  (leading_ws + start_parens + matched_string + end_parans + end_ws + self.end_of_line_comment)
-        result =  (matched_string + end_parans + end_ws + self.end_of_line_comment)
+#        result =  (matched_string + end_parans + end_ws + self.end_of_line_comment)
+        result =  (matched_string + end_ws + self.end_of_line_comment)
         self.matched = True
         self.matched_source = result
         return result
@@ -87,11 +88,16 @@ class DefaultSourceMatcher(SourceMatcher):
             part_source = part.GetSource(self.node)
             source_list.append(part_source)
         source = ''.join(source_list)
-        if self.paren_wrapped:
-            source = '{}{}{}'.format(
-                self.GetStartParenText(),
-                source,
-                self.GetEndParenText())
+        # if self.paren_wrapped:
+        #     source = '{}{}{}'.format(
+        #         self.GetStartParenText(),
+        #         source,
+        #         self.GetEndParenText())
+        source = '{}{}{}'.format(
+            self.GetStartParenText(),
+            source,
+            self.GetEndParenText())
+
         if self.start_whitespace_matchers:
             source = '{}{}'.format(self.GetWhiteSpaceText(self.start_whitespace_matchers), source)
         if self.end_whitespace_matchers:
@@ -109,6 +115,26 @@ class DefaultSourceMatcher(SourceMatcher):
     #     else:
     #         raise NotImplementedError('Cannot add newline to non-text placeholder')
 
+    # def MatchStartParens(self, string):
+    #     """Matches the starting parens in a string."""
+    #
+    #     original_source_code =  full_string.get()
+    #
+    #     remaining_string = string
+    #     #matched_parts = []
+    #     try:
+    #         while True:
+    #             start_paren_matcher = StartParenMatcher()
+    #             remaining_string = MatchPlaceholder(
+    #                 remaining_string, None, start_paren_matcher)
+    #             #self.start_paren_matchers.append(start_paren_matcher)
+    #             #matched_parts.append(start_paren_matcher.matched_text)
+    #             #node_name = str(self.node)
+    #             self.parentheses_stack.push((start_paren_matcher, self))
+    #     except BadlySpecifiedTemplateError:
+    #         pass
+    #     return remaining_string
+
     def __repr__(self):
         return ('DefaultSourceMatcher "{}" for node "{}" expecting to match "{}"'
                 .format(super(DefaultSourceMatcher, self).__repr__(),
@@ -121,3 +147,51 @@ class DefaultSourceMatcher(SourceMatcher):
         remaining_string = remaining_string[len(match_ws):]
         #self.start_whitespace_matchers.append(ws_placeholder)
         return remaining_string
+
+    # def MatchEndParen(self, string):
+    #     """Matches the ending parens in a string."""
+    #
+    #     end_paren_matcher = EndParenMatcher()
+    #     try:
+    #         MatchPlaceholder(string, None, end_paren_matcher)
+    #     except BadlySpecifiedTemplateError:
+    #         return
+    #
+    #     original_source_code =  full_string.get()
+    #
+    #     remaining_string = string
+    #     #matched_parts = []
+    #     try:
+    #         while True:
+    #         #for unused_i in range(len(self.start_paren_matchers)):
+    #             end_paren_matcher = EndParenMatcher()
+    #             matcher_type = self.parentheses_stack.peek()
+    #             if isinstance(matcher_type[0], StartParenMatcher):
+    #                 #if matcher_type[1] == str(self.node):
+    #                 remaining_string = MatchPlaceholder( remaining_string, None, end_paren_matcher)
+    #                 paired_matcher_info=   self.parentheses_stack.pop()
+    #                 original_node_matcher = paired_matcher_info[1]
+    #                 start_paren_matcher = paired_matcher_info[0]
+    #                 self.end_paren_matchers.append(end_paren_matcher)
+    #                 original_node_matcher.start_paren_matchers.append(start_paren_matcher)
+    #             else:
+    #                 break
+    #                     #self.parentheses_stack.push((end_paren_matcher, str(self.node)))
+    #             #self.paren_wrapped = True
+    #     except BadlySpecifiedTemplateError:
+    #         pass
+    #     except EmptyStackException:
+    #         pass
+    #     if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
+    #         raise BadlySpecifiedTemplateError('missing end paren at end of string')
+    #     return remaining_string
+#        new_end_matchers = []
+#        new_start_matchers = []
+#        min_size = min(len(self.start_paren_matchers), len(self.end_paren_matchers))
+#        if min_size == 0:
+#            return
+#        for end_matcher in self.end_paren_matchers[:min_size]:
+#            new_start_matchers.append(self.start_paren_matchers.pop())
+#            new_end_matchers.append(end_matcher)
+#        self.start_paren_matchers = new_start_matchers[::-1]
+#        self.end_paren_matchers = new_end_matchers

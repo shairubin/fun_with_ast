@@ -55,10 +55,9 @@ class SourceMatcher(object):
 
 
     def do_match(self, string):
+        self._check_balance_parentheses(string)
         SourceMatcher.parentheses_stack.reset()
         result = self._match(string)
-        if SourceMatcher.parentheses_stack.size != 0:
-            raise BadlySpecifiedTemplateError('Un matched parenthesis')
         return result
 
 
@@ -283,3 +282,17 @@ class SourceMatcher(object):
             raise ValueError('Internal Error: matched_text must be None if is_matched is False')
         if hasattr(self, 'matched_text'):
             raise ValueError('Internal Error: dont have this field - ever')
+
+    def _check_balance_parentheses(self, string):
+        left = right = 0
+        for c in string:
+            if c == '(':
+                left += 1
+            elif c == ')':
+                right += 1
+
+        if left != right:
+            raise BadlySpecifiedTemplateError('unbalanced parentheses')
+
+
+

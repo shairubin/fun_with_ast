@@ -124,7 +124,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '(   1   )     )'
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(EmptyStackException):
+        with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
 
     def testLargeNumberMatch(self):

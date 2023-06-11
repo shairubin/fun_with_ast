@@ -70,6 +70,7 @@ class DefaultSourceMatcher(SourceMatcher):
         #leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
         #start_parens = self.GetStartParenText()
         #end_parans = self.GetEndParenText()
+        self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
 #        result =  (leading_ws + start_parens + matched_string + end_parans + end_ws + self.end_of_line_comment)
 #        result =  (matched_string + end_parans + end_ws + self.end_of_line_comment)

@@ -109,7 +109,7 @@ _dynamic_matchers = {
     fun_with_ast.manipulate_node.create_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher', 'fun_with_ast.source_matchers.syntaxfreeline'],
 #    manipulate_node.create_node.SyntaxFreeLine: ['get_SyntaxFreeLine_expected_parts', 'fun_with_ast.source_match'],
     fun_with_ast.manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
-    _ast.Tuple: ['TupleSourceMatcher', 'fun_with_ast.source_match'],
+    _ast.Tuple: ['get_Tuple_expected_parts', 'fun_with_ast.source_match'],
     #    _ast.TryExcept: get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
     #    _ast.Try: TryFinallySourceMatcher', 'fun_with_ast.source_match'],
     _ast.JoinedStr: ['JoinedStrSourceMatcher', 'fun_with_ast.source_matchers.joined_str'],

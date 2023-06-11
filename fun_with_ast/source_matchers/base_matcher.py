@@ -198,8 +198,11 @@ class SourceMatcher(object):
 
     # nice example for creating unit test
     def MatchCommentEOL(self, string, remove_comment=False):
+        if string is None:
+            return ''
         remaining_string = string
         comment = ''
+
         full_line  = re.match(r'(.*)(#.*)', string)
         if full_line:
             comment = full_line.group(2)
@@ -207,7 +210,7 @@ class SourceMatcher(object):
             self.end_of_line_comment = comment
         if remove_comment and full_line:
             remaining_string = full_line.group(1)
-        return comment, remaining_string
+        return comment
 
     # def MatchWhiteSpaces(self, string, in_matcher):
     #     """Matches the  whitespaces  in a string."""

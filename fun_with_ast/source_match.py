@@ -61,6 +61,14 @@ def get_alias_expected_parts():
     ]
 
 
+def get_Tuple_expected_parts():
+    return  [
+            #TextPlaceholder(r'(\s*\(|\s*)', ''),
+            SeparatedListFieldPlaceholder(
+                'elts', before_separator_placeholder=TextPlaceholder(r'[ \t]*,[ \t]*', ',')),
+            #TextPlaceholder(r'(\s*,?\s*\)|\s*)[ \t]*(#\S*)*', ')')
+        ]
+
 def get_And_expected_parts():
     return [TextPlaceholder(r'and')]
 

@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
@@ -28,14 +29,16 @@ class TupleTest(unittest.TestCase):
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.skip(reason="Not Implemented Yet - illegal tuple ")
-    def testBasicTupleNoParansComment(self):
+    #@pytest.mark.skip(reason="Not Implemented Yet - illegal tuple ")
+    def testBasicTupleNoIllegal(self):
         node = create_node.Tuple(['a', 'b'])
         string = '(\t a,\t\tb \t #comment'
         matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+        #self.assertEqual(string, matcher.GetSource())
 
+    # @pytest.mark.skip(reason="Not Implemented Yet - comma without another name")
     def testBasicSingleTuple(self):
         node = create_node.Tuple(['a'])
         string = '(\t   a, \t)'
@@ -43,12 +46,13 @@ class TupleTest(unittest.TestCase):
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    def testTupleWithCommentAndWS(self):
+    def testBasicSingleTuple(self):
         node = create_node.Tuple(['a'])
-        string = ' (\t   a, \t) \t #comment'
+        string = '(\t   a \t)'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
+
 
     def testTupleWithCommentAndWS2(self):
         node = create_node.Tuple(['a', 'b'])

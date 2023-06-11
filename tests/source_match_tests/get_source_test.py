@@ -11,6 +11,10 @@ class GetSourceTest(unittest.TestCase):
         string = "logger.info(\"test string\")\n"
         self._verify_source(string, default_quote='\'')
 
+    def testEpmty(self):
+        string = ""
+        self._verify_source(string, default_quote='\'')
+
     def testCall2(self):
         string = 'logger.info(\'test string\')\n'
         self._verify_source(string,default_quote='\"')

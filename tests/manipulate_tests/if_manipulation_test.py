@@ -28,15 +28,15 @@ class bcolors:
 def injected_source(request):
     yield request.param
 
-@pytest.fixture(params=[#('   pass\n', '   a=1\n', 0, 'c.d():'),
+@pytest.fixture(params=[('   pass\n', '   a=1\n', 0, 'c.d():'),
                         ('   a=1\n', '   pass', 0, 'c.d(): # comment'),
-                        # ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
-                        #  '  a=1', 0, 'a>2: #comment'),
-                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a and not b and not not c:' ),
-                        # ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1,
-                        #  '(a and not b) or not (not c):'),
-                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1, 'a+b > c/d+c:'),
-                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a+b > c/(d+c):')
+                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
+                          '  a=1', 0, 'a>2: #comment'),
+                         ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a and not b and not not c:' ),
+                         ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1,
+                          '(a and not b) or not (not c):'),
+                         ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1, 'a+b > c/d+c:'),
+                         ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a+b > c/(d+c):')
 
                         ])
 def body_and_orelse(request):
@@ -70,7 +70,7 @@ class TestIfManupulation:
             expected_source = original_if_source
         assert composed_source == expected_source
 
-    def test_If_elif_Manipulation(self, injected_source, capsys):
+    def test_If_elif_AddNode(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=1, location_in_body_index=1))
@@ -83,7 +83,25 @@ class TestIfManupulation:
             expected_source = original_if_source
         assert composed_source == expected_source
 
-    def test_get_source_body_Manipulation(self, body_and_orelse, capsys):
+    def test_get_source_body(self, body_and_orelse, capsys):
+        body = body_and_orelse[0]
+        orelse = body_and_orelse[1]
+        body_index = body_and_orelse[2]
+        test = body_and_orelse[3]
+        original_if_source = 'if '+ test + '\n'   + body + 'else:\n' + orelse
+        if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=body_index, location_in_body_index=1))
+        the_source = manipulator.get_body_orelse_source()
+        title = 'Body source:' if body_index == 0 else 'Else source:'
+        title = 'test_get_source. ' + title
+        self._capture_source(capsys, the_source, title, bcolors.OKGREEN, True)
+        if body_index == 0:
+            assert the_source == body
+        elif body_index == 1:
+            assert the_source == orelse
+        else:
+            raise ValueError("body index can be only 0 or 1")
+    def test_switch_body_else(self, body_and_orelse, capsys):
         body = body_and_orelse[0]
         orelse = body_and_orelse[1]
         body_index = body_and_orelse[2]

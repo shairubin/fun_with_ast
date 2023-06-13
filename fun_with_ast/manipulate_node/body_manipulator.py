@@ -1,3 +1,4 @@
+from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 
 
@@ -13,6 +14,8 @@ class BodyManipulator:
             node.matcher.add_newline_to_source()
 
     def inject_node(self,node_to_inject, index):
+        if IsEmptyModule(node_to_inject):
+            return
         ident = self._get_indentation()
         source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
         node_to_inject.matcher.FixIndentation(ident)

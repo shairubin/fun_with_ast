@@ -100,6 +100,10 @@ def GetWrappingStmtNode(module_node, node_in_stmt):
   visitor.visit(module_node)
   return visitor.correct_stmt
 
+def IsEmptyModule(node):
+    if not isinstance(node, _ast.Module):
+        return False
+    return len(node.body) == 0
 
 class _ParentVisitor(ast.NodeVisitor):
 

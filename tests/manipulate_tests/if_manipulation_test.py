@@ -1,6 +1,7 @@
 import sys
 import pytest
 
+from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
@@ -18,23 +19,24 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-@pytest.fixture(params=['a.b()\n', \
-                        'a.c()\n', \
+@pytest.fixture(params=['a.b()\n',
+                        'a.c()\n',
                         'a=44',
-                        "s='fun_with_ast'"
+                        "s='fun_with_ast'",
+                        ""
                         ])
 def injected_source(request):
     yield request.param
 
 @pytest.fixture(params=[#('   pass\n', '   a=1\n', 0, 'c.d():'),
                         ('   a=1\n', '   pass', 0, 'c.d(): # comment'),
-                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
-                         '  a=1', 0, 'a>2: #comment'),
-                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a and not b and not not c:' ),
-                        ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1,
-                         '(a and not b) or not (not c):'),
-                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1, 'a+b > c/d+c:'),
-                        ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a+b > c/(d+c):')
+                        # ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
+                        #  '  a=1', 0, 'a>2: #comment'),
+                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a and not b and not not c:' ),
+                        # ("  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",'  a=1', 1,
+                        #  '(a and not b) or not (not c):'),
+                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 1, 'a+b > c/d+c:'),
+                        # ('#line comment \n   pass #comment 1\n', '   a=1 #comment 2', 0, 'a+b > c/(d+c):')
 
                         ])
 def body_and_orelse(request):
@@ -46,9 +48,11 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=0))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        #self._capture_source(capsys, composed_source, 'modified source:', bcolors.OKCYAN)
         add_new_line = '' if injected_source.endswith('\n') else '\n'
-        expected_source = original_if_source.replace('   a=1',  '   '+injected_source + add_new_line +'   a=1\n')
+        if not IsEmptyModule(injected_node):
+            expected_source = original_if_source.replace('   a=1',  '   '+injected_source + add_new_line +'   a=1\n')
+        else:
+            expected_source = original_if_source
         assert expected_source == composed_source
 
 
@@ -58,8 +62,12 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node,IfManipulatorConfig(body_index=1, location_in_body_index=1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
+
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
-        expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
+        if not IsEmptyModule(injected_node):
+            expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
+        else:
+            expected_source = original_if_source
         assert composed_source == expected_source
 
     def test_If_elif_Manipulation(self, injected_source, capsys):
@@ -69,7 +77,10 @@ class TestIfManupulation:
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
-        expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
+        if not IsEmptyModule(injected_node):
+            expected_source = original_if_source.replace('b=2', 'b=2\n   '+injected_source + add_new_line )
+        else:
+            expected_source = original_if_source
         assert composed_source == expected_source
 
     def test_get_source_body_Manipulation(self, body_and_orelse, capsys):

@@ -1,5 +1,7 @@
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class BodyManipulator:
@@ -22,6 +24,17 @@ class BodyManipulator:
         self.body_block.insert(index, node_to_inject)
         self._add_newlines()
 
+    def replace_body(self,source_of_new_body):
+        body_lines = self._split_source_onto_lines(source_of_new_body)
+        new_body = self._create_body_from_lines(body_lines)
+        for node in new_body:
+            matcher = GetDynamicMatcher(node)
+            #self.node.matcher.orelse_placeholder._match(source_of_new_body)
+            matcher.do_match(source_of_new_body)
+
+        self.body_block = new_body
+        return self.body_block
+
     def get_source(self):
         raise NotImplementedError('get_source not implemented yet')
 
@@ -34,3 +47,19 @@ class BodyManipulator:
             elif stmt_ident != ident and ident != 0:
                 raise ValueError('illegal ident')
         return ident
+
+    def _split_source_onto_lines(self, source_of_new_body):
+        body_lines = source_of_new_body.split('\n')
+#        if len(body_lines) > 1:
+#            raise NotImplementedError('replace_body not implemented yet')
+        for body_line in body_lines:
+            if body_line == '\n':
+                raise NotImplementedError('Found end-of-line in if body')
+        return body_lines
+
+    def _create_body_from_lines(self, body_lines):
+        new_body = []
+        for line in body_lines:
+            node = GetNodeFromInput(line.lstrip())
+            new_body.append(node)
+        return new_body

@@ -5,14 +5,28 @@ from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 
 from dataclasses import dataclass
 
-from fun_with_ast.source_matchers.body import BodyPlaceholder
+
 
 
 @dataclass
 class IfManipulatorConfig():
-    body_index: int
-    location_in_body_index: int
+    _body_index: int
+    _location_in_body_index: int
+    @property
+    def body_index(self) -> int:
+        return self._body_index
 
+    @body_index.setter
+    def body_index(self, v: int) -> None:
+        self._body_index = v
+
+    @property
+    def location_in_body_index(self) -> int:
+        return self._location_in_body_index
+
+    @body_index.setter
+    def location_in_body_index(self, v: int) -> None:
+        self.location_in_body_index = v
 
 class ManipulateIfNode():
     def __init__(self, node, config: IfManipulatorConfig):
@@ -73,5 +87,31 @@ class ManipulateIfNode():
                 return self.node.orelse
             body_index -= 2
 
+    def _set_block(self, body_index, new_block):
+        if body_index < 0:
+            raise ValueError('Illegal body index')
+        if body_index > 1:
+            raise NotImplementedError('elif not supported yet')
+        if body_index == 0:
+            self.node.body = new_block
+        if body_index == 1 and not self.node.orelse:
+            ValueError('No oresle in If')
+        if body_index == 1:
+            if self.is_elif:
+                self.node.orelse[0].body = new_block
+            self.node.orelse = new_block
+
+
     def _get_nodes_to_inject(self, nodes):
         return nodes[0]
+
+    def rerplace_body(self, source):
+        if self.config.body_index ==0:
+            raise NotImplementedError('Not supported replace body index')
+        body_block_to_manipulate = self._get_block(self.config.body_index)
+        body_manipulator = BodyManipulator(body_block_to_manipulate)
+        new_body = body_manipulator.replace_body(source)
+        current_else_code = self.node.matcher.orelse_placeholder.GetSource(self.node)
+        self.node.orelse = new_body
+        self.node.matcher.orelse_placeholder._match(self.node, source)
+

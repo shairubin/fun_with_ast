@@ -30,14 +30,15 @@ def injected_source(request):
     yield request.param
 
 
-@pytest.fixture(params=[{"body": '   pass\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
+@pytest.fixture(scope="function", params=[
+                        {"body": '   pass\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
                         {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
                         {"body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
-                            "else_body": '  a=1', "inject_to": 0, "condition": 'a>2: #comment'},
+                           "else_body": '  a=1', "inject_to": 0, "condition": 'a>2: #comment'},
                         {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2',
-                         "inject_to": 0, "condition": 'a and not b and not not c:'},
+                        "inject_to": 0, "condition": 'a and not b and not not c:'},
                         {"body":  "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n", "else_body":'  a=1',
-                         "inject_to":1, "condition":   '(a and not b) or not (not c):'},
+                        "inject_to":1, "condition":   '(a and not b) or not (not c):'},
                         {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to":1, "condition": 'a+b > c/d+c:'},
                         {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to": 0, "condition": 'a+b > c/(d+c):'}
 
@@ -45,12 +46,12 @@ def injected_source(request):
 def body_and_orelse(request):
     yield request.param
 
-
+#@pytest.mark.usefixtures(body_and_orelse)
 class TestIfManupulation:
     def test_If_Manipulation(self, injected_source, capsys):
         original_if_source = 'if (c.d()):\n   a=1'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=0))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(_body_index=0, _location_in_body_index=0))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '' if injected_source.endswith('\n') else '\n'
@@ -63,7 +64,7 @@ class TestIfManupulation:
     def test_If_Else_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1,1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
 
@@ -77,7 +78,7 @@ class TestIfManupulation:
     def test_If_elif_AddNode(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=1, location_in_body_index=1))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1, 1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source.endswith('\n') else ''
@@ -91,7 +92,7 @@ class TestIfManupulation:
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
         original_if_source = 'if ' + test + '\n' + body + 'else:\n' + orelse
         if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=body_index, location_in_body_index=1))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index, 1))
         the_source = manipulator.get_body_orelse_source()
         title = 'Body source:' if body_index == 0 else 'Else source:'
         title = 'test_get_source. ' + title
@@ -103,29 +104,23 @@ class TestIfManupulation:
         else:
             raise ValueError("body index can be only 0 or 1")
 
-    def _get_test_pastameters(self, body_and_orelse):
-        body = body_and_orelse['body']
-        orelse = body_and_orelse['else_body']
-        body_index = body_and_orelse['inject_to']
-        test = body_and_orelse['condition']
-        return body, body_index, orelse, test
 
     def test_switch_body_else(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
         original_if_source = 'if ' + test + '\n' + body + 'else:\n' + orelse
-        if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=body_index, location_in_body_index=1))
-        the_source = manipulator.get_body_orelse_source()
-        title = 'Body source:' if body_index == 0 else 'Else source:'
-        title = 'test_get_source. ' + title
-        self._capture_source(capsys, the_source, title, bcolors.OKGREEN, True)
-        if body_index == 0:
-            assert the_source == body
-        elif body_index == 1:
-            assert the_source == orelse
-        else:
-            raise ValueError("body index can be only 0 or 1")
-
+        if_node,_ = self._create_nodes(capsys, 'pass', original_if_source)
+        config = IfManipulatorConfig(0, 1)
+        manipulator = ManipulateIfNode(if_node, config)
+        body_source = manipulator.get_body_orelse_source()
+        self._capture_source(capsys, body_source, 'Body source:', bcolors.OKGREEN, True)
+        config.body_index = 1
+        else_source = manipulator.get_body_orelse_source()
+        self._capture_source(capsys, else_source, 'Else Source', bcolors.OKGREEN, True)
+        assert body_source == body
+        assert else_source == orelse
+        manipulator.rerplace_body(body_source)
+        else_source = manipulator.get_body_orelse_source()
+        assert else_source == body_source
     def _create_nodes(self, capsys, injected_source, original_if_source):
         self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
         if_node = self._create_if_node(original_if_source)
@@ -163,3 +158,10 @@ class TestIfManupulation:
         composed_source = GetSource(if_node, assume_no_indent=True)
         self._capture_source(capsys, composed_source, 'Modified source', bcolors.OKCYAN)
         return composed_source
+
+    def _get_test_pastameters(self, body_and_orelse):
+        body = body_and_orelse['body']
+        orelse = body_and_orelse['else_body']
+        body_index = body_and_orelse['inject_to']
+        test = body_and_orelse['condition']
+        return body, body_index, orelse, test

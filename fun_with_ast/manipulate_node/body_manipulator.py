@@ -1,6 +1,8 @@
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.source_matchers.body import BodyPlaceholder
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
@@ -25,14 +27,18 @@ class BodyManipulator:
         self._add_newlines()
 
     def replace_body(self,source_of_new_body):
-        body_lines = self._split_source_onto_lines(source_of_new_body)
-        new_body = self._create_body_from_lines(body_lines)
-        for node in new_body:
-            matcher = GetDynamicMatcher(node)
-            #self.node.matcher.orelse_placeholder._match(source_of_new_body)
-            matcher.do_match(source_of_new_body)
-
-        self.body_block = new_body
+#        body_lines = self._split_source_onto_lines(source_of_new_body)
+        new_body = self._create_body_from_source(source_of_new_body)
+        module_node = create_node.Module(*new_body)
+        #placeholder = BodyPlaceholder('body')
+        #matched_text = placeholder._match(module_node, source_of_new_body)
+        #remasining_string = source_of_new_body
+        #for node in new_body:
+        #    matcher = GetDynamicMatcher(node)
+        #    #self.node.matcher.orelse_placeholder._match(source_of_new_body)
+        #    result = matcher.do_match(remasining_string)
+        #    remasining_string = remasining_string.replace(result, '', 1)
+        self.body_block = module_node.body
         return self.body_block
 
     def get_source(self):
@@ -50,16 +56,38 @@ class BodyManipulator:
 
     def _split_source_onto_lines(self, source_of_new_body):
         body_lines = source_of_new_body.split('\n')
-#        if len(body_lines) > 1:
-#            raise NotImplementedError('replace_body not implemented yet')
         for body_line in body_lines:
             if body_line == '\n':
                 raise NotImplementedError('Found end-of-line in if body')
         return body_lines
 
-    def _create_body_from_lines(self, body_lines):
-        new_body = []
-        for line in body_lines:
-            node = GetNodeFromInput(line.lstrip())
-            new_body.append(node)
+    def _create_body_from_source(self, body_lines):
+        # new_body = []
+        # for line in body_lines:
+        #     node = GetNodeFromInput(line.lstrip())
+        #     new_body.append(node)
+        # return new_body
+        idented_body_source = self._ident_left(body_lines)
+        new_body = GetNodeFromInput(idented_body_source, full_body=True)
         return new_body
+
+    def _ident_left(self, body_lines):
+        body_lines = [x+'\n' for x in body_lines.split('\n') if x]
+        new_body = []
+        shift_count = self._get_ident_count_for_lines(body_lines)
+        for line in body_lines:
+            if line.startswith('#'):
+                new_body.append(line)
+            else:
+                new_body.append(line[shift_count:])
+        return ''.join(new_body)
+
+    def _get_ident_count_for_lines(self, body_lines):
+        result = 0
+        for line in body_lines:
+            line_ident = len(line) - len(line.lstrip())
+            if line_ident == 0 and line.startswith('#'):
+                continue
+            result = line_ident
+            break
+        return result

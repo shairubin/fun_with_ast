@@ -23,10 +23,12 @@ CtxEnum = Enum(
     DEL='delete',
     PARAM='param')
 
-def GetNodeFromInput(string, body_index=0):
+def GetNodeFromInput(string, body_index=0, full_body=False):
     result = ast.parse(string)
-    if result.body:
+    if result.body and full_body == False:
         body = result.body[body_index]
+    elif result.body and full_body == True:
+        body = result.body
     else:
         return result # empty Module
     if isinstance(body, ast.If) and 'elif' in string:

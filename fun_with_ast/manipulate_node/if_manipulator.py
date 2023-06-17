@@ -113,5 +113,6 @@ class ManipulateIfNode():
         new_body = body_manipulator.replace_body(source)
         current_else_code = self.node.matcher.orelse_placeholder.GetSource(self.node)
         self.node.orelse = new_body
-        self.node.matcher.orelse_placeholder._match(self.node, source)
+        new_else_node_source = self.node.matcher.orelse_placeholder._match(self.node, source)
+        return new_else_node_source
 

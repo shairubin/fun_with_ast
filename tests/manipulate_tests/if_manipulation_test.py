@@ -31,7 +31,7 @@ def injected_source(request):
 
 
 @pytest.fixture(scope="function", params=[
-                        {"body": '   pass\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
+                        {"body": '   pass\n   z=x\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
                         {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
                         {"body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
                            "else_body": '  a=1', "inject_to": 0, "condition": 'a>2: #comment'},

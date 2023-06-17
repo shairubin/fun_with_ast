@@ -14,6 +14,11 @@ class SyntaxFreeLineMatcherTest(BaseTestUtils):
         string = '\n'
         self._verify_match(node, string)
 
+    def testBasicMatch2(self):
+        node = SyntaxFreeLine()
+        string = '# comment\n'
+        self._verify_match(node, string)
+
     def testVeryShortMatch(self):
         node = SyntaxFreeLine(
             comment='', col_offset=4, comment_indent=0)

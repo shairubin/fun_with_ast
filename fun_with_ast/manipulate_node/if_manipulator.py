@@ -106,13 +106,27 @@ class ManipulateIfNode():
         return nodes[0]
 
     def rerplace_body(self, source):
-        if self.config.body_index ==0:
-            raise NotImplementedError('Not supported replace body index')
         body_block_to_manipulate = self._get_block(self.config.body_index)
         body_manipulator = BodyManipulator(body_block_to_manipulate)
         new_body = body_manipulator.replace_body(source)
-        current_else_code = self.node.matcher.orelse_placeholder.GetSource(self.node)
-        self.node.orelse = new_body
-        new_else_node_source = self.node.matcher.orelse_placeholder._match(self.node, source)
-        return new_else_node_source
+#        if self.config.body_index == 0:
+#            current_body_code = self.node.matcher.body_placeholder.GetSource(self.node)
+#        elif self.config.body_index == 1:
+#            current_else_code = self.node.matcher.orelse_placeholder.GetSource(self.node)
+#        else:
+#            raise ValueError('Illegal body index')
+
+        if self.config.body_index == 0:
+            self.node.body = new_body
+            new_body_source = self.node.matcher.body_placeholder._match(self.node, source)
+            if not new_body_source.endswith('\n'):
+                self.node.matcher.add_newline_to_source()
+            return new_body_source
+        elif self.config.body_index == 1:
+            self.node.orelse = new_body
+            new_else_node_source = self.node.matcher.orelse_placeholder._match(self.node, source)
+            return new_else_node_source
+        else:
+            raise ValueError('Illegal body index')
+
 

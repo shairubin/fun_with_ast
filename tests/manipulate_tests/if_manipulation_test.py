@@ -112,15 +112,31 @@ class TestIfManupulation:
         config = IfManipulatorConfig(0, 1)
         manipulator = ManipulateIfNode(if_node, config)
         body_source = manipulator.get_body_orelse_source()
-        self._capture_source(capsys, body_source, 'Body source:', bcolors.OKGREEN, True)
+        self._capture_source(capsys, body_source, 'Original Body source:', bcolors.OKGREEN, True)
         config.body_index = 1
-        else_source = manipulator.get_body_orelse_source()
-        self._capture_source(capsys, else_source, 'Else Source', bcolors.OKGREEN, True)
+        orig_else_source = manipulator.get_body_orelse_source()
+        self._capture_source(capsys, orig_else_source, 'Original Else Source', bcolors.OKGREEN, True)
         assert body_source == body
-        assert else_source == orelse
+        assert orig_else_source == orelse
         manipulator.rerplace_body(body_source)
-        else_source = manipulator.get_body_orelse_source()
-        assert else_source == body_source
+        new_else_source = manipulator.get_body_orelse_source()
+        self._capture_source(capsys, new_else_source, 'New Else Source', bcolors.OKCYAN, True)
+        assert new_else_source == body_source
+        assert new_else_source != orelse
+        config.body_index = 0
+        manipulator.rerplace_body(orig_else_source)
+        new_body_source = manipulator.get_body_orelse_source()
+        self._capture_source(capsys, new_body_source, 'New Body Source', bcolors.OKCYAN, True)
+        if orig_else_source.endswith('\n'):
+            add_new_line_to_new_body = ''
+        else:
+            add_new_line_to_new_body = '\n'
+        assert new_body_source == orig_else_source + add_new_line_to_new_body
+        expected_new_if_source = 'if ' + test + '\n' + orelse + add_new_line_to_new_body + 'else:\n' + body
+        actual_new_if_source = if_node.matcher.GetSource()
+        self._capture_source(capsys, actual_new_if_source, 'New If Source', bcolors.OKCYAN, True)
+        assert expected_new_if_source == actual_new_if_source
+
     def _create_nodes(self, capsys, injected_source, original_if_source):
         self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
         if_node = self._create_if_node(original_if_source)

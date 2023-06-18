@@ -102,4 +102,4 @@ class IfSourceMatcher(SourceMatcher):
         if not self.node.orelse:
             self.node.body[-1].matcher.add_newline_to_source()
         else:
-            raise NotImplementedError('IfSourceMatcher does not support adding newlines to source')
+            self.node.body[-1].matcher.add_newline_to_source()

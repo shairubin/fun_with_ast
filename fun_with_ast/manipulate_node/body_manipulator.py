@@ -27,17 +27,8 @@ class BodyManipulator:
         self._add_newlines()
 
     def replace_body(self,source_of_new_body):
-#        body_lines = self._split_source_onto_lines(source_of_new_body)
         new_body = self._create_body_from_source(source_of_new_body)
         module_node = create_node.Module(*new_body)
-        #placeholder = BodyPlaceholder('body')
-        #matched_text = placeholder._match(module_node, source_of_new_body)
-        #remasining_string = source_of_new_body
-        #for node in new_body:
-        #    matcher = GetDynamicMatcher(node)
-        #    #self.node.matcher.orelse_placeholder._match(source_of_new_body)
-        #    result = matcher.do_match(remasining_string)
-        #    remasining_string = remasining_string.replace(result, '', 1)
         self.body_block = module_node.body
         return self.body_block
 

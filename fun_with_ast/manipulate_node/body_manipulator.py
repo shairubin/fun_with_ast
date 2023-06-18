@@ -2,21 +2,12 @@ from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
-from fun_with_ast.source_matchers.body import BodyPlaceholder
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class BodyManipulator:
-
+    """ Class for manipulating the body of a node. (the If body, orelse body, etc.)"""
     def __init__(self, body_block):
         self.body_block = body_block
-    def _add_newlines(self):
-        for node in self.body_block:
-            node_source = node.matcher.GetSource()
-            if node_source.endswith("\n"):
-                continue
-            node.matcher.add_newline_to_source()
-
     def inject_node(self,node_to_inject, index):
         if IsEmptyModule(node_to_inject):
             return
@@ -35,6 +26,14 @@ class BodyManipulator:
     def get_source(self):
         raise NotImplementedError('get_source not implemented yet')
 
+    def _add_newlines(self):
+        for node in self.body_block:
+            node_source = node.matcher.GetSource()
+            if node_source.endswith("\n"):
+                continue
+            node.matcher.add_newline_to_source()
+
+
     def _get_indentation(self):
         ident = 0
         for stmt in self.body_block:
@@ -45,19 +44,14 @@ class BodyManipulator:
                 raise ValueError('illegal ident')
         return ident
 
-    def _split_source_onto_lines(self, source_of_new_body):
-        body_lines = source_of_new_body.split('\n')
-        for body_line in body_lines:
-            if body_line == '\n':
-                raise NotImplementedError('Found end-of-line in if body')
-        return body_lines
+    # def _split_source_onto_lines(self, source_of_new_body):
+    #     body_lines = source_of_new_body.split('\n')
+    #     for body_line in body_lines:
+    #         if body_line == '\n':
+    #             raise NotImplementedError('Found end-of-line in if body')
+    #     return body_lines
 
     def _create_body_from_source(self, body_lines):
-        # new_body = []
-        # for line in body_lines:
-        #     node = GetNodeFromInput(line.lstrip())
-        #     new_body.append(node)
-        # return new_body
         idented_body_source = self._ident_left(body_lines)
         new_body = GetNodeFromInput(idented_body_source, full_body=True)
         return new_body

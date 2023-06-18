@@ -1,14 +1,14 @@
 from fun_with_ast.common_utils import node_tree_util
 
 
-def FixSourceIndentation(module_node, node_to_fix, starting_parens=None):
-    if starting_parens is None:
-        starting_parens = []
-    default_source = node_to_fix.matcher.GetSource()
-    node_to_fix.matcher = dynamic_matcher.GetDynamicMatcher(node_to_fix, starting_parens)
-    starting_indent = '  ' * node_tree_util.GetIndentLevel(
-        module_node, node_to_fix)
-    node_to_fix.matcher._match(starting_indent + default_source)
+# def FixSourceIndentation(module_node, node_to_fix, starting_parens=None):
+#     if starting_parens is None:
+#         starting_parens = []
+#     default_source = node_to_fix.matcher.GetSource()
+#     node_to_fix.matcher = dynamic_matcher.GetDynamicMatcher(node_to_fix, starting_parens)
+#     starting_indent = '  ' * node_tree_util.GetIndentLevel(
+#         module_node, node_to_fix)
+#     node_to_fix.matcher._match(starting_indent + default_source)
 
 def GetDefaultQuoteType():
     return '"'

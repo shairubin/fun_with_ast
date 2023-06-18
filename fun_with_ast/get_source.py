@@ -2,7 +2,6 @@ import _ast
 import ast
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.common_utils.utils_source_match import FixSourceIndentation
 
 
 
@@ -66,7 +65,8 @@ def _match_text(assume_no_indent, field, text):
                 'is a statement, so it must have a .module_node field defined. '
                 'To add this automatically, call ast_annotate.AddBasicAnnotations'
                 .format(field))
-        FixSourceIndentation(field.module_node, field)
+        raise NotImplementedError('Not clear if we ever get here')
+#        FixSourceIndentation(field.module_node, field)
 
 
 def _guess_base_from_string(string, field):

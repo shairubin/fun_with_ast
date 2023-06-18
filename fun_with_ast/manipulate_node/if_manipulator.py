@@ -26,7 +26,7 @@ class IfManipulatorConfig():
 
     @body_index.setter
     def location_in_body_index(self, v: int) -> None:
-        self.location_in_body_index = v
+        self._location_in_body_index = v
 
 class ManipulateIfNode():
     def __init__(self, node, config: IfManipulatorConfig):

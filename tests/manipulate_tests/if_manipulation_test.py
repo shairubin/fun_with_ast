@@ -20,11 +20,16 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-@pytest.fixture(params=['a.b()\n',
-                        'a.c()\n',
-                        'a=44',
-                        "s='fun_with_ast'",
-                        ""
+@pytest.fixture(params=[('a.b()\n',0),
+                        ('a.c()\n',0),
+                        ('a=44',0),
+                        ("s='fun_with_ast'",0),
+                        ("",0),
+                        ('a.b()\n',1),
+                        ('a.c()\n',1),
+                        ('a=44',1),
+                        ("s='fun_with_ast'",1),
+                        ("",1),
                         ])
 def injected_source(request):
     yield request.param
@@ -50,40 +55,37 @@ def body_and_orelse(request):
 class TestIfManupulation:
     def test_If_Manipulation(self, injected_source, capsys):
         original_if_source = 'if (c.d()):\n   a=1'
-        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(_body_index=0, _location_in_body_index=0))
+        if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=injected_source[1]))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        add_new_line = '' if injected_source.endswith('\n') else '\n'
-        if not IsEmptyModule(injected_node):
-            expected_source = original_if_source.replace('   a=1', '   ' + injected_source + add_new_line + '   a=1\n')
-        else:
-            expected_source = original_if_source
+        expected_source = self._get_expected_if_source(injected_node, injected_source, original_if_source)
         assert expected_source == composed_source
+
 
     def test_If_Else_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
-        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
+        if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1,1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
 
-        add_new_line = '\n' if not injected_source.endswith('\n') else ''
+        add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
         if not IsEmptyModule(injected_node):
-            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source + add_new_line)
+            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
             expected_source = original_if_source
         assert composed_source == expected_source
 
     def test_If_elif_AddNode(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
-        if_node, injected_node = self._create_nodes(capsys, injected_source, original_if_source)
+        if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1, 1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        add_new_line = '\n' if not injected_source.endswith('\n') else ''
+        add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
         if not IsEmptyModule(injected_node):
-            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source + add_new_line)
+            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
             expected_source = original_if_source
         assert composed_source == expected_source
@@ -181,3 +183,15 @@ class TestIfManupulation:
         body_index = body_and_orelse['inject_to']
         test = body_and_orelse['condition']
         return body, body_index, orelse, test
+
+    def _get_expected_if_source(self,  injected_node, injected_source, original_if_source):
+        add_new_line = '' if injected_source[0].endswith('\n') else '\n'
+        if not IsEmptyModule(injected_node):
+            if injected_source[1] == 0:
+                expected_source = original_if_source.replace('   a=1',
+                                                             '   ' + injected_source[0] + add_new_line + '   a=1\n')
+            else:
+                expected_source = original_if_source.replace('   a=1', '   a=1\n   ' + injected_source[0] + add_new_line)
+        else:
+            expected_source = original_if_source
+        return expected_source

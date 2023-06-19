@@ -8,10 +8,11 @@ from dataclasses import dataclass
 
 
 
-@dataclass
+
 class IfManipulatorConfig():
-    _body_index: int
-    _location_in_body_index: int
+    def __init__(self, body_index: int, location_in_body_index: int):
+        self._body_index = body_index
+        self._location_in_body_index = location_in_body_index
     @property
     def body_index(self) -> int:
         return self._body_index
@@ -19,12 +20,11 @@ class IfManipulatorConfig():
     @body_index.setter
     def body_index(self, v: int) -> None:
         self._body_index = v
-
     @property
     def location_in_body_index(self) -> int:
         return self._location_in_body_index
 
-    @body_index.setter
+    @location_in_body_index.setter
     def location_in_body_index(self, v: int) -> None:
         self._location_in_body_index = v
 

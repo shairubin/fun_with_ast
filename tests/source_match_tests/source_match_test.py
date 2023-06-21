@@ -27,6 +27,7 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 import fun_with_ast.manipulate_node.create_node as create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.source_matchers import defualt_matcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 DEFAULT_TEXT = 'default'
 
@@ -768,7 +769,7 @@ class IfExpMatcherTest(unittest.TestCase):
         self.assertEqual('c if False else d', matcher.GetSource())
 
 
-class ListComprehensionMatcherTest(unittest.TestCase):
+class ListComprehensionMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.ListComp('c', 'a', 'b')
@@ -806,7 +807,7 @@ class SetComprehensionMatcherTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
 
 
-class StrMatcherTest(unittest.TestCase):
+class StrMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Str('foobar')
@@ -814,9 +815,10 @@ class StrMatcherTest(unittest.TestCase):
         self._match_string(node, string)
 
     def _match_string(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
+#        matcher = GetDynamicMatcher(node)
+#        matcher.do_match(string)
+#        self.assertEqual(string, matcher.GetSource())
 
     def testPrefixMatch(self):
         node = create_node.Str('foobar')
@@ -832,11 +834,12 @@ class StrMatcherTest(unittest.TestCase):
     def testContinuationMatch(self):
         node = create_node.Str('foobar')
         string = '"foo"\n"bar"'
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(NotImplementedError):
-            matcher.do_match(string)
+        self._match_string(node, string)
+        # matcher = GetDynamicMatcher(node)
+        # with pytest.raises(BadlySpecifiedTemplateError):
+        #     matcher.do_match(string)
 
-    def testContinuationMatch(self):
+    def testContinuationMatch3(self):
         node = create_node.Str('foobar')
         string = "'foo''bar'"
         self._match_string(node, string)

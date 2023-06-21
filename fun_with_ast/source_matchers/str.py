@@ -41,10 +41,13 @@ class StrSourceMatcher(SourceMatcher):
         #    raise NotImplementedError('Multi-part strings not yet supported')
         self.original_quote_type = (
             self.quote_parts[0].quote_match_placeholder.matched_text)
-        parsed_string = self._get_parsed_string()
-        return parsed_string
+        parsed_string = self._match_parsed_string()
+        result = StrSourceMatcher.GetSource(self)
+        self.matched = True
+        self.matched_source = result
+        return result
 
-    def _get_parsed_string(self):
+    def _match_parsed_string(self):
         start_paran_text = self.GetStartParenText()
         end_paran_text = self.GetEndParenText()
         start_quote = self.original_quote_type

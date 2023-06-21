@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
@@ -69,7 +70,10 @@ class UnaryOpMatcherTest(unittest.TestCase):
             create_node.Not(),
             create_node.Name('a'))
         string = 'not a:\n'
-        self._validate_no_match(node, string)
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+        #self._validate_no_match(node, string)
 
     def testInvertUnaryOp(self):
         node = create_node.UnaryOp(
@@ -103,8 +107,4 @@ class UnaryOpMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         source = matcher.do_match(string)
         self.assertEqual(string, source)
-    def _validate_no_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        source = matcher.do_match(string)
-        self.assertNotEqual(string, source)
 

@@ -162,3 +162,8 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
+    def testIfFromSource5(self):
+        string = "if (a): #comment\n   pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+

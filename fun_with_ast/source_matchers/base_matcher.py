@@ -1,3 +1,4 @@
+import ast
 import re
 from contextvars import ContextVar
 
@@ -58,6 +59,11 @@ class SourceMatcher(object):
         self._check_balance_parentheses(string)
         SourceMatcher.parentheses_stack.reset()
         result = self._match(string)
+        if len(result) < len(string):
+            try:
+                ast.parse(string)
+            except SyntaxError:
+                raise BadlySpecifiedTemplateError(f'string {string} is not valid python')
         return result
 
 
@@ -100,61 +106,18 @@ class SourceMatcher(object):
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
 
-        #original_source_code =  full_string.get()
 
         remaining_string = string
-        #matched_parts = []
         try:
             while True:
                 start_paren_matcher = StartParenMatcher()
                 remaining_string = MatchPlaceholder(
                     remaining_string, None, start_paren_matcher)
-                #self.start_paren_matchers.append(start_paren_matcher)
-                #matched_parts.append(start_paren_matcher.matched_text)
-                #node_name = str(self.node)
                 self.parentheses_stack.push((start_paren_matcher, self))
         except BadlySpecifiedTemplateError:
             pass
         return remaining_string
 
-    # def MatchEndParen(self, string):
-    #     """Matches the ending parens in a string."""
-    #
-    #     if not self.start_paren_matchers:
-    #         return
-    #     remaining_string = string
-    #     matched_parts = []
-    #     try:
-    #         while True:
-    #         #for unused_i in range(len(self.start_paren_matchers)):
-    #             end_paren_matcher = EndParenMatcher()
-    #             remaining_string = MatchPlaceholder(
-    #                 remaining_string, None, end_paren_matcher)
-    #             self.end_paren_matchers.append(end_paren_matcher)
-    #             matched_parts.append(end_paren_matcher.matched_text)
-    #             self.paren_wrapped = True
-    #             if isinstance(self.parentheses_stack.peek(), StartParenMatcher):
-    #                 self.parentheses_stack.pop()
-    #             else:
-    #                 self.parentheses_stack.push(end_paren_matcher)
-    #     except BadlySpecifiedTemplateError:
-    #         pass
-    #     except EmptyStackException:
-    #         #raise BadlySpecifiedTemplateError('unmatched end paren')
-    #         raise
-    #     if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
-    #         raise BadlySpecifiedTemplateError('missing end paren at end of string')
-    #
-    #     new_end_matchers = []
-    #     new_start_matchers = []
-    #     min_size = min(len(self.start_paren_matchers), len(self.end_paren_matchers))
-    #     if min_size == 0:
-    #         return
-    #     for end_matcher in self.end_paren_matchers[:min_size]:
-    #         new_start_matchers.append(self.start_paren_matchers.pop())
-    #         new_end_matchers.append(end_matcher)
-    #     self.start_paren_matchers = new_start_matchers[::-1]
-    #     self.end_paren_matchers = new_end_matchers
 
     def MatchEndParen(self, string):
         """Matches the ending parens in a string."""
@@ -185,13 +148,10 @@ class SourceMatcher(object):
                     original_node_matcher.start_paren_matchers.insert(0,start_paren_matcher)
                 else:
                     break
-                        #self.parentheses_stack.push((end_paren_matcher, str(self.node)))
-                #self.paren_wrapped = True
         except BadlySpecifiedTemplateError:
             pass
         except EmptyStackException:
             pass
-            #raise EmptyStackException('unmatched end paren')
         if not remaining_string and len(self.start_paren_matchers)  > len(self.end_paren_matchers):
             raise BadlySpecifiedTemplateError('missing end paren at end of string')
         return remaining_string
@@ -203,7 +163,7 @@ class SourceMatcher(object):
         remaining_string = string
         comment = ''
 
-        full_line  = re.match(r'(.*)(#.*)', string)
+        full_line  = re.match(r'(\s*)(#.*)', string)
         if full_line:
             comment = full_line.group(2)
         if comment:

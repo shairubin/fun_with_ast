@@ -38,26 +38,13 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Num('1')
         string = '1:#Comment'
         matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertNotEqual(string, matched_string)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+        # matcher.do_match(string)
+        # matched_string = matcher.GetSource()
+        # self.assertNotEqual(string, matched_string)
 
 
-    # def testBasicMatchWithPlusSign(self):
-    #     node = create_node.Num('1')
-    #     string = '+1'
-    #     matcher = GetDynamicMatcher(node)
-    #     matcher.do_match(string)
-    #     matched_string = matcher.GetSource()
-    #     self.assertEqual(string, matched_string)
-    #
-    # def testBasicMatchWithPlusSign2(self):
-    #     node = create_node.Num('1')
-    #     string = '(+1)'
-    #     matcher = GetDynamicMatcher(node)
-    #     matcher.do_match(string)
-    #     matched_string = matcher.GetSource()
-    #     self.assertEqual(string, matched_string)
     @pytest.mark.skip('Not implemented yet')
     def testBasicMatchWithPlusSign3(self):
         node = create_node.Num('1')

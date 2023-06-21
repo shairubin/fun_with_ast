@@ -14,6 +14,35 @@ class NameMatcherTest(BaseTestUtils):
         node = create_node.Name('foobar')
         string = 'foobar'
         self._verify_match(node, string)
+    def testBasicMatchWiuthParans(self):
+        node = create_node.Name('foobar')
+        string = '(foobar)'
+        self._verify_match(node, string)
+    def testBasicMatchWiuthParansWithComment(self):
+        node = create_node.Name('foobar')
+        string = '(foobar) #comment'
+        self._verify_match(node, string)
+
+    def testBasicMatchWiuthParansWithCommentAndNL(self):
+        node = create_node.Name('foobar')
+        string = '(foobar): #comment'
+#        self._verify_match(node, string)
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+           matcher.do_match(string)
+
+    def testBasicMatchWiuthParans2(self):
+        node = create_node.Name('foobar')
+        string = ' \t (foobar \t ) \t '
+        self._verify_match(node, string)
+
+    def testBasicMatchWiuthParans2(self):
+        node = create_node.Name('foobar')
+        string = '(foobar))'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+
 
 
     def testBasicMatchWithWS(self):

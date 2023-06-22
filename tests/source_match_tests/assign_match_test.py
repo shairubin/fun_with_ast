@@ -19,7 +19,6 @@ class AssignMatcherTest(BaseTestUtils):
     def testBasicMatchAssignHexWithLower(self):
         node = create_node.Assign('a', create_node.Num('0x1f'))
         string = 'a=0x1f'
-        matcher = GetDynamicMatcher(node)
         self._assert_matched_source(node, string)
 
     def testBasicMatchAssignString(self):

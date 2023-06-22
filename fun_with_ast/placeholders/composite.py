@@ -25,7 +25,12 @@ class CompositePlaceholder(Placeholder):
         return elements
 
     def GetSource(self, node):
-        source = ''.join(element.GetSource(node) for element in self.GetElements(node))
+        source = ''
+        for element in self.GetElements(node):
+            source += element.GetSource(node)
+#        source = ''.join(element.GetSource(node) for element in self.GetElements(node))
+#        if source != source1:
+#              raise ValueError('source1 and source are not equal')
         return source
     def Validate(self, unused_node):
         return True
@@ -43,6 +48,11 @@ class FieldPlaceholder(CompositePlaceholder):
     def GetElements(self, node):
         if isinstance(node, _ast.Call) and self.field_name == 'kwargs':
             field_value = getattr(node, self.field_name, None)
+        #if isinstance(node, _ast.Constant) and not getattr(node,'matcher',None):
+        #    raise ValueError('Constant nodes must have a matcher')
+#        if isinstance(node, _ast.Constant):
+#            raise NotImplementedError('not implemented yet')
+
         else:
             field_value = getattr(node, self.field_name)
 

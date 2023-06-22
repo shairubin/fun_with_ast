@@ -4,9 +4,10 @@ import pytest
 
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class GetSourceTest(unittest.TestCase):
+class GetSourceTest(BaseTestUtils):
     def testCall1(self):
         string = "logger.info(\"test string\")\n"
         self._verify_source(string, default_quote='\'')
@@ -35,16 +36,28 @@ class GetSourceTest(unittest.TestCase):
         assert l1 != '\n'
         self.assertEqual(string, GetSource(log_node))
 
+
     def testIf2(self):
         string = 'if True:\n   b.a(c)\n   a=1'
         self._verify_match_and_no_new_line(string)
 
     def testIf3(self):
-        string = 'if x%2 == 0xff:\n   b.a(c)\n   a=1'
+        string = 'if (x == 0xff):\n   b.a(c)\n   a=1'
         self._verify_match_and_no_new_line(string)
 
     def testIAssign1(self):
         string = "a='fun_with_east'"
+        log_node = GetNodeFromInput(string)
+        source = GetSource(log_node, string)
+        self.assertEqual(string, source)
+
+    def testIAssign3(self):
+        string = "a=1"
+        log_node = GetNodeFromInput(string)
+        source = GetSource(log_node, string)
+        self.assertEqual(string, source)
+    def testIAssign4(self):
+        string = "a=0xff"
         log_node = GetNodeFromInput(string)
         source = GetSource(log_node, string)
         self.assertEqual(string, source)

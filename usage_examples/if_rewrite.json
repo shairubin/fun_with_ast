@@ -1,0 +1,113 @@
+[
+  {
+    "example name": "Add a Node 'b=2' at the Beginning of If Body",
+    "example values": {
+      "original source code": "if True:\n    a=1",
+      "source to add": "print('Node Added to If Body')",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 0
+      }
+    }
+  },
+  {
+    "example name": "Add a Node 'b=2' at the End of If Body",
+    "example values": {
+      "original source code": "if True:\n    a=1",
+      "source to add": "print('Node Added to If Body')",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Keep comment (no code added)",
+    "example values": {
+      "original source code": "if True: # comment\n    a=1",
+      "source to add": "",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Add a Node 'b=3' at the End of If Body",
+    "example values": {
+      "original source code": "if True: # comment\n    a=1\nelse:\n    a=2 #a is 2",
+      "source to add": "b=3",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Add a Node 'b=3' at the End of Else Body",
+    "example values": {
+      "original source code": "if True: # comment\n    a=1\nelse:\n    a=2 #a is 2",
+      "source to add": "b=3",
+      "manipulator config": {
+        "body index": 1,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Add a Node 'b=3' at the End of ElseIf Body",
+    "example values": {
+      "original source code": "if True: # comment\n    a=1\nelif False:\n    a=2 #a is 2",
+      "source to add": "b=3",
+      "manipulator config": {
+        "body index": 1,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Keep the else: + if seperated",
+    "example values": {
+      "original source code": "if True: # comment\n    a=1\nelse:\n    if False:\n       a=2 #a is 2",
+      "source to add": "",
+      "manipulator config": {
+        "body index": 1,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Parentheses in if test",
+    "example values": {
+      "original source code": "if a>7 and (b<6 or (c>8 and d>5)):\n  pass      # comment",
+      "source to add": "",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Parentheses in if test 2",
+    "example values": {
+      "original source code": "if (a>7) and (b<6 and  (c>8 and d>5)):\n  pass      # comment",
+      "source to add": "",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  },
+  {
+    "example name": "Preserving non-decimal constant values",
+    "example values": {
+      "original source code": "if a==0xff:\n  pass      # comment",
+      "source to add": "",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 1
+      }
+    }
+  }
+
+]

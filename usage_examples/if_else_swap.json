@@ -1,0 +1,22 @@
+[
+  {
+    "example name": "Swap if body and else body",
+    "example values": {
+      "original source code": "if True:\n    a=1 # original body source \nelse:\n    a=2 # original else source",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 0
+      }
+    }
+  },
+  {
+    "example name": "Swap if body and else body",
+    "example values": {
+      "original source code": "if True:\n    a=1 # original body source \n    b.c(a)\nelse:\n    a=2 # original else source",
+      "manipulator config": {
+        "body index": 0,
+        "location in body": 0
+      }
+    }
+  }
+]

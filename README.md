@@ -3,14 +3,7 @@ Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation. 
 
 ## Using the library
-1. We assume you use python > 3.6 
-2. Create a virtual environment: `python3 -m venv /path/to/new/virtual/environment`
-3. Activate the virtual environment: `source /path/to/new/virtual/environment/bin/activate`
-4. Install the library: `pip install fun-with-ast`
-5. Run the library example programs:
-    1. TBD
-    2. TBD 
-6. Deactivate the virtual environment: `deactivate`
+See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the fun-with-ast library.
 
 
 ## Why Fun with ASTs

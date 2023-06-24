@@ -28,9 +28,6 @@ class CompositePlaceholder(Placeholder):
         source = ''
         for element in self.GetElements(node):
             source += element.GetSource(node)
-#        source = ''.join(element.GetSource(node) for element in self.GetElements(node))
-#        if source != source1:
-#              raise ValueError('source1 and source are not equal')
         return source
     def Validate(self, unused_node):
         return True

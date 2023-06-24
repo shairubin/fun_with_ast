@@ -1,14 +1,5 @@
-from fun_with_ast.common_utils import node_tree_util
 
 
-# def FixSourceIndentation(module_node, node_to_fix, starting_parens=None):
-#     if starting_parens is None:
-#         starting_parens = []
-#     default_source = node_to_fix.matcher.GetSource()
-#     node_to_fix.matcher = dynamic_matcher.GetDynamicMatcher(node_to_fix, starting_parens)
-#     starting_indent = '  ' * node_tree_util.GetIndentLevel(
-#         module_node, node_to_fix)
-#     node_to_fix.matcher._match(starting_indent + default_source)
 
 def GetDefaultQuoteType():
     return '"'
@@ -38,10 +29,6 @@ def _FindQuoteEnd(string, quote_type):
 
     Returns:
       The index of the end of the first quote.
-
-    The method works by attempting to find the first instance of the end of
-    the quote, then recursing if it isn't valid. If -1 is returned at any time,
-    we can't find the end, and we return -1.
     """
     trial_index = string.find(quote_type)
     if trial_index == -1:

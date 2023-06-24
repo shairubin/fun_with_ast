@@ -44,13 +44,6 @@ class BodyManipulator:
                 raise ValueError('illegal ident')
         return ident
 
-    # def _split_source_onto_lines(self, source_of_new_body):
-    #     body_lines = source_of_new_body.split('\n')
-    #     for body_line in body_lines:
-    #         if body_line == '\n':
-    #             raise NotImplementedError('Found end-of-line in if body')
-    #     return body_lines
-
     def _create_body_from_source(self, body_lines):
         idented_body_source = self._ident_left(body_lines)
         new_body = GetNodeFromInput(idented_body_source, full_body=True)

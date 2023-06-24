@@ -326,15 +326,6 @@ def Call(caller, args=[], keywords=[], starargs=None, kwargs={}):
         raise ValueError('kwargs must be a ast.Dict')
     if not isinstance(caller, (_ast.Name, _ast.Attribute)):
         raise ValueError('caller not the expected value')
-    #  raise ValueError(
-    #        'caller must be a: \n'
-    #        '1. string\n'
-    #        '2. _ast.Str node\n'
-    #        '3. _ast.Name node\n'
-    #        '4. _ast.Attr node\n'
-    #        'not {}'.format(caller))
-    #  keywords = [_ast.keyword(value=Dict(key, val))
-    #              for key, val in kwargs.items()]
     args = [_WrapWithName(arg, ctx_type=CtxEnum.LOAD) for arg in args]
     if isinstance(starargs, str):
         starargs = VarReference(*starargs.split('.'))
@@ -1032,18 +1023,8 @@ def Tuple(items, **kwargs):
                       ctx=ctx)
 
 
-# python 2.7
-# def TryExcept(body, except_handlers, orelse=None):
-#  return _ast.TryExcept(body=body, handlers=except_handlers, orelse=orelse)
-# def Try(body, except_handlers, orelse=None):
-#    return _ast.Try(body=body, handlers=except_handlers, orelse=orelse)
-
-
 def Try(body, except_handlers=[], finalybody=[], orelse=[]):
     finalbody = FormatAndValidateBody(finalybody)
-    # python 2.7
-    #  return _ast.Try(body=body, finalbody=finalbody)
-    # python 3
 
     if (not except_handlers) or (not isinstance(except_handlers, list)):
         raise ValueError('Exception handlers must be a non-empty list')

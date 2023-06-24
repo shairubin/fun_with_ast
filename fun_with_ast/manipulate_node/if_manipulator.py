@@ -1,9 +1,7 @@
 import ast
 
-from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 
-from dataclasses import dataclass
 
 
 
@@ -109,12 +107,6 @@ class ManipulateIfNode():
         body_block_to_manipulate = self._get_block(self.config.body_index)
         body_manipulator = BodyManipulator(body_block_to_manipulate)
         new_body = body_manipulator.replace_body(source)
-#        if self.config.body_index == 0:
-#            current_body_code = self.node.matcher.body_placeholder.GetSource(self.node)
-#        elif self.config.body_index == 1:
-#            current_else_code = self.node.matcher.orelse_placeholder.GetSource(self.node)
-#        else:
-#            raise ValueError('Illegal body index')
 
         if self.config.body_index == 0:
             self.node.body = new_body

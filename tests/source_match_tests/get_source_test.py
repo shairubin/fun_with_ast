@@ -42,6 +42,10 @@ class GetSourceTest(BaseTestUtils):
         string = 'logger.info(\'test string\')\n'
         self._verify_source(string,default_quote='\'')
 
+    def testForAndIf(self):
+        string = """for i in range(1, 15):\n print('fun with ast')\n pass"""
+        self._verify_source(string, default_quote='\'', get_module=True)
+
     def testIf(self):
         string = 'if True:\n   a=1'
         self._verify_match_and_no_new_line(string)
@@ -105,12 +109,12 @@ class GetSourceTest(BaseTestUtils):
         self.assertEqual(if_modified_string, if_source)
 
     def _verify_source(self, string, default_quote, get_module=False):
-        log_node = GetNodeFromInput(string, 0, get_module=get_module)
-        source = GetSource(log_node, string)
+        node = GetNodeFromInput(string, 0, get_module=get_module)
+        source = GetSource(node, string)
         self.assertEqual(string, source)
-        log_node = GetNodeFromInput(string,0,get_module)
+        node = GetNodeFromInput(string,0,get_module)
         if not get_module:
-            source = GetSource(log_node, assume_no_indent=True)
+            source = GetSource(node, assume_no_indent=True)
             if default_quote == '\"':
                 string = string.replace("\'", '\"')
             self.assertEqual(string, source)

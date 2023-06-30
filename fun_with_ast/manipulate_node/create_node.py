@@ -23,17 +23,17 @@ CtxEnum = Enum(
     DEL='delete',
     PARAM='param')
 
-def GetNodeFromInput(string, body_index=0, full_body=False):
-    result = ast.parse(string)
-    if result.body and full_body == False:
-        body = result.body[body_index]
-    elif result.body and full_body == True:
-        body = result.body
+def GetNodeFromInput(string, body_index = 0, get_module = False):
+    parse_result = ast.parse(string)
+    if parse_result.body and get_module == False:
+        node = parse_result.body[body_index]
+    elif parse_result.body and get_module == True:
+        node = parse_result
     else:
-        return result # empty Module
-    if isinstance(body, ast.If) and 'elif' in string:
-        body.is_elif = True if 'elif' in string else False
-    return body
+        return parse_result # empty Module
+    if isinstance(node, ast.If) and 'elif' in string:
+        node.is_elif = True if 'elif' in string else False
+    return node
 
 
 def _ToArgsWithDefaults(_args, _defaults):

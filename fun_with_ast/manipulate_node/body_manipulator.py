@@ -46,7 +46,7 @@ class BodyManipulator:
 
     def _create_body_from_source(self, body_lines):
         idented_body_source = self._ident_left(body_lines)
-        new_body = GetNodeFromInput(idented_body_source, full_body=True)
+        new_body = GetNodeFromInput(idented_body_source, get_module=True).body
         return new_body
 
     def _ident_left(self, body_lines):

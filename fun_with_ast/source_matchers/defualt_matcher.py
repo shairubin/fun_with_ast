@@ -89,11 +89,6 @@ class DefaultSourceMatcher(SourceMatcher):
             part_source = part.GetSource(self.node)
             source_list.append(part_source)
         source = ''.join(source_list)
-        # if self.paren_wrapped:
-        #     source = '{}{}{}'.format(
-        #         self.GetStartParenText(),
-        #         source,
-        #         self.GetEndParenText())
         source = '{}{}{}'.format(
             self.GetStartParenText(),
             source,

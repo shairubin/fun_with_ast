@@ -42,7 +42,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return field.matcher.GetSource()
     else:
         field.matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
-        _match_text(assume_no_indent, field, text)
+        _match_text(assume_no_indent, field, text, parent_node)
         _set_elif(assume_elif, field)
         source_code = field.matcher.GetSource()
         return source_code
@@ -54,18 +54,19 @@ def _set_elif(assume_elif, field):
             field.matcher.is_elif = assume_elif
 
 
-def _match_text(assume_no_indent, field, text):
+def _match_text(assume_no_indent, field, text, parent_node):
     if text:
         field.matcher._match(text)
     # TODO: Fix this to work with lambdas
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
-        if not hasattr(field, 'module_node'):
+#       if not hasattr(field, 'module_node'):
+        if not isinstance(parent_node, ast.Module):
             raise ValueError(
                 'No text was provided, and we try to get source from node {} which'
                 'is a statement, so it must have a .module_node field defined. '
                 'To add this automatically, call ast_annotate.AddBasicAnnotations'
                 .format(field))
-        raise NotImplementedError('Not clear if we ever get here')
+        #raise NotImplementedError('Not clear if we ever get here')
 #        FixSourceIndentation(field.module_node, field)
 
 

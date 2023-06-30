@@ -20,6 +20,10 @@ class GetSourceTest(BaseTestUtils):
         string = 'logger.info(\'test string\')\n'
         self._verify_source(string,default_quote='\"')
 
+    def testImport(self):
+        string = 'import a\nimport b\n'
+        self._verify_source(string,default_quote='\"', get_module=True)
+
     @pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
     def testCall3(self):
         string = 'logger.info(\'test string\')\n'
@@ -87,12 +91,12 @@ class GetSourceTest(BaseTestUtils):
         if_modified_string = if_modified_string.replace('  a=1', string2)
         self.assertEqual(if_modified_string, if_source)
 
-    def _verify_source(self, string, default_quote):
-        log_node = GetNodeFromInput(string)
+    def _verify_source(self, string, default_quote, get_module=False):
+        log_node = GetNodeFromInput(string, 0, get_module=get_module)
         source = GetSource(log_node, string)
         self.assertEqual(string, source)
-        log_node = GetNodeFromInput(string)
-        source = GetSource(log_node, assume_no_indent=True)
+        log_node = GetNodeFromInput(string,0,get_module)
+        source = GetSource(log_node, assume_no_indent=True if not get_module else False)
         if default_quote == '\"':
             string = string.replace("\'", '\"')
         self.assertEqual(string, source)

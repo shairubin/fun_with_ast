@@ -1,5 +1,6 @@
 import unittest
 
+from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 
@@ -13,3 +14,17 @@ class ExprMatcherTest(unittest.TestCase):
         matcher2._match(string2)
         source2 = matcher2.GetSource()
         self.assertEqual(source2, string2)
+
+    def testBasicMatch2(self):
+        node = create_node.Call('a.b')
+        string = 'a.b()\n '
+        expr_node = create_node.Expr(node)
+        matcher = GetDynamicMatcher(expr_node)
+        matcher.do_match(string)
+
+    def testBasicMatchWS(self):
+        node = create_node.Call('a.b')
+        string = ' a.b()\n '
+        expr_node = create_node.Expr(node)
+        matcher = GetDynamicMatcher(expr_node)
+        matcher._match(string)

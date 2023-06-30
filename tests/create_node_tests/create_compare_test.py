@@ -114,3 +114,20 @@ class CreateCompareTest(CreateNodeTestBase):
             'not in',
             create_node.Name('b'))
         self.assertNodesEqual(expected_node, test_node)
+    def testFunctionCall(self):
+        expected_string = 'a.b() == 1'
+        expected_node = GetNodeFromInput(expected_string).value
+        test_node = create_node.Compare(
+            create_node.Call('a.b'),
+            '==',
+            create_node.Num('1'))
+        self.assertNodesEqual(expected_node, test_node)
+
+    def testFunctionCall2(self):
+        expected_string = '(a.b(2) >= 1)'
+        expected_node = GetNodeFromInput(expected_string).value
+        test_node = create_node.Compare(
+            create_node.Call('a.b', args=[create_node.Num('2')]),
+            '>=',
+            create_node.Num('1'))
+        self.assertNodesEqual(expected_node, test_node)

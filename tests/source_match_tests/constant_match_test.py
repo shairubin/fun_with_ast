@@ -87,6 +87,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
+
     def testWithParansAndWS(self):
         node = create_node.Num('1')
         string = '(   1   )     '

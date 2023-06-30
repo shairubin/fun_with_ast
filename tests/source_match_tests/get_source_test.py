@@ -22,7 +22,20 @@ class GetSourceTest(BaseTestUtils):
 
     def testImport(self):
         string = 'import a\nimport b\n'
-        self._verify_source(string,default_quote='\"', get_module=True)
+        self._verify_source(string, default_quote='\"', get_module=True)
+
+    def testImportWithComment(self):
+        string = 'import a # comment 1\nimport b #comment 2\n'
+        self._verify_source(string, default_quote='\"', get_module=True)
+
+    def testImportWithComment2(self):
+        string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n'
+        self._verify_source(string, default_quote='\"', get_module=True)
+
+    @pytest.mark.skip('Not implemented yet')
+    def testImportWithComment3(self):
+        string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n# comment end'
+        self._verify_source(string, default_quote='\"', get_module=True)
 
     @pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
     def testCall3(self):
@@ -96,7 +109,8 @@ class GetSourceTest(BaseTestUtils):
         source = GetSource(log_node, string)
         self.assertEqual(string, source)
         log_node = GetNodeFromInput(string,0,get_module)
-        source = GetSource(log_node, assume_no_indent=True if not get_module else False)
-        if default_quote == '\"':
-            string = string.replace("\'", '\"')
-        self.assertEqual(string, source)
+        if not get_module:
+            source = GetSource(log_node, assume_no_indent=True)
+            if default_quote == '\"':
+                string = string.replace("\'", '\"')
+            self.assertEqual(string, source)

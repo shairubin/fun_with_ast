@@ -58,6 +58,8 @@ def _match_text(assume_no_indent, field, text, parent_node):
     if text:
         field.matcher._match(text)
     # TODO: Fix this to work with lambdas
+#    elif isinstance(field, ast.Module):
+#        raise NotImplementedError('Not supported: cannot match module node without input text')
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
 #       if not hasattr(field, 'module_node'):
         if not isinstance(parent_node, ast.Module):

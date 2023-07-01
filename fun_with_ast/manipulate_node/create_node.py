@@ -1030,6 +1030,9 @@ def Try(body, except_handlers=[], finalybody=[], orelse=[]):
         raise ValueError('Exception handlers must be a non-empty list')
     return _ast.Try(body=body, handlers=except_handlers, finalbody=finalbody, orelse=orelse)
 
+def For(target, iter, body, orelse=[]):
+    return ast.For(target, iter, body, orelse=[])
+
 
 def UAdd():
     return _ast.UAdd()

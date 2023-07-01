@@ -32,15 +32,17 @@ class StringParser(object):
         """Process a substring, validating its state and calculating remaining."""
         if not substring:
             return
+        split_start = 1
         stripped_substring = StripStartParens(substring)
         stripped_remaining = StripStartParens(self.remaining_string)
         if not stripped_remaining.startswith(stripped_substring):
             raise BadlySpecifiedTemplateError(
                 'string "{}" should be in string "{}"'
                     .format(stripped_substring, stripped_remaining))
-        self.remaining_string = self.remaining_string.split(
-            stripped_substring, 1)[1]
-
+        if stripped_substring == '' and substring == '(':
+            self.remaining_string = stripped_remaining
+        else:
+            self.remaining_string = self.remaining_string.split(stripped_substring, 1)[1]
     def _MatchTextPlaceholder(self, element):
         if self.remaining_string == self.string:
             element.SetStartingParens(self.starting_parens)

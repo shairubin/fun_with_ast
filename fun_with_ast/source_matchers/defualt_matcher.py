@@ -56,7 +56,6 @@ class DefaultSourceMatcher(SourceMatcher):
                 remaining_string, self.node, self.expected_parts,
                 self.start_paren_matchers)
             remaining_string = self.MatchEndParen(remaining_string)
-#            remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers)
 
         except BadlySpecifiedTemplateError as e:
             raise BadlySpecifiedTemplateError(

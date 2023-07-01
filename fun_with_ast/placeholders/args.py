@@ -100,6 +100,21 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             if index != len(keywords) - 1:
                 elements.append(self._GetArgSeparator(arg_index))
                 arg_index += 1
+        #if not elements:
+        #     parens = TextPlaceholder(r'\(\s*\)', '()')
+        #     elements.append(parens)
+        # elif not node.args and  getattr(node, 'starargs', False):
+        #     start_paren = TextPlaceholder(r'\(\s*', '(')
+        #     end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
+        #     elements.insert(0,start_paren)
+        #     elements.append(end_paren)
+        # else:
+        #     ValueError('Missing rule for adding parentheses to arguments')
+        start_paren = TextPlaceholder(r'\(\s*', '(')
+        end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
+        elements.insert(0,start_paren)
+        elements.append(end_paren)
+
         return elements
 
 

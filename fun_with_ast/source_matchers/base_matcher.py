@@ -85,23 +85,6 @@ class SourceMatcher(object):
         else:
             self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
 
-    # def MatchStartParens(self, string):
-    #     """Matches the starting parens in a string."""
-    #     original_source_code =  full_string.get()
-    #
-    #     remaining_string = string
-    #     matched_parts = []
-    #     try:
-    #         while True:
-    #             start_paren_matcher = StartParenMatcher()
-    #             remaining_string = MatchPlaceholder(
-    #                 remaining_string, None, start_paren_matcher)
-    #             self.start_paren_matchers.append(start_paren_matcher)
-    #             matched_parts.append(start_paren_matcher.matched_text)
-    #             self.parentheses_stack.push(start_paren_matcher)
-    #     except BadlySpecifiedTemplateError:
-    #         pass
-    #     return remaining_string
 
     def MatchStartParens(self, string):
         """Matches the starting parens in a string."""
@@ -172,36 +155,6 @@ class SourceMatcher(object):
             remaining_string = full_line.group(1)
         return comment
 
-    # def MatchWhiteSpaces(self, string, in_matcher):
-    #     """Matches the  whitespaces  in a string."""
-    #     remaining_string = string
-    #     matched_parts = []
-    #     try:
-    #         ws_matcher = GetWhiteSpaceMatcher()
-    #         remaining_string = MatchPlaceholder(
-    #                 remaining_string, None, ws_matcher)
-    #         if remaining_string != string:
-    #             in_matcher.append(ws_matcher)
-    #             matched_parts.append(ws_matcher._matched_text)
-    #     except BadlySpecifiedTemplateError:
-    #         pass
-    #     return remaining_string
-
-
-    # def MatchStartLeadingWhiteSpaces(self, string):
-    #     """Matches the starting whitespaces  in a string."""
-    #     remaining_string = string
-    #     matched_parts = []
-    #     try:
-    #         start_ws_matcher = GetWhiteSpaceMatcher()
-    #         remaining_string = MatchPlaceholder(
-    #                 remaining_string, None, start_ws_matcher)
-    #         if remaining_string != string:
-    #             self.start_whitespace_matchers.append(start_ws_matcher)
-    #             matched_parts.append(start_ws_matcher._matched_text)
-    #     except BadlySpecifiedTemplateError:
-    #         pass
-    #     return remaining_string
 
 
     def GetStartParenText(self):

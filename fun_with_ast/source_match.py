@@ -168,14 +168,14 @@ def get_Break_expected_parts():
 def get_Call_expected_parts():
     return [
         FieldPlaceholder('func'),
-        TextPlaceholder(r'\(\s*', '('),
+        #TextPlaceholder(r'\(\s*', '('),
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
         FieldPlaceholder(
             'kwargs',
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
-        TextPlaceholder(r'\s*,?\s*\)', ')'),
+        #TextPlaceholder(r'\s*,?\s*\)', ')'),
     ]
 
 

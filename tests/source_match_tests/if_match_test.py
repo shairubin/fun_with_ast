@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFromInput
 
@@ -17,14 +19,15 @@ class IfMatcherTest(BaseTestUtils):
         # matcher.do_match(string)
         # matcher_source = matcher.GetSource()
         # self.assertEqual(string, matcher_source)
+
     def testSimpleIfElse2(self):
-        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num('2')),
+        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'), '==', create_node.Num('2')),
                               body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       a==2:   \n   pass    \nelse:\n   pass \n'
         self._assert_match_to_source(node, string, match_get_source=False)
 
     def testSimpleIfElse2WithComment(self):
-        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'),'==', create_node.Num('2')),
+        node = create_node.If(conditional=create_node.Compare(create_node.Name('a'), '==', create_node.Num('2')),
                               body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       a==2:#comment   \n   pass    \nelse:\n   pass \n'
         self._assert_match_to_source(node, string, match_get_source=False)
@@ -45,21 +48,21 @@ class IfMatcherTest(BaseTestUtils):
     def testBasicIf(self):
         node = create_node.If(
             create_node.Name('True'),
-                            body=[create_node.Pass()])
+            body=[create_node.Pass()])
         string = """if True:\n  pass"""
         self._assert_match_to_source(node, string)
 
     def testBasicIf2(self):
         node = create_node.If(
             create_node.Name('True'),
-                            body=[create_node.Assign('a', 1)])
+            body=[create_node.Assign('a', 1)])
         string = """if True:\n  a=1"""
         self._assert_match_to_source(node, string)
 
     def testBasicIfwithEmptyLine(self):
         node = create_node.If(
             create_node.Name('True'),
-                            body=[create_node.Pass()])
+            body=[create_node.Pass()])
         string = """if True:\n\n  pass"""
         self._assert_match_to_source(node, string, 2)
         assert node.body[0].full_line == ''
@@ -91,9 +94,9 @@ elif False:
 
     def testBasicIfElifwWithWSAndComment(self):
         node = create_node.If(
-        create_node.Name('True'),
-        body=[create_node.Pass()],
-        orelse=[create_node.If(create_node.Name('False'), body=[create_node.Pass()])])
+            create_node.Name('True'),
+            body=[create_node.Pass()],
+            orelse=[create_node.If(create_node.Name('False'), body=[create_node.Pass()])])
         string = """if True:    \t #comment
       pass  \t
     elif False:    \t # comment  
@@ -132,11 +135,11 @@ else:
     def _assert_match_to_source(self, node, string, lines_in_body=1, match_get_source=True):
         assume_elif = False
         matcher = GetDynamicMatcher(node)
-        source_from_matcher  = matcher.do_match(string)
+        source_from_matcher = matcher.do_match(string)
         matcher_source = matcher.GetSource()
         self.assertEqual(string, matcher_source)
         self.assertEqual(string, source_from_matcher)
-        self.assertEqual(len(node.body),lines_in_body)
+        self.assertEqual(len(node.body), lines_in_body)
         if 'elif' in string:
             assume_elif = True
         if match_get_source:
@@ -148,15 +151,16 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
-
     def testIfFromSource2(self):
         string = "if not a:\n     a = 1"
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
+
     def testIfFromSource3(self):
         string = "if not a:\n     a = 1\nelse:\n    a=2"
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
+
     def testIfFromSource4(self):
         string = "if a and ((not c) and d):\n   pass"
         if_node = GetNodeFromInput(string)
@@ -167,3 +171,13 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
+    def testIfFromSource6(self):
+        string = "if a.b(1)==7:\n pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    @pytest.mark.skip('not implemented, the problem are the outer parentheses')
+    def testIfFromSource7(self):
+        string = "if (a.b(1)==7):\n pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)

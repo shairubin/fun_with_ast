@@ -15,7 +15,7 @@ See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) proj
 ## How it works
 
 ## AST Parse and Unparse Examples
-1. [example1](fun_with_ast/docs/fib_example.html)
+1. [example1](/docs/fib_example.html)
 ## examples
 ### Fun #1: Keep source to source transformations
 ### Fun #2: add log

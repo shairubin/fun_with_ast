@@ -68,8 +68,15 @@ class ForMatcherTest(BaseTestUtils):
         string = "for x in range(1,15):\n a('fun with ast')\n pass"
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
-    @pytest.mark.skip('not implemented see also: testIfFromSource7')
+
+    @pytest.mark.skip('issue #5')
     def testSimpleFor9(self):
+        string = "for i in range( 1, x):\n a('fun with ast')\n pass"
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)
+
+    @pytest.mark.skip('not implemented see also: testIfFromSource7')
+    def testSimpleFor10(self):
         string = "for x in range(1,15):\n if (a.b(1)==True):\n  a('fun with ast')\n  pass"
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)

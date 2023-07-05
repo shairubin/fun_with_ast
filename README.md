@@ -1,4 +1,4 @@
-# Fun with ASTs
+# Fun with AST
 Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation. 
 

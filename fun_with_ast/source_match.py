@@ -13,7 +13,7 @@ from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder, Sep
 from fun_with_ast.placeholders.text import TextPlaceholder
 
 # TODO: Consolidate with StringParser
-from fun_with_ast.source_matchers.base_matcher import MatchPlaceholder
+from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.source_matchers.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.tuple import TupleSourceMatcher

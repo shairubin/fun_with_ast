@@ -1,6 +1,7 @@
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher
+from fun_with_ast.placeholders.base_match import MatchPlaceholderList
 
 
 class WithItemSourceMatcher(SourceMatcher):

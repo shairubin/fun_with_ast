@@ -2,7 +2,8 @@ import pprint
 
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
-from fun_with_ast.source_matchers.base_matcher import SourceMatcher, MatchPlaceholderList, MatchPlaceholder, full_string
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher, full_string
+from fun_with_ast.placeholders.base_match import MatchPlaceholder, MatchPlaceholderList
 from fun_with_ast.placeholders.text import TextPlaceholder, EndParenMatcher, StartParenMatcher
 
 

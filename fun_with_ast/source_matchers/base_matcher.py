@@ -2,44 +2,21 @@ import ast
 import re
 from contextvars import ContextVar
 
-from fun_with_ast.common_utils.stack import Stack
+from fun_with_ast.common_utils.parenthese_stack import ParanthesisStack
+from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder, StartParenMatcher, EndParenMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
-from fun_with_ast.placeholders.node import ValidateStart
-from fun_with_ast.placeholders.string_parser import StripStartParens
 from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder
 
 full_string = ContextVar('full_string')
-def MatchPlaceholder(string, node, placeholder):
-    """Match a placeholder against a string."""
-    matched_text = placeholder._match(node, string)
-    if not matched_text:
-        return string
-    ValidateStart(string, matched_text)
-    if not isinstance(placeholder, TextPlaceholder):
-        matched_text = StripStartParens(matched_text)
-    before, after = string.split(matched_text, 1)
-    if StripStartParens(before):
-        raise BadlySpecifiedTemplateError(
-            'string "{}" should have started with placeholder "{}"'
-                .format(string, placeholder))
-    return after
 
-def MatchPlaceholderList(string, node, placeholders, starting_parens=None):
-    remaining_string = string
-    for placeholder in placeholders:
-        if remaining_string == string:
-            placeholder.SetStartingParens(starting_parens)
-        remaining_string = MatchPlaceholder(
-            remaining_string, node, placeholder)
-    return remaining_string
 
 class SourceMatcher(object):
     """Base class for all SourceMatcher objects.
 
     These are designed to match the source that corresponds to a given node.
     """
-    parentheses_stack = Stack()
+    parentheses_stack = ParanthesisStack()
     def __init__(self, node, stripped_parens=None):
         self.node = node
         self.end_paren_matchers = []

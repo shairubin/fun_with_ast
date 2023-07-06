@@ -23,7 +23,7 @@ class ParanthesisStack(Stack):
         return remaining_string
 
 
-    def MatchEndParen(self, matcher, string):
+    def MatchEndParens(self, matcher, string):
         """Matches the ending parens in a string."""
 
         end_paren_matcher = EndParenMatcher()

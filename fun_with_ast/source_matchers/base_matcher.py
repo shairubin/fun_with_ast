@@ -65,7 +65,7 @@ class SourceMatcher(object):
 
     def MatchEndParen(self, string):
         """Matches the ending parens in a string."""
-        return self.parentheses_stack.MatchEndParen(self,string)
+        return self.parentheses_stack.MatchEndParens(self,string)
 
 
     # nice example for creating unit test
@@ -88,10 +88,6 @@ class SourceMatcher(object):
 
     def GetStartParenText(self):
         result = ''
-        # if self.paren_wrapped:
-        #     for matcher in self.start_paren_matchers:
-        #         result += matcher.GetSource(None)
-#        if self.paren_wrapped:
         for matcher in self.start_paren_matchers:
             result += matcher.GetSource(None)
         return result

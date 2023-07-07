@@ -1,5 +1,5 @@
 from fun_with_ast.placeholders.composite import CompositePlaceholder
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.node import NodePlaceholder
 

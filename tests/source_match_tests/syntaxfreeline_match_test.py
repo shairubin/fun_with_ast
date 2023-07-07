@@ -3,7 +3,7 @@ import unittest
 import pytest
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 

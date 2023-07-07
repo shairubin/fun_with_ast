@@ -3,7 +3,7 @@ import _ast
 from fun_with_ast.source_matchers.body import BodyPlaceholder
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.placeholders.base_match import MatchPlaceholder, MatchPlaceholderList

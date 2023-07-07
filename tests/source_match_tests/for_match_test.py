@@ -1,13 +1,8 @@
-import unittest
-
 import pytest
 
-from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFromInput
-
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 

@@ -39,7 +39,7 @@ library.
 1. In `fun-with-ast` we use pytest.
 2. Use your IDE to run all tests in `tests` directory. 
 3. OR, use command line:
-   1. `cd <your pathe to fun-with-ast fork>/fun_with_ast/tests`
+   1. `cd <your path to fun-with-ast fork>/fun_with_ast/tests`
    2. `pytest --version`, should be at least `7.2.2`
    3.  run `pytest`
    4.  No tests should fail - some tests would be skipped / xfail. 

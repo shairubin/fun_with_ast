@@ -63,17 +63,9 @@ class DefaultSourceMatcher(SourceMatcher):
                 'When attempting to match string "{}" with {}, this '
                 'error resulted:\n\n{}'
                     .format(string, self, e.message))
-#        matched_string = self.GetSource()
         matched_string = DefaultSourceMatcher.GetSource(self)
-        #if remaining_string :
-        #    matched_string = string[:-len(remaining_string)]
-        #leading_ws = self.GetWhiteSpaceText(self.start_whitespace_matchers)
-        #start_parens = self.GetStartParenText()
-        #end_parans = self.GetEndParenText()
         self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
-#        result =  (leading_ws + start_parens + matched_string + end_parans + end_ws + self.end_of_line_comment)
-#        result =  (matched_string + end_parans + end_ws + self.end_of_line_comment)
         result =  (matched_string + end_ws + self.end_of_line_comment)
         self.matched = True
         self.matched_source = result

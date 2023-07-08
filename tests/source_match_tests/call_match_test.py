@@ -32,8 +32,17 @@ class CallMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testMatchWithStarargsBeforeKeyword(self):
-        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c')], starargs='args')
-        string = 'a(*args, b=c)'
+        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c')], starargs='started')
+        string = 'a(*started, b=c)'
+        self._verify_match(node, string)
+    def testMatchWithStarargsBeforeKeyword2(self):
+        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c'), create_node.keyword('e', 'f')], starargs='started')
+        string = 'a(*started, b=c, e = f)'
+        self._verify_match(node, string)
+
+    def testMatchWithStarargsBeforeKeyword3(self):
+        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c'), create_node.keyword('e', 'f')], starargs='started')
+        string = 'a(   *started, b=c, e = f )'
         self._verify_match(node, string)
 
     def testCallWithAttribute(self):
@@ -54,7 +63,7 @@ class CallMatcherTest(BaseTestUtils):
         node = create_node.Call('a.b', args=[create_node.Num('1'), create_node.Num('2')])
         string = 'a.b(1,2)'
         self._verify_match(node, string)
-    @pytest.mark.skip('issue #5 should solve it')
+    #@pytest.mark.skip('issue #5 should solve it')
     def testCallWithAttributeAndParam5(self):
         node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
         string = 'a( 1,2)'

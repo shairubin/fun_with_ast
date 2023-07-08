@@ -33,7 +33,7 @@ library.
 1. Follow the steps in  [Contribute to projects](https://docs.github.com/en/get-started/quickstart/contributing-to-projects).
 2. You can chose an existing open issue or open a new one.
 3. Start working .... 
-4. Before submitting a pull request make sure tests are [passing](how-to-run-tests).
+4. Before submitting a pull request make sure tests are [passing](#how-to-run-tests).
 
 ## How to Run Tests
 1. In `fun-with-ast` we use pytest.

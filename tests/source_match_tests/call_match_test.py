@@ -56,6 +56,16 @@ class CallMatcherTest(BaseTestUtils):
         node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
         string = 'a( 1,2)'
         self._verify_match(node, string)
+
+    def testCallWithAttributeAndParam6(self):
+        node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
+        string = 'a(1,2)'
+        self._verify_match(node, string)
+
+    def testCallWithAttributeAndParam7(self):
+        node = create_node.Call('a', args=[create_node.Num('1')])
+        string = 'a(1)'
+        self._verify_match(node, string)
     def testCallWithAttributeAndParam3(self):
         node = create_node.Call('a.b', args=[create_node.Num('1')])
         string = '(a.b(1))'

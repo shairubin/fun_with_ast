@@ -178,6 +178,16 @@ def get_Call_expected_parts():
         #TextPlaceholder(r'\s*,?\s*\)', ')'),
     ]
 
+def get_CallArgs_expected_parts():
+    return [
+        ArgsKeywordsPlaceholder(
+            TextPlaceholder(r'\s*,\s*', ', '),
+            TextPlaceholder('')),
+        FieldPlaceholder(
+            'kwargs',
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
+    ]
+
 
 def get_ClassDef_expected_parts():
     return [

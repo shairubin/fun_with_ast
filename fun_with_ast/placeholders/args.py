@@ -1,3 +1,7 @@
+from fun_with_ast.placeholders.list_placeholder import SeparatedListFieldPlaceholder
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+
+from fun_with_ast.manipulate_node.call_args_node import CallArgs
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 
 from fun_with_ast.placeholders.composite import CompositePlaceholder
@@ -80,14 +84,23 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             arg_separator_placeholder, kwarg_separator_placeholder)
         self.stararg_separator = TextPlaceholder(r'\s*,?\s*\*', ', *')
         self.start_paren_matchers = []
+        self.use_default_matcher = False
+
     def _match(self, node, string):
         if not string.startswith('('):
             raise ValueError('string for arguments _match does not start with string')
-        #remaing_string = SourceMatcher.parentheses_stack.MatchStartParens(self,string)
-        remaing_string = super()._match(node, string)
-        #remaing_string = SourceMatcher.parentheses_stack.MatchEndParens(self,remaing_string)
-        return remaing_string
+        if self.use_default_matcher == True:
+            raise NotImplementedError('stabilize the original first')
+        else:
+            remaing_string = super()._match(node, string)
+            return remaing_string
     def GetElements(self, node):
+        if self.use_default_matcher == True:
+            raise NotImplementedError('stabilize the original first')
+        else:
+            return self._original_GetElements(node)
+
+    def _original_GetElements(self, node):
         """Gets the basic elements of this composite placeholder."""
         args = node.args or []
         keywords = node.keywords or []
@@ -125,6 +138,14 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         elements.append(end_paren)
 
         return elements
+
+    def _use_default_matcher(self, node, string):
+        args_node = CallArgs(node.args)
+        parts = [SeparatedListFieldPlaceholder(
+            r'args', TextPlaceholder(r'\s*,\s*', ', '))]
+        args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
+        matched_string = args_matcher._match(string)
+        return matched_string
 
 
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):

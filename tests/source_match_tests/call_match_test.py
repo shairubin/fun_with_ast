@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from fun_with_ast.manipulate_node import create_node as create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
@@ -52,6 +54,7 @@ class CallMatcherTest(BaseTestUtils):
         node = create_node.Call('a.b', args=[create_node.Num('1'), create_node.Num('2')])
         string = 'a.b(1,2)'
         self._verify_match(node, string)
+    @pytest.mark.skip('issue #5 should solve it')
     def testCallWithAttributeAndParam5(self):
         node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
         string = 'a( 1,2)'

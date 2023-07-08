@@ -6,32 +6,40 @@ This repository contains a library to analyze and manipulate python code using [
 See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the fun-with-ast library.
 
 
-## Why Fun with ASTs
-1. The intellectual problem: 
-2. It is fun
-2. It is a great learning experience 
+## Why Fun-with-AST
+1. Here is a [talk](https://docs.google.com/presentation/d/e/2PACX-1vQTQQNaUPs7UNO_skE5vxBxaYbu6box99g_DnYYOuXuIKUqxI-_XEMxQ3p0_CBNlE6V9F3NzpOaXzUJ/pub?start=true&loop=false&delayms=30000)
+I gave in Pycon 2023. It explains the capabilities of fun-with-ast.
+2. It is a great learning personal development experience. 
 3. Enables smart and complex manipulations 
 
 
-## AST Parse and Unparse Examples
+## Examples: AST Parse vs. AST Unparse vs. fun-with-ast Source Code Preserver
 The examples below show an original program that first was unparsed with 
 python ast module, 
 and then was unparsed using the fun-with-ast library. The actual code that generates 
 these example can be found in the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) 
 library. 
 
-1. [Fibonacci calculator](./docs/parse_vs_unparse_vs_fwa.pdf)
+1. [Parse-Unparse Fibonacci Calculator](./docs/parse_vs_unparse_vs_fwa.pdf)
 ## Potential usages:
 - Fun #1: Keep source to source transformations
-- Fun #2: add log
-- Fun #3: switch else / if 
-- Fun #4: mutation testing switch `<` into `<=`
-- Fun #5: for to while 
-- Fun #6: for loop into tail recursion 
-- Fun #7: Add node AND comment
+- Fun #2: switch `else` / `if` bodies  
+- Fun #3: mutation testing switch `<` into `<=`
+- Fun #4: Switch `For` to `While` 
+- Fun #5: for loop into tail recursion. 
+- Fun #7: Add node AND comment.
 
+## How to Contribute
+1. Follow the steps in  [Contribute to projects](https://docs.github.com/en/get-started/quickstart/contributing-to-projects).
+2. You can chose an existing open issue or open a new one.
+3. Start working .... 
+4. Before submitting a pull request make sure tests are [passing](#how-to-run-tests).
 
-
-
-
-# Get started 
+## How to Run Tests
+1. In `fun-with-ast` we use pytest.
+2. Use your IDE to run all tests in `tests` directory. 
+3. OR, use command line:
+   1. `cd <your pathe to fun-with-ast fork>/fun_with_ast/tests`
+   2. `pytest --version`, should be at least `7.2.2`
+   3.  run `pytest`
+   4.  No tests should fail - some tests would be skipped / xfail. 

@@ -299,7 +299,7 @@ class SeparatedListFieldPlaceholderTest(unittest.TestCase):
         self.assertEqual(matched_text, '2')
 
 
-class TestDefaultSourceMatcher(unittest.TestCase):
+class TestDefaultSourceMatcher(BaseTestUtils):
 
     def testInvalidExpectedPartsType(self):
         node = create_node.Name('bar')

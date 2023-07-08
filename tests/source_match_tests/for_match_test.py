@@ -1,13 +1,8 @@
-import unittest
-
 import pytest
 
-from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFromInput
-
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
@@ -69,13 +64,11 @@ class ForMatcherTest(BaseTestUtils):
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-    @pytest.mark.skip('issue #5')
     def testSimpleFor9(self):
         string = "for i in range( 1, x):\n a('fun with ast')\n pass"
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-    @pytest.mark.skip('not implemented see also: testIfFromSource7')
     def testSimpleFor10(self):
         string = "for x in range(1,15):\n if (a.b(1)==True):\n  a('fun with ast')\n  pass"
         for_node = GetNodeFromInput(string)

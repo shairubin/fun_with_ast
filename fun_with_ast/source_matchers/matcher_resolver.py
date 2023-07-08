@@ -3,7 +3,11 @@ import _ast
 import sys
 
 import fun_with_ast.manipulate_node.create_node
-def GetDynamicMatcher(node, starting_parens=None, parent_node=None):
+import fun_with_ast.manipulate_node.syntax_free_line_node
+import fun_with_ast.manipulate_node.call_args_node
+
+
+def GetDynamicMatcher(node, starting_parens=None, parent_node=None, parts_in=None):
     """Gets an initialized matcher for the given node (doesnt call .Match).
 
     If there is no corresponding matcher in _matchers, this will return a
@@ -25,7 +29,10 @@ def GetDynamicMatcher(node, starting_parens=None, parent_node=None):
     current_module = sys.modules[parts_or_matcher_module]
     parts_or_matcher = getattr(current_module, parts_or_matcher_string)
     try:
-        parts = parts_or_matcher()
+        if not parts_in :
+            parts = parts_or_matcher()
+        else:
+            parts = parts_in
         default_source_matcher = current_module.DefaultSourceMatcher
         return default_source_matcher(node, parts, starting_parens, parent_node)
     except TypeError:
@@ -46,7 +53,6 @@ _dynamic_matchers = {
     _ast.BitAnd: ['get_BitAnd_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitOr: ['get_BitOr_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitXor: ['get_BitXor_expected_parts', 'fun_with_ast.source_match'],
-#    _ast.BoolOp: ['BoolOpSourceMatcher', 'fun_with_ast.boolop_source_match'],
     _ast.BoolOp: ['BoolOpSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Break: ['get_Break_expected_parts', 'fun_with_ast.source_match'],
     _ast.Call: ['get_Call_expected_parts', 'fun_with_ast.source_match'],
@@ -73,7 +79,6 @@ _dynamic_matchers = {
     _ast.Import: ['get_Import_expected_parts', 'fun_with_ast.source_match'],
     _ast.ImportFrom: ['get_ImportFrom_expected_parts', 'fun_with_ast.source_match'],
     _ast.In: ['get_In_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.Index: get_Index_expected_parts', 'fun_with_ast.source_match'],
     _ast.Invert: ['get_Invert_expected_parts', 'fun_with_ast.source_match'],
     _ast.Is: ['get_Is_expected_parts', 'fun_with_ast.source_match'],
     _ast.IsNot: ['get_IsNot_expected_parts', 'fun_with_ast.source_match'],
@@ -91,11 +96,9 @@ _dynamic_matchers = {
     _ast.Not: ['get_Not_expected_parts', 'fun_with_ast.source_match'],
     _ast.NotIn: ['get_NotIn_expected_parts', 'fun_with_ast.source_match'],
     _ast.NotEq: ['get_NotEq_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.Num: NumSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Or: ['get_Or_expected_parts', 'fun_with_ast.source_match'],
     _ast.Pass: ['get_Pass_expected_parts', 'fun_with_ast.source_match'],
     _ast.Pow: ['get_Pow_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.Print: get_Print_expected_parts', 'fun_with_ast.source_match'],
     _ast.Raise: ['get_Raise_expected_parts', 'fun_with_ast.source_match'],
     _ast.Return: ['get_Return_expected_parts', 'fun_with_ast.source_match'],
     _ast.RShift: ['get_RShift_expected_parts', 'fun_with_ast.source_match'],
@@ -104,14 +107,8 @@ _dynamic_matchers = {
     _ast.Set: ['get_Set_expected_parts', 'fun_with_ast.source_match'],
     _ast.SetComp: ['get_SetComp_expected_parts', 'fun_with_ast.source_match'],
     _ast.Subscript: ['get_Subscript_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.Str: ['StrSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Constant: ['ConstantSourceMatcher', 'fun_with_ast.source_match'],
-    fun_with_ast.manipulate_node.create_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher', 'fun_with_ast.source_matchers.syntaxfreeline'],
-#    manipulate_node.create_node.SyntaxFreeLine: ['get_SyntaxFreeLine_expected_parts', 'fun_with_ast.source_match'],
-    fun_with_ast.manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
     _ast.Tuple: ['get_Tuple_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.TryExcept: get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
-    #    _ast.Try: TryFinallySourceMatcher', 'fun_with_ast.source_match'],
     _ast.JoinedStr: ['JoinedStrSourceMatcher', 'fun_with_ast.source_matchers.joined_str'],
     _ast.Try: ['get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
     _ast.FormattedValue: ['get_FormattedValue_expected_parts', 'fun_with_ast.source_match'],
@@ -121,5 +118,10 @@ _dynamic_matchers = {
     _ast.While: ['get_While_expected_parts', 'fun_with_ast.source_match'],
     _ast.With: ['WithSourceMatcher', 'fun_with_ast.source_match'],
     _ast.withitem: ['WithItemSourceMatcher', 'fun_with_ast.source_matchers.withitem'],
-    _ast.Yield: ['get_Yield_expected_parts', 'fun_with_ast.source_match']
+    _ast.Yield: ['get_Yield_expected_parts', 'fun_with_ast.source_match'],
+    fun_with_ast.manipulate_node.syntax_free_line_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher',
+                                                                        'fun_with_ast.source_matchers.syntaxfreeline'],
+    fun_with_ast.manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
+    fun_with_ast.manipulate_node.call_args_node.CallArgs: ['get_CallArgs_expected_parts', 'fun_with_ast.source_match'],
+
 }

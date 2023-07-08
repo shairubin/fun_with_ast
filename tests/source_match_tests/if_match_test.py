@@ -3,7 +3,8 @@ import unittest
 import pytest
 
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.create_node import SyntaxFreeLine, GetNodeFromInput
+from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher

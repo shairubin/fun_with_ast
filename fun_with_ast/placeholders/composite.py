@@ -26,7 +26,8 @@ class CompositePlaceholder(Placeholder):
 
     def GetSource(self, node):
         source = ''
-        for element in self.GetElements(node):
+        elements = self.GetElements(node)
+        for element in elements:
             source += element.GetSource(node)
         return source
     def Validate(self, unused_node):

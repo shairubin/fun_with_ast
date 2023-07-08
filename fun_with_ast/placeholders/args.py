@@ -85,11 +85,10 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         self.stararg_separator = TextPlaceholder(r'\s*,?\s*\*', ', *')
         self.start_paren_matchers = []
         self.args_matcher = None
-        self.use_default_matcher = True
+        self.use_default_matcher = True # TODO: remove this feature flag
 
     def _match(self, node, string):
-        #if not string.startswith('('):
-        #    raise ValueError('string for arguments _match does not start with string')
+
         if self.use_default_matcher == True:
             default_matcher_result = self._use_default_matcher(node, string)
             return default_matcher_result
@@ -111,47 +110,37 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             parts.append(end_paren)
             return parts
         else:
-            return self._original_GetElements(node)
-
-    def _original_GetElements(self, node):
-        """Gets the basic elements of this composite placeholder."""
-        args = node.args or []
-        keywords = node.keywords or []
-        elements = []
-        arg_index = 0
-        for index, arg in enumerate(args):
-            elements.append(NodePlaceholder(arg))
-            if index != len(args) - 1 or keywords:
-                elements.append(self._GetArgSeparator(arg_index))
-                arg_index += 1
-        if getattr(node, 'starargs', False):
-            elements.append(self.stararg_separator)
-            elements.append(NodePlaceholder(node.starargs))
-            if keywords:
-                arg_seperator = self._GetArgSeparator(arg_index)
-                elements.append(arg_seperator)
-                arg_index += 1
-        for index, arg in enumerate(keywords):
-            elements.append(NodePlaceholder(arg))
-            if index != len(keywords) - 1:
-                elements.append(self._GetArgSeparator(arg_index))
-                arg_index += 1
-        #if not elements:
-        #     parens = TextPlaceholder(r'\(\s*\)', '()')
-        #     elements.append(parens)
-        # elif not node.args and  getattr(node, 'starargs', False):
-        #     start_paren = TextPlaceholder(r'\(\s*', '(')
-        #     end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
-        #     elements.insert(0,start_paren)
-        #     elements.append(end_paren)
-        # else:
-        #     ValueError('Missing rule for adding parentheses to arguments')
-        start_paren = TextPlaceholder(r'\(\s*', '(')
-        end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
-        elements.insert(0,start_paren)
-        elements.append(end_paren)
-
-        return elements
+            raise ValueError('old implementation not supported anymore')
+# We leave this code for reference only -- will be deleted in the near future
+    # def _original_GetElements(self, node):
+    #     """Gets the basic elements of this composite placeholder."""
+    #     args = node.args or []
+    #     keywords = node.keywords or []
+    #     elements = []
+    #     arg_index = 0
+    #     for index, arg in enumerate(args):
+    #         elements.append(NodePlaceholder(arg))
+    #         if index != len(args) - 1 or keywords:
+    #             elements.append(self._GetArgSeparator(arg_index))
+    #             arg_index += 1
+    #     if getattr(node, 'starargs', False):
+    #         elements.append(self.stararg_separator)
+    #         elements.append(NodePlaceholder(node.starargs))
+    #         if keywords:
+    #             arg_seperator = self._GetArgSeparator(arg_index)
+    #             elements.append(arg_seperator)
+    #             arg_index += 1
+    #     for index, arg in enumerate(keywords):
+    #         elements.append(NodePlaceholder(arg))
+    #         if index != len(keywords) - 1:
+    #             elements.append(self._GetArgSeparator(arg_index))
+    #             arg_index += 1
+    #     start_paren = TextPlaceholder(r'\(\s*', '(')
+    #     end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
+    #     elements.insert(0,start_paren)
+    #     elements.append(end_paren)
+    #
+    #     return elements
 
     def _use_default_matcher(self, node, string):
         arg_index = len(node.args)

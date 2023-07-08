@@ -2,7 +2,7 @@ import _ast
 
 
 class CallArgs(_ast.stmt):
-    """Class defining a new node that has no syntax (only optional comments)."""
+    """A node for handling arguments for a function call"""
 
     def __init__(self, args_list):
         self._fields = ['args']

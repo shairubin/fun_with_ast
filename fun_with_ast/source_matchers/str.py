@@ -61,8 +61,7 @@ class StrSourceMatcher(SourceMatcher):
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
         if parsed_string !=  start_paran_text +start_quote + self.original_s + end_quote + end_paran_text:
              raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
-        # if not self.original_s in parsed_string:
-        #     raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
+
 
         return parsed_string
 

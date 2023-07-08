@@ -15,6 +15,5 @@ class SyntaxFreeLineMatcher(DefaultSourceMatcher):
 
     def MatchWhiteSpaces(self, remaining_string):
         ws_placeholder = WhiteSpaceTextPlaceholder()
-#        ws_placeholder.Match(None, remaining_string)
         self.start_whitespace_matchers.append(ws_placeholder)
-        return remaining_string # NOTE: we retrun remainiing_string !
+        return remaining_string # NOTE: we return remaining_string !

@@ -74,21 +74,3 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _check_not_implemented(self, string):
         if '\"\"' in string:
             raise NotImplementedError('Double-quotes are not supported yet')
-# class JoinedStrSourceMatcher(StrSourceMatcher):
-#     def __init__(self, node, starting_parens=None):
-#         super(JoinedStrSourceMatcher, self).__init__(node, starting_parens)
-#         self.value_placeholder = ListFieldPlaceholder('values')
-#
-#     def _get_original_string(self):
-#         self.original_s = ''
-#
-#     def _part_place_holder(self):
-#         return JoinedStringPartPlaceholder()
-#
-#     def Match(self, string):
-#         part = self._part_place_holder()
-#         remaining_string = MatchPlaceholder(string, None, part)
-#         self.quote_parts.append(part)
-#
-#     def _handle_multipart(self, remaining_string):
-#         pass

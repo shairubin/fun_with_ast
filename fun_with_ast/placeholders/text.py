@@ -84,8 +84,8 @@ class EndParenMatcher(TextPlaceholder):
         super(EndParenMatcher, self).__init__(r'[\s]*\)[ \t]*', '')
 
 
-#def GetStartParenMatcher():
-#    return TextPlaceholder(r'[ \t]*\(\s*', '')
+def GetStartParenMatcher():
+    return TextPlaceholder(r'[ \t]*\(\s*', '')
 
 def GetWhiteSpaceMatcher():
     return TextPlaceholder(r'[ \t]*', '')

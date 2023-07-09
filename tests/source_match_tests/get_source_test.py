@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -37,7 +37,7 @@ class GetSourceTest(BaseTestUtils):
         string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n# comment end'
         self._verify_source(string, default_quote='\"', get_module=True)
 
-    @pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
+    #@pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
     def testCall3(self):
         string = 'logger.info(\'test string\')\n'
         self._verify_source(string,default_quote='\'')

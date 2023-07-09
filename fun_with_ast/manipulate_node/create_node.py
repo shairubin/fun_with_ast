@@ -21,18 +21,6 @@ CtxEnum = Enum(
     DEL='delete',
     PARAM='param')
 
-def GetNodeFromInput(string, body_index = 0, get_module = False):
-    parse_result = ast.parse(string)
-    if parse_result.body and get_module == False:
-        node = parse_result.body[body_index]
-    elif parse_result.body and get_module == True:
-        node = parse_result
-    else:
-        return parse_result # empty Module
-    if isinstance(node, ast.If) and 'elif' in string:
-        node.is_elif = True if 'elif' in string else False
-    return node
-
 
 def _ToArgsWithDefaults(_args, _defaults):
     if not isinstance(_args, list):
@@ -66,10 +54,10 @@ def _WrapWithName(to_wrap, ctx_type=CtxEnum.LOAD):
     raise NotImplementedError
 
 
-def _WrapWithTuple(to_wrap, ctx_type=CtxEnum.LOAD):
-    if not isinstance(to_wrap, list):
-        raise NotImplementedError
-    return Tuple(to_wrap, ctx_type=ctx_type)
+# def _WrapWithTuple(to_wrap, ctx_type=CtxEnum.LOAD):
+#     if not isinstance(to_wrap, list):
+#         raise NotImplementedError
+#     return Tuple(to_wrap, ctx_type=ctx_type)
 
 
 def _LeftmostNodeInDotVar(node):

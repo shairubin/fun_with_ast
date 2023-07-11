@@ -754,7 +754,9 @@ def Arg(arg):
 
 
 def Constant(value):
-    return _ast.Constant(value=value)
+    node = _ast.Constant(value=value)
+    node.default_quote = "'" # TODO: only if the value is str
+    return node
 
 
 def validate_id(name_id):

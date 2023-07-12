@@ -8,7 +8,7 @@ class CreateTupleTest(CreateNodeTestBase):
     def testTupleLoad(self):
         expected_string = 'a = ("b",)'
         expected_node = GetNodeFromInput(expected_string).value
-        test_node = create_node.Tuple([create_node.Constant('b')], ctx_type=create_node.CtxEnum.LOAD)
+        test_node = create_node.Tuple([create_node.Constant('b', "'")], ctx_type=create_node.CtxEnum.LOAD)
         self.assertNodesEqual(expected_node, test_node)
 
     def testTupleWithStrings(self):

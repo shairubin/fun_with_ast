@@ -51,9 +51,27 @@ class CallMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testCallWithAttributeAndParam(self):
-        node = create_node.Call('a.b', args=[create_node.Str('fun-with-ast')])
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
         string = 'a.b(\'fun-with-ast\')'
         self._verify_match(node, string)
+
+    def testCallWithAttributeAndParamAndQuate(self):
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")])
+        string = "a.b(\"fun-with-ast\")"
+        self._verify_match(node, string)
+
+    def testNoMatchCallWithAttributeAndParamAndQuate(self):
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
+        string = "a.b(\"fun-with-ast\")"
+        from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+    def testNoMatchCallWithAttributeAndParamAndQuate2(self):
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")])
+        string = "a.b('fun-with-ast')"
+        from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
 
     def testCallWithAttributeAndParam2(self):
         node = create_node.Call('a.b', args=[create_node.Num('1')])
@@ -84,6 +102,6 @@ class CallMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testCallWithAttributeAndParamWS(self):
-        node = create_node.Call('a.b', args=[create_node.Str('fun-with-ast')])
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
         string = 'a.b(\'fun-with-ast\')'
         self._verify_match(node, string)

@@ -2,6 +2,8 @@
 import _ast
 import ast
 
+from fun_with_ast.manipulate_node.get_node_from_input import FWANodeGenerator
+
 
 class Error(Exception):
     pass
@@ -753,9 +755,12 @@ def Arg(arg):
     return _ast.arg(arg)
 
 
-def Constant(value):
+def Constant(value, quote_type =None):
     node = _ast.Constant(value=value)
-    node.default_quote = "'" # TODO: only if the value is str
+    if isinstance(value, str):
+        if not quote_type:
+            raise ValueError('Constant string must be provided with quote type')
+        node.default_quote = quote_type
     return node
 
 
@@ -808,6 +813,7 @@ def Num(number):
         raise ValueError(f'number must be a str to support bases')
     base = _extract_base(number)
     result =  _ast.Constant(value=int(number, base))
+    result.default_quote = "'" # TODO this is not clean -- as this is not really necessary
     result.base = base
     return result
 
@@ -841,16 +847,21 @@ def Pow():
     return _ast.Pow()
 
 
-def Return(value):
+def Return(value, quote_type=None):
+
     if isinstance(value, int):
         value_node = Num(str(value))
     elif isinstance(value, str):
+        if quote_type is None:
+            raise ValueError('Must provite quote type when creating a Return node weith type str..')
         value_node = Str(value)
+        value_node.default_quote = quote_type
     elif isinstance(value, _ast.AST):
         return _ast.Return(value)
     else:
         raise ValueError('Invalid return value')
-    return _ast.Return(value=value_node)
+    result = _ast.Return(value=value_node)
+    return result
 
 def RShift():
     return _ast.RShift()

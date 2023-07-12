@@ -417,11 +417,20 @@ class AssertMatcherTest(unittest.TestCase):
 
     def testMatchWithMessage(self):
         node = create_node.Assert(create_node.Name('a'),
-                                  create_node.Str('message'))
+                                  create_node.Constant('message', "\""))
         string = 'assert a, "message"\n'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
+
+    def testNoMatchWithMessage(self):
+        node = create_node.Assert(create_node.Name('a'),
+                                  create_node.Constant('message', "'"))
+        string = 'assert a, "message"\n'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+
 
 
 class AttributeMatcherTest(unittest.TestCase):
@@ -687,13 +696,29 @@ class DictMatcherTest(unittest.TestCase):
 
     def testTwoItemMatch(self):
         node = create_node.Dict(
-            [create_node.Name('a'), create_node.Str('c')],
-            [create_node.Name('b'), create_node.Str('d')])
+            [create_node.Name('a'), create_node.Constant('c',"\"")],
+            [create_node.Name('b'), create_node.Constant('d', "\"")])
         string = '{a: b, "c": "d"}'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
+    def testTwoItemNoMatch(self):
+        node = create_node.Dict(
+            [create_node.Name('a'), create_node.Constant('c',"'")],
+            [create_node.Name('b'), create_node.Constant('d', "\"")])
+        string = '{a: b, "c": "d"}'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
+    def testTwoItemNoMatch(self):
+        node = create_node.Dict(
+            [create_node.Name('a'), create_node.Constant('c',"\"")],
+            [create_node.Name('b'), create_node.Constant('d', "'")])
+        string = '{a: b, "c": "d"}'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
 
 class DictComprehensionMatcherTest(unittest.TestCase):
 
@@ -810,42 +835,36 @@ class SetComprehensionMatcherTest(unittest.TestCase):
 class StrMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '"foobar"'
         self._match_string(node, string)
 
     def _match_string(self, node, string):
         self._verify_match(node, string)
-#        matcher = GetDynamicMatcher(node)
-#        matcher.do_match(string)
-#        self.assertEqual(string, matcher.GetSource())
 
     def testPrefixMatch(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = 'r"foobar"'
         self._match_string(node, string)
 
     def testQuoteWrapped(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '("foobar")'
         self._match_string(node, string)
 
-    #@pytest.mark.skip(reason="Not Implemented Yet")
     def testContinuationMatch(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '"foo"\n"bar"'
         self._match_string(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # with pytest.raises(BadlySpecifiedTemplateError):
-        #     matcher.do_match(string)
+
 
     def testContinuationMatch3(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "'")
         string = "'foo''bar'"
         self._match_string(node, string)
 
     def testContinuationMatch2(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "'")
         string = "'fo''o''b''a''r'"
         self._match_string(node, string)
 
@@ -859,14 +878,14 @@ class StrMatcherTest(BaseTestUtils):
         self._match_string(node, string)
 
     def testQuoteTypeMismatch(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '"foobar\''
         matcher = GetDynamicMatcher(node)
         with self.assertRaises(ValueError):
             matcher.do_match(string)
 
     def testSChange(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
@@ -874,12 +893,12 @@ class StrMatcherTest(BaseTestUtils):
         self.assertEqual('"hello"', matcher.GetSource())
 
     def testSChangeInContinuation(self):
-        node = create_node.Str('foo\nbar')
+        node = create_node.Constant('foo\nbar', "'")
         string = "'foo\nbar'"
         self._match_string(node, string)
 
     def testQuoteTypeChange(self):
-        node = create_node.Str('foobar')
+        node = create_node.Constant('foobar', "\"")
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
@@ -887,7 +906,7 @@ class StrMatcherTest(BaseTestUtils):
         self.assertEqual("'foobar'", matcher.GetSource())
 
     def testQuoteTypeChangeToTripleQuote(self):
-        node = create_node.Str('foobar')
+        node = create_node.Str('foobar', "\"")
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)

@@ -21,9 +21,8 @@ class CompositePlaceholder(Placeholder):
         return parser.GetMatchedText()
 
     def _set_parents(self, elements, node):
-        if isinstance(node, ast.Constant) and  not hasattr(node, 'default_quote'):
-            pass
-            #raise NotImplementedError('every Contant node should have attribute \'default quote\'')
+        if isinstance(node, ast.Constant) and not isinstance(node.s, int) and not hasattr(node, 'default_quote'):
+            raise NotImplementedError
         for element in elements:
             element.parent = node
             #if isinstance(node, ast.Constant) :

@@ -14,8 +14,13 @@ class RetrunMatcherTest(unittest.TestCase):
 
 
     def testReturnStr(self):
-        node = create_node.Return('1')
+        node = create_node.Return("1", "'")
         string = "return '1'"
+        self._assert_match(node, string)
+
+    def testReturnStrDoubleQuote(self):
+        node = create_node.Return('1', "\"")
+        string = "return \"1\""
         self._assert_match(node, string)
 
     def testReturnName(self):

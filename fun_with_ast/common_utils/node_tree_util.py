@@ -105,10 +105,10 @@ def IsEmptyModule(node):
 #     self.parent_stack.pop()
 #
 
-def GetParentNode(module_node, node_in_stmt):
-  visitor = _ParentVisitor(node_in_stmt)
-  visitor.visit(module_node)
-  return visitor.correct_parent
+# def GetParentNode(module_node, node_in_stmt):
+#   visitor = _ParentVisitor(node_in_stmt)
+#   visitor.visit(module_node)
+#   return visitor.correct_parent
 
 
 def NodeCopy(node_to_copy):

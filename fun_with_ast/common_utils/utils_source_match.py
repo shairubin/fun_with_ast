@@ -2,6 +2,7 @@
 
 
 def GetDefaultQuoteType():
+    raise NotImplementedError
     return '"'
 
 def _GetListDefault(l, index, default):

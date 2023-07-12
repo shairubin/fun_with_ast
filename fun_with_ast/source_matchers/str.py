@@ -18,7 +18,11 @@ class StrSourceMatcher(SourceMatcher):
         self.quote_parts = []
         self.separators = []
         # If set, will apply to all parts of the string.
-        self.quote_type = None
+
+        if  hasattr(node, 'default_quote'):
+            self.quote_type = node.default_quote
+        else:
+            raise ValueError('node must have a default_quote attribute')
         self.original_quote_type = None
         self.original_s = None
         self.accept_multiparts_string=accept_multiparts_string
@@ -37,8 +41,6 @@ class StrSourceMatcher(SourceMatcher):
         remaining_string = self._handle_multipart(remaining_string)
 
         self.MatchEndParen(remaining_string)
-        #if len(self.quote_parts) != 1 :
-        #    raise NotImplementedError('Multi-part strings not yet supported')
         self.original_quote_type = (
             self.quote_parts[0].quote_match_placeholder.matched_text)
         parsed_string = self._match_parsed_string()

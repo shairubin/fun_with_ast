@@ -873,7 +873,7 @@ class StrMatcherTest(BaseTestUtils):
         string = '"""foobar"""'
 
     def testMultilineTripleQuoteMatch(self):
-        node = create_node.Str('foobar\n\nbaz')
+        node = create_node.Constant('foobar\n\nbaz', "\"\"\"")
         string = '"""foobar\n\nbaz"""'
         self._match_string(node, string)
 
@@ -906,7 +906,7 @@ class StrMatcherTest(BaseTestUtils):
         self.assertEqual("'foobar'", matcher.GetSource())
 
     def testQuoteTypeChangeToTripleQuote(self):
-        node = create_node.Str('foobar', "\"")
+        node = create_node.Constant('foobar', "\"")
         string = '"foobar"'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)

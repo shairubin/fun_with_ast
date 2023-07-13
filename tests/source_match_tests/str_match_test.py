@@ -35,13 +35,8 @@ class ConstantStrMatcherTest(BaseTestUtils):
 
 
 
-    def testBasicMatchEmpty3(self):
-        node = create_node.Constant('', "\"")
-        string = "\"\"''"
-        self._verify_match(node, string)
 
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
+
 
     def testBasicMatchMultiPart(self):
         node = create_node.Constant("'1''2'", "\"")
@@ -49,9 +44,11 @@ class ConstantStrMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testBasicNoMatchMultiPart(self):
-        node = create_node.Constant("'1''2'", "'")
-        string = "\"'1''2'\""
-        self._verify_match(node, string)
+        node = create_node.Constant("'1''2'", "\"")
+        string = "\"'1''3'\""
+        with pytest.raises(BadlySpecifiedTemplateError) as e:
+            self._verify_match(node, string)
+
 
 
     def testBasicMatchMultiPart2(self):

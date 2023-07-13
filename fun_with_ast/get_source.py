@@ -57,9 +57,6 @@ def _set_elif(assume_elif, field):
 def _match_text(assume_no_indent, field, text, parent_node):
     if text:
         field.matcher._match(text)
-    # TODO: Fix this to work with lambdas
-#    elif isinstance(field, ast.Module):
-#        raise NotImplementedError('Not supported: cannot match module node without input text')
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
 #       if not hasattr(field, 'module_node'):
         if not isinstance(parent_node, ast.Module):
@@ -68,8 +65,6 @@ def _match_text(assume_no_indent, field, text, parent_node):
                 'is a statement, so it must have a .module_node field defined. '
                 'To add this automatically, call ast_annotate.AddBasicAnnotations'
                 .format(field))
-        #raise NotImplementedError('Not clear if we ever get here')
-#        FixSourceIndentation(field.module_node, field)
 
 
 def _guess_base_from_string(string, field):

@@ -2,6 +2,8 @@
 import _ast
 import ast
 
+from fun_with_ast.manipulate_node.get_node_from_input import FWANodeGenerator
+
 
 class Error(Exception):
     pass
@@ -20,18 +22,6 @@ CtxEnum = Enum(
     STORE='store',
     DEL='delete',
     PARAM='param')
-
-def GetNodeFromInput(string, body_index = 0, get_module = False):
-    parse_result = ast.parse(string)
-    if parse_result.body and get_module == False:
-        node = parse_result.body[body_index]
-    elif parse_result.body and get_module == True:
-        node = parse_result
-    else:
-        return parse_result # empty Module
-    if isinstance(node, ast.If) and 'elif' in string:
-        node.is_elif = True if 'elif' in string else False
-    return node
 
 
 def _ToArgsWithDefaults(_args, _defaults):
@@ -66,10 +56,10 @@ def _WrapWithName(to_wrap, ctx_type=CtxEnum.LOAD):
     raise NotImplementedError
 
 
-def _WrapWithTuple(to_wrap, ctx_type=CtxEnum.LOAD):
-    if not isinstance(to_wrap, list):
-        raise NotImplementedError
-    return Tuple(to_wrap, ctx_type=ctx_type)
+# def _WrapWithTuple(to_wrap, ctx_type=CtxEnum.LOAD):
+#     if not isinstance(to_wrap, list):
+#         raise NotImplementedError
+#     return Tuple(to_wrap, ctx_type=ctx_type)
 
 
 def _LeftmostNodeInDotVar(node):
@@ -765,8 +755,13 @@ def Arg(arg):
     return _ast.arg(arg)
 
 
-def Constant(value):
-    return _ast.Constant(value=value)
+def Constant(value, quote_type =None):
+    node = _ast.Constant(value=value)
+    if isinstance(value, str):
+        if not quote_type:
+            raise ValueError('Constant string must be provided with quote type')
+        node.default_quote = quote_type
+    return node
 
 
 def validate_id(name_id):
@@ -818,6 +813,7 @@ def Num(number):
         raise ValueError(f'number must be a str to support bases')
     base = _extract_base(number)
     result =  _ast.Constant(value=int(number, base))
+    result.default_quote = "'" # TODO this is not clean -- as this is not really necessary
     result.base = base
     return result
 
@@ -851,16 +847,21 @@ def Pow():
     return _ast.Pow()
 
 
-def Return(value):
+def Return(value, quote_type=None):
+
     if isinstance(value, int):
         value_node = Num(str(value))
     elif isinstance(value, str):
+        if quote_type is None:
+            raise ValueError('Must provite quote type when creating a Return node weith type str..')
         value_node = Str(value)
+        value_node.default_quote = quote_type
     elif isinstance(value, _ast.AST):
         return _ast.Return(value)
     else:
         raise ValueError('Invalid return value')
-    return _ast.Return(value=value_node)
+    result = _ast.Return(value=value_node)
+    return result
 
 def RShift():
     return _ast.RShift()

@@ -22,12 +22,23 @@ class AssignMatcherTest(BaseTestUtils):
         self._assert_matched_source(node, string)
 
     def testBasicMatchAssignString(self):
-        node = create_node.Assign('a', create_node.Str('1'))
+        node = create_node.Assign('a', create_node.Constant('1', "'"))
         string = "a='1'"
         self._assert_matched_source(node, string)
 
+    def testBasicNoMatchAssignStringWithDoubleQuote(self):
+        node = create_node.Assign('a', create_node.Constant('1', "'"))
+        string = "a=\"1\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._assert_matched_source(node, string)
+
+    def testBasicMatchAssignStringWithDoubleQuote2(self):
+        node = create_node.Assign('a', create_node.Constant('1', "\""))
+        string = "a=\"1\""
+        self._assert_matched_source(node, string)
+
     def testBasicMatchAssignString2(self):
-        node = create_node.Assign('a', create_node.Str('12'))
+        node = create_node.Assign('a', create_node.Constant('12', "\'"))
         string = "a='1''2'"
         self._assert_matched_source(node, string)
 

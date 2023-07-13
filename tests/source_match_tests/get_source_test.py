@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.get_source import GetSource
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -10,41 +10,41 @@ from tests.source_match_tests.base_test_utils import BaseTestUtils
 class GetSourceTest(BaseTestUtils):
     def testCall1(self):
         string = "logger.info(\"test string\")\n"
-        self._verify_source(string, default_quote='\'')
+        self._verify_source(string)
 
     def testEpmty(self):
         string = ""
-        self._verify_source(string, default_quote='\'')
+        self._verify_source(string)
 
     def testCall2(self):
         string = 'logger.info(\'test string\')\n'
-        self._verify_source(string,default_quote='\"')
+        self._verify_source(string)
 
     def testImport(self):
         string = 'import a\nimport b\n'
-        self._verify_source(string, default_quote='\"', get_module=True)
+        self._verify_source(string, get_module=True)
 
     def testImportWithComment(self):
         string = 'import a # comment 1\nimport b #comment 2\n'
-        self._verify_source(string, default_quote='\"', get_module=True)
+        self._verify_source(string, get_module=True)
 
     def testImportWithComment2(self):
         string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n'
-        self._verify_source(string, default_quote='\"', get_module=True)
+        self._verify_source(string, get_module=True)
 
     @pytest.mark.skip('Not implemented yet')
     def testImportWithComment3(self):
         string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n# comment end'
         self._verify_source(string, default_quote='\"', get_module=True)
 
-    @pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
+    #@pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
     def testCall3(self):
         string = 'logger.info(\'test string\')\n'
-        self._verify_source(string,default_quote='\'')
+        self._verify_source(string)
 
     def testForAndIf(self):
         string = """for i in range(1, 15):\n print('fun with ast')\n pass"""
-        self._verify_source(string, default_quote='\'', get_module=True)
+        self._verify_source(string, get_module=True)
 
     def testIf(self):
         string = 'if True:\n   a=1'
@@ -85,7 +85,7 @@ class GetSourceTest(BaseTestUtils):
 
     def testConstant(self):
         string = "\"fun_with_east\"\n"
-        self._verify_source(string, default_quote='\"')
+        self._verify_source(string)
 
     @pytest.mark.xfail()
     def testIAssign2(self):
@@ -108,13 +108,13 @@ class GetSourceTest(BaseTestUtils):
         if_modified_string = if_modified_string.replace('  a=1', string2)
         self.assertEqual(if_modified_string, if_source)
 
-    def _verify_source(self, string, default_quote, get_module=False):
+    def _verify_source(self, string, get_module=False):
         node = GetNodeFromInput(string, 0, get_module=get_module)
         source = GetSource(node, string)
         self.assertEqual(string, source)
         node = GetNodeFromInput(string,0,get_module)
         if not get_module:
             source = GetSource(node, assume_no_indent=True)
-            if default_quote == '\"':
-                string = string.replace("\'", '\"')
+            #if default_quote == '\"':
+            #    string = string.replace("\'", '\"')
             self.assertEqual(string, source)

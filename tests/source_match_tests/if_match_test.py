@@ -3,7 +3,7 @@ import unittest
 import pytest
 
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.manipulate_node.create_node import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 
 from fun_with_ast.manipulate_node import create_node
@@ -16,10 +16,6 @@ class IfMatcherTest(BaseTestUtils):
         node = create_node.If(conditional=True, body=[create_node.Pass()], orelse=[create_node.Pass()])
         string = 'if       True:   \n   pass    \nelse:\n   pass \n'
         self._assert_match_to_source(node, string, match_get_source=False)
-        # matcher = GetDynamicMatcher(node)
-        # matcher.do_match(string)
-        # matcher_source = matcher.GetSource()
-        # self.assertEqual(string, matcher_source)
 
     def testSimpleIfElse2(self):
         node = create_node.If(conditional=create_node.Compare(create_node.Name('a'), '==', create_node.Num('2')),
@@ -41,10 +37,7 @@ class IfMatcherTest(BaseTestUtils):
     def testSimpleIf(self):
         node = create_node.If(conditional=True, body=[create_node.Pass()])
         string = 'if       True:\n pass         '
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        self._assert_match_to_source(node, string, match_get_source=False)
 
     def testBasicIf(self):
         node = create_node.If(

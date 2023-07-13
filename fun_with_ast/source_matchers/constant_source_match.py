@@ -12,23 +12,22 @@ class ConstantSourceMatcher(SourceMatcher):
         SourceMatcher.__init__(self, node)
         if not isinstance(node, ast.Constant):
             raise ValueError
-#        self.node = node
         self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
                                                        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
 
-        #        self.num_matcher = NumSourceMatcher(node, starting_parens)
         self.bool_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
                                                        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
-            #BoolSourceMatcher(node, starting_parens)
         self.parent_node = parent_node
         if isinstance(self.parent_node, ast.JoinedStr):
             self.accept_multiparts_string = False
         else:
             self.accept_multiparts_string = True
-        self.str_matcher = StrSourceMatcher(node, starting_parens, self.accept_multiparts_string)
-
+        if isinstance(node.s, str):
+            self.str_matcher = StrSourceMatcher(node, starting_parens, self.accept_multiparts_string)
+        else:
+            self.str_matcher = None
 
     def _match(self, string):
         if isinstance(self.node.n, bool):

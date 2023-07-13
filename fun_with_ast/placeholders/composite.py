@@ -22,11 +22,9 @@ class CompositePlaceholder(Placeholder):
 
     def _set_parents(self, elements, node):
         if isinstance(node, ast.Constant) and not isinstance(node.s, int) and not hasattr(node, 'default_quote'):
-            raise NotImplementedError
+            raise ValueError('Constant nodes must of type string must have a default_quote attribute')
         for element in elements:
             element.parent = node
-            #if isinstance(node, ast.Constant) :
-            #    element.default_quote = node.default_quote
         return elements
 
     def GetSource(self, node):

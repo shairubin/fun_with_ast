@@ -26,13 +26,13 @@ class AssignMatcherTest(BaseTestUtils):
         string = "a='1'"
         self._assert_matched_source(node, string)
 
-    def testBasicMatchAssignStringWithDoubeQuote(self):
+    def testBasicNoMatchAssignStringWithDoubleQuote(self):
         node = create_node.Assign('a', create_node.Constant('1', "'"))
         string = "a=\"1\""
         with pytest.raises(BadlySpecifiedTemplateError):
             self._assert_matched_source(node, string)
 
-    def testBasicNoMatchAssignStringWithDoubeQuote(self):
+    def testBasicMatchAssignStringWithDoubleQuote2(self):
         node = create_node.Assign('a', create_node.Constant('1', "\""))
         string = "a=\"1\""
         self._assert_matched_source(node, string)

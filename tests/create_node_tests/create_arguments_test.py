@@ -16,14 +16,14 @@ class CreateArgumentsTest(CreateNodeTestBase):
     def testArgs(self):
         expected_string = """def testFunc(a, b):
   pass"""
-        expected_node = fun_with_ast.manipulate_node.get_node_from_input.GetNodeFromInput(expected_string).args
+        expected_node = GetNodeFromInput(expected_string).args
         test_node = create_node.arguments(args=['a', 'b'])
         self.assertNodesEqual(expected_node, test_node)
 
     def testStringKwargs(self):
         expected_string = """def testFunc(a='b', c='d'):
   pass"""
-        expected_node = fun_with_ast.manipulate_node.get_node_from_input.GetNodeFromInput(expected_string).args
+        expected_node = GetNodeFromInput(expected_string).args
         test_node = create_node.arguments(
             args=['a', 'c'],
             defaults=[create_node.Str('b'), create_node.Str('d')])

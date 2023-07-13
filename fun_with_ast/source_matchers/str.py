@@ -5,7 +5,7 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.placeholders.string_part import StringPartPlaceholder
-from fun_with_ast.common_utils.utils_source_match import _GetListDefault, GetDefaultQuoteType
+from fun_with_ast.common_utils.utils_source_match import _GetListDefault
 from fun_with_ast.placeholders.text import TextPlaceholder
 
 
@@ -91,6 +91,7 @@ class StrSourceMatcher(SourceMatcher):
 
         if self.original_s is None:
             if not self.quote_type:
+                raise ValueError('quote_type must be set')
                 self.quote_type = self.original_quote_type or GetDefaultQuoteType()
             return self.quote_type + self.node.s + self.quote_type
 

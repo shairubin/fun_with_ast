@@ -92,7 +92,7 @@ class StrSourceMatcher(SourceMatcher):
         if self.original_s is None:
             if not self.quote_type:
                 raise ValueError('quote_type must be set')
-                self.quote_type = self.original_quote_type or GetDefaultQuoteType()
+                #self.quote_type = self.original_quote_type or GetDefaultQuoteType()
             return self.quote_type + self.node.s + self.quote_type
 
         if self.quote_type:

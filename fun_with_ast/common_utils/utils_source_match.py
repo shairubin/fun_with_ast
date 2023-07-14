@@ -1,8 +1,6 @@
 
 
 
-def GetDefaultQuoteType():
-    return '"'
 
 def _GetListDefault(l, index, default):
     if index < len(l):

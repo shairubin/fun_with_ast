@@ -5,7 +5,7 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from fun_with_ast.placeholders.string_part import StringPartPlaceholder
-from fun_with_ast.common_utils.utils_source_match import _GetListDefault, GetDefaultQuoteType
+from fun_with_ast.common_utils.utils_source_match import _GetListDefault
 from fun_with_ast.placeholders.text import TextPlaceholder
 
 
@@ -18,7 +18,11 @@ class StrSourceMatcher(SourceMatcher):
         self.quote_parts = []
         self.separators = []
         # If set, will apply to all parts of the string.
-        self.quote_type = None
+
+        if  hasattr(node, 'default_quote'):
+            self.quote_type = node.default_quote
+        else:
+            raise ValueError('node must have a default_quote attribute')
         self.original_quote_type = None
         self.original_s = None
         self.accept_multiparts_string=accept_multiparts_string
@@ -37,8 +41,6 @@ class StrSourceMatcher(SourceMatcher):
         remaining_string = self._handle_multipart(remaining_string)
 
         self.MatchEndParen(remaining_string)
-        #if len(self.quote_parts) != 1 :
-        #    raise NotImplementedError('Multi-part strings not yet supported')
         self.original_quote_type = (
             self.quote_parts[0].quote_match_placeholder.matched_text)
         parsed_string = self._match_parsed_string()
@@ -89,7 +91,8 @@ class StrSourceMatcher(SourceMatcher):
 
         if self.original_s is None:
             if not self.quote_type:
-                self.quote_type = self.original_quote_type or GetDefaultQuoteType()
+                raise ValueError('quote_type must be set')
+                #self.quote_type = self.original_quote_type or GetDefaultQuoteType()
             return self.quote_type + self.node.s + self.quote_type
 
         if self.quote_type:

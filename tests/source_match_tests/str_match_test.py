@@ -12,80 +12,70 @@ class ConstantStrMatcherTest(BaseTestUtils):
 
 
     def testBasicMatchStr(self):
-        node = create_node.Str('1')
+        node = create_node.Constant('1', "'")
         string = "'1'"
         self._verify_match(node, string)
 
 
     def testBasicMatchStrDoubelQ(self):
-        node = create_node.Str("1")
+        node = create_node.Constant("1", "\"")
         string = "\"1\""
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
+
 
     def testBasicMatchEmpty(self):
-        node = create_node.Str('')
+        node = create_node.Constant('', "'")
         string = "''"
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
 
-    def testBasicMatchEmpty2(self):
-        node = create_node.Str('')
+    def testBasicMatchEmptyDoubleQ(self):
+        node = create_node.Constant('', "\"")
         string = "\"\""
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
 
-    def testBasicMatchEmpty3(self):
-        node = create_node.Str('')
-        string = "\"\"''"
-        self._verify_match(node, string)
 
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
+
+
+
 
     def testBasicMatchMultiPart(self):
-        node = create_node.Str("'1''2'")
+        node = create_node.Constant("'1''2'", "\"")
         string = "\"'1''2'\""
         self._verify_match(node, string)
 
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
+    def testBasicNoMatchMultiPart(self):
+        node = create_node.Constant("'1''2'", "\"")
+        string = "\"'1''3'\""
+        with pytest.raises(BadlySpecifiedTemplateError) as e:
+            self._verify_match(node, string)
+
+
 
     def testBasicMatchMultiPart2(self):
-        node = create_node.Str('1''2')
+        node = create_node.Constant('1''2', "'")
         string = '\'1\'\'2\''
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
 
     def testNoMatchMultiPart(self):
-        node = create_node.Str("\"'1''2'\"")
+        node = create_node.Constant("\"'1''2'\"", "\"")
         string = "\"'1''3'\""
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError) as e:
-            match_result = matcher.do_match(string)
-        #assert match_result != string
+            matcher.do_match(string)
 
 
     def testBasicMatchConcatinatedString(self):
-        node = create_node.Str('1''2')
+        node = create_node.Constant('1''2', "'")
         string = "'12'"
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
 
     def testBasicMatchStrWithWS(self):
-        node = create_node.Str('  1  ')
+        node = create_node.Constant('  1  ', "'")
         string = "'  1  '"
         self._verify_match(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # self._validate_match(matcher, string)
 
     def testBasicNoMatchStr(self):
-        node = create_node.Str('1')
+        node = create_node.Constant('1', "'")
         string = "'2'"
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):

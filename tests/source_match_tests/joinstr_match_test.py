@@ -10,34 +10,40 @@ from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 class JoinStrMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):
-        node = create_node.JoinedStr([create_node.Str('X')])
+        node = create_node.JoinedStr([create_node.Constant('X', "'")])
         string = "f'X'"
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicNoMatch(self):
-        node = create_node.JoinedStr([create_node.Str('X')])
+        node = create_node.JoinedStr([create_node.Constant('X', "'")])
         string = "f'X '"
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
+    def testBasicNoMatch2(self):
+        node = create_node.JoinedStr([create_node.Constant('X', "\"")])
+        string = "f\"X \""
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            matcher.do_match(string)
 
-    def testBasicMatchDoubleQuote(self):
-        node = create_node.JoinedStr([create_node.Str("X")])
+    def testBasicMatchDoubleQuote2(self):
+        node = create_node.JoinedStr([create_node.Constant("X", "\"")])
         string = "f\"X\""
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
-    def testBasicnNMatchDoubleQuote(self):
-        node = create_node.JoinedStr([create_node.Str('fun_with-ast')])
+    def testBasicnNMatchDoubleQuote3(self):
+        node = create_node.JoinedStr([create_node.Constant('fun_with-ast', "\"")])
         string = "f\"fun-with-ast\""
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
 
     def testBasicnNoMatchEmpty(self):
-        node = create_node.JoinedStr([create_node.Str('')])
+        node = create_node.JoinedStr([create_node.Constant('', "\"")])
         string = "f\"\""
         matcher = GetDynamicMatcher(node)
         with pytest.raises(NotImplementedError):
@@ -65,20 +71,29 @@ class JoinStrMatcherTest(unittest.TestCase):
     def testMatchStringsAndFormatedValue(self):
         node = create_node.JoinedStr([
                                       create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('x')])
+                                      create_node.Constant('x', "'")])
         string = "f'{a}x'"
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
+    def testNoMatchStringsAndFormatedValueDQuote(self):
+        node = create_node.JoinedStr([
+                                      create_node.FormattedValue(create_node.Name('a')),
+                                      create_node.Constant('x', "\"")])
+        string = "f'{a}x'"
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._assert_match(matcher, string)
+
     def testMatchStringsAndFormatedValue2(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a'))])
         string = "f'y{a}'"
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
     def testMatchStringsAndFormatedValue3(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.FormattedValue(create_node.Name('b'))])
         string = "f'y{a}{b}'"
@@ -86,7 +101,7 @@ class JoinStrMatcherTest(unittest.TestCase):
         self._assert_match(matcher, string)
 
     def testNoMatchStringsAndFormatedValue(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.FormattedValue(create_node.Name('b'))])
         string = "f'y{a}{c}'"
@@ -96,47 +111,57 @@ class JoinStrMatcherTest(unittest.TestCase):
             matcher.do_match(string)
 
     def testMatchStringsAndFormatedValue4(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y',"'"),
                                       create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('x'),
+                                      create_node.Constant('x', "'"),
                                       create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Str('z')])
+                                      create_node.Constant('z', "'")])
         string = "f'y{a}x{b}z'"
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
-    def testMatchStringsAndFormatedValue5(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+    def testMatchStringsAndFormatedValue8(self):
+        node = create_node.JoinedStr([create_node.Constant('y', "\""),
                                       create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('x'),
+                                      create_node.Constant('x', "\""),
                                       create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Str('z')])
+                                      create_node.Constant('z', "\"")])
         string = "f\"y{a}x{b}z\""
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
+    def testNoMatchStringsAndFormatedValue8(self):
+        node = create_node.JoinedStr([create_node.Constant('y', "\""),
+                                      create_node.FormattedValue(create_node.Name('a')),
+                                      create_node.Constant('x', "'"),
+                                      create_node.FormattedValue(create_node.Name('b')),
+                                      create_node.Constant('z', "\"")])
+        string = "f\"y{a}x{b}z\""
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._assert_match(matcher, string)
 
     def testMatchStringsAndFormatedValue5(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y', "\""),
                                       create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('\''),
+                                      create_node.Constant('\'', "\""),
                                       create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Str('z')])
+                                      create_node.Constant('z', "\"")])
         string = "f\"y{a}'{b}z\""
         matcher = GetDynamicMatcher(node)
         self._assert_match(matcher, string)
 
-
     def testNoMatchStringsAndFormatedValue5(self):
-        node = create_node.JoinedStr([create_node.Str('y'),
+        node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Str('\''),
+                                      create_node.Constant('\'', "\""),
                                       create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Str('z')])
-        string = "f\"y{a}'{b}z \""
+                                      create_node.Constant('z', "\"")])
+        string = "f\"y{a}'{b}z\""
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.do_match(string)
+            self._assert_match(matcher, string)
+
 
 
     def _assert_match(self, matcher, string):

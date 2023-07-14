@@ -1,4 +1,5 @@
 import _ast
+import ast
 
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_placeholder import Placeholder
@@ -20,6 +21,8 @@ class CompositePlaceholder(Placeholder):
         return parser.GetMatchedText()
 
     def _set_parents(self, elements, node):
+        if isinstance(node, ast.Constant) and not isinstance(node.s, int) and not hasattr(node, 'default_quote'):
+            raise ValueError('Constant nodes must of type string must have a default_quote attribute')
         for element in elements:
             element.parent = node
         return elements

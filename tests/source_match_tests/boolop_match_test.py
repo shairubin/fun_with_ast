@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 
 from fun_with_ast.manipulate_node import create_node as create_node
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
@@ -117,6 +118,12 @@ class BoolOpMatcherTest(BaseTestUtils):
             'and',
             create_node.BoolOp(create_node.Name('b'), 'or', create_node.Name('c')))
         string = '(a and ((b) or c))'
+        self._assert_match(node, string)
+
+    @pytest.mark.skip(reason="issue #6")
+    def testOrFromSource(self):
+        string = "a or b"
+        node = GetNodeFromInput(string)
         self._assert_match(node, string)
 
     def _assert_no_match(self, node, string):

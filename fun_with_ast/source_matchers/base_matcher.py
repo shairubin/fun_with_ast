@@ -69,19 +69,21 @@ class SourceMatcher(object):
 
 
     # nice example for creating unit test
-    def MatchCommentEOL(self, string, remove_comment=False):
+    def MatchCommentEOL(self, string):
         if string is None:
             return ''
+
         remaining_string = string
         comment = ''
 
-        full_line  = re.match(r'(\s*)(#.*)', string)
+        full_line  = re.match(r'([ \t]*)(#.*)', string)
         if full_line:
             comment = full_line.group(2)
         if comment:
             self.end_of_line_comment = comment
-        if remove_comment and full_line:
-            remaining_string = full_line.group(1)
+        #if remove_comment and full_line:
+        #    raise NotImplementedError('remove_comment is not implemented')
+        #    remaining_string = full_line.group(1)
         return comment
 
 

@@ -152,8 +152,13 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('this is issue #17')
     def testBodyFromString8(self):
         string = 'def test_fun():\n  return isPerfectSquare(5 * n * n + 4) or isPerfectSquare(5 * n * n - 4)\n#\ndef test_fun2():\n  return d or c'
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testBodyFromString9(self):
+        string = 'def test_fun():\n  (b)\n#\ndef test_fun2():\n  pass'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

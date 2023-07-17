@@ -143,7 +143,7 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
     def testBodyFromString5(self):
-        string = 'def test_fun():\n  return a or b\n\n\n#\#       \ndef test_fun2():\n  return d or c'
+        string = 'def test_fun():\n  return a or b\n\n\n##       \ndef test_fun2():\n  return d or c'
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 

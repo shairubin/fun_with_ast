@@ -1,6 +1,8 @@
 import unittest
 
 import pytest
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.manipulate_node import create_node
@@ -87,6 +89,10 @@ class NameMatcherTest(BaseTestUtils):
         string = 'a # comment'
         self._verify_match(node, string)
 
+    def testNamesInModule(self):
+        string = '(b)\n#\nn(a)\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')

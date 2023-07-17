@@ -120,12 +120,23 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = '(a and ((b) or c))'
         self._assert_match(node, string)
 
-    @pytest.mark.skip(reason="issue #6")
+    @pytest.mark.skip('boolop without EOL is not supported' )
     def testOrFromSource(self):
         string = "a or b"
         node = GetNodeFromInput(string)
         self._assert_match(node, string)
 
+    def testOrFromSource2(self):
+        string = "a(c) or b(d)\n"
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testOrFromSource3(self):
+        string = "isPerfectSquare(5 * n * n + 4) or isPerfectSquare(5 * n * n - 4)\n"
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+#    isPerfectSquare(5 * n * n + 4) or isPerfectSquare(5 * n * n - 4)
     def _assert_no_match(self, node, string):
         matcher = GetDynamicMatcher(node)
         with pytest.raises((BadlySpecifiedTemplateError, EmptyStackException)):

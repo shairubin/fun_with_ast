@@ -9,7 +9,7 @@ on: push
 #    branches: [ "main" ]
 
 jobs:
-  lint-and-unit-test:
+  build-and-publish-to-testpypi:
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -50,27 +50,11 @@ jobs:
       - name: Run tests
         run: |
           pytest ./tests
-      #----------------------------------------------
-      #              build using poetry
-      #----------------------------------------------
       - name: Build New Version
         run: |
           poetry build
-#echo "start build new version-patch"
-#echo "add shh key"
-#ssh-add --apple-use-keychain ~/.ssh/id_ed25519
-#echo "patch a version"
-#poetry version patch
-#echo "adding commit message"
-#git add pyproject.toml
-#git commit -m 'new patch version update'
-#echo "push to git. Enter user name and your access token"
-#git push origin main
-#if [ $? -eq 0 ]
-#then
-#  echo "Successfully push"
-#else
-#  echo "Could not git push" >&2
-#  exit 1
-#fi
-#
+      - name: publish to test pypi
+        run: |
+          poetry config repositories.testpypi https://test.pypi.org/legacy/  
+          poetry config pypi-token.testpypi ${{ secrets.TEST_PYPI_API_KEY }
+          poetry publish --build -r testpypi

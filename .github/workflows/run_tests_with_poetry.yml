@@ -47,7 +47,7 @@ jobs:
       - name: Install project
         run: |
           poetry install --no-interaction
-
+          poetry --version
       #----------------------------------------------
       #             run linter using flake8
       #----------------------------------------------

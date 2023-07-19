@@ -1,12 +1,8 @@
 name: run-tests-with-poetry
 # source: https://github.com/marketplace/actions/install-poetry-action
 
-on: push
-#on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+on: workflow_dispatch
+
 
 jobs:
   build-and-publish-to-testpypi:

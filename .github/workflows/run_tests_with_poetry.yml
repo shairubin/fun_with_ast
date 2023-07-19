@@ -62,5 +62,5 @@ jobs:
       #----------------------------------------------
       - name: Run tests
         run: |
-          which pytest
+          echo "shai rubin"
 

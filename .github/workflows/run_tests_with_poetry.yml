@@ -48,6 +48,7 @@ jobs:
         run: |
           poetry install --no-interaction
           poetry --version
+          pytest --version
       #----------------------------------------------
       #             run linter using flake8
       #----------------------------------------------
@@ -64,5 +65,5 @@ jobs:
       #----------------------------------------------
       - name: Run tests
         run: |
-          echo "shai rubin"
+          pytest ./tests
 

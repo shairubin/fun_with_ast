@@ -1,0 +1,76 @@
+name: run-tests-with-poetry
+# source: https://github.com/marketplace/actions/install-poetry-action
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-and-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+          virtualenvs-in-project: false
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+#        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install project
+        run: |
+          poetry install --no-interaction
+          poetry --version
+          pytest --version
+      #----------------------------------------------
+      #              run test suite
+      #----------------------------------------------
+      - name: Run tests
+        run: |
+          pytest ./tests
+      #----------------------------------------------
+      #              build using poetry
+      #----------------------------------------------
+      - name: Build New Version
+        run: |
+          poetry build
+#echo "start build new version-patch"
+#echo "add shh key"
+#ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+#echo "patch a version"
+#poetry version patch
+#echo "adding commit message"
+#git add pyproject.toml
+#git commit -m 'new patch version update'
+#echo "push to git. Enter user name and your access token"
+#git push origin main
+#if [ $? -eq 0 ]
+#then
+#  echo "Successfully push"
+#else
+#  echo "Could not git push" >&2
+#  exit 1
+#fi
+#

@@ -1,4 +1,4 @@
-name: run-tests-with-poetry
+name: build-and-publish-to-testpypi
 # source: https://github.com/marketplace/actions/install-poetry-action
 
 on: workflow_dispatch

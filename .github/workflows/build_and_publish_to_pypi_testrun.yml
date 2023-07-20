@@ -57,10 +57,15 @@ jobs:
       - name: Bump-Version
         run: |
           poetry version patch
-      - name: Commit Version Bump
+      #----------------------------------------------
+      #              commit and push to a new branch
+      #----------------------------------------------
+      - name: Commit and Push Version Bump
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Bump version
+          create_branch: true
+          branch: version-bump-1
       #----------------------------------------------
       #              build new version
       #----------------------------------------------

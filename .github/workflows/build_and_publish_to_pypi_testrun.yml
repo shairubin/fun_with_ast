@@ -8,8 +8,6 @@ jobs:
   build-and-publish-to-testpypi:
     runs-on: ubuntu-latest
     permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the
-      # added or changed files to the repository.
       contents: write
 
     steps:
@@ -59,6 +57,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           branch-suffix: random
+          token: ${{ secrets.GITHUB_TOKEN }}
       #----------------------------------------------
       #              bump version
       #----------------------------------------------

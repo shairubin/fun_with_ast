@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       #----------------------------------------------
@@ -57,7 +58,6 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           branch-suffix: random
-          token: ${{ secrets.GITHUB_TOKEN }}
       #----------------------------------------------
       #              bump version
       #----------------------------------------------

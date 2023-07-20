@@ -51,6 +51,13 @@ jobs:
         run: |
           pytest ./tests
       #----------------------------------------------
+      #              bump version
+      #----------------------------------------------
+      - name: Bump-Version
+        run: |
+          poetry version patch
+
+      #----------------------------------------------
       #              create pull request
       #----------------------------------------------
       - name: Create Pull Request
@@ -58,12 +65,6 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           branch-suffix: random
-#      #----------------------------------------------
-#      #              bump version
-#      #----------------------------------------------
-#      - name: Bump-Version
-#        run: |
-#          poetry version patch
 #      #----------------------------------------------
 #      #              commit and push to a new branch
 #      #----------------------------------------------

@@ -4,31 +4,50 @@ import pytest
 
 from fun_with_ast.manipulate_node import create_node as create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
 class CallMatcherTest(BaseTestUtils):
 
+    # def testBasicMatch(self):
+    #     node = create_node.Call('a')
+    #     string = 'a()'
+    #     self._verify_match(node, string)
     def testBasicMatch(self):
-        node = create_node.Call('a')
+        node = create_node.Call310('a')
         string = 'a()'
         self._verify_match(node, string)
+    # def testBasicMatchWarp(self):
+    #     node = create_node.Call('a')
+    #     string = '(a())'
+    #     self._verify_match(node, string)
     def testBasicMatchWarp(self):
-        node = create_node.Call('a')
+        node = create_node.Call310('a')
         string = '(a())'
         self._verify_match(node, string)
+    # def testBasicMatchWS(self):
+    #     node = create_node.Call('a')
+    #     string = ' a()'
+    #     self._verify_match(node, string)
     def testBasicMatchWS(self):
-        node = create_node.Call('a')
+        node = create_node.Call310('a')
         string = ' a()'
         self._verify_match(node, string)
 
+    # def testBasicMatchWS2(self):
+    #     node = create_node.Call('a.b')
+    #     string = ' a.b()'
+    #     self._verify_match(node, string)
     def testBasicMatchWS2(self):
-        node = create_node.Call('a.b')
+        node = create_node.Call310('a.b')
         string = ' a.b()'
         self._verify_match(node, string)
+    # def testMatchStarargs(self):
+    #     node = create_node.Call('a', starargs='args')
+    #     string = 'a(*args)'
+    #     self._verify_match(node, string)
     def testMatchStarargs(self):
-        node = create_node.Call('a', starargs='args')
+        node = create_node.Call310('a', args=[create_node.Stared('args')])
         string = 'a(*args)'
         self._verify_match(node, string)
 
@@ -44,6 +63,16 @@ class CallMatcherTest(BaseTestUtils):
     def testMatchWithStarargsBeforeKeyword3(self):
         node = create_node.Call('a', keywords=[create_node.keyword('b', 'c'), create_node.keyword('e', 'f')], starargs='started')
         string = 'a(   *started, b=c, e = f )'
+        self._verify_match(node, string)
+
+    # def testMatchWithStarargsBeforeKeyword4(self):
+    #     node = create_node.Call('a', keywords=[create_node.keyword('b','c')])
+    #     string = 'a(b=c)'
+    #     self._verify_match(node, string)
+
+    def testMatchKeywordOnly(self):
+        node = create_node.Call('a', keywords=[create_node.keyword('b','c')])
+        string = 'a(b=c)'
         self._verify_match(node, string)
 
     def testCallWithAttribute(self):
@@ -129,9 +158,13 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('reproduce issue portfolio.py issue')
     def testCallWithMultiLinesSimple4(self):
         string = "a.b(d=[])\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithMultiLinesSimple5(self):
+        string = "a(d=c)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 from fun_with_ast.manipulate_node import create_node as create_node
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -100,6 +101,41 @@ class CallMatcherTest(BaseTestUtils):
         node = create_node.Call('a.b', args=[create_node.Num('1')])
         string = '(a.b(1))'
         self._verify_match(node, string)
+
+    @pytest.mark.skip('reproduce issue portfolio.py issue')
+    def testCallWithMultiLines(self):
+        string = "fileparse.parse_csv(lines,\n \
+                                     select=['name', 'shares', 'price'],\n \
+                                     types=[str, int, float],\n \
+                                    **opts)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallWithMultiLinesSimple(self):
+        string = "fileparse.parse_csv(lines,\n \
+                                      a)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithMultiLinesSimple2(self):
+        string = "fileparse.parse_csv(lines)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    @pytest.mark.skip('reproduce issue portfolio.py issue')
+    def testCallWithMultiLinesSimple3(self):
+        string = "a.b(c,\n \
+                       d=[e])\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('reproduce issue portfolio.py issue')
+    def testCallWithMultiLinesSimple4(self):
+        string = "a.b(d=[])\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
 
     def testCallWithAttributeAndParamWS(self):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])

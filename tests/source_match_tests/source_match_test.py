@@ -512,7 +512,7 @@ class ClassDefMatcherTest(unittest.TestCase):
         node = create_node.ClassDef(
             'TestClass',
             decorator_list=[create_node.Name('dec'),
-                            create_node.Call('dec2')], body=[create_node.Pass()])
+                            create_node.Call310('dec2')], body=[create_node.Pass()])
         string = '@dec\n@dec2()\nclass TestClass():\n  pass\n'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
@@ -524,7 +524,7 @@ class ClassDefMatcherTest(unittest.TestCase):
             bases=['Base1', 'Base2'],
             body=[create_node.Expr(create_node.Name('a'))],
             decorator_list=[create_node.Name('dec'),
-                            create_node.Call('dec2')])
+                            create_node.Call310('dec2')])
         string = '@dec\n@dec2()\nclass TestClass(Base1, Base2):\n  a\n'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)

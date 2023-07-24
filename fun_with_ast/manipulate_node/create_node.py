@@ -279,6 +279,8 @@ def BitXor():
 
 
 def keyword(arg, value):
+    #result = ast.keyword(None,value)
+    #return result
     return _ast.keyword(arg, value)
 
 def  Stared(value, ctx=CtxEnum.LOAD):
@@ -288,30 +290,12 @@ def  Stared(value, ctx=CtxEnum.LOAD):
 
 
 def Call310(caller, args=[], keywords=[]):
-    """Creates an _ast.Call node.
 
-  Args:
-    caller: Either a node of the appropriate type
-      (_ast.Str, _ast.Name, or _ast.Attribute), or a dot-separated string.
-    args: A list of args.
-    keys: A list of keys, must be the same length as values.
-    values: A list of values, correspond to keys.
-    starargs: A node with a star in front of it. Passing a string will be
-      interpreted as a VarReference.
-    kwargs: A node with two stars in front of it. Passing a string will be
-      interpreted as a VarReference.
-
-  Raises:
-    ValueError: If len(keys) != len(values) or caller is not the right type.
-
-  Returns:
-    An _ast.Call object.
-  """
     if not isinstance(args, list):
         raise ValueError('args must be a list')
 
     if not isinstance(keywords, list):
-        raise ValueError('kewords must be a list')
+        raise ValueError('keywords must be a list')
 
     if isinstance(caller, str):
         caller = VarReference(*caller.split('.'))
@@ -347,6 +331,7 @@ def Call(caller, args=[], keywords=[], starargs=None, kwargs={}):
   Returns:
     An _ast.Call object.
   """
+    raise NotImplementedError('Use Call310 instead')
     if not isinstance(args, list):
         raise ValueError('args must be a list')
 
@@ -364,7 +349,7 @@ def Call(caller, args=[], keywords=[], starargs=None, kwargs={}):
         starargs = VarReference(*starargs.split('.'))
     if isinstance(kwargs, str):
         kwargs = VarReference(*kwargs.split('.'))
-    result = _ast.Call(
+    result = _ast.Call310(
         func=caller,
         args=args,
         keywords=keywords,

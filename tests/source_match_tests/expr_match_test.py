@@ -16,14 +16,14 @@ class ExprMatcherTest(unittest.TestCase):
         self.assertEqual(source2, string2)
 
     def testBasicMatch2(self):
-        node = create_node.Call('a.b')
+        node = create_node.Call310('a.b')
         string = 'a.b()\n '
         expr_node = create_node.Expr(node)
         matcher = GetDynamicMatcher(expr_node)
         matcher.do_match(string)
 
     def testBasicMatchWS(self):
-        node = create_node.Call('a.b')
+        node = create_node.Call310('a.b')
         string = ' a.b()\n '
         expr_node = create_node.Expr(node)
         matcher = GetDynamicMatcher(expr_node)

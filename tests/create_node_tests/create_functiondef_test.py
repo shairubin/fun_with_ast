@@ -75,6 +75,6 @@ def testFunc(**kwargs):
             'testFunc', create_node.arguments(kwarg='kwargs'), body=[create_node.Pass()],
             decorator_list=[
                 create_node.Name('decorator'),
-                create_node.Call('other_decorator', ['arg'])
+                create_node.Call310('other_decorator', ['arg'])
             ])
         self.assertNodesEqual(expected_node, test_node)

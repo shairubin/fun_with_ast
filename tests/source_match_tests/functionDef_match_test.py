@@ -95,7 +95,7 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = create_node.FunctionDef(
             'test_fun',
             decorator_list=[create_node.Name('dec'),
-                            create_node.Call('call_dec')],
+                            create_node.Call310('call_dec')],
             body=[create_node.Pass()])
         string = '@dec\n@call_dec()\ndef test_fun():\n  pass\n'
         self._verify_match(node, string)
@@ -104,7 +104,7 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = create_node.FunctionDef(
             'test_fun',
             decorator_list=[create_node.Name('dec'),
-                            create_node.Call('call_dec')],
+                            create_node.Call310('call_dec')],
             body=[create_node.Pass()])
         string = '@dec\n#hello world\n@call_dec()\ndef test_fun():\n  pass\n'
         self._verify_match(node, string)

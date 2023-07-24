@@ -32,5 +32,5 @@ class CreateClassDefTest(CreateNodeTestBase):
         test_node = create_node.ClassDef(
             'TestClass', body=[create_node.Pass()],
             decorator_list=[create_node.Name('dec'),
-                            create_node.Call('dec2')])
+                            create_node.Call310('dec2')])
         self.assertNodesEqual(expected_node, test_node)

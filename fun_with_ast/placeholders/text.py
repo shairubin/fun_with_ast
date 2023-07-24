@@ -11,7 +11,6 @@ class TextPlaceholder(Placeholder):
     def __init__(self, regex, default=None, longest_match=False):
         super(TextPlaceholder, self).__init__()
         self.original_regex = regex
-#        self.regex = regex
         self.regex = self._TransformRegex(regex)
         self.longest_match = longest_match
         if default is None:
@@ -23,10 +22,8 @@ class TextPlaceholder(Placeholder):
     def _TransformRegex(self, regex):
         non_whitespace_parts = regex.split(r'\s*')
         regex = r'\s*(\\\s*|#.*\s*)*'.join(non_whitespace_parts)
-#        regex = r'\s*(\\\s*)*'.join(non_whitespace_parts)
         non_linebreak_parts = regex.split(r'\n')
         regex = r'( *#.*\n| *;| *\n)'.join(non_linebreak_parts)
-#        regex = r'( *;| *\n)'.join(non_linebreak_parts)
         return regex
 
     def _match(self, unused_node, string, dotall=False):

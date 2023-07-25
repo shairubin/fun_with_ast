@@ -86,7 +86,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         self.start_paren_matchers = []
         self.args_matcher = None
         self.use_default_matcher = True # TODO: remove this feature flag
-        self.use_after_matcher = True  # TODO: remove this feature flag
     def _match(self, node, string):
 
         if self.use_default_matcher == True:
@@ -122,16 +121,14 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _get_parts_for_default_matcher(self, arg_index, node):
         parts = []
-        if not self.use_after_matcher:
-            parts.append(SeparatedListFieldPlaceholder(r'args', TextPlaceholder(r'\s*,\s*', ', ')))
-        else:
-            parts.append(SeparatedListFieldPlaceholder(r'args',
-                                                        after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
-                                                        exclude_last_after=True))
+        parts.append(SeparatedListFieldPlaceholder(r'args',
+                                                    after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
+                                                    exclude_last_after=True))
         if node.keywords:
             if node.args:
                 parts.append(TextPlaceholder(r'\s*,\s*', ', '))
-            parts.append(SeparatedListFieldPlaceholder(r'keywords', TextPlaceholder(r'\s*,\s*', ', ')))
+            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
+                                                                    exclude_last_after=True  ))
         if getattr(node, 'starargs', False):
             ValueError('This should not happen in python 3.10; starred args are part of args')
             parts.append(self.stararg_separator)

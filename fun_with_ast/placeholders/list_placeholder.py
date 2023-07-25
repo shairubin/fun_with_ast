@@ -10,7 +10,8 @@ class ListFieldPlaceholder(CompositePlaceholder):
     def __init__(self, field_name,
                  before_placeholder=None, after_placeholder=None,
                  prefix_placeholder=None,
-                 exclude_first_before=False):
+                 exclude_first_before=False,
+                 exclude_last_after=False):
         """Initializes a field which is a list of child nodes.
 
         Args:
@@ -30,6 +31,7 @@ class ListFieldPlaceholder(CompositePlaceholder):
         self.before_placeholder = before_placeholder
         self.after_placeholder = after_placeholder
         self.exclude_first_before = exclude_first_before
+        self.exclude_last_after = exclude_last_after
         self.matched_before = []
         self.matched_after = []
 
@@ -47,7 +49,7 @@ class ListFieldPlaceholder(CompositePlaceholder):
         self.matched_after.append(new_placeholder)
         return new_placeholder
 
-    def GetValueAtIndex(self, values, index):
+    def GetValueAtIndex(self, values, index, is_last_node=False):
         """Gets the set of node in values at index, including before and after."""
         elements = []
         child_value = values[index]
@@ -58,7 +60,7 @@ class ListFieldPlaceholder(CompositePlaceholder):
             before_index = index - 1 if self.exclude_first_before else index
             elements.append(self._GetBeforePlaceholder(before_index))
         elements.append(NodePlaceholder(child_value))
-        if self.after_placeholder:
+        if self.after_placeholder and not (self.exclude_last_after and is_last_node):
             elements.append(self._GetAfterPlaceholder(index))
         return elements
 
@@ -68,7 +70,7 @@ class ListFieldPlaceholder(CompositePlaceholder):
         if self.prefix_placeholder and field_value:
             elements.append(self.prefix_placeholder)
         for i in range(len(field_value)):
-            elements.extend(self.GetValueAtIndex(field_value, i))
+            elements.extend(self.GetValueAtIndex(field_value, i, is_last_node= i == len(field_value) - 1))
         return elements
 
     def Validate(self, node):
@@ -86,8 +88,12 @@ class ListFieldPlaceholder(CompositePlaceholder):
 
 class SeparatedListFieldPlaceholder(ListFieldPlaceholder):
 
-    def __init__(self, field_name, before_separator_placeholder=[], after__separator_placeholder=[]):
+    def __init__(self, field_name, before_separator_placeholder=[],
+                 after__separator_placeholder=[],
+                 exclude_last_after=False):
         super(SeparatedListFieldPlaceholder, self).__init__(
             field_name, before_placeholder=before_separator_placeholder,
             after_placeholder=after__separator_placeholder,
-            exclude_first_before=True)
+            exclude_first_before=True,
+            exclude_last_after=exclude_last_after)
+

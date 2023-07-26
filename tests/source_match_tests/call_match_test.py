@@ -144,7 +144,6 @@ class CallMatcherTest(BaseTestUtils):
         string = '(a.b(1))'
         self._verify_match(node, string)
 
-    @pytest.mark.skip('reproduce issue portfolio.py issue')
     def testCallWithMultiLines(self):
         string = "fileparse.parse_csv(lines,\n \
                                      select=['name', 'shares', 'price'],\n \
@@ -182,6 +181,47 @@ class CallMatcherTest(BaseTestUtils):
         string = "a(**args)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testCallMatchWithKwargs2(self):
+        string = "a(**args, **args2)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallMatchWithKwargs3(self):
+        string = "a(*stared, **args2)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    @pytest.mark.skip('not implemented yet')
+    def testCallMatchWithKwargs4(self):
+        string = "a(b=c, *d)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallMatchWithKwargs4_5(self):
+        string = "a(b=c, *d, e)\n"
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+
+    @pytest.mark.skip('not implemented yet')
+    def testCallMatchWithKwargs4_5(self):
+        string = "a(b=c, *d, e=f)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallMatchWithKwargs5(self):
+        string = "a(*d, b=c)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallMatchWithKwargs6(self):
+        string = "a(*d, *c)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallMatchWithKwargs7(self):
+        string = "a(c=d, e)\n"
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
 
 
 

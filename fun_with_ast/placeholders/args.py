@@ -114,6 +114,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
     def _use_default_matcher(self, node, string):
         arg_index = len(node.args)
         args_node = CallArgs(node.args, node.keywords)
+        node.keywords = args_node.keywords # not nice
         parts = self._get_parts_for_default_matcher(arg_index, node)
         self.args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
         matched_string = self.args_matcher._match(string)

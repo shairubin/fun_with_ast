@@ -414,6 +414,11 @@ def get_keyword_expected_parts():
         FieldPlaceholder('value'),
     ]
 
+def get_KWKeyword_expected_parts():
+    return [
+        FieldPlaceholder('value', before_placeholder=TextPlaceholder(r'\*\*', '**'))
+    ]
+
 
 def get_Lambda_expected_parts():
     return [

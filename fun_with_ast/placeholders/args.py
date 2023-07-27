@@ -86,7 +86,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         self.start_paren_matchers = []
         self.args_matcher = None
         self.use_default_matcher = True # TODO: remove this feature flag
-
     def _match(self, node, string):
 
         if self.use_default_matcher == True:
@@ -111,40 +110,11 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             return parts
         else:
             raise ValueError('old implementation not supported anymore')
-# We leave this code for reference only -- will be deleted in the near future
-    # def _original_GetElements(self, node):
-    #     """Gets the basic elements of this composite placeholder."""
-    #     args = node.args or []
-    #     keywords = node.keywords or []
-    #     elements = []
-    #     arg_index = 0
-    #     for index, arg in enumerate(args):
-    #         elements.append(NodePlaceholder(arg))
-    #         if index != len(args) - 1 or keywords:
-    #             elements.append(self._GetArgSeparator(arg_index))
-    #             arg_index += 1
-    #     if getattr(node, 'starargs', False):
-    #         elements.append(self.stararg_separator)
-    #         elements.append(NodePlaceholder(node.starargs))
-    #         if keywords:
-    #             arg_seperator = self._GetArgSeparator(arg_index)
-    #             elements.append(arg_seperator)
-    #             arg_index += 1
-    #     for index, arg in enumerate(keywords):
-    #         elements.append(NodePlaceholder(arg))
-    #         if index != len(keywords) - 1:
-    #             elements.append(self._GetArgSeparator(arg_index))
-    #             arg_index += 1
-    #     start_paren = TextPlaceholder(r'\(\s*', '(')
-    #     end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
-    #     elements.insert(0,start_paren)
-    #     elements.append(end_paren)
-    #
-    #     return elements
 
     def _use_default_matcher(self, node, string):
         arg_index = len(node.args)
-        args_node = CallArgs(node.args)
+        args_node = CallArgs(node.args, node.keywords)
+        node.keywords = args_node.keywords # not nice
         parts = self._get_parts_for_default_matcher(arg_index, node)
         self.args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
         matched_string = self.args_matcher._match(string)
@@ -152,9 +122,16 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _get_parts_for_default_matcher(self, arg_index, node):
         parts = []
-        parts.append(SeparatedListFieldPlaceholder(
-            r'args', TextPlaceholder(r'\s*,\s*', ', ')))
+        parts.append(SeparatedListFieldPlaceholder(r'args',
+                                                    after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
+                                                    exclude_last_after=True))
+        if node.keywords:
+            if node.args:
+                parts.append(TextPlaceholder(r'\s*,\s*', ', '))
+            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
+                                                                    exclude_last_after=True  ))
         if getattr(node, 'starargs', False):
+            ValueError('This should not happen in python 3.10; starred args are part of args')
             parts.append(self.stararg_separator)
             parts.append(NodePlaceholder(node.starargs))
             if node.keywords:

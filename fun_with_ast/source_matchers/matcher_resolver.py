@@ -111,6 +111,7 @@ _dynamic_matchers = {
     _ast.Tuple: ['get_Tuple_expected_parts', 'fun_with_ast.source_match'],
     _ast.JoinedStr: ['JoinedStrSourceMatcher', 'fun_with_ast.source_matchers.joined_str'],
     _ast.Try: ['get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
+    _ast.Starred: ['get_Starred_expected_parts', 'fun_with_ast.source_match'],
     _ast.FormattedValue: ['get_FormattedValue_expected_parts', 'fun_with_ast.source_match'],
     _ast.UAdd: ['get_UAdd_expected_parts', 'fun_with_ast.source_match'],
     _ast.UnaryOp: ['get_UnaryOp_expected_parts', 'fun_with_ast.source_match'],
@@ -123,5 +124,6 @@ _dynamic_matchers = {
                                                                         'fun_with_ast.source_matchers.syntaxfreeline'],
     fun_with_ast.manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
     fun_with_ast.manipulate_node.call_args_node.CallArgs: ['get_CallArgs_expected_parts', 'fun_with_ast.source_match'],
+    fun_with_ast.manipulate_node.call_args_node.KWKeyword: ['get_KWKeyword_expected_parts', 'fun_with_ast.source_match']
 
 }

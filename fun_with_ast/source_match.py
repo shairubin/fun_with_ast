@@ -100,6 +100,11 @@ def get_Assert_expected_parts():
             'msg', before_placeholder=TextPlaceholder(r', *', ', ')),
         TextPlaceholder(r' *\n', '\n'),
     ]
+def get_Starred_expected_parts():
+    return [
+        TextPlaceholder(r'\*', '*'),
+        FieldPlaceholder('value'),
+    ]
 
 def get_Assign_expected_parts():
     return [
@@ -407,6 +412,11 @@ def get_keyword_expected_parts():
         FieldPlaceholder('arg'),
         TextPlaceholder(r'\s*=\s*', '='),
         FieldPlaceholder('value'),
+    ]
+
+def get_KWKeyword_expected_parts():
+    return [
+        FieldPlaceholder('value', before_placeholder=TextPlaceholder(r'\*\*', '**'))
     ]
 
 

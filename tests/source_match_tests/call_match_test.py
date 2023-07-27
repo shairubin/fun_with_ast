@@ -10,43 +10,23 @@ from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 class CallMatcherTest(BaseTestUtils):
 
-    # def testBasicMatch(self):
-    #     node = create_node.Call310('a')
-    #     string = 'a()'
-    #     self._verify_match(node, string)
     def testBasicMatch(self):
         node = create_node.Call('a')
         string = 'a()'
         self._verify_match(node, string)
-    # def testBasicMatchWarp(self):
-    #     node = create_node.Call310('a')
-    #     string = '(a())'
-    #     self._verify_match(node, string)
     def testBasicMatchWarp(self):
         node = create_node.Call('a')
         string = '(a())'
         self._verify_match(node, string)
-    # def testBasicMatchWS(self):
-    #     node = create_node.Call310('a')
-    #     string = ' a()'
-    #     self._verify_match(node, string)
     def testBasicMatchWS(self):
         node = create_node.Call('a')
         string = ' a()'
         self._verify_match(node, string)
 
-    # def testBasicMatchWS2(self):
-    #     node = create_node.Call310('a.b')
-    #     string = ' a.b()'
-    #     self._verify_match(node, string)
     def testBasicMatchWS2(self):
         node = create_node.Call('a.b')
         string = ' a.b()'
         self._verify_match(node, string)
-    # def testMatchStarargs(self):
-    #     node = create_node.Call310('a', starargs='args')
-    #     string = 'a(*args)'
-    #     self._verify_match(node, string)
     def testMatchStarargs(self):
         node = create_node.Call('a', args=[create_node.Starred('args')])
         string = 'a(*args)'

@@ -38,4 +38,4 @@ class CallArgs(_ast.stmt):
         elif isinstance(kw_keyword.arg, str):
             return False
         else:
-            raise NotImplementedError('incorrect type for kw_keyword.arg')
+            raise ValueError('incorrect type for kw_keyword.arg')

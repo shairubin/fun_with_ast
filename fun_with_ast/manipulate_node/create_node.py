@@ -279,8 +279,6 @@ def BitXor():
 
 
 def keyword(arg, value):
-    #result = ast.keyword(None,value)
-    #return result
     return _ast.keyword(arg, value)
 
 def  Stared(value, ctx=CtxEnum.LOAD):
@@ -289,7 +287,7 @@ def  Stared(value, ctx=CtxEnum.LOAD):
     return _ast.Starred(value, ctx=ctx)
 
 
-def Call310(caller, args=[], keywords=[]):
+def Call(caller, args=[], keywords=[]):
 
     if not isinstance(args, list):
         raise ValueError('args must be a list')
@@ -299,63 +297,57 @@ def Call310(caller, args=[], keywords=[]):
 
     if isinstance(caller, str):
         caller = VarReference(*caller.split('.'))
-#    if not isinstance(kwargs, dict):
-#        raise ValueError('kwargs must be a ast.Dict')
     if not isinstance(caller, (_ast.Name, _ast.Attribute)):
         raise ValueError('caller must be a Name or an Attribute')
     args = [_WrapWithName(arg, ctx_type=CtxEnum.LOAD) for arg in args]
-    #if isinstance(starargs, str):
-    #    starargs = VarReference(*starargs.split('.'))
-    #if isinstance(kwargs, str):
-    #    kwargs = VarReference(*kwargs.split('.'))
     result = _ast.Call(func=caller,args=args,keywords=keywords)
     return result
 
-def Call(caller, args=[], keywords=[], starargs=None, kwargs={}):
-    """Creates an _ast.Call node.
-
-  Args:
-    caller: Either a node of the appropriate type
-      (_ast.Str, _ast.Name, or _ast.Attribute), or a dot-separated string.
-    args: A list of args.
-    keys: A list of keys, must be the same length as values.
-    values: A list of values, correspond to keys.
-    starargs: A node with a star in front of it. Passing a string will be
-      interpreted as a VarReference.
-    kwargs: A node with two stars in front of it. Passing a string will be
-      interpreted as a VarReference.
-
-  Raises:
-    ValueError: If len(keys) != len(values) or caller is not the right type.
-
-  Returns:
-    An _ast.Call object.
-  """
-    raise NotImplementedError('Use Call310 instead')
-    if not isinstance(args, list):
-        raise ValueError('args must be a list')
-
-        #  if len(keys) != len(values):
-    #    raise ValueError(
-    #        'len(keys)={} != len(values)={}'.format(len(keys), len(values)))
-    if isinstance(caller, str):
-        caller = VarReference(*caller.split('.'))
-    if not isinstance(kwargs, dict):
-        raise ValueError('kwargs must be a ast.Dict')
-    if not isinstance(caller, (_ast.Name, _ast.Attribute)):
-        raise ValueError('caller not the expected value')
-    args = [_WrapWithName(arg, ctx_type=CtxEnum.LOAD) for arg in args]
-    if isinstance(starargs, str):
-        starargs = VarReference(*starargs.split('.'))
-    if isinstance(kwargs, str):
-        kwargs = VarReference(*kwargs.split('.'))
-    result = _ast.Call310(
-        func=caller,
-        args=args,
-        keywords=keywords,
-        starargs=starargs,
-        kwargs=kwargs)
-    return result
+# def Call(caller, args=[], keywords=[], starargs=None, kwargs={}):
+#     """Creates an _ast.Call node.
+#   Will be deleted soon
+#   Args:
+#     caller: Either a node of the appropriate type
+#       (_ast.Str, _ast.Name, or _ast.Attribute), or a dot-separated string.
+#     args: A list of args.
+#     keys: A list of keys, must be the same length as values.
+#     values: A list of values, correspond to keys.
+#     starargs: A node with a star in front of it. Passing a string will be
+#       interpreted as a VarReference.
+#     kwargs: A node with two stars in front of it. Passing a string will be
+#       interpreted as a VarReference.
+#
+#   Raises:
+#     ValueError: If len(keys) != len(values) or caller is not the right type.
+#
+#   Returns:
+#     An _ast.Call object.
+#   """
+#     raise NotImplementedError('Use Call310 instead')
+#     if not isinstance(args, list):
+#         raise ValueError('args must be a list')
+#
+#         #  if len(keys) != len(values):
+#     #    raise ValueError(
+#     #        'len(keys)={} != len(values)={}'.format(len(keys), len(values)))
+#     if isinstance(caller, str):
+#         caller = VarReference(*caller.split('.'))
+#     if not isinstance(kwargs, dict):
+#         raise ValueError('kwargs must be a ast.Dict')
+#     if not isinstance(caller, (_ast.Name, _ast.Attribute)):
+#         raise ValueError('caller not the expected value')
+#     args = [_WrapWithName(arg, ctx_type=CtxEnum.LOAD) for arg in args]
+#     if isinstance(starargs, str):
+#         starargs = VarReference(*starargs.split('.'))
+#     if isinstance(kwargs, str):
+#         kwargs = VarReference(*kwargs.split('.'))
+#     result = _ast.Call310(
+#         func=caller,
+#         args=args,
+#         keywords=keywords,
+#         starargs=starargs,
+#         kwargs=kwargs)
+#     return result
 
 
 def ClassDef(name, bases=[], body=[], keywords=[], starargs=None, kwargs=None, decorator_list=[]):

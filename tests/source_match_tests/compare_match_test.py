@@ -11,7 +11,7 @@ class CompareMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Compare(
-            create_node.Call310('a.b', args=[create_node.Num('2')]),
+            create_node.Call('a.b', args=[create_node.Num('2')]),
             '>=',
             create_node.Num('1'))
         string = 'a.b(2) >= 1'
@@ -19,14 +19,14 @@ class CompareMatcherTest(BaseTestUtils):
 
     def testBasicMatch4(self):
         node = create_node.Compare(
-            create_node.Call310('a.b'),
+            create_node.Call('a.b'),
             '>=',
             create_node.Num('1'))
         string = '(a.b() >= 1)'
         self._verify_match(node, string)
     def testBasicMatch5(self):
         node = create_node.Compare(
-            create_node.Call310('a.b'),
+            create_node.Call('a.b'),
             '>=',
             create_node.Num('1'))
         string = 'a.b() >= 1'
@@ -34,7 +34,7 @@ class CompareMatcherTest(BaseTestUtils):
     @pytest.mark.skip('not implemented, see anso: testIfFromSource7')
     def testBasicMatch3(self):
         node = create_node.Compare(
-            create_node.Call310('a.b', args=[create_node.Num('2')]),
+            create_node.Call('a.b', args=[create_node.Num('2')]),
             '>=',
             create_node.Num('1'))
         string = '(a.b(2) >= 1)'

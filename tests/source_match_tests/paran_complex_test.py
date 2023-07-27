@@ -74,7 +74,7 @@ class ParenWrappedTest(unittest.TestCase):
 
 
     def testWithTuple(self):
-        node = create_node.Call310('c', args=[create_node.Name('d'),
+        node = create_node.Call('c', args=[create_node.Name('d'),
                                            create_node.Tuple(['a', 'b'])])
         string = ' c(d, (a, b))'
         matcher = GetDynamicMatcher(node)

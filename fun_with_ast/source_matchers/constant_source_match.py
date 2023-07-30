@@ -34,8 +34,11 @@ class ConstantSourceMatcher(SourceMatcher):
             return self.bool_matcher._match(string)
         if isinstance(self.node.n, int) and isinstance(self.node.s, int):
             return self.num_matcher._match(string)
+        if isinstance(self.node.n, float) and isinstance(self.node.s, float):
+            return self.num_matcher._match(string)
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher._match(string)
+        raise NotImplementedError
 
     def GetSource(self):
         self.validated_call_to_match()
@@ -44,6 +47,8 @@ class ConstantSourceMatcher(SourceMatcher):
         if isinstance(self.node.n, bool) and isinstance(self.node.s, int):
             return self.bool_matcher.GetSource()
         if isinstance(self.node.n, int) and isinstance(self.node.s, int):
+            return self.num_matcher.GetSource()
+        if isinstance(self.node.n, float) and isinstance(self.node.s, float):
             return self.num_matcher.GetSource()
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher.GetSource()

@@ -834,7 +834,19 @@ def Num(number):
     if not isinstance(number, str):
         raise ValueError(f'number must be a str to support bases')
     base = _extract_base(number)
-    result =  _ast.Constant(value=int(number, base))
+    if base != 10:
+        value = int(number, base)
+    elif number[0] == '+' or number[0]=='-':
+        value = int(number, base)
+    elif number.isdigit():
+        value = int(number, base)
+    else:
+        try:
+            value = float(number)
+        except ValueError:
+            raise ValueError(f'Invalid number type')
+    result =  _ast.Constant(value=value)
+
     result.default_quote = "'" # TODO this is not clean -- as this is not really necessary
     result.base = base
     return result

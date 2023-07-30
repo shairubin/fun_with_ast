@@ -34,6 +34,38 @@ class ConstantNumMatcherTest(BaseTestUtils):
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
+    def testBasicMatchNumSci(self):
+        node = create_node.Num('1e-06')
+        string = '1e-06'
+        matcher = GetDynamicMatcher(node)
+        matcher.do_match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+    @pytest.mark.skip('not implemented yet - 1 digit exponent')
+    def testBasicMatchNumSci4(self):
+        node = create_node.Num('1e-6')
+        string = '1e-6'
+        matcher = GetDynamicMatcher(node)
+        matcher.do_match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchNumSci2(self):
+        node = create_node.Num('0.2')
+        string = '0.2'
+        matcher = GetDynamicMatcher(node)
+        matcher.do_match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
+    def testBasicMatchNumSci3(self):
+        node = create_node.Num('123456789.98765433')
+        string = '123456789.98765433'
+        matcher = GetDynamicMatcher(node)
+        matcher.do_match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
     def testBasicMatchNumWithError(self):
         node = create_node.Num('1')
         string = '1:#Comment'

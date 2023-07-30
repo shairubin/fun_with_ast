@@ -203,6 +203,10 @@ class CallMatcherTest(BaseTestUtils):
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string)
 
+    def testCallDoubeAttribute(self):
+        string = "torch.nn.GroupNorm(num_groups=32, num_channels=in_channels, eps=1e-6, affine=True)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
 
     def testCallWithAttributeAndParamWS(self):

@@ -60,16 +60,20 @@ class FieldPlaceholder(CompositePlaceholder):
 
 
         if not field_value and field_value != 0:
-            return []
+            #return []
             if isinstance(node, _ast.Call) :
                 return []
             elif isinstance(node, _ast.arguments):
                 return []
-            elif isinstance(node, SyntaxFreeLine) and field_value =='':
+            elif isinstance(node, SyntaxFreeLine) and field_value == '':
                 return []
+            elif isinstance(node, (ast.withitem,   ast.alias, ast.Slice, ast.excepthandler, ast.Assert)):
+                return []
+
             elif isinstance(node, ast.Constant) and field_value is not None:
                 raise NotImplementedError('None field value for non constant node')
-
+            else:
+                raise NotImplementedError('None field value for non constant node')
         #if field_value is None:
         #    return []
 

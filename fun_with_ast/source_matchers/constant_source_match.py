@@ -1,4 +1,5 @@
 import ast
+from types import NoneType
 
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
@@ -38,6 +39,8 @@ class ConstantSourceMatcher(SourceMatcher):
             return self.num_matcher._match(string)
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher._match(string)
+        if isinstance(self.node.n, NoneType) and isinstance(self.node.s, NoneType):
+            return self.num_matcher._match(string)
         raise NotImplementedError
 
     def GetSource(self):
@@ -47,6 +50,8 @@ class ConstantSourceMatcher(SourceMatcher):
         if isinstance(self.node.n, bool) and isinstance(self.node.s, int):
             return self.bool_matcher.GetSource()
         if isinstance(self.node.n, int) and isinstance(self.node.s, int):
+            return self.num_matcher.GetSource()
+        if isinstance(self.node.n, NoneType) and isinstance(self.node.s, NoneType):
             return self.num_matcher.GetSource()
         if isinstance(self.node.n, float) and isinstance(self.node.s, float):
             return self.num_matcher.GetSource()

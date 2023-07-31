@@ -101,7 +101,5 @@ class FieldPlaceholder(CompositePlaceholder):
 
             elif isinstance(node, ast.Constant) and field_value is not None:
                 raise NotImplementedError('None field value for non constant node')
-            else:
-                raise NotImplementedError('None field value for non constant node')
         return True
 

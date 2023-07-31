@@ -829,6 +829,10 @@ def NotIn():
     return _ast.NotIn()
 
 
+def CreateNone(value):
+    if value != 'None':
+        raise ValueError('Invalid value for None')
+    return _ast.Constant(value=None)
 def Num(number):
     """Creates an _ast.Constant node."""
     if not isinstance(number, str):

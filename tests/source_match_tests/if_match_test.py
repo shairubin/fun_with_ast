@@ -170,6 +170,11 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
+    def testIfFromSourceNone(self):
+        string = "if a is None: \n pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
     @pytest.mark.skip('not implemented, the problem are the outer parentheses')
     def testIfFromSource7(self):
         string = "if (a.b(1)==7):\n pass"

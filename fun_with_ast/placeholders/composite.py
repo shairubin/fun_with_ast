@@ -1,5 +1,8 @@
 import _ast
 import ast
+from types import NoneType
+
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_placeholder import Placeholder
@@ -21,8 +24,10 @@ class CompositePlaceholder(Placeholder):
         return parser.GetMatchedText()
 
     def _set_parents(self, elements, node):
-        if isinstance(node, ast.Constant) and not isinstance(node.s, int) and not hasattr(node, 'default_quote'):
-            raise ValueError('Constant nodes must of type string must have a default_quote attribute')
+        if isinstance(node, ast.Constant):
+            if not isinstance(node.s, int) and not isinstance(node.s, NoneType):
+                if not hasattr(node, 'default_quote'):
+                    raise ValueError('Constant nodes must of type string must have a default_quote attribute')
         for element in elements:
             element.parent = node
         return elements
@@ -49,16 +54,13 @@ class FieldPlaceholder(CompositePlaceholder):
     def GetElements(self, node):
         if isinstance(node, _ast.Call) and self.field_name == 'kwargs':
             field_value = getattr(node, self.field_name, None)
-        #if isinstance(node, _ast.Constant) and not getattr(node,'matcher',None):
-        #    raise ValueError('Constant nodes must have a matcher')
-#        if isinstance(node, _ast.Constant):
-#            raise NotImplementedError('not implemented yet')
 
         else:
             field_value = getattr(node, self.field_name)
 
-        if not field_value and field_value != 0:
+        if not self._isNoneLiteral(field_value, node):
             return []
+
         #if field_value is None:
         #    return []
 
@@ -84,4 +86,16 @@ class FieldPlaceholder(CompositePlaceholder):
     def __repr__(self):
         return 'FieldPlaceholder for field "{}"'.format(
             self.field_name)
+
+    def _isNoneLiteral(self, field_value, node):
+        # TODO: this seems like a hack to identify None in source code as opposed to None in the AST
+        if not field_value and field_value != 0:
+            if isinstance(node, SyntaxFreeLine) and field_value == '':
+                return False
+            elif isinstance(node, (ast.arguments, ast.Call, ast.withitem,   ast.alias,
+                                   ast.Slice, ast.excepthandler, ast.Assert)):
+                return False
+            elif isinstance(node, ast.Constant) and field_value is not None:
+                raise ValueError('None field value for non constant node')
+        return True
 

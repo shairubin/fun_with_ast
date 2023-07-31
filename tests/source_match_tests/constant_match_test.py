@@ -26,6 +26,14 @@ class ConstantNumMatcherTest(BaseTestUtils):
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
 
+    def testBasicMatchNone(self):
+        node = create_node.CreateNone('None')
+        string = 'None'
+        matcher = GetDynamicMatcher(node)
+        matcher.do_match(string)
+        matched_string = matcher.GetSource()
+        self.assertEqual(string, matched_string)
+
     def testBasicMatchNumBinary(self):
         node = create_node.Num('0b0')
         string = '0b0'

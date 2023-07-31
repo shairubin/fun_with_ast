@@ -1,5 +1,6 @@
 import _ast
 import ast
+from types import NoneType
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
@@ -28,6 +29,8 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
       ValueError: When passing in a stmt node that has no string or module_node.
           This is an error because we have no idea how much to indent it.
     """
+    if field is None and isinstance(parent_node, ast.Constant):
+        return 'None'
     if field is None:
         return ''
     if starting_parens is None:

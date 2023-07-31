@@ -58,22 +58,9 @@ class FieldPlaceholder(CompositePlaceholder):
         else:
             field_value = getattr(node, self.field_name)
 
+        if not self._isNoneLiteral(field_value, node):
+            return []
 
-        if not field_value and field_value != 0:
-            #return []
-            if isinstance(node, _ast.Call) :
-                return []
-            elif isinstance(node, _ast.arguments):
-                return []
-            elif isinstance(node, SyntaxFreeLine) and field_value == '':
-                return []
-            elif isinstance(node, (ast.withitem,   ast.alias, ast.Slice, ast.excepthandler, ast.Assert)):
-                return []
-
-            elif isinstance(node, ast.Constant) and field_value is not None:
-                raise NotImplementedError('None field value for non constant node')
-            else:
-                raise NotImplementedError('None field value for non constant node')
         #if field_value is None:
         #    return []
 
@@ -99,4 +86,22 @@ class FieldPlaceholder(CompositePlaceholder):
     def __repr__(self):
         return 'FieldPlaceholder for field "{}"'.format(
             self.field_name)
+
+    def _isNoneLiteral(self, field_value, node):
+        # TODO: this seems like a hack to identify None in source code as opposed to None in the AST
+        if not field_value and field_value != 0:
+            if isinstance(node, _ast.Call) :
+                return False
+            elif isinstance(node, _ast.arguments):
+                return False
+            elif isinstance(node, SyntaxFreeLine) and field_value == '':
+                return False
+            elif isinstance(node, (ast.withitem,   ast.alias, ast.Slice, ast.excepthandler, ast.Assert)):
+                return False
+
+            elif isinstance(node, ast.Constant) and field_value is not None:
+                raise NotImplementedError('None field value for non constant node')
+            else:
+                raise NotImplementedError('None field value for non constant node')
+        return True
 

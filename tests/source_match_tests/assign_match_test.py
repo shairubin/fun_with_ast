@@ -21,6 +21,17 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=0x1f'
         self._assert_matched_source(node, string)
 
+    def testBasicMatchAssignNone(self):
+        node = create_node.Assign('a', create_node.CreateNone('None'))
+        string = 'a = \t None # a is None'
+        self._assert_matched_source(node, string)
+
+    def testBasicNoMatchAssignNone(self):
+        node = create_node.Assign('a', create_node.CreateNone('None'))
+        string = 'a = \t none # a is None'
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._assert_matched_source(node, string)
+
     def testBasicMatchAssignString(self):
         node = create_node.Assign('a', create_node.Constant('1', "'"))
         string = "a='1'"
@@ -62,7 +73,6 @@ class AssignMatcherTest(BaseTestUtils):
         string = ' a  =  1  \t'
         self._assert_matched_source(node, string)
 
-    #@pytest.mark.xfail(strict=True)
     def testMatchMultiAssign(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('2'))
         string = 'a=b=1'

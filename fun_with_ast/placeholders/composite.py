@@ -90,16 +90,12 @@ class FieldPlaceholder(CompositePlaceholder):
     def _isNoneLiteral(self, field_value, node):
         # TODO: this seems like a hack to identify None in source code as opposed to None in the AST
         if not field_value and field_value != 0:
-            if isinstance(node, _ast.Call) :
+            if isinstance(node, SyntaxFreeLine) and field_value == '':
                 return False
-            elif isinstance(node, _ast.arguments):
+            elif isinstance(node, (ast.arguments, ast.Call, ast.withitem,   ast.alias,
+                                   ast.Slice, ast.excepthandler, ast.Assert)):
                 return False
-            elif isinstance(node, SyntaxFreeLine) and field_value == '':
-                return False
-            elif isinstance(node, (ast.withitem,   ast.alias, ast.Slice, ast.excepthandler, ast.Assert)):
-                return False
-
             elif isinstance(node, ast.Constant) and field_value is not None:
-                raise NotImplementedError('None field value for non constant node')
+                raise ValueError('None field value for non constant node')
         return True
 

@@ -38,6 +38,14 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = '(a and b)'
         self._assert_match(node, string)
 
+    def testAndBoolOpNone(self):
+        node = create_node.BoolOp(
+            create_node.Name('a'),
+            create_node.And(),
+            create_node.CreateNone('None'))
+        string = '(a and None)'
+        self._assert_match(node, string)
+
     def testAndBoolOp3(self):
         node = create_node.BoolOp(
             create_node.Name('a'),

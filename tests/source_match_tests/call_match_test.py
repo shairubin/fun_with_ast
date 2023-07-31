@@ -79,6 +79,17 @@ class CallMatcherTest(BaseTestUtils):
         string = 'a.b(\'fun-with-ast\')'
         self._verify_match(node, string)
 
+    def testCallWithAttributeAndNone(self):
+        node = create_node.Call('a.b', args=[create_node.CreateNone('None')])
+        string = 'a.b(None)'
+        self._verify_match(node, string)
+
+    def testCallWithAttributeAndNoneNoMatch(self):
+        node = create_node.Call('a.b', args=[create_node.CreateNone('None')])
+        string = 'a.b(none)'
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+
     def testCallWithAttributeAndParamAndQuate(self):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")])
         string = "a.b(\"fun-with-ast\")"

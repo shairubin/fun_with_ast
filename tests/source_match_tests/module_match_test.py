@@ -1,10 +1,13 @@
 import unittest
 
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class ModuleMatcherTest(unittest.TestCase):
+class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
             create_node.AugAssign('a', create_node.Add(), create_node.Name('c'))]))
@@ -46,3 +49,51 @@ class ModuleMatcherTest(unittest.TestCase):
         matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+    def testFromInput(self):
+        node = GetNodeFromInput('a=1')
+        string = 'a=1'
+        self._verify_match(node, string)
+    def testFromInput2(self):
+        node = GetNodeFromInput('a=1', get_module=True)
+        string = 'a=1'
+        self._verify_match(node, string)
+    def testFromInput3(self):
+        node = GetNodeFromInput("chkpt = torch.load(model_path, map_location='cpu')", get_module=True)
+        string = "chkpt = torch.load(model_path, map_location='cpu')"
+        self._verify_match(node, string)
+    def testFromInput4(self):
+        string = """
+# @ARCH_REGISTRY.register()
+# class VQAutoEncoder(nn.Module):
+#     def __init__(self, img_size, nf, ch_mult, quantizer="nearest", res_blocks=2, attn_resolutions=None, codebook_size=1024, emb_dim=256,
+#                  beta=0.25, gamma=0.99, decay=0.99, hidden_dim=128, num_layers=2, use_checkpoint=False, checkpoint_path=None):
+chkpt = torch.load(model_path, map_location='cpu')
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInput5(self):
+        string = """
+# @ARCH_REGISTRY.register()
+# class VQAutoEncoder(nn.Module):
+chkpt = torch.load(model_path, map_location='cpu')
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInput6(self):
+        string = """
+#     def __init__("nearest")
+
+chkpt = torch.load(model_path, map_location='cpu')
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInput7(self):
+        string = """
+#     def a("s"):
+a.b('cpu')
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

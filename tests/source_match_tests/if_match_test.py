@@ -165,6 +165,42 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
+    def testIfElseFromSource(self):
+        string = "if (a): #comment\n   pass\nelse:\n   pass # comment 2"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfElseFromSource2(self):
+        string = "if (a): #comment\n   pass\nelif False:\n   pass # comment 2"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfElseFromSource3(self):
+        string = "if (a): #comment\n   pass\nelif False:\n   pass # comment 2\nelse:\n   pass # comment 3"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfElseFromSource4(self):
+        string = "if (a): #comment\n   pass\nelif False:\n   pass # comment 2\nelif '':\n   pass # comment 3"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfElseFromSource5(self):
+        string = "if (a): #comment\n   pass\nelif False:\n   pass # comment 2\nelif '':\n   pass # comment 3\else:\n   pass # comment 4"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfElseFromSource6(self):
+        string = """if (a): #comment
+   pass
+elif False:
+   pass # comment 2
+else:
+   if 7:
+      pass # comment 3\n"""
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
     def testIfFromSource6(self):
         string = "if a.b(1)==7:\n pass"
         if_node = GetNodeFromInput(string)
@@ -175,7 +211,6 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
-    @pytest.mark.skip('not implemented, the problem are the outer parentheses')
     def testIfFromSource7(self):
         string = "if (a.b(1)==7):\n pass"
         if_node = GetNodeFromInput(string)

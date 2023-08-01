@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 
 from fun_with_ast.manipulate_node import create_node
@@ -57,6 +59,12 @@ class ModuleMatcherTest(BaseTestUtils):
         node = GetNodeFromInput('a=1', get_module=True)
         string = 'a=1'
         self._verify_match(node, string)
+    @pytest.mark.skip(reason="issue #41")
+    def testTupleOperation(self):
+        node = GetNodeFromInput('(1,)+tuple(ch_mult)', get_module=True)
+        string = '(1,)+tuple(ch_mult)'
+        self._verify_match(node, string)
+
     def testFromInput3(self):
         node = GetNodeFromInput("chkpt = torch.load(model_path, map_location='cpu')", get_module=True)
         string = "chkpt = torch.load(model_path, map_location='cpu')"

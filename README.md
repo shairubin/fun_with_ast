@@ -43,3 +43,9 @@ library.
    2. `pytest --version`, should be at least `7.2.2`
    3.  run `pytest`
    4.  No tests should fail - some tests would be skipped / xfail. 
+
+## Limitations 
+1. The library is not yet mature.
+2. Determining the the of quote (i.e., ' or ") for each string is done at the module or node level.
+   this means if a node contains both `print('fun-with-ast')` and `print("fun-with-ast")` only one of them will be preserved, 
+   the first one in the module/node. (See method `guess_default_quote_for_node`, if you want to work on something interesting) 

@@ -1,4 +1,5 @@
 import ast
+import re
 
 from fun_with_ast.common_utils.constant_visitor import ConstantVisitor
 
@@ -27,4 +28,14 @@ class FWANodeGenerator():
         return node
 
     def guess_default_quote_for_node(self, string):
-        return "\"" if "\"" in string else "'"
+        lines = string.split('\n')
+        quote = "\""
+        for line in lines:
+            if re.match(r'[\t ]*#', line):
+                continue
+            elif "\"" in line:
+                break
+            elif "'" in line:
+                quote = "'"
+                break
+        return quote

@@ -238,3 +238,20 @@ class CallMatcherTest(BaseTestUtils):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
         string = 'a.b(\'fun-with-ast\')'
         self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams(self):
+        string = "a.b(x)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams2(self):
+        string = "a().b(x)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallDoubeAttributeWithParams3(self):
+        string = "a(z,y).b(x=3)    \n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams4(self):
+        string = "super().__init__()\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

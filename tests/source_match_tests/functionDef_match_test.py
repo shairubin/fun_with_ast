@@ -162,3 +162,11 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testDefInit(self):
+        string = 'def __init__(self):\n     pass'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testDefInit2(self):
+        string = 'def __init__(self):\n     a.b()\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

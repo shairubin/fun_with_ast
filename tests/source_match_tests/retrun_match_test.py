@@ -51,7 +51,8 @@ class RetrunMatcherTest(BaseTestUtils):
         self._assert_match(node, string)
 
     def _assert_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matcher_source = matcher.GetSource()
-        self.assertEqual(string, matcher_source)
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #matcher_source = matcher.GetSource()
+        #self.assertEqual(string, matcher_source)
+        self._verify_match(node, string)

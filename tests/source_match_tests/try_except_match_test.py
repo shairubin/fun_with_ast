@@ -2,9 +2,10 @@ import unittest
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class TryExceptMatcherTest(unittest.TestCase):
+class TryExceptMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Try(
@@ -12,10 +13,7 @@ class TryExceptMatcherTest(unittest.TestCase):
             [create_node.ExceptHandler(None, None, [create_node.Pass()])])
 
         string = """try:\n\tpass\nexcept:\n\tpass\n"""
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
-
+        self._assert_match(node, string)
 
     def testMatchMultipleExceptHandlers(self):
         node = create_node.Try(
@@ -29,9 +27,7 @@ except TestA:
 except TestB:
   pass
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testMatchExceptAndOrElse(self):
         node = create_node.Try(
@@ -45,9 +41,13 @@ except:
 else:
   pass
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
+
+    def _assert_match(self, node, string):
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
 
     def testMatchWithEmptyLine(self):
         node = create_node.Try(
@@ -60,6 +60,4 @@ except Exception1 as e:
 
   pass
 """
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)

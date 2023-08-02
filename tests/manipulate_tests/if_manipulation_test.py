@@ -36,6 +36,7 @@ def injected_source(request):
 
 
 @pytest.fixture(scope="function", params=[
+                        {"body": '   pass\n', "else_body": '', "inject_to": 0, "condition": 'c.d():'},
                         {"body": '   pass\n   z=x\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
                         {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
                         {"body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
@@ -92,7 +93,8 @@ class TestIfManupulation:
 
     def test_get_source_body(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
-        original_if_source = 'if ' + test + '\n' + body + 'else:\n' + orelse
+        else_string = 'else:\n'  if orelse  else ''
+        original_if_source = 'if ' + test + '\n' + body + else_string + orelse
         if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index, 1))
         the_source = manipulator.get_body_orelse_source()
@@ -109,7 +111,10 @@ class TestIfManupulation:
 
     def test_switch_body_else(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
-        original_if_source = 'if ' + test + '\n' + body + 'else:\n' + orelse
+        if not orelse:
+            return # nothing to do as there is no else body
+        else_string = 'else:\n'  if orelse  else ''
+        original_if_source = 'if ' + test + '\n' + body + else_string + orelse
         if_node,_ = self._create_nodes(capsys, 'pass', original_if_source)
         config = IfManipulatorConfig(0, 1)
         manipulator = ManipulateIfNode(if_node, config)
@@ -135,7 +140,7 @@ class TestIfManupulation:
             add_new_line_to_new_body = '\n'
         assert new_body_source == orig_else_source + add_new_line_to_new_body
         expected_new_if_source = 'if ' + test + '\n' + orelse + add_new_line_to_new_body + 'else:\n' + body
-        actual_new_if_source = if_node.matcher.GetSource()
+        actual_new_if_source = if_node.node_matcher.GetSource()
         self._capture_source(capsys, actual_new_if_source, 'New If Source', bcolors.OKCYAN, True)
         assert expected_new_if_source == actual_new_if_source
 
@@ -162,7 +167,7 @@ class TestIfManupulation:
         if_node_matcher.do_match(original_if_source)
         if_node_source = if_node_matcher.GetSource()
         assert if_node_source == original_if_source
-        if_node.matcher = if_node_matcher
+        #if_node.matcher = if_node_matcher
         return if_node
 
     def _capture_source(self, capsys, source, title, color, ignore_ident=False):

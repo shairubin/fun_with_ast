@@ -533,7 +533,7 @@ class ClassDefMatcherTest(unittest.TestCase):
 
 
 
-class CompareMatcherTest(unittest.TestCase):
+class CompareMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Compare(
@@ -541,9 +541,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Lt(),
             create_node.Name('b'))
         string = 'a < b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testMultiMatch(self):
         node = create_node.Compare(
@@ -553,9 +551,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Lt(),
             create_node.Name('c'))
         string = 'a < b < c'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testEq(self):
         node = create_node.Compare(
@@ -563,9 +559,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Eq(),
             create_node.Name('b'))
         string = 'a == b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testNotEq(self):
         node = create_node.Compare(
@@ -573,9 +567,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.NotEq(),
             create_node.Name('b'))
         string = 'a != b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testLt(self):
         node = create_node.Compare(
@@ -583,9 +575,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Lt(),
             create_node.Name('b'))
         string = 'a < b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testLtE(self):
         node = create_node.Compare(
@@ -593,9 +583,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.LtE(),
             create_node.Name('b'))
         string = 'a <= b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testGt(self):
         node = create_node.Compare(
@@ -603,9 +591,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Gt(),
             create_node.Name('b'))
         string = 'a > b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testGtE(self):
         node = create_node.Compare(
@@ -613,9 +599,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.GtE(),
             create_node.Name('b'))
         string = 'a >= b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testIs(self):
         node = create_node.Compare(
@@ -623,9 +607,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.Is(),
             create_node.Name('b'))
         string = 'a is b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testIsNot(self):
         node = create_node.Compare(
@@ -633,9 +615,8 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.IsNot(),
             create_node.Name('b'))
         string = 'a is not b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
+
 
     def testIn(self):
         node = create_node.Compare(
@@ -643,9 +624,7 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.In(),
             create_node.Name('b'))
         string = 'a in b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
     def testNotIn(self):
         node = create_node.Compare(
@@ -653,10 +632,13 @@ class CompareMatcherTest(unittest.TestCase):
             create_node.NotIn(),
             create_node.Name('b'))
         string = 'a not in b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
+    def _assert_match(self, node, string):
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
 
 class ComprehensionMatcherTest(unittest.TestCase):
 
@@ -799,18 +781,19 @@ class ListComprehensionMatcherTest(BaseTestUtils):
     def testBasicMatch(self):
         node = create_node.ListComp('c', 'a', 'b')
         string = '[c for a in b]'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
+    def _assert_match(self, node, string):
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #self.assertEqual(string, matcher.GetSource())
+        self._verify_match(node, string)
     def testBasicMatchWithIf(self):
         node = create_node.ListComp(
             'c', 'a', 'b',
             create_node.Compare('c', '<', 'd'))
         string = '[c for a in b if c < d]'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
+        self._assert_match(node, string)
 
 
 class SetComprehensionMatcherTest(unittest.TestCase):

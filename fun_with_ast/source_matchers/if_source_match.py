@@ -101,6 +101,6 @@ class IfSourceMatcher(SourceMatcher):
 
     def add_newline_to_source(self):
         if not self.node.orelse:
-            self.node.body[-1].matcher.add_newline_to_source()
+            self.node.body[-1].node_matcher.add_newline_to_source()
         else:
-            self.node.body[-1].matcher.add_newline_to_source()
+            self.node.body[-1].node_matcher.add_newline_to_source()

@@ -56,6 +56,9 @@ class SourceMatcher(object):
                 return
         else:
             self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
+        self.matched = False
+        self.matched_source = None
+        self.GetSource()
 
 
     def MatchStartParens(self, string, retrun=None):

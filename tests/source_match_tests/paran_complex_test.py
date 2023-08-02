@@ -5,9 +5,10 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class ParenWrappedTest(unittest.TestCase):
+class ParenWrappedTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Name('a')
@@ -20,35 +21,29 @@ class ParenWrappedTest(unittest.TestCase):
     def testNewLineMatch(self):
         node = create_node.Name('a')
         string = '(\na\n)'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
-
+        self._assert_match(node, string)
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')
         string = '  a'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._assert_match(node, string)
+
+    def _assert_match(self, node, string):
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #matched_text = matcher.GetSource()
+        #self.assertEqual(string, matched_text)
+        self._verify_match(node, string)
 
     def testMatchTrailingTabs(self):
         node = create_node.Name('a')
         string = '(a  \t  )  \t '
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._assert_match(node, string)
 
     def testNoMatchLeadingTabs(self):
         node = create_node.Name('a')
         string = ' \t (a  \t  )  \t '
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_text = matcher.GetSource()
-        self.assertEqual(string, matched_text)
+        self._assert_match(node, string)
 
     def testMatchLeadingTabs(self):
         node = create_node.Name('a')

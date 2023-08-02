@@ -1,3 +1,5 @@
+import ast
+
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
@@ -12,12 +14,18 @@ class BodyManipulator:
         if IsEmptyModule(node_to_inject):
             return
         ident = self._get_indentation()
-        source_to_inject = GetSource(node_to_inject, assume_no_indent=True)
-        node_to_inject.matcher.FixIndentation(ident)
+        GetSource(node_to_inject, assume_no_indent=True)
+        # if not isinstance(node_to_inject, ast.Expr):
+        #     node_to_inject.node_matcher.FixIndentation(ident)
+        # else:
+        #     node_to_inject.value.node_matcher.FixIndentation(ident)
+        node_to_inject.node_matcher.FixIndentation(ident)
         self.body_block.insert(index, node_to_inject)
         self._add_newlines()
 
     def replace_body(self,source_of_new_body):
+        if source_of_new_body == '':
+            raise ValueError('source_of_new_body cannot be empty')
         new_body = self._create_body_from_source(source_of_new_body)
         module_node = create_node.Module(*new_body)
         self.body_block = module_node.body
@@ -28,10 +36,10 @@ class BodyManipulator:
 
     def _add_newlines(self):
         for node in self.body_block:
-            node_source = node.matcher.GetSource()
+            node_source = node.node_matcher.GetSource()
             if node_source.endswith("\n"):
                 continue
-            node.matcher.add_newline_to_source()
+            node.node_matcher.add_newline_to_source()
 
 
     def _get_indentation(self):

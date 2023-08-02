@@ -43,13 +43,15 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
         return str(field)
-    if hasattr(field, 'matcher') and field.matcher:
-        return field.matcher.GetSource()
+    if hasattr(field, 'node_matcher') and field.node_matcher:
+        source = field.node_matcher.GetSource()
+        return source
     else:
-        field.matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
+        field.node_matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
+        #GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
         _match_text(assume_no_indent, field, text, parent_node)
         _set_elif(assume_elif, field)
-        source_code = field.matcher.GetSource()
+        source_code = field.node_matcher.GetSource()
         return source_code
 
 
@@ -61,7 +63,7 @@ def _set_elif(assume_elif, field):
 
 def _match_text(assume_no_indent, field, text, parent_node):
     if text:
-        field.matcher._match(text)
+        field.node_matcher._match(text)
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
 #       if not hasattr(field, 'module_node'):
         if not isinstance(parent_node, ast.Module):

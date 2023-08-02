@@ -5,9 +5,10 @@ import pytest
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class UnaryOpMatcherTest(unittest.TestCase):
+class UnaryOpMatcherTest(BaseTestUtils):
 
     def testUAddUnaryOp(self):
         node = create_node.UnaryOp(
@@ -104,7 +105,7 @@ class UnaryOpMatcherTest(unittest.TestCase):
         self._validate_match(node, string)
 
     def _validate_match(self, node, string):
-        matcher = GetDynamicMatcher(node)
-        source = matcher.do_match(string)
-        self.assertEqual(string, source)
-
+        #matcher = GetDynamicMatcher(node)
+        #source = matcher.do_match(string)
+        #self.assertEqual(string, source)
+        self._verify_match(node, string)

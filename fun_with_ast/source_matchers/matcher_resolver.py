@@ -34,9 +34,12 @@ def GetDynamicMatcher(node, starting_parens=None, parent_node=None, parts_in=Non
         else:
             parts = parts_in
         default_source_matcher = current_module.DefaultSourceMatcher
-        return default_source_matcher(node, parts, starting_parens, parent_node)
+        matcher = default_source_matcher(node, parts, starting_parens, parent_node)
+        node.node_matcher = matcher
+        return matcher
     except TypeError:
         matcher = parts_or_matcher(node, starting_parens, parent_node)
+        node.node_matcher = matcher
         return matcher
 
 _dynamic_matchers = {

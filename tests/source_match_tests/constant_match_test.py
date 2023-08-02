@@ -21,58 +21,44 @@ class ConstantNumMatcherTest(BaseTestUtils):
     def testBasicMatchNum(self):
         node = create_node.Num('1')
         string = '1'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchNone(self):
         node = create_node.CreateNone('None')
         string = 'None'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
+    def _assert_match(self, node, string):
+        #matcher = GetDynamicMatcher(node)
+        #matcher.do_match(string)
+        #matched_string = matcher.GetSource()
+        #self.assertEqual(string, matched_string)
+        self._verify_match(node, string)
     def testBasicMatchNumBinary(self):
         node = create_node.Num('0b0')
         string = '0b0'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchNumSci(self):
         node = create_node.Num('1e-06')
         string = '1e-06'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
+
     @pytest.mark.skip('not implemented yet - 1 digit exponent')
     def testBasicMatchNumSci4(self):
         node = create_node.Num('1e-6')
         string = '1e-6'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchNumSci2(self):
         node = create_node.Num('0.2')
         string = '0.2'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchNumSci3(self):
         node = create_node.Num('123456789.98765433')
         string = '123456789.98765433'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchNumWithError(self):
         node = create_node.Num('1')
@@ -89,52 +75,32 @@ class ConstantNumMatcherTest(BaseTestUtils):
     def testBasicMatchWithPlusSign3(self):
         node = create_node.Num('1')
         string = '(    (    +1   )   ) # comment'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
+        self._assert_match(node, string)
 
     def testBasicMatchWithMinusSign(self):
         node = create_node.Num('-1')
         string = '  -1   \t'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testBasicMatchWithdWS(self):
         node = create_node.Num('1')
         string = '   1   '
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testMatchWSWithComment(self):
         node = create_node.Num('1')
         string = '   1   #comment'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testWithParans(self):
         node = create_node.Num('1')
         string = '(1)'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
-
+        self._assert_match(node, string)
 
     def testWithParansAndWS(self):
         node = create_node.Num('1')
         string = '(   1   )     '
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        matched_string = matcher.GetSource()
-        self.assertEqual(string, matched_string)
+        self._assert_match(node, string)
 
     def testWithMultiParansAndWS(self):
         node = create_node.Num('-1')

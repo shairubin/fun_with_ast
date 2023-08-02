@@ -44,9 +44,9 @@ class ManipulateIfNode():
 
     def get_body_orelse_source(self):
         if self.config.body_index ==0:
-            source = self.node.matcher.body_placeholder.GetSource(self.node)
+            source = self.node.node_matcher.body_placeholder.GetSource(self.node)
         elif self.config.body_index ==1:
-            source = self.node.matcher.orelse_placeholder.GetSource(self.node)
+            source = self.node.node_matcher.orelse_placeholder.GetSource(self.node)
         else:
             raise ValueError('Illegal body index')
         return source
@@ -110,13 +110,13 @@ class ManipulateIfNode():
 
         if self.config.body_index == 0:
             self.node.body = new_body
-            new_body_source = self.node.matcher.body_placeholder._match(self.node, source)
+            new_body_source = self.node.node_matcher.body_placeholder._match(self.node, source)
             if not new_body_source.endswith('\n'):
-                self.node.matcher.add_newline_to_source()
+                self.node.node_matcher.add_newline_to_source()
             return new_body_source
         elif self.config.body_index == 1:
             self.node.orelse = new_body
-            new_else_node_source = self.node.matcher.orelse_placeholder._match(self.node, source)
+            new_else_node_source = self.node.node_matcher.orelse_placeholder._match(self.node, source)
             return new_else_node_source
         else:
             raise ValueError('Illegal body index')

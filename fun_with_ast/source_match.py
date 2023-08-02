@@ -533,8 +533,8 @@ def get_JoinedStr_expected_parts():
 def get_Raise_expected_parts():
     return [
         TextPlaceholder(r'[ \t]*raise[ \t]*', 'raise '),
-        FieldPlaceholder('type'),
-        TextPlaceholder(r'\n', '\n'),
+        FieldPlaceholder('exc'),
+        FieldPlaceholder('cause', before_placeholder=TextPlaceholder(r'[ \t]*(from)?[ \t]*', '')),
     ]
 
 

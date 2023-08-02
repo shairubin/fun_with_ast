@@ -988,6 +988,8 @@ class Comment(_ast.stmt):
 def Raise(exception=None, cause=None):
     if exception is not None and  not isinstance(exception, (_ast.Name, _ast.Call)):
         raise ValueError('Raise exception must be a Name or Call')
+    if cause is not None and  not isinstance(cause, (_ast.Name)):
+        raise ValueError('cause exception must be a Name')
     result = _ast.Raise(exc=exception, cause=cause)
     return result
 

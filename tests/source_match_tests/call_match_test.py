@@ -219,6 +219,15 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCallWithJoinedString(self):
+        string = "logger.info(f'vqgan is loaded from: {model_path} [params_ema]')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallWithJoinedString2(self):
+        string = "logger.info(f\"vqgan is loaded from: {model_path} [params_ema]\")"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testCallDoubeAttribute2(self):
         string = "torch.nn.GroupNorm(eps=1e-06)\n"
         node = GetNodeFromInput(string)

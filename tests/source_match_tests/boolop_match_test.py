@@ -27,8 +27,6 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = '(a and b'
         self._assert_no_match(node, string)
 
-    def _assert_match(self, node, string):
-        self._verify_match(node, string)
 
     def testAndBoolOp2(self):
         node = create_node.BoolOp(
@@ -133,7 +131,7 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = "a or b"
         node = GetNodeFromInput(string)
         self._assert_match(node, string)
-
+    #
     def testOrFromSource2(self):
         string = "a(c) or b(d)\n"
         node = GetNodeFromInput(string)
@@ -149,3 +147,6 @@ class BoolOpMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with pytest.raises((BadlySpecifiedTemplateError, EmptyStackException)):
             matcher.do_match(string)
+
+    def _assert_match(self, node, string):
+        self._verify_match(node, string)

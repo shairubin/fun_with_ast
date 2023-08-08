@@ -22,10 +22,11 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
-        self._check_not_implemented(string)
-        self.padding_quote = self._get_padding_quqte(string)
-        string = self._convert_to_multi_part_string(string)
-        matched_text = super(JoinedStrSourceMatcher, self)._match(string)
+        jstr = self._extract_jstr_string(string)
+        self._check_not_implemented(jstr)
+        self.padding_quote = self._get_padding_quqte(jstr)
+        jstr = self._convert_to_multi_part_string(jstr)
+        matched_text = super(JoinedStrSourceMatcher, self)._match(jstr)
         return matched_text
 
     def _convert_to_multi_part_string(self, _in):
@@ -46,7 +47,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return multi_part
 
     def MatchStartParens(self, remaining_string):
-#        raise NotImplementedError('use main stack')
         return remaining_string
 
     def GetSource(self):
@@ -74,3 +74,26 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _check_not_implemented(self, string):
         if '\"\"' in string:
             raise NotImplementedError('Double-quotes are not supported yet')
+
+    def _extract_jstr_string(self, string):
+        start = string.find("f'")
+        if start == -1:
+            start = string.find("f\"")
+            if start == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
+            end = string.rfind("\"")
+            if end == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must end with \"')
+        else:
+            end = string.rfind("'")
+            if end == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must end with \'')
+        extracted_string = string[start:end+1]
+        stripped_string = string.strip()
+        if stripped_string != extracted_string:
+            if stripped_string[end+1] != ')':
+                raise NotImplementedError("extracted_string is not followed by ')'")
+        return extracted_string
+
+
+

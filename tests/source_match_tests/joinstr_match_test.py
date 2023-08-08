@@ -1,6 +1,7 @@
 import unittest
 
 import pytest
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
@@ -16,6 +17,21 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
+
+    @pytest.mark.skip(reason="not implemented")
+    def testBasicMatchFromInput(self):
+        node = GetNodeFromInput("f'X'")
+        string = "(f'X')"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput2(self):
+        node = GetNodeFromInput("f'X{a}'")
+        string = "f'X{a}'"
+        self._assert_match(node.value, string)
+    def testBasicMatchFromInput3(self):
+        node = GetNodeFromInput("f'X{a}[b]'")
+        string = "f'X{a}[b]'"
+        self._assert_match(node.value, string)
 
 
     def testBasicFormatedValue(self):

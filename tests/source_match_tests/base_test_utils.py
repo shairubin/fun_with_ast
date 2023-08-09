@@ -21,4 +21,7 @@ class BaseTestUtils(TestCase):
         self.assertEqual(result_from_matcher, node_matcher_source, 'result_from_matcher does not equal to node_matcher GetSource result')
         reseter = ResetMatch(node)
         reseter.reset_match()
+        matcher_source_after_reset  = matcher.GetSource()
+        self.assertEqual(matcher_source_after_reset, node_matcher_source, 'matcher_source_after_reset does not equal to node_matcher GetSource result')
+
 

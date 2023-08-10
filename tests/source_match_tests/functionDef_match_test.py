@@ -172,3 +172,23 @@ class FunctionDefMatcherTest(BaseTestUtils):
         string = 'def __init__(self):\n     a.b()\n'
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testInnerDef(self):
+        string = """def convert_exception_to_response(get_response):
+
+            if iscoroutinefunction(get_response):
+
+                @wraps(get_response)
+                async def inner(request):
+                    try:
+                        response = await get_response(request)
+                    except Exception as exc:
+                        response = await sync_to_async(
+                            response_for_exception, thread_sensitive=False
+                        )(request, exc)
+                    return response
+
+                return inner"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

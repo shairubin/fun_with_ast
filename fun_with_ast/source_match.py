@@ -92,6 +92,12 @@ def get_arguments_expected_parts():
     ]
 
 
+def get_Await_expected_parts():
+    return [
+        TextPlaceholder(r'[ \t]*await[ \t]+', 'await '),
+        FieldPlaceholder('value'),
+    ]
+
 def get_Assert_expected_parts():
     return [
         TextPlaceholder(r' *assert *', 'assert '),

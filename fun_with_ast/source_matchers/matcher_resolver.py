@@ -52,6 +52,7 @@ _dynamic_matchers = {
     _ast.AugAssign: ['get_AugAssign_expected_parts', 'fun_with_ast.source_match'],
     _ast.arguments: ['get_arguments_expected_parts', 'fun_with_ast.source_match'],
     _ast.arg: ['get_arg_expected_parts', 'fun_with_ast.source_match'],
+    _ast.Await: ['get_Await_expected_parts', 'fun_with_ast.source_match'],
     _ast.BinOp: ['get_BinOp_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitAnd: ['get_BitAnd_expected_parts', 'fun_with_ast.source_match'],
     _ast.BitOr: ['get_BitOr_expected_parts', 'fun_with_ast.source_match'],

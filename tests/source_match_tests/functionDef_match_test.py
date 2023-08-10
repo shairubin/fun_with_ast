@@ -15,7 +15,9 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
         string = 'def test_fun():\n\t\t\t\tpass\n'
         self._verify_match(node, string)
-
+        async_string = 'async \t' + string
+        node = GetNodeFromInput(async_string)
+        self._verify_match(node, async_string)
     def testDefWithReturn(self):
         node = create_node.FunctionDef('test_fun', body=[create_node.Return(0)])
         string = 'def test_fun():\n\t\t\t\treturn 0'

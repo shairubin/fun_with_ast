@@ -73,6 +73,7 @@ _dynamic_matchers = {
     _ast.FloorDiv: ['get_FloorDiv_expected_parts', 'fun_with_ast.source_match'],
     _ast.For: ['get_For_expected_parts', 'fun_with_ast.source_match'],
     _ast.FunctionDef: ['get_FunctionDef_expected_parts', 'fun_with_ast.source_match'],
+    _ast.AsyncFunctionDef: ['get_FunctionDef_expected_parts', 'fun_with_ast.source_match'],
     _ast.GeneratorExp: ['get_GeneratorExp_expected_parts', 'fun_with_ast.source_match'],
     _ast.Global: ['get_Global_expected_parts', 'fun_with_ast.source_match'],
     _ast.Gt: ['get_Gt_expected_parts', 'fun_with_ast.source_match'],

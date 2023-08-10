@@ -321,7 +321,7 @@ def get_FunctionDef_expected_parts():
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
             after_placeholder=TextPlaceholder(r'\n', '\n')),
-        TextPlaceholder(r'[ \t]*def ', 'def '),
+        TextPlaceholder(r'([ \t]*async[ \t]+)*[ \t]*def ', 'def '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(\s*', '('),
         FieldPlaceholder('args'),

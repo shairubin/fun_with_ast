@@ -36,3 +36,15 @@ class ImportMatcherTest(BaseTestUtils):
         string = """from z import (a,\n     b,c\n)     \n"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testBasicMatchImportFrom8(self):
+        string = """from django.core.exceptions import ( 
+    BadRequest,
+    PermissionDenied,
+    RequestDataTooBig,
+    SuspiciousOperation,
+    TooManyFieldsSent,
+    TooManyFilesSent
+  )\n"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

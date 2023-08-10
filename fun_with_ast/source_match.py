@@ -380,10 +380,10 @@ def get_ImportFrom_expected_parts():
     return [
         TextPlaceholder(r'[ \t]*from ', 'from '),
         FieldPlaceholder('module'),
-        TextPlaceholder(r' import[ \t]*\(?'),
+        TextPlaceholder(r' import[ \t]*\(?[ \t]*\n?'),
         SeparatedListFieldPlaceholder(
             'names', TextPlaceholder('[ \t]*,\n?[ \t]*', ', ')),
-        TextPlaceholder(r'[ \t]*\n*\)?\n', '\n')
+        TextPlaceholder(r'[ \t]*\n*[ \t]*\)?\n', '\n')
     ]
 
 

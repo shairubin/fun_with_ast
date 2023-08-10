@@ -371,7 +371,7 @@ def get_Import_expected_parts():
     return [
         TextPlaceholder(r' *import ', 'import '),
         SeparatedListFieldPlaceholder(
-            'names', TextPlaceholder('[ \t]*,[ \t]', ', ')),
+            'names', TextPlaceholder('[ \t]*,[ \t]*', ', ')),
         TextPlaceholder(r'\n', '\n')
     ]
 
@@ -380,10 +380,10 @@ def get_ImportFrom_expected_parts():
     return [
         TextPlaceholder(r'[ \t]*from ', 'from '),
         FieldPlaceholder('module'),
-        TextPlaceholder(r' import '),
+        TextPlaceholder(r' import[ \t]*\(?'),
         SeparatedListFieldPlaceholder(
-            'names', TextPlaceholder('[ \t]*,[ \t]', ', ')),
-        TextPlaceholder(r'\n', '\n')
+            'names', TextPlaceholder('[ \t]*,\n?[ \t]*', ', ')),
+        TextPlaceholder(r'[ \t]*\n*\)?\n', '\n')
     ]
 
 

@@ -92,6 +92,12 @@ def get_arguments_expected_parts():
     ]
 
 
+def get_Await_expected_parts():
+    return [
+        TextPlaceholder(r'[ \t]*await[ \t]+', 'await '),
+        FieldPlaceholder('value'),
+    ]
+
 def get_Assert_expected_parts():
     return [
         TextPlaceholder(r' *assert *', 'assert '),
@@ -321,7 +327,7 @@ def get_FunctionDef_expected_parts():
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
             after_placeholder=TextPlaceholder(r'\n', '\n')),
-        TextPlaceholder(r'[ \t]*def ', 'def '),
+        TextPlaceholder(r'([ \t]*async[ \t]+)*[ \t]*def ', 'def '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(\s*', '('),
         FieldPlaceholder('args'),

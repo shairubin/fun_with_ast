@@ -15,7 +15,9 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
         string = 'def test_fun():\n\t\t\t\tpass\n'
         self._verify_match(node, string)
-
+        async_string = 'async \t' + string
+        node = GetNodeFromInput(async_string)
+        self._verify_match(node, async_string)
     def testDefWithReturn(self):
         node = create_node.FunctionDef('test_fun', body=[create_node.Return(0)])
         string = 'def test_fun():\n\t\t\t\treturn 0'
@@ -170,3 +172,23 @@ class FunctionDefMatcherTest(BaseTestUtils):
         string = 'def __init__(self):\n     a.b()\n'
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testInnerDef(self):
+        string = """def convert_exception_to_response(get_response):
+
+            if iscoroutinefunction(get_response):
+
+                @wraps(get_response)
+                async def inner(request):
+                    try:
+                        response = await get_response(request)
+                    except Exception as exc:
+                        response = await sync_to_async(
+                            response_for_exception, thread_sensitive=False
+                        )(request, exc)
+                    return response
+
+                return inner"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

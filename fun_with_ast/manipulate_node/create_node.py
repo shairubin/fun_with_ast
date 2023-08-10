@@ -634,6 +634,16 @@ def IfExp(conditional, true_case, false_case):
   """
     return _ast.IfExp(body=true_case, test=conditional, orelse=false_case)
 
+def ImportFrom(module, names, level=0):
+    if not isinstance(names, (list, tuple)):
+        raise ValueError('names must be a list or tuple')
+    alias_names = []
+    for name in names:
+        if not isinstance(name, str):
+            raise ValueError('All names must be strings')
+        alias_names.append(_ast.alias(name=name, asname=None))
+    return _ast.ImportFrom(module=module, names=alias_names, level=level)
+
 
 def Import(import_part='', from_part='', asname=None):
     """Creates either an _ast.Import node or an _ast.ImportFrom node.

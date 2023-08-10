@@ -22,7 +22,10 @@ def ExpandTree(node):
 
 class CreateNodeTestBase(unittest.TestCase):
 
-    def assertNodesEqual(self, node1, node2):
+    def assertNodesEqual(self, node1, node2, equal=True):
         node1_fields = ExpandTree(node1)
         node2_fields = ExpandTree(node2)
-        self.assertEqual(node1_fields, node2_fields)
+        if equal:
+            self.assertEqual(node1_fields, node2_fields)
+        else:
+            self.assertNotEqual(node1_fields, node2_fields)

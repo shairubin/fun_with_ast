@@ -29,3 +29,10 @@ class CreateImportFromTest(CreateNodeTestBase):
         expected_node = GetNodeFromInput(expected_string)
         test_node = create_node.ImportFrom('x', ['y', 'z'])
         self.assertNodesEqual(expected_node, test_node)
+
+    def testImportFrom4(self):
+        expected_string = """from . import (y,
+        z) """
+        expected_node = GetNodeFromInput(expected_string)
+        test_node = create_node.ImportFrom(None, ['y', 'z'], level=1)
+        self.assertNodesEqual(expected_node, test_node)

@@ -185,6 +185,7 @@ def get_Call_expected_parts():
         FieldPlaceholder(
             'kwargs',
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
+        #TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 
 def get_CallArgs_expected_parts():
@@ -297,7 +298,8 @@ def get_Expr_expected_parts():
     return [
         TextPlaceholder(r' *', ''),
         FieldPlaceholder('value'),
-        TextPlaceholder(r' *\n', '\n')
+        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+        #TextPlaceholder(r' *\n', '\n')
     ]
 
 
@@ -332,7 +334,7 @@ def get_FunctionDef_expected_parts():
         TextPlaceholder(r'\(\s*', '('),
         FieldPlaceholder('args'),
         TextPlaceholder(r'\s*,?\s*\):\n?', '):\n'),
-        DocStringTextPlaceholder(),
+        #DocStringTextPlaceholder(),
         BodyPlaceholder('body')
     ]
 

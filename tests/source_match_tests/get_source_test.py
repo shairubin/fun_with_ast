@@ -9,7 +9,7 @@ from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 class GetSourceTest(BaseTestUtils):
     def testCall1(self):
-        string = "logger.info(\"test string\")\n"
+        string = "logger.info(\"test string\")"
         self._verify_source(string)
 
     def testEpmty(self):
@@ -17,7 +17,7 @@ class GetSourceTest(BaseTestUtils):
         self._verify_source(string)
 
     def testCall2(self):
-        string = 'logger.info(\'test string\')\n'
+        string = 'logger.info(\'test string\')'
         self._verify_source(string)
 
     def testImport(self):
@@ -39,7 +39,7 @@ class GetSourceTest(BaseTestUtils):
 
     #@pytest.mark.xfail(reason='Not implemented yet', raises=AssertionError)
     def testCall3(self):
-        string = 'logger.info(\'test string\')\n'
+        string = 'logger.info(\'test string\')'
         self._verify_source(string)
 
     def testForAndIf(self):
@@ -84,7 +84,7 @@ class GetSourceTest(BaseTestUtils):
         self.assertEqual(string, source)
 
     def testConstant(self):
-        string = "\"fun_with_east\"\n"
+        string = "\"fun_with_east\""
         self._verify_source(string)
 
     @pytest.mark.xfail()

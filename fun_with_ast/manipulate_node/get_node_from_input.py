@@ -33,6 +33,9 @@ class FWANodeGenerator():
         for line in lines:
             if re.match(r'[\t ]*#', line):
                 continue
+            elif re.match(r'[\t ]*"""', line):
+                quote = "\"\"\""
+                break
             elif "\"" in line:
                 break
             elif "'" in line:

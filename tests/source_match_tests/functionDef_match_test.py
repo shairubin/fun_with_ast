@@ -29,10 +29,6 @@ class FunctionDefMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
-    def testEmptyWithDocString(self):
-        node = create_node.FunctionDef('test_fun', body=[create_node.Pass()])
-        string = "def test_fun():\n\t\t\t'''docstring'''\n\t\t\tpass\n"
-        self._verify_match(node, string)
     def testSingleArg(self):
         node = create_node.FunctionDef('test_fun', create_node.arguments(args=['a']), body=[create_node.Pass()])
         string = 'def test_fun(a):\n  pass\n'

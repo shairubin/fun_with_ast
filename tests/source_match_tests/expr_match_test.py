@@ -3,9 +3,10 @@ import unittest
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class ExprMatcherTest(unittest.TestCase):
+class ExprMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         string2 = 'a.b()\n'
@@ -28,3 +29,29 @@ class ExprMatcherTest(unittest.TestCase):
         expr_node = create_node.Expr(node)
         matcher = GetDynamicMatcher(expr_node)
         matcher._match(string)
+
+    def testSimpleExpr(self):
+        string = '4\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleExpr2(self):
+        string = '4'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleExpr3(self):
+        string = 'a'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleExpr4(self):
+        string = "'a'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleExpr5(self):
+        string = "\"b\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleExpr6(self):
+        string = "\"\"\"b\"\"\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

@@ -189,7 +189,17 @@ class FunctionDefMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     @pytest.mark.skip(reason="issue #63")
-    def testMultipleArgsAndTypes(self):
+    def testArgsAndAnnotation(self):
         string = 'def test_fun(a: list = []):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2(self):
+        string = 'def test_fun(a: int):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2(self):
+        string = 'def test_fun(a: int, b  :      str):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

@@ -443,7 +443,7 @@ def get_Lambda_expected_parts():
     return [
         TextPlaceholder(r'lambda\s*', 'lambda '),
         FieldPlaceholder('args'),
-        TextPlaceholder(r'\s*:\s*', ': '),
+        #TextPlaceholder(r'\s*:\s*', ': '),
         FieldPlaceholder('body'),
     ]
 

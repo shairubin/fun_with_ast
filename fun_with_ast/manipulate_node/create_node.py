@@ -25,7 +25,7 @@ CtxEnum = Enum(
     PARAM='param')
 
 
-def _ToArgsWithDefaults(_args, _defaults, is_lambda = False):
+def _ToArgsWithDefaults(_args, _defaults):
     if not isinstance(_args, list):
         raise ValueError('args must be a list')
     if not isinstance(_defaults, list):
@@ -36,22 +36,22 @@ def _ToArgsWithDefaults(_args, _defaults, is_lambda = False):
         args.append(arg)
     for default in _defaults:
         defaults.append(default)
-    args = [_WrapWithArgs(arg, is_lambda) for arg in args]
+    args = [_WrapWithArgs(arg) for arg in args]
     defaults = [_WrapWithName(default) for default in defaults]
     return args, defaults
 
 
-def _WrapWithArgs(to_wrap, is_lambda=False):
+def _WrapWithArgs(to_wrap):
     if isinstance(to_wrap, _ast.AST):
         return to_wrap
     if ':' in to_wrap:
         name, annotation = to_wrap.split(':')
-        annotation = _WrapWithName(annotation, ctx_type=CtxEnum.LOAD) if not is_lambda else None
+        annotation = _WrapWithName(annotation, ctx_type=CtxEnum.LOAD)
     else:
         name = to_wrap
         annotation = None
 
-    return Arg(name, annotation=annotation, is_lambda=is_lambda)
+    return Arg(name, annotation=annotation)
 
 
 def _WrapWithName(to_wrap, ctx_type=CtxEnum.LOAD):
@@ -114,7 +114,7 @@ def ChangeCtx(node, new_ctx_type):
 
 
 def arguments(posonlyargs=[], args=[], vararg=None, kwonlyargs=[], kw_defaults=[], kwarg=None,
-              defaults=[], is_lambda = False):
+              defaults=[]):
     """Creates an _ast.FunctionDef node.
 
   Args:
@@ -135,8 +135,8 @@ def arguments(posonlyargs=[], args=[], vararg=None, kwonlyargs=[], kw_defaults=[
     if kwarg:
         kwarg = _WrapWithArgs(kwarg)
     if vararg:
-        vararg = _WrapWithArgs(vararg, is_lambda=is_lambda)
-    args, defaults = _ToArgsWithDefaults(args, defaults, is_lambda=is_lambda)
+        vararg = _WrapWithArgs(vararg)
+    args, defaults = _ToArgsWithDefaults(args, defaults)
     return _ast.arguments(
         posonlyargs=posonlyargs,
         args=args,
@@ -714,7 +714,7 @@ def Lambda(body, args=[]):
         raise ValueError('Body should be a single element, not a list or tuple')
     #    if not args:
     #        args = arguments()
-    lambda_args = arguments(args=args,is_lambda=True)
+    lambda_args = arguments(args=args)
     return _ast.Lambda(args=lambda_args, body=body)
 
 
@@ -792,9 +792,9 @@ def Mult():
     return _ast.Mult()
 
 
-def Arg(arg, annotation=None, is_lambda=False):
-    if is_lambda:
-        return LambdaArg(arg)
+def Arg(arg, annotation=None):
+#    if is_lambda:
+#        return LambdaArg(arg)
     result = _ast.arg(arg=arg, annotation=annotation)
     return result
 

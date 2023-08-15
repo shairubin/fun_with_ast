@@ -2,6 +2,7 @@
 import _ast
 import ast
 
+from fun_with_ast.manipulate_node.call_args_node import LambdaArg
 from fun_with_ast.manipulate_node.get_node_from_input import FWANodeGenerator
 
 
@@ -793,7 +794,7 @@ def Mult():
 
 def Arg(arg, annotation=None, is_lambda=False):
     if is_lambda:
-        raise NotImplementedError('Arg with lambda True is not implemented')
+        return LambdaArg(arg)
     result = _ast.arg(arg=arg, annotation=annotation)
     return result
 

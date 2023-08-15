@@ -188,8 +188,29 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #63")
-    def testMultipleArgsAndTypes(self):
+
+    def testArgsAndAnnotation(self):
         string = 'def test_fun(a: list = []):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2(self):
+        string = 'def test_fun(a: int):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testArgsAndAnnotation2_5(self):
+        string = 'def test_fun(a: int=1):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2_6(self):
+        string = 'def test_fun(a: int=2):\n  pass\n'
+        node = GetNodeFromInput(string)
+        assert  node.args.args[0].annotation, 'must be not none'
+        assert  node.args.args[0].arg == 'a'
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation3(self):
+        string = "def test_fun(a: int, b  :      str='fun with ast'):\n  pass\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

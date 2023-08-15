@@ -237,7 +237,4 @@ class FunctionDefMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
-#def _smelu(x: Any) -> Any:
-#x = jnp.where(x <= -beta, 0.0, x)
-#return jnp.where(x >= beta, x, jnp.square(x + beta) / (4 * beta))
 

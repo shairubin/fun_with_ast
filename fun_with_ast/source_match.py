@@ -61,6 +61,7 @@ def get_alias_expected_parts():
     ]
 
 
+
 def get_Tuple_expected_parts():
     return  [
             #TextPlaceholder(r'(\s*\(|\s*)', ''),
@@ -77,6 +78,10 @@ def get_arg_expected_parts():
     result = [FieldPlaceholder('arg'),
               TextPlaceholder(r'([ \t]*:)*', ''),
               FieldPlaceholder('annotation')
+            ]
+    return result
+def get_LambdaArg_expected_parts():
+    result = [FieldPlaceholder('arg'),
             ]
     return result
 

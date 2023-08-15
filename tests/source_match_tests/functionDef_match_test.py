@@ -214,3 +214,27 @@ class FunctionDefMatcherTest(BaseTestUtils):
         string = "def test_fun(a: int, b  :      str='fun with ast'):\n  pass\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation(self):
+        string = "def test_fun() -> int:\n  pass\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation2(self):
+        string = "def test_fun()     \t->     my_class\t:\n  pass\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation3(self):
+        string = "def test_fun()     \t->     my_class\t: #comment\n  pass\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testFunctionLevelAnnotation4(self):
+        string = """def _smelu(x: Any) -> Any:
+    x = jnp.where(x <= -beta, 0.0, x)
+    return jnp.where(x >= beta, x, jnp.square(x + beta) / (4 * beta))"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+

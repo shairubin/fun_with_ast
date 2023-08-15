@@ -88,6 +88,4 @@ def GetWhiteSpaceMatcher():
     return TextPlaceholder(r'[ \t]*', '')
 
 
-#def GetEndParenMatcher():
-#    return TextPlaceholder(r'[\s]*\)[ \t]*', '')
 

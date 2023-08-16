@@ -268,3 +268,10 @@ class CallMatcherTest(BaseTestUtils):
         string = "super().__init__()\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testCallDoubeAttributeWithParams4(self):
+        string = """ACT2FN.update({"smelu": smelu()})\n"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+

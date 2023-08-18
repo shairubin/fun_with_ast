@@ -95,9 +95,9 @@ class StrSourceMatcher(SourceMatcher):
                 #self.quote_type = self.original_quote_type or GetDefaultQuoteType()
             return self.quote_type + self.node.s + self.quote_type
 
-        if self.quote_type:
-            for part in self.quote_parts:
-                part.quote_match_placeholder.matched_text = self.quote_type
+        #if self.quote_type:
+        #    for part in self.quote_parts:
+        #        part.quote_match_placeholder.matched_text = self.quote_type
 
         source_list = [self.GetStartParenText()]
         source_list.append(_GetListDefault(

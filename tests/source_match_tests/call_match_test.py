@@ -277,5 +277,9 @@ class CallMatcherTest(BaseTestUtils):
         string = "A(\"a\", 'b')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallMultipleQuotes2(self):
+        string = "A('a', \"b\")\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
 

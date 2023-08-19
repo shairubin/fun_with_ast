@@ -98,14 +98,11 @@ class CallMatcherTest(BaseTestUtils):
     def testNoMatchCallWithAttributeAndParamAndQuate(self):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
         string = "a.b(\"fun-with-ast\")"
-        from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
     def testNoMatchCallWithAttributeAndParamAndQuate2(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")])
+        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")]) #TODO: do not need second param
         string = "a.b('fun-with-ast')"
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
 
     def testCallWithAttributeAndParam2(self):
         node = create_node.Call('a.b', args=[create_node.Num('1')])
@@ -269,8 +266,17 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testCallDoubeAttributeWithParams4(self):
+    def testCallDoubeAttributeWithParams5(self):
         string = """ACT2FN.update({"smelu": smelu()})\n"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallMultipleQuotes(self):
+        string = "A(\"a\", 'b')\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallMultipleQuotes2(self):
+        string = "A('a', \"b\")\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

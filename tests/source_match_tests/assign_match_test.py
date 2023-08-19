@@ -40,8 +40,7 @@ class AssignMatcherTest(BaseTestUtils):
     def testBasicNoMatchAssignStringWithDoubleQuote(self):
         node = create_node.Assign('a', create_node.Constant('1', "'"))
         string = "a=\"1\""
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._assert_matched_source(node, string)
+        self._assert_matched_source(node, string)
 
     def testBasicMatchAssignStringWithDoubleQuote2(self):
         node = create_node.Assign('a', create_node.Constant('1', "\""))

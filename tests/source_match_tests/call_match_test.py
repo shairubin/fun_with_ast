@@ -98,12 +98,10 @@ class CallMatcherTest(BaseTestUtils):
     def testNoMatchCallWithAttributeAndParamAndQuate(self):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
         string = "a.b(\"fun-with-ast\")"
-        #with pytest.raises(AssertionError):
         self._verify_match(node, string)
     def testNoMatchCallWithAttributeAndParamAndQuate2(self):
         node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")]) #TODO: do not need second param
         string = "a.b('fun-with-ast')"
-        #with pytest.raises(BadlySpecifiedTemplateError):
         self._verify_match(node, string)
 
     def testCallWithAttributeAndParam2(self):

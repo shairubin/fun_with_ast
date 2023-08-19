@@ -154,12 +154,13 @@ class ConstantNumMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
+    @pytest.mark.skip('Not implemented yet -- issue #73')
     def testStringWithDB(self):
         node = create_node.Str("\"0xffaa\"")
         string = "\"0xffaa\""
         self._verify_match(node, string)
     @pytest.mark.skip('Not implemented yet -- issue #73')
-    def testStringWithDB(self):
+    def testStringWithSB(self):
         node = create_node.Str("'0xffaa'")
         string = "'0xffaa'"
         self._verify_match(node, string)

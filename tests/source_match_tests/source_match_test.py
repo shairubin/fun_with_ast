@@ -429,13 +429,11 @@ class AssertMatcherTest(BaseTestUtils):
         node = create_node.Assert(create_node.Name('a'),
                                   create_node.Constant('message', "'"))
         string = 'assert a, "message"\n'
-        #with pytest.raises(AssertionError):
         self._verify_match(node,string)
     def testNoMatchWithMessage(self):
         node = create_node.Assert(create_node.Name('a'),
                                   create_node.Constant('message', "'"))
         string = "assert a, 'message'\n"
-        #with pytest.raises(AssertionError):
         self._verify_match(node,string)
 
 
@@ -709,7 +707,6 @@ class DictMatcherTest(BaseTestUtils):
             [create_node.Name('a'), create_node.Constant('c',"\"")],
             [create_node.Name('b'), create_node.Constant('d', "'")])
         string = "{a: b, 'c': 'd'}"
-        #with pytest.raises(AssertionError):
         self._verify_match(node,string)
     def testTwoItemNoMatch3(self):
         node = create_node.Dict(
@@ -902,11 +899,6 @@ class StrMatcherTest(BaseTestUtils):
         node = create_node.Constant('foobar', "\"")
         string = '\"\"\"foobar\"\"\"'
         self._match_string(node, string)
-        # matcher = GetDynamicMatcher(node)
-        # matcher.do_match(string)
-        # matcher.str_matcher.quote_type = "'''"
-        # matched_source = matcher.GetSource()
-        # self.assertEqual("'''foobar'''", matched_source)
 
 
 class CommentMatcherTest(unittest.TestCase):

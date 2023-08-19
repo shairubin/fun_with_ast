@@ -99,7 +99,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('b')),
                                       create_node.Constant('z', "\"")])
         string = "f\"y{a}'{b}z\""
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
 
@@ -118,9 +117,6 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "f'{a}x'"
         self._assert_match(node, string)
 
-#        matcher = GetDynamicMatcher(node)
-#        with pytest.raises(BadlySpecifiedTemplateError):
-#            self._assert_match(matcher, string)
 
     def testBasicNoMatch(self):
         node = create_node.JoinedStr([create_node.Constant('X', "'")])
@@ -157,8 +153,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('b')),
                                       create_node.Constant('z', "\"")])
         string = "f\"y{a}'{b}z\""
-        #matcher = GetDynamicMatcher(node)
-        #with pytest.raises(AssertionError):
         self._assert_match(node, string)
 
     def testNoMatchStringsAndFormatedValue8(self):
@@ -168,7 +162,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('b')),
                                       create_node.Constant('z', "\"")])
         string = "f\"y{a}x{b}z\""
-        #with pytest.raises(AssertionError):
         self._assert_match(node, string)
 
     def testNoMatchStringsAndFormatedValue(self):

@@ -126,8 +126,15 @@ def get_Assign_expected_parts():
         FieldPlaceholder('value'),
         TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
-
-
+def get_AnnAssign_expected_parts():
+    return [
+        FieldPlaceholder('target'),
+        TextPlaceholder(r'\s*:', ': '),
+        FieldPlaceholder('annotation'),
+        TextPlaceholder(r'([ \t]*=[ \t]*)*', '='),
+        FieldPlaceholder('value'),
+        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+    ]
 
 def get_Attribute_expected_parts():
     return [

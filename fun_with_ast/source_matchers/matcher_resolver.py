@@ -48,6 +48,7 @@ _dynamic_matchers = {
     _ast.And: ['get_And_expected_parts', 'fun_with_ast.source_match'],
     _ast.Assert: ['get_Assert_expected_parts', 'fun_with_ast.source_match'],
     _ast.Assign: ['get_Assign_expected_parts', 'fun_with_ast.source_match'],
+    _ast.AnnAssign: ['get_AnnAssign_expected_parts', 'fun_with_ast.source_match'],
     _ast.Attribute: ['get_Attribute_expected_parts', 'fun_with_ast.source_match'],
     _ast.AugAssign: ['get_AugAssign_expected_parts', 'fun_with_ast.source_match'],
     _ast.arguments: ['get_arguments_expected_parts', 'fun_with_ast.source_match'],

@@ -158,6 +158,16 @@ def And():
 def Assert(check, message=None):
     return _ast.Assert(test=check, msg=message)
 
+def AnnAssign(target, value=None, simple=1):
+    if ':' not in target:
+        raise ValueError('target must have an annotation')
+    name, annotation = target.split(':')
+    if '.' not in name:
+        target_node = _WrapWithName(name, ctx_type=CtxEnum.STORE)
+        annotation_node = _WrapWithName(annotation, ctx_type=CtxEnum.LOAD)
+    else:
+        raise NotImplementedError("Handle attribute names")
+    return _ast.AnnAssign(target_node, annotation_node, value=value, simple=simple)
 
 def Assign(left, right):
     """Creates an _ast.Assign node.

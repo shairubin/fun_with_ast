@@ -1,3 +1,5 @@
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from tests.create_node_tests.create_node_test_based import CreateNodeTestBase
@@ -30,5 +32,14 @@ class CreateAssignTest(CreateNodeTestBase):
         expected_node = GetNodeFromInput(expected_string)
         test_node = create_node.Assign(
             create_node.Tuple(['a', 'c'], ctx_type=create_node.CtxEnum.STORE),
+            create_node.Str('b'))
+        self.assertNodesEqual(expected_node, test_node)
+
+    @pytest.mark.skip(reason='Not implemented yet issue #79')
+    def testAssignWithSubscript(self):
+        expected_string = 'a[1] = "b"'
+        expected_node = GetNodeFromInput(expected_string)
+        test_node = create_node.Assign(
+            create_node.Subscript(1, ctx_type=create_node.CtxEnum.STORE),
             create_node.Str('b'))
         self.assertNodesEqual(expected_node, test_node)

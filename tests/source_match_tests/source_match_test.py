@@ -700,7 +700,6 @@ class DictMatcherTest(BaseTestUtils):
             [create_node.Name('a'), create_node.Constant('c',"\"")], # TODO: no need for the extra parameter
             [create_node.Name('b'), create_node.Constant('d', "'")])
         string = "{a: b, 'c': \"d\"}"
-        #with pytest.raises(AssertionError):
         self._verify_match(node,string)
     def testTwoItemNoMatch3(self):
         node = create_node.Dict(

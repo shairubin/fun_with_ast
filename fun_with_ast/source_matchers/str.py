@@ -57,7 +57,11 @@ class StrSourceMatcher(SourceMatcher):
         #        string_body = string[:-len(remaining_string)]
         string_body = ''
         for part in self.quote_parts:
-            string_body += part.inner_text_placeholder.matched_text
+            string_body +=   part.inner_text_placeholder.matched_text
+#            string_body +=   part.quote_match_placeholder.matched_text + \ TODO: code for issue 79
+#                            part.inner_text_placeholder.matched_text + \
+#                            part.quote_match_placeholder.matched_text
+
         if len(string_body) != len(self.original_s):
             raise BadlySpecifiedTemplateError(f'String body: {string_body} does not match node.s: {self.original_s}')
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
@@ -91,8 +95,8 @@ class StrSourceMatcher(SourceMatcher):
 
         if self.original_s is None:
             if not self.quote_type:
-                raise ValueError('quote_type must be set')
-                #self.quote_type = self.original_quote_type or GetDefaultQuoteType()
+               raise ValueError('quote_type must be set')
+               #self.quote_type = self.original_quote_type or GetDefaultQuoteType()
             return self.quote_type + self.node.s + self.quote_type
 
         #if self.quote_type:

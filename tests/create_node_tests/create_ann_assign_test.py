@@ -10,3 +10,14 @@ class CreateAnnAssignTest(CreateNodeTestBase):
         expected_node = GetNodeFromInput(expected_string)
         test_node = create_node.AnnAssign('a:int')
         self.assertNodesEqual(expected_node, test_node)
+
+    def testAnnAssignSimpleAttribute(self):
+        expected_string = 'a.b:int'
+        expected_node = GetNodeFromInput(expected_string)
+        test_node = create_node.AnnAssign('a.b:int')
+        self.assertNodesEqual(expected_node, test_node)
+    def testAnnAssignSimpleSubsript(self):
+        expected_string = 'a[1tests]:int'
+        expected_node = GetNodeFromInput(expected_string)
+        test_node = create_node.AnnAssign('a.b:int')
+        self.assertNodesEqual(expected_node, test_node)

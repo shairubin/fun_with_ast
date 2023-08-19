@@ -29,10 +29,6 @@ class ConstantNumMatcherTest(BaseTestUtils):
         self._assert_match(node, string)
 
     def _assert_match(self, node, string):
-        #matcher = GetDynamicMatcher(node)
-        #matcher.do_match(string)
-        #matched_string = matcher.GetSource()
-        #self.assertEqual(string, matched_string)
         self._verify_match(node, string)
     def testBasicMatchNumBinary(self):
         node = create_node.Num('0b0')
@@ -158,3 +154,12 @@ class ConstantNumMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
+    def testStringWithDB(self):
+        node = create_node.Str("\"0xffaa\"")
+        string = "\"0xffaa\""
+        self._verify_match(node, string)
+    @pytest.mark.skip('Not implemented yet -- issue #73')
+    def testStringWithDB(self):
+        node = create_node.Str("'0xffaa'")
+        string = "'0xffaa'"
+        self._verify_match(node, string)

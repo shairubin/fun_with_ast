@@ -127,9 +127,12 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=1'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
-    def testAnnAssignFromSource(self):
-        string = 'a: int =1'
+    def testAssignFromSource2(self):
+        string = "a='str'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSource3(self):
+        string = "a=\"str'\""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

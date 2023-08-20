@@ -135,6 +135,10 @@ class AssignMatcherTest(BaseTestUtils):
         string = "a=\"str'\""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testAssignFromSource4(self):
+        string = "reduction_axes = (-1,)"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def _assert_matched_source(self, node, string):
         self._verify_match(node, string)

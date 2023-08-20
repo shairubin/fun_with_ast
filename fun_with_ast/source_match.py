@@ -66,7 +66,7 @@ def get_Tuple_expected_parts():
     return  [
             #TextPlaceholder(r'(\s*\(|\s*)', ''),
             SeparatedListFieldPlaceholder(
-                'elts', before_separator_placeholder=TextPlaceholder(r'[ \t]*,[ \t]*', ',')),
+                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', ',')),
             #TextPlaceholder(r'(\s*,?\s*\)|\s*)[ \t]*(#\S*)*', ')')
         ]
 

@@ -275,9 +275,56 @@ class CallMatcherTest(BaseTestUtils):
         string = "A(\"a\", 'b')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallCommaAtTheEnd(self):
+        string = """return self._normalize(
+                self,
+                x,
+                rms_sq,
+                reduction_axes,
+                feature_axes,
+                self.dtype,
+                self.param_dtype,
+                self.epsilon,
+                self.use_scale,
+                self.scale_init
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallCommaAtTheEnd2(self):
+        string = """return self._normalize(
+                self,
+                x,
+                rms_sq,
+                reduction_axes,
+                feature_axes,
+                self.dtype,
+                self.param_dtype,
+                self.epsilon,
+                self.use_scale,
+                self.scale_init,
+            )"""
+
+    def testCallCommaAtTheEnd3(self):
+        string = """self._normalize(self,)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithNewLineAndComment(self):
+        string = """T(a='cpu')\n# X\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testCallWithNewLineAndComment3(self):
+        string = """T(a)\n# X\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    @pytest.mark.skip('not implemented yet - last line is comment without new line')
+    def testCallWithNewLineAndComment2(self):
+        string = """T()\n# X"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testCallMultipleQuotes2(self):
         string = "A('a', \"b\")\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
 

@@ -53,7 +53,7 @@ class IfSourceMatcher(SourceMatcher):
         if self.matched:
             return self.matched_source
 
-        while SyntaxFreeLine.MatchesStart(remaining_string):
+        while SyntaxFreeLine.is_syntaxfree_line(remaining_string):
             remaining_string, syntax_free_node = (
                 self.body_placeholder.MatchSyntaxFreeLine(remaining_string))
             self.node.body.append(syntax_free_node)

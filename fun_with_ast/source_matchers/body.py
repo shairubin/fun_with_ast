@@ -12,12 +12,16 @@ class BodyPlaceholder(ListFieldPlaceholder):
         super(BodyPlaceholder, self).__init__(*args, **kwargs)
 
     def MatchSyntaxFreeLine(self, remaining_string):
-        line, remaining_string = remaining_string.split('\n', 1)
-        syntax_free_node = SyntaxFreeLine()
-        line += '\n'
-        syntax_free_node.SetFromSrcLine(line)
-        GetSource(syntax_free_node, text=line)
-        return remaining_string, syntax_free_node
+        try:
+            line = remaining_string.split('\n', 1)[0]
+            syntax_free_node = SyntaxFreeLine()
+            line += '\n'
+            syntax_free_node.SetFromSrcLine(line)
+            GetSource(syntax_free_node, text=line)
+            remaining_string = remaining_string.removeprefix(line)
+            return remaining_string, syntax_free_node
+        except Exception as e:
+            raise ValueError(f'Could not match syntax free line {e}')
 
     def _match(self, node, string):
         remaining_string = string
@@ -39,7 +43,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
             remaining_string = MatchPlaceholderList(
                 remaining_string, node, value_at_index)
 
-        while (SyntaxFreeLine.MatchesStart(remaining_string) and
+        while (SyntaxFreeLine.is_syntaxfree_line(remaining_string) and
                (remaining_string.startswith(indent_level) or self.match_after)):
             remaining_string, syntax_free_node = self.MatchSyntaxFreeLine(
                 remaining_string)
@@ -51,7 +55,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
         return matched_string
 
     def _skip_syntax_free_lines(self, new_node, remaining_string):
-        while SyntaxFreeLine.MatchesStart(remaining_string):
+        while SyntaxFreeLine.is_syntaxfree_line(remaining_string):
             remaining_string, syntax_free_node = self.MatchSyntaxFreeLine(
                 remaining_string)
             new_node.append(syntax_free_node)

@@ -8,8 +8,9 @@ from fun_with_ast.placeholders.base_placeholder import Placeholder
 class TextPlaceholder(Placeholder):
     """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""
 
-    def __init__(self, regex, default=None, longest_match=False):
+    def __init__(self, regex, default=None, longest_match=False, no_transform=False):
         super(TextPlaceholder, self).__init__()
+        self.no_transform = no_transform
         self.original_regex = regex
         self.regex = self._TransformRegex(regex)
         self.longest_match = longest_match
@@ -20,6 +21,8 @@ class TextPlaceholder(Placeholder):
         self.matched_text = None
 
     def _TransformRegex(self, regex):
+        if self.no_transform:
+            return regex
         non_whitespace_parts = regex.split(r'\s*')
         regex = r'\s*(\\\s*|#.*\s*)*'.join(non_whitespace_parts)
         non_linebreak_parts = regex.split(r'\n')
@@ -67,7 +70,7 @@ class TextPlaceholder(Placeholder):
         return self.matched_text
 
     def Copy(self):
-        return TextPlaceholder(self.regex, self.default)
+        return TextPlaceholder(self.regex, self.default, no_transform=self.no_transform)
 
     def __repr__(self):
         return 'TextPlaceholder with regex "{}" ("{}") and default "{}"'.format(

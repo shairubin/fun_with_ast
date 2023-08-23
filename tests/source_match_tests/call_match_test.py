@@ -258,7 +258,7 @@ class CallMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testCallDoubeAttributeWithParams3(self):
-        string = "a(z,y).b(x=3)    \n"
+        string = "a(z, \ty).b(x=3)    \n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testCallDoubeAttributeWithParams4(self):
@@ -275,9 +275,101 @@ class CallMatcherTest(BaseTestUtils):
         string = "A(\"a\", 'b')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallCommaAtTheEnd(self):
+        string = """return self._normalize(
+                self,
+                x,
+                rms_sq,
+                reduction_axes,
+                feature_axes,
+                self.dtype,
+                self.param_dtype,
+                self.epsilon,
+                self.use_scale,
+                self.scale_init
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallCommaAtTheEnd2(self):
+        string = """return self._normalize(
+                self,
+                x,
+                rms_sq,
+                reduction_axes,
+                feature_axes,
+                self.dtype,
+                self.param_dtype,
+                self.epsilon,
+                self.use_scale,
+                self.scale_init,
+            )"""
+
+    def testCallCommaAtTheEnd3(self):
+        string = """self._normalize(self,)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithNewLineAndComment(self):
+        string = """T(a='cpu')\n# X\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testCallWithNewLineAndComment3(self):
+        string = """T(a)\n # X\n   # Y\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('not implemented yes - last comment in modul must end with \n ')
+    def testCallWithNewLineAndComment2(self):
+        string = """T(a,b=x)\n     # X ,  \n   # Y"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testCallMultipleQuotes2(self):
         string = "A('a', \"b\")\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCallTwoComments(self):
+        string = """b(a)\n  #if p\n # m\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
+    def testCallTwoComments2(self):
+        string = """
+l(a)        
+        #      load(x,y)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallThreeComments(self):
+        string =  """
+l(a)        
+        #      load(x,y)\n
+        #      load(z,w)\n
+        #      load(i,o)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('not implemented yet - unbalanced parentheses in comments')
+    def testCallThreeComments2(self):
+        string = """
+l(a)        
+        #      load(x,y)\n
+        #      load(z,w))\n
+        #      load(i,o)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallTwoComments3(self):
+        string = string4 = """
+def __init__():
+     chkpt = torch.load(model_path, map_location='cpu')
+         #if 'params_d' in chkpt:
+         #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
+"""
+
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

@@ -65,16 +65,16 @@ class CreateSyntaxFreeLineTest(CreateNodeTestBase):
         test_node = fun_with_ast.manipulate_node.syntax_free_line_node.SyntaxFreeLine()
         test_node.SetFromSrcLine(test_input)
         self.assertEqual(test_node.col_offset, 2)
-        self.assertEqual(test_node.comment_indent, 1)
-        self.assertEqual(test_node.comment, 'Comment')
+        self.assertEqual(test_node.comment_indent, 0)
+        self.assertEqual(test_node.comment, ' Comment')
 
     def testSetFromSrcLineDoubleComment(self):
         test_input = '  # Comment # More comment\n'
         test_node = fun_with_ast.manipulate_node.syntax_free_line_node.SyntaxFreeLine()
         test_node.SetFromSrcLine(test_input)
         self.assertEqual(test_node.col_offset, 2)
-        self.assertEqual(test_node.comment_indent, 1)
-        self.assertEqual(test_node.comment, 'Comment # More comment')
+        self.assertEqual(test_node.comment_indent, 0)
+        self.assertEqual(test_node.comment, ' Comment # More comment')
 
     def testSetFromSrcLineNoComment(self):
         test_input = '  Comment\n'

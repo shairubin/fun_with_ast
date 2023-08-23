@@ -64,10 +64,9 @@ def get_alias_expected_parts():
 
 def get_Tuple_expected_parts():
     return  [
-            #TextPlaceholder(r'(\s*\(|\s*)', ''),
-            SeparatedListFieldPlaceholder(
-                'elts', before_separator_placeholder=TextPlaceholder(r'[ \t]*,[ \t]*', ',')),
-            #TextPlaceholder(r'(\s*,?\s*\)|\s*)[ \t]*(#\S*)*', ')')
+            SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
+                                           # seems to work for now to allow both (a,) and (a)
+                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', ',')),
         ]
 
 def get_And_expected_parts():
@@ -204,14 +203,7 @@ def get_Call_expected_parts():
     ]
 
 def get_CallArgs_expected_parts():
-    return [
-        ArgsKeywordsPlaceholder(
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder('')),
-        FieldPlaceholder(
-            'kwargs',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
-    ]
+    raise NotImplementedError('deprecated')
 
 
 def get_ClassDef_expected_parts():

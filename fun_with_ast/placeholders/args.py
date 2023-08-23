@@ -92,8 +92,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             default_matcher_result = self._use_default_matcher(node, string)
             return default_matcher_result
         else:
-            remaing_string = super()._match(node, string)
-            return remaing_string
+            raise ValueError('old implementation not supported anymore')
     def GetElements(self, node):
         if self.use_default_matcher == True and self.args_matcher:
             elements = []
@@ -122,14 +121,13 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _get_parts_for_default_matcher(self, arg_index, node):
         parts = []
+        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?', default='', no_transform=True)
         parts.append(SeparatedListFieldPlaceholder(r'args',
-                                                    after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
-                                                    exclude_last_after=True))
+                                                    after__separator_placeholder=args_seperator_placeholder))
         if node.keywords:
             if node.args:
-                parts.append(TextPlaceholder(r'\s*,\s*', ', '))
-            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=TextPlaceholder(r'\s*,\s*', ', ',),
-                                                                    exclude_last_after=True  ))
+                parts.append(args_seperator_placeholder)
+            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=args_seperator_placeholder))
         if getattr(node, 'starargs', False):
             ValueError('This should not happen in python 3.10; starred args are part of args')
             parts.append(self.stararg_separator)

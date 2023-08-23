@@ -46,17 +46,6 @@ class VQGANDiscriminator(nn.Module):
             # else:
             #     raise ValueError('Wrong params!')
 """
-# string4 = """
-# def __init__():
-#     chkpt = torch.load(model_path, map_location='cpu')
-#         #if 'params_d' in chkpt:
-#         #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
-# """
-string4 = """
-l(a)        
-        #      load(x,y)\n
-"""
-string3 = """b(a)\n  #if p\n # m\n"""
 
 string2 = """
 class VQGANDiscriminator(nn.Module):
@@ -89,14 +78,7 @@ class ClassMatcherTest(BaseTestUtils):
         string = string2
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def testClassSimple46(self):
-        string = string3
-        node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
-    def testClassSimple47(self):
-        string = string4
-        node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
+
     def testClassSimple5(self):
         string = "class VQGANDiscriminator(nn.Module):\n  def __init__(self, nc=3, ndf=64, n_layers=4, model_path=None):\n     super().__init__()\n"
         node = GetNodeFromInput(string, get_module=True)

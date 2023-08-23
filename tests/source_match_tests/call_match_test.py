@@ -329,3 +329,47 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCallTwoComments(self):
+        string = """b(a)\n  #if p\n # m\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallTwoComments2(self):
+        string = """
+l(a)        
+        #      load(x,y)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallThreeComments(self):
+        string =  """
+l(a)        
+        #      load(x,y)\n
+        #      load(z,w)\n
+        #      load(i,o)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('not implemented yet - unbalanced parentheses in comments')
+    def testCallThreeComments2(self):
+        string = """
+l(a)        
+        #      load(x,y)\n
+        #      load(z,w))\n
+        #      load(i,o)\n
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallTwoComments3(self):
+        string = string4 = """
+def __init__():
+     chkpt = torch.load(model_path, map_location='cpu')
+         #if 'params_d' in chkpt:
+         #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
+"""
+
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

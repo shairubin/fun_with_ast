@@ -203,15 +203,7 @@ def get_Call_expected_parts():
     ]
 
 def get_CallArgs_expected_parts():
-    raise NotImplementedError('depricated')
-    # return [
-    #     ArgsKeywordsPlaceholder(
-    #         TextPlaceholder(r'\s*,\s*', ', '),
-    #         TextPlaceholder('')),
-    #     FieldPlaceholder(
-    #         'kwargs',
-    #         before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
-    # ]
+    raise NotImplementedError('deprecated')
 
 
 def get_ClassDef_expected_parts():

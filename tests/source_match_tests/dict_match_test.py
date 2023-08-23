@@ -17,22 +17,45 @@ def run_around_tests(): # TODO not very smart global variable
 
 class DictMatcherTest(BaseTestUtils):
 
-
     def testBasicDictMatch(self):
-        node = create_node.Num('1')
         string = """deepnet_gain = {
-        "encoder": {
-            "alpha": lambda config: 0.81
-            * (config.encoder_layers**4 * config.decoder_layers) ** 0.0625,
-            "beta": lambda config: 0.87
-            * (config.encoder_layers**4 * config.decoder_layers) ** -0.0625,
-        },
-        "decoder": {
-            "alpha": lambda config: (3 * config.decoder_layers) ** 0.25,
-            "beta": lambda config: (12 * config.decoder_layers) ** -0.25,
-        },
+            "encoder": {
+                "alpha": lambda config: 0.81
+                * (config.encoder_layers**4 * config.decoder_layers) ** 0.0625,
+                "beta": lambda config: 0.87
+                * (config.encoder_layers**4 * config.decoder_layers) ** -0.0625,
+            },
+            "decoder": {
+                "alpha": lambda config: (3 * config.decoder_layers) ** 0.25,
+                "beta": lambda config: (12 * config.decoder_layers) ** -0.25,
+            },
+    }"""
+        node = GetNodeFromInput(string, get_module=True)
+
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 89')
+    def testBasicDictMatch2(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(
+        1.0
+        / 3.0
+        * math.log(3 * config.decoder_layers)
+        * math.log(2 * config.encoder_layers)
+    ),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
 }"""
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
+
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 89')
+    def testBasicDictMatch3(self):
+        string = """{
+    "encoder":  sqrt(1.0),
+    "decoder":  math,
+}"""
+        node = GetNodeFromInput(string, get_module=True)
 
         self._verify_match(node, string)
 

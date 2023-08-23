@@ -258,7 +258,7 @@ class CallMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testCallDoubeAttributeWithParams3(self):
-        string = "a(z,y).b(x=3)    \n"
+        string = "a(z, \ty).b(x=3)    \n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testCallDoubeAttributeWithParams4(self):
@@ -314,12 +314,13 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
     def testCallWithNewLineAndComment3(self):
-        string = """T(a)\n# X\n"""
+        string = """T(a)\n # X\n   # Y\n"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('not implemented yet - last line is comment without new line')
+
+    @pytest.mark.skip('not implemented yes - last comment in modul must end with \n ')
     def testCallWithNewLineAndComment2(self):
-        string = """T()\n# X"""
+        string = """T(a,b=x)\n     # X ,  \n   # Y"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 

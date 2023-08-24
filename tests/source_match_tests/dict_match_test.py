@@ -49,13 +49,46 @@ class DictMatcherTest(BaseTestUtils):
 
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 89')
+    def testBasicDictMatch15(self):
+        string = """{
+    "E":  C, # comment 
+    "D":  B, #comment
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testBasicDictMatch3(self):
         string = """{
-    "encoder":  sqrt(1.0),
-    "decoder":  math,
+    "E":  C(1.0), # comment1
+    "D":  B
 }"""
-        node = GetNodeFromInput(string, get_module=True)
-
+        node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testBasicDictMatch31(self):
+        string = """{
+    "E":  C(1.0,), # comment1
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch32(self):
+        string = """{
+    "E":  C(1.0,) # comment1
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch33(self):
+        string = """{
+    "E":  C(1.0) # comment1
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch4(self):
+        string = """{
+    "encoder":  sqrt(1.0),
+    "decoder":  math
+}"""
 

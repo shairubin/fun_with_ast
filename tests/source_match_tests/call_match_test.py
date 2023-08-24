@@ -228,6 +228,20 @@ class CallMatcherTest(BaseTestUtils):
         string = "c(f'a')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallWithJoinedFloat(self):
+        string = "c(1.0)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallWithCommanandFloat(self):
+        string = "c(1.0,)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testNoMatchCallWithJoinedFloat(self):
+        string = "c(1),\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
 
     def testCallDoubeAttribute2(self):
         string = "torch.nn.GroupNorm(eps=1e-06)\n"

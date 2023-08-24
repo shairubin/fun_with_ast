@@ -1,8 +1,13 @@
+import random
+
+
 class Placeholder(object):
     """Base class for other placeholder objects."""
-
+    id = 0
     def __init__(self):
         self.starting_parens = []
+        self._id = Placeholder.id
+        Placeholder.id += 1
 
     def _match(self, node, string):
         raise NotImplementedError

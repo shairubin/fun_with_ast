@@ -196,9 +196,9 @@ def get_Call_expected_parts():
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
-        FieldPlaceholder(
-            'kwargs',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
+#        FieldPlaceholder(
+#            'kwargs',
+#            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
         #TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 
@@ -260,8 +260,9 @@ def get_Dict_expected_parts():
     return [
         TextPlaceholder(r'\s*{\s*', '{'),
         KeysValuesPlaceholder(
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*:\s*', ': ')),
+            #TextPlaceholder(r'\s*,\s*', ', '),
+            TextPlaceholder(r'\s*,[ \t]*(#+.*)*(\n[ \t]*)?', ', ', no_transform=True),
+            TextPlaceholder(r'\s*:\s*', ': ', no_transform=True)),
         TextPlaceholder(r'\s*,?\s*}', '}')
     ]
 

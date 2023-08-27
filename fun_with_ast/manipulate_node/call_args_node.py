@@ -18,9 +18,10 @@ class KWKeyword(ast.keyword):
 class CallArgs(_ast.stmt):
     """A node for handling arguments for a function call"""
 
-    def __init__(self, args_list, keywords_list):
+    def __init__(self, args_list, keywords_list, parent_node):
         self._fields = ['args', 'keywords']
         self.args = args_list
+        self.parent_node = parent_node
         kw_keywords = []
         for keyword in keywords_list:
             if self.isKWarg(keyword):

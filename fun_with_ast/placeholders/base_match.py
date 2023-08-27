@@ -1,7 +1,7 @@
 from fun_with_ast.placeholders.node import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, ReachedEndOfNodeException
 
 
 def MatchPlaceholder(string, node, placeholder):
@@ -25,6 +25,10 @@ def MatchPlaceholderList(string, node, placeholders, starting_parens=None):
     for placeholder in placeholders:
         if remaining_string == string:
             placeholder.SetStartingParens(starting_parens)
-        remaining_string = MatchPlaceholder(
-            remaining_string, node, placeholder)
+        try:
+            remaining_string = MatchPlaceholder(
+                remaining_string, node, placeholder)
+        except ReachedEndOfNodeException as e:
+            remaining_string = e.remaining_string
+            break
     return remaining_string

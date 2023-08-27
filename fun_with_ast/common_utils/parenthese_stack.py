@@ -39,6 +39,9 @@ class ParanthesisStack(Stack):
                 # for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = EndParenMatcher()
                 orig_start_paren_matcher, orig_source_matcher = self.peek()
+                if matcher is not orig_source_matcher:
+                    if orig_source_matcher is not matcher.node.parent_node.node_matcher:
+                        raise ValueError('parentheses stack is not balanced')
                 if isinstance(orig_start_paren_matcher, StartParenMatcher):
                     remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
                     original_node_matcher = orig_source_matcher

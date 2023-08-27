@@ -275,6 +275,10 @@ class CallMatcherTest(BaseTestUtils):
         string = "a(z, \ty).b(x=3)    \n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams31(self):
+        string = "b(x=3)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
     def testCallDoubeAttributeWithParams4(self):
         string = "super().__init__()\n"
         node = GetNodeFromInput(string)

@@ -140,6 +140,26 @@ else:
             source = GetSource(node, assume_no_indent=True, assume_elif=assume_elif)
             self.assertEqual(string, source)
 
+    def testIfFromSource0(self):
+        string = "if (a):\n  pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource01(self):
+        string = "if (not a):\n  pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource02(self):
+        string = "if (not (a)):\n  pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource03(self):
+        string = "if (not (a )):\n  pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource04(self):
+        string = "if (not (a ) ):\n  pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
     def testIfFromSource(self):
         string = "if (a and b):\n     a = 1\nelse:\n    a=2"
         if_node = GetNodeFromInput(string)
@@ -157,6 +177,10 @@ else:
 
     def testIfFromSource4(self):
         string = "if a and ((not c) and d):\n   pass"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+    def testIfFromSource41(self):
+        string = "if ((not c) and d):\n   pass"
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 

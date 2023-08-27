@@ -9,6 +9,11 @@ class CreateStrTest(CreateNodeTestBase):
         expected_node = GetNodeFromInput(expected_string).value
         test_node = create_node.Str('a')
         self.assertNodesEqual(expected_node, test_node)
+    def testStr2(self):
+        expected_string = ' "a"'
+        expected_node = GetNodeFromInput(expected_string).value
+        test_node = create_node.Str('a')
+        self.assertNodesEqual(expected_node, test_node)
 
 
 class CreateNumTest(CreateNodeTestBase):

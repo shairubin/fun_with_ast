@@ -31,7 +31,35 @@ class DictMatcherTest(BaseTestUtils):
             },
     }"""
         node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testComplexDictMatch2(self):
+        string = """deepnet_gain = {
+            "encoder": {
+                "alpha": lambda config: 0.81
+                * (config.encoder_layers**4 * config.decoder_layers) ** 0.0625,
+                "beta": lambda config: 0.87
+                * (config.encoder_layers**4 * config.decoder_layers) ** -0.0625,
+            },
+    }"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
+    def testComplexDictMatch21(self):
+        string = """deepnet_gain = {
+            "encoder": {
+                "alpha": lambda config: 0.81
+                * (config.encoder_layers**4 * config.decoder_layers) ** 0.0625
+            }
+    }"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testComplexDictMatch22(self):
+        string = """deepnet_gain = {
+                "alpha": lambda config: 0.81
+                * (config.encoder_layers**4 * config.decoder_layers) ** 0.0625,
+    }"""
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testBasicDictMatch28(self):

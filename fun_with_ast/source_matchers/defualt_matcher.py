@@ -5,7 +5,7 @@ from fun_with_ast.placeholders.base_match import MatchPlaceholderList
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, ReachedEndOfNodeException
 
 
 class DefaultSourceMatcher(SourceMatcher):
@@ -63,6 +63,12 @@ class DefaultSourceMatcher(SourceMatcher):
                 'When attempting to match string "{}" with {}, this '
                 'error resulted:\n\n{}'
                     .format(string, self, e.message))
+        except ReachedEndOfNodeException as e:
+            matched_string = DefaultSourceMatcher.GetSource(self)
+            self.matched_source = matched_string
+            self.matched = True
+            raise e
+
         matched_string = DefaultSourceMatcher.GetSource(self)
         self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)

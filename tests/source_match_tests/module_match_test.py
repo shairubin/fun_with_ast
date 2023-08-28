@@ -111,3 +111,13 @@ a.b('cpu')
 """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testFromInputParantheses(self):
+        string = """(a)"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputParantheses2(self):
+        string = """(   (a) )  """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

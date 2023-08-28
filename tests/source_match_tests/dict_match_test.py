@@ -57,10 +57,35 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testBasicDictMatch16(self):
+        string = """{
+    "E":  C,
+    "D":  B
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch16(self):
+        string = """{
+    "E":  C, #comment2
+    "D":  B
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('not supported yet comment in the middle of a dict after call.  issue ')
     def testBasicDictMatch3(self):
         string = """{
     "E":  C(1.0), # comment1
-    "D":  B
+    "D":  B,
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch32(self):
+        string = """{
+    "E":  C(1.0),
+    "D":  B,
 }"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

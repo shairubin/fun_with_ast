@@ -321,6 +321,27 @@ class CallMatcherTest(BaseTestUtils):
                 self.use_scale,
                 self.scale_init,
             )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallStringParam(self):
+        string = """return self._normalize(
+                self,
+                "x",
+                rms_sq,
+                reduction_axe
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallCallParam(self):
+        string = """return self._normalize(
+                self,
+                "x",
+                C(1.0),
+                reduction_axe
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testCallCommaAtTheEnd3(self):
         string = """self._normalize(self,)"""

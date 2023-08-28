@@ -170,6 +170,6 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testStringFronInput3(self):
-        string = "   '0xffaa'"
+        string = "if True:\n   'fun-with-ast'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

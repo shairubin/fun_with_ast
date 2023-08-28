@@ -1,3 +1,4 @@
+import ast
 import pprint
 
 from fun_with_ast.placeholders.base_match import MatchPlaceholderList
@@ -47,7 +48,8 @@ class DefaultSourceMatcher(SourceMatcher):
           ValueError: If there is more than one TextPlaceholder in a rwo
         """
         remaining_string = self.MatchWhiteSpaces(string)
-        remaining_string = self.MatchStartParens(remaining_string)
+        if not isinstance(self.node, ast.Module):
+            remaining_string = self.MatchStartParens(remaining_string)
 
 
         try:

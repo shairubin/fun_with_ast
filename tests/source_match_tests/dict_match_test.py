@@ -17,7 +17,7 @@ def run_around_tests(): # TODO not very smart global variable
 
 class DictMatcherTest(BaseTestUtils):
 
-    def testBasicDictMatch(self):
+    def testComplexDictMatch(self):
         string = """deepnet_gain = {
             "encoder": {
                 "alpha": lambda config: 0.81
@@ -34,7 +34,19 @@ class DictMatcherTest(BaseTestUtils):
 
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 89')
+    def testBasicDictMatch28(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(
+        1.0
+        / 3.0
+        * math.log(3 * config.decoder_layers)
+        * math.log(2 * config.encoder_layers),
+    ),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testBasicDictMatch2(self):
         string = """subln_gain = {
     "encoder": lambda config: math.sqrt(
@@ -46,7 +58,34 @@ class DictMatcherTest(BaseTestUtils):
     "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
 }"""
         node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
+    def testBasicDictMatch25(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(1.0),
+    "decoder": 7
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch26(self):
+        string = """subln_gain = {
+    "encoder": sqrt(1.0),
+    "decoder": 7
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch24(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(
+        1.0
+        / 3.0
+        * math.log(3 * config.decoder_layers)
+        * math.log(2 * config.encoder_layers)
+    ),
+}"""
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testBasicDictMatch15(self):
@@ -97,7 +136,7 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testBasicDictMatch32(self):
+    def testBasicDictMatch34(self):
         string = """{
     "E":  C(1.0,) # comment1
 }"""

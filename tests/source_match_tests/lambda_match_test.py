@@ -45,6 +45,30 @@ class LambdaMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testMatchComplexLambda21(self):
+        string = """lambda config: math.sqrt(
+        1.0
+        / 3.0,
+    ),"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testMatchComplexLambda22(self):
+        string = """lambda config: math.sqrt(
+        1.0
+        / 3.0
+    ),"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testMatchComplexLambda23(self):
+        string = """lambda config: math.sqrt(
+        1.0
+        / 3.0
+    )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testMatchComplexLambda2(self):
         string = """lambda x:a"""
         node = GetNodeFromInput(string)

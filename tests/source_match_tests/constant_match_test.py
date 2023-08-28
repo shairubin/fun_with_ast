@@ -62,9 +62,6 @@ class ConstantNumMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
-        # matcher.do_match(string)
-        # matched_string = matcher.GetSource()
-        # self.assertNotEqual(string, matched_string)
 
 
     @pytest.mark.skip('Not implemented yet')
@@ -155,12 +152,24 @@ class ConstantNumMatcherTest(BaseTestUtils):
 
 
     @pytest.mark.skip('Not implemented yet -- issue #73')
-    def testStringWithDB(self):
+    def testStringWithDQ(self):
         node = create_node.Str("\"0xffaa\"")
         string = "\"0xffaa\""
         self._verify_match(node, string)
     @pytest.mark.skip('Not implemented yet -- issue #73')
-    def testStringWithSB(self):
+    def testStringWithSQ(self):
         node = create_node.Str("'0xffaa'")
         string = "'0xffaa'"
+        self._verify_match(node, string)
+    def testStringFronInput(self):
+        string = "'0xffaa'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringFronInput2(self):
+        string = "'   0xffaa'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringFronInput3(self):
+        string = "if True:\n   'fun-with-ast'"
+        node = GetNodeFromInput(string)
         self._verify_match(node, string)

@@ -112,7 +112,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _use_default_matcher(self, node, string):
         arg_index = len(node.args)
-        args_node = CallArgs(node.args, node.keywords)
+        args_node = CallArgs(node.args, node.keywords, node)
         node.keywords = args_node.keywords # not nice
         parts = self._get_parts_for_default_matcher(arg_index, node)
         self.args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
@@ -121,7 +121,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _get_parts_for_default_matcher(self, arg_index, node):
         parts = []
-        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?', default='', no_transform=True)
+        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*)*', default='', no_transform=True)
         parts.append(SeparatedListFieldPlaceholder(r'args',
                                                     after__separator_placeholder=args_seperator_placeholder))
         if node.keywords:

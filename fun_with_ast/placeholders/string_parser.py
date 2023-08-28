@@ -63,7 +63,7 @@ class StringParser(object):
 
     def Parse(self):
         """Parses the string, handling nodes and TextPlaceholders."""
-        for element in self.elements:
+        for index, element in enumerate(self.elements):
             if isinstance(element, Placeholder):
                 self._MatchTextPlaceholder(element)
             else:

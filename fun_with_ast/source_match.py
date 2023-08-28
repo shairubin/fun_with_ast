@@ -66,7 +66,7 @@ def get_Tuple_expected_parts():
     return  [
             SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
                                            # seems to work for now to allow both (a,) and (a)
-                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', ',')),
+                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', '')),
         ]
 
 def get_And_expected_parts():
@@ -196,10 +196,6 @@ def get_Call_expected_parts():
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
-        FieldPlaceholder(
-            'kwargs',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*', ', **')),
-        #TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 
 def get_CallArgs_expected_parts():
@@ -260,8 +256,8 @@ def get_Dict_expected_parts():
     return [
         TextPlaceholder(r'\s*{\s*', '{'),
         KeysValuesPlaceholder(
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*:\s*', ': ')),
+                TextPlaceholder(r'\s*,[ \t]*(#+.*)?(\n[ \t]*)?', ',', no_transform=True),
+                TextPlaceholder(r'\s*:\s*', ': ', no_transform=True)),
         TextPlaceholder(r'\s*,?\s*}', '}')
     ]
 

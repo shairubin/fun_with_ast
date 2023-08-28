@@ -93,6 +93,14 @@ class NameMatcherTest(BaseTestUtils):
         string = '(b)\n#\nn(a)\n'
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testNamesInModule1(self):
+        string = '(b)\n(a)\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testNamesInModule2(self):
+        string = '(b)\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testLeadingSpaces(self):
         node = create_node.Name('a')

@@ -84,9 +84,6 @@ class SourceMatcher(object):
             comment = full_line.group(2)
         if comment:
             self.end_of_line_comment = comment
-        #if remove_comment and full_line:
-        #    raise NotImplementedError('remove_comment is not implemented')
-        #    remaining_string = full_line.group(1)
         return comment
 
 

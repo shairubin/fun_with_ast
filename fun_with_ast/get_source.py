@@ -63,6 +63,7 @@ def _set_elif(assume_elif, field):
 
 def _match_text(assume_no_indent, field, text, parent_node):
     if text:
+        field.parent_node = parent_node
         field.node_matcher._match(text)
     elif isinstance(field, _ast.stmt) and not assume_no_indent:
 #       if not hasattr(field, 'module_node'):

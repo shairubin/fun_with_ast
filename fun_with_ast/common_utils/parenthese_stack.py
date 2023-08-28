@@ -1,4 +1,5 @@
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException, \
+    ReachedEndOfNodeException
 
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.text import StartParenMatcher, EndParenMatcher
@@ -38,16 +39,20 @@ class ParanthesisStack(Stack):
             while True:
                 # for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = EndParenMatcher()
-                matcher_type = self.peek()
-                if isinstance(matcher_type[0], StartParenMatcher):
+                orig_start_paren_matcher, orig_source_matcher = self.peek()
+                if matcher is not orig_source_matcher:
+                    if matcher.node.parent_node is not None:
+                        if orig_source_matcher is not matcher.node.parent_node.node_matcher:
+                            raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
+                if isinstance(orig_start_paren_matcher, StartParenMatcher):
                     remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
-                    paired_matcher_info = self.pop()
-                    original_node_matcher = paired_matcher_info[1]
-                    start_paren_matcher = paired_matcher_info[0]
+                    original_node_matcher = orig_source_matcher
+                    start_paren_matcher = orig_start_paren_matcher
+                    self.pop()
                     matcher.end_paren_matchers.append(end_paren_matcher)
                     original_node_matcher.start_paren_matchers.insert(0, start_paren_matcher)
                 else:
-                    break
+                    ValueError('parentheses stack is not balanced')
         except BadlySpecifiedTemplateError:
             pass
         except EmptyStackException:

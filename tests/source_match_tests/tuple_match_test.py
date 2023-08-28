@@ -71,6 +71,15 @@ class TupleTest(BaseTestUtils):
         string = '(\t   a\t, 1 \t) \t #comment'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
+    def testCreateNodeFromInput1(self):
+        string = '(a, 1,) \t #comment'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+    def testCreateNodeFromInput11(self):
+        string = '(a, 1)  #comment'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
     def testCreateNodeFromInput2(self):
         string = '(a,)'
         node =GetNodeFromInput(string)

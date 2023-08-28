@@ -228,6 +228,20 @@ class CallMatcherTest(BaseTestUtils):
         string = "c(f'a')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallWithFloat(self):
+        string = "c(1.0)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallWithFloat2(self):
+        string = "c(1.0,)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testNoMatchCallWithIntAndComma(self):
+        string = "c(1),\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
 
     def testCallDoubeAttribute2(self):
         string = "torch.nn.GroupNorm(eps=1e-06)\n"
@@ -259,6 +273,10 @@ class CallMatcherTest(BaseTestUtils):
 
     def testCallDoubeAttributeWithParams3(self):
         string = "a(z, \ty).b(x=3)    \n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams31(self):
+        string = "b(x=3)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testCallDoubeAttributeWithParams4(self):
@@ -303,6 +321,27 @@ class CallMatcherTest(BaseTestUtils):
                 self.use_scale,
                 self.scale_init,
             )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallStringParam(self):
+        string = """return self._normalize(
+                self,
+                "x",
+                rms_sq,
+                reduction_axe
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallCallParam(self):
+        string = """return self._normalize(
+                self,
+                "x",
+                C(1.0),
+                reduction_axe
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testCallCommaAtTheEnd3(self):
         string = """self._normalize(self,)"""

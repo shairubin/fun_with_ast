@@ -228,16 +228,16 @@ class CallMatcherTest(BaseTestUtils):
         string = "c(f'a')\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    def testCallWithJoinedFloat(self):
+    def testCallWithFloat(self):
         string = "c(1.0)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    def testCallWithCommanandFloat(self):
+    def testCallWithFloat2(self):
         string = "c(1.0,)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testNoMatchCallWithJoinedFloat(self):
+    def testNoMatchCallWithIntAndComma(self):
         string = "c(1),\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

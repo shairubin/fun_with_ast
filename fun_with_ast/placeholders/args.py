@@ -122,7 +122,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
     def _get_parts_for_default_matcher(self, arg_index, node):
         parts = []
         args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*)*', default='', no_transform=True)
-        #args_seperator_placeholder = TextPlaceholder(r'(\s*(?=\)))', default='', no_transform=True)
         parts.append(SeparatedListFieldPlaceholder(r'args',
                                                     after__separator_placeholder=args_seperator_placeholder))
         if node.keywords:

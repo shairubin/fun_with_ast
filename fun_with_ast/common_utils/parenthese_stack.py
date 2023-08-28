@@ -44,9 +44,6 @@ class ParanthesisStack(Stack):
                     if matcher.node.parent_node is not None:
                         if orig_source_matcher is not matcher.node.parent_node.node_matcher:
                             raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
-                        #pass
-                        #if orig_source_matcher is not matcher.node.parent_node.node_matcher:
-                        #    raise ValueError('parentheses stack is not balanced')
                 if isinstance(orig_start_paren_matcher, StartParenMatcher):
                     remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
                     original_node_matcher = orig_source_matcher

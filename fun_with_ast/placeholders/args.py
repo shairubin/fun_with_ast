@@ -131,7 +131,8 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         if node.keywords:
             if node.args:
                 parts.append(args_seperator_placeholder)
-            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=args_seperator_placeholder))
+            parts.append(SeparatedListFieldPlaceholder(r'keywords', after__separator_placeholder=args_seperator_placeholder,
+                                                        exclude_last_after=exclude_last_after))
         if getattr(node, 'starargs', False):
             ValueError('This should not happen in python 3.10; starred args are part of args')
             parts.append(self.stararg_separator)
@@ -154,6 +155,8 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         first_pair = parens_pairs[0]
         current_string = string[:first_pair[1]+1]
         if re.search(r'[ \t]*,[ \t\n]*\)$', current_string):
+            return False
+        if re.search(r'(\s*,\s*)?([ \t]*#.*\n*[ \t]*)', current_string):
             return False
         return  True
 

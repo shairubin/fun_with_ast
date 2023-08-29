@@ -148,3 +148,22 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+
+    @pytest.mark.skip(reason="issue #98")
+    def testAssignFromSourceList2(self):
+        string = "layers = [nn.Conv2d(nc, ndf, kernel_size=4, stride=2, padding=1), nn.LeakyReLU(0.2, True)]"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceList21(self):
+        string = "layers = [nn.Conv2d(nc, ndf, kernel_size=4, stride=2, padding=1)]"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #98")
+    def testAssignFromSourceList22(self):
+        string = "layers = [nn.Conv2d(nc, ndf, kernel_size=4, stride=2, padding=1), nn.LeakyReLU(0.2)]"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+

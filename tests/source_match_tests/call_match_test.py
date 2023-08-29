@@ -343,6 +343,15 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCallCallParam2(self):
+        string = """return self._normalize(
+                self,
+                "x",
+                C(1.0),
+            ),"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testCallCommaAtTheEnd3(self):
         string = """self._normalize(self,)"""
         node = GetNodeFromInput(string)

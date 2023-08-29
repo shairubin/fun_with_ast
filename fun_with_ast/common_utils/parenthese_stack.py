@@ -1,5 +1,7 @@
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException, \
-    ReachedEndOfNodeException
+import ast
+
+from fun_with_ast.manipulate_node.call_args_node import CallArgs
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
 
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.text import StartParenMatcher, EndParenMatcher
@@ -40,10 +42,6 @@ class ParanthesisStack(Stack):
                 # for unused_i in range(len(self.start_paren_matchers)):
                 end_paren_matcher = EndParenMatcher()
                 orig_start_paren_matcher, orig_source_matcher = self.peek()
-                if matcher is not orig_source_matcher:
-                    if matcher.node.parent_node is not None:
-                        if orig_source_matcher is not matcher.node.parent_node.node_matcher:
-                            raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
                 if isinstance(orig_start_paren_matcher, StartParenMatcher):
                     remaining_string = MatchPlaceholder(remaining_string, None, end_paren_matcher)
                     original_node_matcher = orig_source_matcher

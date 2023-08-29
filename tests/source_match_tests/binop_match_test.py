@@ -2,6 +2,7 @@ import unittest
 
 import pytest
 
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
@@ -26,9 +27,6 @@ class BinOpMatcherTest(BaseTestUtils):
             create_node.Name('b'))
         string = 'b + a'
         self._validate_no_match(node, string)
-#        matcher = GetDynamicMatcher(node)
-#        with pytest.raises(BadlySpecifiedTemplateError):
-#            matcher.do_match(string)
 
     def testSubBinOp(self):
         node = create_node.BinOp(
@@ -136,6 +134,14 @@ class BinOpMatcherTest(BaseTestUtils):
         string = 'a ** b'
         self._verify_match(node, string)
 
+    def testPowBinOp2(self):
+        node = create_node.BinOp(
+            create_node.Name('a'),
+            create_node.Pow(),
+            create_node.Name('b'))
+        string = '(a ** b)'
+        self._verify_match(node, string)
+
     def testLShiftBinOp(self):
         node = create_node.BinOp(
             create_node.Name('a'),
@@ -180,3 +186,44 @@ class BinOpMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError) as e:
             matcher.do_match(string)
+    def testFromInput(self):
+        string = "0.81 * config.encoder_layers**4 * config.decoder_layers ** 0.0625"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testFromInput1(self):
+        string = "7 * (A**4 * C) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testFromInput2(self):
+        string = "7 * (A**4 * C)"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testFromInput3(self):
+        string = "(A*4 * C) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput31(self):
+        string = "(A*4 * C) ** 9"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInput32(self):
+        string = "(A*4) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput33(self):
+        string = "(A*(4)) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput4(self):
+        string = "(A * C) * 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput41(self):
+        string = "(A * C) * 9"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

@@ -423,7 +423,6 @@ def __init__():
         self._verify_match(node, string)
 
 
-    #@pytest.mark.skip('issue #95')
     def testCallWithLists(self):
         string =  """portdicts = fileparse.parse_csv(lines,
                                         select=['name', 'shares', 'price'], # <-- See this line of AST unparse results
@@ -455,6 +454,12 @@ def __init__():
                                         select=['name'], # <-- See this line of AST unparse results
                                         types=[str])
 """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWithLists22(self):
+        string = """a.b(lines, # comment
+                        select)"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 

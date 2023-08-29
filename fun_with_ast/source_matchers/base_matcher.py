@@ -31,6 +31,8 @@ class SourceMatcher(object):
     def do_match(self, string):
         self._check_balance_parentheses(string)
         SourceMatcher.parentheses_stack.reset()
+        if self.node:
+            self.node.parent_node = None
         result = self._match(string)
         if len(result) < len(string):
             try:

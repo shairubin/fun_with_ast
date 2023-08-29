@@ -98,7 +98,7 @@ class DictMatcherTest(BaseTestUtils):
 
     def testBasicDictMatch26(self):
         string = """subln_gain = {
-    "encoder": sqrt(1.0),
+    "encoder": sqrt(1.0,),
     "decoder": 7
 }"""
         node = GetNodeFromInput(string, get_module=True)

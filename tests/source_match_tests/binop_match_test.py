@@ -203,7 +203,27 @@ class BinOpMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testFromInput31(self):
+        string = "(A*4 * C) ** 9"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInput32(self):
+        string = "(A*4) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput33(self):
+        string = "(A*(4)) ** 9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testFromInput4(self):
         string = "(A * C) * 9"
         node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromInput41(self):
+        string = "(A * C) * 9"
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -1,3 +1,6 @@
+import ast
+
+from fun_with_ast.manipulate_node.call_args_node import CallArgs
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException, \
     ReachedEndOfNodeException
 
@@ -44,9 +47,11 @@ class ParanthesisStack(Stack):
                     if matcher.node.parent_node is not None:
                         parent_matcher = matcher.node.parent_node.node_matcher
                         if orig_source_matcher is not parent_matcher:
-                            raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
-                        if orig_source_matcher is parent_matcher:
-                            raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
+                            pass
+                            #raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
+                        if orig_source_matcher is parent_matcher and parent_matcher.node.parent_node is not None:
+                            pass
+                            #raise ReachedEndOfNodeException(matcher, orig_source_matcher, remaining_string)
 
                     else:
                         pass # unclear what to do in this case

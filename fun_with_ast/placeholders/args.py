@@ -1,3 +1,5 @@
+import re
+
 from fun_with_ast.placeholders.list_placeholder import SeparatedListFieldPlaceholder
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
@@ -101,7 +103,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             elements.extend(self.args_matcher.end_paren_matchers)
             return elements
         elif self.use_default_matcher == True and not self.args_matcher:
-            parts = self._get_parts_for_default_matcher(0, node)
+            parts = self._get_parts_for_default_matcher(0, node, '')
             start_paren = TextPlaceholder(r'\(\s*', '(')
             end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
             parts.insert(0, start_paren)
@@ -114,16 +116,18 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         arg_index = len(node.args)
         args_node = CallArgs(node.args, node.keywords, node)
         node.keywords = args_node.keywords # not nice
-        parts = self._get_parts_for_default_matcher(arg_index, node)
+        parts = self._get_parts_for_default_matcher(arg_index, node, string)
         self.args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
         matched_string = self.args_matcher._match(string)
         return matched_string
 
-    def _get_parts_for_default_matcher(self, arg_index, node):
+    def _get_parts_for_default_matcher(self, arg_index, node, string):
         parts = []
-        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*)*', default='', no_transform=True)
+        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*)*', default='', no_transform=True )
+        exclude_last_after = self._should_exclude_last_after(string)
         parts.append(SeparatedListFieldPlaceholder(r'args',
-                                                    after__separator_placeholder=args_seperator_placeholder))
+                                                    after__separator_placeholder=args_seperator_placeholder,
+                                                    exclude_last_after=exclude_last_after))
         if node.keywords:
             if node.args:
                 parts.append(args_seperator_placeholder)
@@ -142,6 +146,12 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
                     parts.append(self._GetArgSeparator(arg_index))
                     arg_index += 1
         return parts
+
+    def _should_exclude_last_after(self, string):
+        found = re.search(r',\s*\)', string)
+        if found :
+            return False
+        return True
 
 
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):

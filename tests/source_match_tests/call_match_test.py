@@ -423,13 +423,45 @@ def __init__():
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip('issue #95')
+    #@pytest.mark.skip('issue #95')
     def testCallWithLists(self):
         string =  """portdicts = fileparse.parse_csv(lines,
                                         select=['name', 'shares', 'price'], # <-- See this line of AST unparse results
                                         types=[str, int, float],
                                         **opts)
                                         # <-- See this line is missing in of AST unparse results
-    """
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWithLists1(self):
+        string =  """fileparse.parse_csv(lines,
+                                        select=['name', 'shares', 'c'],# <-- See this line of AST unparse results
+                                        types=[str, int, float])
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWithLists2(self):
+        string =  """fileparse.parse_csv(lines,
+                                        select=['name'],
+                                        types=[str])
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWithLists21(self):
+        string = """fileparse.parse_csv(lines,
+                                        select=['name'], # <-- See this line of AST unparse results
+                                        types=[str])
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWithLists3(self):
+        string =  """fileparse.parse_csv(lines,
+                                        select=['name'], # <-- See this line of AST unparse results
+                                        )
+"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

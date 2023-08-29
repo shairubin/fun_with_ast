@@ -412,12 +412,24 @@ l(a)
         self._verify_match(node, string)
 
     def testCallTwoComments3(self):
-        string = string4 = """
+        string =  """
 def __init__():
      chkpt = torch.load(model_path, map_location='cpu')
          #if 'params_d' in chkpt:
          #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
 """
 
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    @pytest.mark.skip('issue #95')
+    def testCallWithLists(self):
+        string =  """portdicts = fileparse.parse_csv(lines,
+                                        select=['name', 'shares', 'price'], # <-- See this line of AST unparse results
+                                        types=[str, int, float],
+                                        **opts)
+                                        # <-- See this line is missing in of AST unparse results
+    """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

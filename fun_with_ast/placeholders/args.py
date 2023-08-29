@@ -148,12 +148,36 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         return parts
 
     def _should_exclude_last_after(self, string):
-        found = re.search(r',\s*\)', string)
-        if found :
+        parens_pairs = self._find_parens(string)
+        if not parens_pairs:
+            return True
+        first_pair = parens_pairs[0]
+        #if first_pair[0] != 0:
+        #    raise NotImplementedError('not supported yet')
+        current_string = string[:first_pair[1]+1]
+        #if current_string[-2] == ',':
+        if re.search(r'[ \t]*,[ \t\n]*\)$', current_string):
             return False
-        return True
+        return  True
 
+    def _find_parens(self, s): # from stack overflow
+        toret = {}
+        pstack = []
 
+        for i, c in enumerate(s):
+            if c == '(':
+                pstack.append(i)
+            elif c == ')':
+                if len(pstack) == 0:
+                    break
+                    raise IndexError("No matching closing parens at: " + str(i))
+                toret[pstack.pop()] = i
+
+        if len(pstack) > 0:
+            raise IndexError("No matching opening parens at: " + str(pstack.pop()))
+        result = [(x,y) for x,y in toret.items()]
+        result.sort()
+        return result
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _GetArgsKwargs(self, node):

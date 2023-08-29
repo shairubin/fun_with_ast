@@ -69,8 +69,41 @@ class DictMatcherTest(BaseTestUtils):
         / 3.0
         * math.log(3 * config.decoder_layers)
         * math.log(2 * config.encoder_layers),
-    ),
+        ),
     "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch27(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(math.log(x,),),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch271(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(math.log(x,)),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers))
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch272(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(math.log(x,)),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers),)
+}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicDictMatch273(self):
+        string = """subln_gain = {
+    "encoder": lambda config: math.sqrt(math.log(x,)    ,     ),
+    "decoder": lambda config: math.sqrt(math.log(3 * config.decoder_layers),
+    ),
 }"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

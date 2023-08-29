@@ -123,7 +123,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _get_parts_for_default_matcher(self, arg_index, node, string):
         parts = []
-        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*)*', default='', no_transform=True )
+        args_seperator_placeholder = TextPlaceholder(r'(\s*,\s*)?([ \t]*#.*\n*[ \t]*)*', default='', no_transform=True )
         exclude_last_after = self._should_exclude_last_after(string)
         parts.append(SeparatedListFieldPlaceholder(r'args',
                                                     after__separator_placeholder=args_seperator_placeholder,

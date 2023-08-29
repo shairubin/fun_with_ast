@@ -142,3 +142,9 @@ class AssignMatcherTest(BaseTestUtils):
 
     def _assert_matched_source(self, node, string):
         self._verify_match(node, string)
+
+    def testAssignFromSourceList(self):
+        string = "select = ['name', 'shares', 'price'],  # <-- See this line of AST unparse results"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

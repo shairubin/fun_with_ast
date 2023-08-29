@@ -152,10 +152,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         if not parens_pairs:
             return True
         first_pair = parens_pairs[0]
-        #if first_pair[0] != 0:
-        #    raise NotImplementedError('not supported yet')
         current_string = string[:first_pair[1]+1]
-        #if current_string[-2] == ',':
         if re.search(r'[ \t]*,[ \t\n]*\)$', current_string):
             return False
         return  True
@@ -170,7 +167,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             elif c == ')':
                 if len(pstack) == 0:
                     break
-                    raise IndexError("No matching closing parens at: " + str(i))
                 toret[pstack.pop()] = i
 
         if len(pstack) > 0:

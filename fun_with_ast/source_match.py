@@ -390,14 +390,14 @@ def get_Import_expected_parts():
     ]
 
 
-def get_ImportFrom_expected_parts():
+def get_ImportFrom_expected_parts(): # TODO: Handle path before names better
     return [
-        TextPlaceholder(r'[ \t]*from ', 'from '),
+        TextPlaceholder(r'[ \t]*from[ \t]+[\.\/]*', 'from '),
         FieldPlaceholder('module'),
         TextPlaceholder(r' import[ \t]*\(?[ \t]*\n?'),
         SeparatedListFieldPlaceholder(
             'names', TextPlaceholder(r'[ \t]*,\n?[ \t]*\n*', '')),
-        TextPlaceholder(r'[ \t]*\n*[ \t]*,?\n*\)?\n', '\n', no_transform=True)
+        TextPlaceholder(r'([ \t]*\n*[ \t]*,?\n*\)?\n)*', '\n', no_transform=True)
     ]
 
 

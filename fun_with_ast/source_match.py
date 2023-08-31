@@ -336,11 +336,9 @@ def get_FunctionDef_expected_parts():
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(\s*', '('),
         FieldPlaceholder('args'),
-#        TextPlaceholder(r'\s*,?\s*\):\n?', '):\n'),
-        TextPlaceholder(r'\)([ \t]*->[ \t*])?',')'),
+        TextPlaceholder(r',?\s*\)([ \t]*->[ \t*])?',')'),
         FieldPlaceholder('returns'),
         TextPlaceholder(r':\n', ':\n'),
-        #DocStringTextPlaceholder(),
         BodyPlaceholder('body')
     ]
 

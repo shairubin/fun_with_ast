@@ -64,11 +64,15 @@ class ImportMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip(reason="Not implemented yet issue 105")
+
+    def testImporWithNoPath(self):
+        string = """from configuration import DalleBartConfig"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testImporWithPath(self):
         string = """from .configuration import DalleBartConfig"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
 
 

@@ -223,19 +223,14 @@ class ClassMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-
-    @pytest.mark.skip('support multi-line function def #108')
     def testClassWithDocString(self):
         string = string_c
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('support multi-line function def #108')
     def testClassWithDocString1(self):
         string = string_c1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('support multi-line function def #108')
 
     def testClassWithDocString12(self):
         string = string_c2

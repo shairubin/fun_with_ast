@@ -198,6 +198,21 @@ class FunctionDefMatcherTest(BaseTestUtils):
         string = 'def test_fun(a: int):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testArgsAndAnnotation2_1(self):
+        string = 'def test_fun(a,b,c):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2_2(self):
+        string = 'def test_fun(a,b,c,):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testArgsAndAnnotation2_3(self):
+        string = 'def test_fun(a,):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testArgsAndAnnotation2_5(self):
         string = 'def test_fun(a: int=1):\n  pass\n'
         node = GetNodeFromInput(string)
@@ -236,36 +251,65 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('support multi-line function def #108')
+
     def testFunctionMultiLine(self):
         string = """def a(
         self,
-        ):"""
+        ):
+           pass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('support multi-line function def #108')
     def testFunctionMultiLine2(self):
         string = """def a(
-        ):"""
+        ):
+            pass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('support multi-line function def #108')
+
     def testFunctionMultiLine3(self):
         string = """def a(
         self,
         b,
-        ):"""
+        ):
+            pass"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testFunctionMultiLine31(self):
+        string = """def a(
+        self,
+
+        ):
+            pass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('support multi-line function def #108')
+    def testFunctionMultiLine32(self):
+        string = """def a(self,
+
+        ):
+            pass"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionMultiLine33(self):
+        string = """def a(
+        self,
+
+        b, 
+        
+        ):
+            pass"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testFunctionMultiLine4(self):
         string = """def a(
         self,
         b
-        ):"""
+        ):
+             pass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

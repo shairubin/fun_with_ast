@@ -226,7 +226,6 @@ class ClassMatcherTest(BaseTestUtils):
 
 
     @pytest.mark.skip('support multi-line function def #108')
-
     def testClassWithDocString(self):
         string = string_c
         node = GetNodeFromInput(string, get_module=True)

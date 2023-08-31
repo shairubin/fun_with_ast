@@ -25,15 +25,36 @@ class ImportMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
-    @pytest.skip('issue #102')
     def testImportListWithParentheses(self):
-        string = 'import (a,b)\n'
+        string = 'from x import (a,b)\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.skip('issue #102')
+
+    def testImportListWithParentheses21(self):
+        string = 'from x import (a,\n b)\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testImportListWithParentheses22(self):
+        string = 'from x import (a,\n b,)\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testImportListWithParenthese2(self):
         string = """from transformers.modeling_flax_outputs import (
     FlaxBaseModelOutput,
+    FlaxBaseModelOutputWithPastAndCrossAttentions,
+    FlaxCausalLMOutputWithCrossAttentions,
+    FlaxSeq2SeqLMOutput
+)
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testImportListWithParenthese24(self):
+        string = """from transformers.modeling_flax_outputs import (
+    FlaxBaseModelOutput,
+
     FlaxBaseModelOutputWithPastAndCrossAttentions,
     FlaxCausalLMOutputWithCrossAttentions,
     FlaxSeq2SeqLMOutput,
@@ -41,4 +62,3 @@ class ImportMatcherTest(BaseTestUtils):
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-

@@ -236,5 +236,36 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip('support multi-line function def #108')
+    def testFunctionMultiLine(self):
+        string = """def a(
+        self,
+        ):"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
+    @pytest.mark.skip('support multi-line function def #108')
+    def testFunctionMultiLine2(self):
+        string = """def a(
+        ):"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('support multi-line function def #108')
+    def testFunctionMultiLine3(self):
+        string = """def a(
+        self,
+        b,
+        ):"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('support multi-line function def #108')
+    def testFunctionMultiLine4(self):
+        string = """def a(
+        self,
+        b
+        ):"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 

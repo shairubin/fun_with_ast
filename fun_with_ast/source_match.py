@@ -396,8 +396,8 @@ def get_ImportFrom_expected_parts():
         FieldPlaceholder('module'),
         TextPlaceholder(r' import[ \t]*\(?[ \t]*\n?'),
         SeparatedListFieldPlaceholder(
-            'names', TextPlaceholder('[ \t]*,\n?[ \t]*', ', ')),
-        TextPlaceholder(r'[ \t]*\n*[ \t]*\)?\n', '\n')
+            'names', TextPlaceholder(r'[ \t]*,\n?[ \t]*\n*', '')),
+        TextPlaceholder(r'[ \t]*\n*[ \t]*,?\n*\)?\n', '\n', no_transform=True)
     ]
 
 

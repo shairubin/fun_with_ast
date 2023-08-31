@@ -62,3 +62,13 @@ class ImportMatcherTest(BaseTestUtils):
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+
+    @pytest.mark.skip(reason="Not implemented yet issue 105")
+    def testImporWithPath(self):
+        string = """from .configuration import DalleBartConfig"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+

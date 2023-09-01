@@ -8,7 +8,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     """Source matcher for _ast.Tuple nodes."""
-
+    USE_NEW_IMPLEMENTATION = False
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
@@ -27,7 +27,11 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self._check_not_implemented(jstr)
         self.padding_quote = self._get_padding_quqte(jstr)
         jstr = self._convert_to_multi_part_string(jstr)
-        matched_text = super(JoinedStrSourceMatcher, self)._match(jstr)
+        if self.USE_NEW_IMPLEMENTATION:
+            embeded_string = self._embed_jstr_into_string(jstr, string)
+            matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
+        else:
+            matched_text = super(JoinedStrSourceMatcher, self)._match(jstr)
         return matched_text
 
     def _convert_to_multi_part_string(self, _in):
@@ -119,4 +123,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError("extracted_string is not followed by ')'")
         self.jstr_meta_data["extracted_string"] = extracted_string
         self.jstr_meta_data["start_at"] = start
-        self.jstr_meta_data["end_at"] =  end
+        self.jstr_meta_data["end_at"] = end
+
+    def _embed_jstr_into_string(self, jstr, string):
+        jstr_start = self.jstr_meta_data["start_at"]
+        jstr_end = self.jstr_meta_data["end_at"]
+        prefix = string[:jstr_start]
+        suffix = string[jstr_end+1:]
+        result = prefix + jstr + suffix
+        return result

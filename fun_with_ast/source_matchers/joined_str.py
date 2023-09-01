@@ -18,11 +18,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         super(JoinedStrSourceMatcher, self).__init__(
             node, expected_parts, starting_parens)
         self.padding_quote = None
-
+        self.jstr_meta_data = {}
 
 
     def _match(self, string):
-        jstr = self._extract_jstr_string(string)
+        self._extract_jstr_string(string)
+        jstr= self.jstr_meta_data["extracted_string"]
         self._check_not_implemented(jstr)
         self.padding_quote = self._get_padding_quqte(jstr)
         jstr = self._convert_to_multi_part_string(jstr)
@@ -97,3 +98,25 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
 
+
+    def _extract_jstr_string(self, string):
+        start = string.find("f'")
+        if start == -1:
+            start = string.find("f\"")
+            if start == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
+            end = string.rfind("\"")
+            if end == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must end with \"')
+        else:
+            end = string.rfind("'")
+            if end == -1:
+                raise BadlySpecifiedTemplateError('Formatted string must end with \'')
+        extracted_string = string[start:end+1]
+        stripped_string = string.strip()
+        if stripped_string != extracted_string:
+            if stripped_string[end+1] != ')':
+                raise NotImplementedError("extracted_string is not followed by ')'")
+        self.jstr_meta_data["extracted_string"] = extracted_string
+        self.jstr_meta_data["start_at"] = start
+        self.jstr_meta_data["end_at"] =  end

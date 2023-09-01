@@ -8,7 +8,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     """Source matcher for _ast.Tuple nodes."""
-    USE_NEW_IMPLEMENTATION = False
+    USE_NEW_IMPLEMENTATION = True
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
@@ -71,18 +71,31 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             result=result.replace('}'+self.padding_quote*2, '}')
             return result
         else:
-            if self.jstr_meta_data["start_at"] != 0:
-                raise ValueError("start_at is 0")
-            end_at = self.jstr_meta_data["end_at"]
-            orig_string = self.jstr_meta_data['orig_string']
-            orig_suffix = orig_string[end_at+1]
-            end_of_orig_suffix = _in.rfind(orig_suffix) + len(orig_suffix)-1
-            if _in[end_at:end_at+1] == self.padding_quote * 2:
-                result = _in[:-1]
-            if result[0:3] == "f" + self.padding_quote*2:
-                result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
+            #if self.jstr_meta_data["start_at"] != 0:
+            #    raise ValueError("start_at is 0")
+            # end_at = self.jstr_meta_data["end_at"]
+            # orig_string = self.jstr_meta_data['orig_string']
+            # orig_suffix = orig_string[end_at-4:end_at+1]
+            # end_of_orig_suffix = _in.rfind(orig_suffix) + len(orig_suffix)-1 + self.jstr_meta_data["start_at"]
+            # last_double_quote = end_of_orig_suffix + 1
+            # if _in[last_double_quote:last_double_quote+2] == self.padding_quote * 2:
+            #     result = _in[:end_of_orig_suffix + self.jstr_meta_data["start_at"]]
+            # else:
+            #     raise ValueError("end_of_orig_suffix is not followed by padding_quote*2")
+            # if result[0:3] == "f" + self.padding_quote*2:
+            #     result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
+            # result=result.replace(self.padding_quote*2+'{', '{')
+            # result=result.replace('}'+self.padding_quote*2, '}')
+            # return result
+            result = _in
+            result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
             result=result.replace(self.padding_quote*2+'{', '{')
             result=result.replace('}'+self.padding_quote*2, '}')
+            if not result.endswith(self.padding_quote):
+                if self.jstr_meta_data['extracted_string'] not in result:
+                    result += self.padding_quote
+            result=result.replace(self.padding_quote*2, self.padding_quote)
+
             return result
 
     def _get_padding_quqte(self, string):

@@ -178,6 +178,31 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "(f'X')"
         self._assert_match(node.value, string)
 
+    def testBasicMatchFromInput52(self):
+        node = GetNodeFromInput("f\"X\"")
+        string = "f\"X\""
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput53(self):
+        node = GetNodeFromInput("f\"X\"")
+        string = "(f\"X\")"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput54(self):
+        node = GetNodeFromInput("f'{X}'")
+        string = "f'{X}'"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput55(self):
+        node = GetNodeFromInput("f\"{X}\"")
+        string = "f\"{X}\""
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput56(self):
+        node = GetNodeFromInput("f\"{X}\"")
+        string = "(f\"{X}\")"
+        self._assert_match(node.value, string)
+
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""

@@ -36,3 +36,13 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string+'y')
         with pytest.raises(BadlySpecifiedTemplateError):
             self._verify_match(node, string)
+
+    def testSimpleRaiseWithString(self):
+        string = "raise \t x('string')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleRaiseWithString2(self):
+        string = "raise \t x(f\"Unknown norm type {type}\")"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

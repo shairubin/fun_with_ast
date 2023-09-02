@@ -8,7 +8,19 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module1 = """ 
+def norm(type, *args, **kwargs):
+    if True:
+        raise ValueError(f"Unknown norm type {type}")
 
+def dot_product_attention_weights(
+):
+    \"\"\"
+    Adapted from flax.linen.attention.dot_product_attention_weights"
+    \"\"\"
+
+    pass
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -119,5 +131,10 @@ a.b('cpu')
 
     def testFromInputParantheses2(self):
         string = """(   (a) )  """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputWithJopinedString(self):
+        string = module1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -18,32 +18,21 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.skip(reason="not implemented")
+
     def testBasicMatchFromInput(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
-        self._assert_match(node.value, string)
-
-    def testBasicMatchFromInput2(self):
-        node = GetNodeFromInput("f'X{a}'")
-        string = "f'X{a}'"
-        self._assert_match(node.value, string)
-    def testBasicMatchFromInput3(self):
-        node = GetNodeFromInput("f'X{a}[b]'")
-        string = "f'X{a}[b]'"
         self._assert_match(node.value, string)
 
 
     def testBasicFormatedValue(self):
         node = create_node.JoinedStr([create_node.FormattedValue(create_node.Name('a'))])
         string = "f'{a}'"
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
     def testBasicFormatedValueDoubleQ(self):
         node = create_node.JoinedStr([create_node.FormattedValue(create_node.Name('a'))])
         string = "f\"{a}\""
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
     def testMatchStringsAndFormatedValue(self):
@@ -51,7 +40,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.Constant('x', "'")])
         string = "f'{a}x'"
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
 
@@ -59,7 +47,10 @@ class JoinStrMatcherTest(BaseTestUtils):
         node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a'))])
         string = "f'y{a}'"
-        #matcher = GetDynamicMatcher(node)
+        self._assert_match(node, string)
+    def testBasicMatchDoubleQuote2(self):
+        node = create_node.JoinedStr([create_node.Constant("X", "\"")])
+        string = "f\"X\""
         self._assert_match(node, string)
 
     def testMatchStringsAndFormatedValue3(self):
@@ -67,7 +58,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('a')),
                                       create_node.FormattedValue(create_node.Name('b'))])
         string = "f'y{a}{b}'"
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
 
@@ -78,7 +68,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('b')),
                                       create_node.Constant('z', "'")])
         string = "f'y{a}x{b}z'"
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
     def testMatchStringsAndFormatedValue8(self):
@@ -88,7 +77,6 @@ class JoinStrMatcherTest(BaseTestUtils):
                                       create_node.FormattedValue(create_node.Name('b')),
                                       create_node.Constant('z', "\"")])
         string = "f\"y{a}x{b}z\""
-        #matcher = GetDynamicMatcher(node)
         self._assert_match(node, string)
 
 
@@ -102,6 +90,14 @@ class JoinStrMatcherTest(BaseTestUtils):
         self._assert_match(node, string)
 
 
+    def testNoMatchStringsAndFormatedValue8(self):
+        node = create_node.JoinedStr([create_node.Constant('y', "\""),
+                                      create_node.FormattedValue(create_node.Name('a')),
+                                      create_node.Constant('x', "'"),
+                                      create_node.FormattedValue(create_node.Name('b')),
+                                      create_node.Constant('z', "\"")])
+        string = "f\"y{a}x{b}z\""
+        self._assert_match(node, string)
 
 
     def _assert_match(self, node, string):
@@ -109,6 +105,17 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
+
+    def testNoMatchStringsAndFormatedValue5(self):
+        node = create_node.JoinedStr([create_node.Constant('y', "'"),
+                                      create_node.FormattedValue(create_node.Name('a')),
+                                      create_node.Constant('\'', "\""),
+                                      create_node.FormattedValue(create_node.Name('b')),
+                                      create_node.Constant('z', "\"")])
+        string = "f\"y{a}'{b}z\""
+        self._assert_match(node, string)
+
+
 # NEGATIVE TESTS - NO MATCH
     def testNoMatchStringsAndFormatedValueDQuote(self):
         node = create_node.JoinedStr([
@@ -128,11 +135,6 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "f\"X \""
         self._assert_no_match(node, string)
 
-    def testBasicMatchDoubleQuote2(self):
-        node = create_node.JoinedStr([create_node.Constant("X", "\"")])
-        string = "f\"X\""
-        #matcher = GetDynamicMatcher(node)
-        self._assert_match(node, string)
 
     def testBasicnNMatchDoubleQuote3(self):
         node = create_node.JoinedStr([create_node.Constant('fun_with-ast', "\"")])
@@ -146,23 +148,6 @@ class JoinStrMatcherTest(BaseTestUtils):
         with pytest.raises(NotImplementedError):
             matcher.do_match(string)
 
-    def testNoMatchStringsAndFormatedValue5(self):
-        node = create_node.JoinedStr([create_node.Constant('y', "'"),
-                                      create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Constant('\'', "\""),
-                                      create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Constant('z', "\"")])
-        string = "f\"y{a}'{b}z\""
-        self._assert_match(node, string)
-
-    def testNoMatchStringsAndFormatedValue8(self):
-        node = create_node.JoinedStr([create_node.Constant('y', "\""),
-                                      create_node.FormattedValue(create_node.Name('a')),
-                                      create_node.Constant('x', "'"),
-                                      create_node.FormattedValue(create_node.Name('b')),
-                                      create_node.Constant('z', "\"")])
-        string = "f\"y{a}x{b}z\""
-        self._assert_match(node, string)
 
     def testNoMatchStringsAndFormatedValue(self):
         node = create_node.JoinedStr([create_node.Constant('y', "'"),
@@ -181,3 +166,65 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
+
+# From Input tests
+    def testBasicMatchFromInput5(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'X'"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput51(self):
+        node = GetNodeFromInput("f'X'")
+        string = "(f'X')"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput52(self):
+        node = GetNodeFromInput("f\"X\"")
+        string = "f\"X\""
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput53(self):
+        node = GetNodeFromInput("f\"X\"")
+        string = "(f\"X\")"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput54(self):
+        node = GetNodeFromInput("f'{X}'")
+        string = "f'{X}'"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput55(self):
+        node = GetNodeFromInput("f\"{X}\"")
+        string = "f\"{X}\""
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput56(self):
+        node = GetNodeFromInput("f\"{X}\"")
+        string = "(f\"{X}\")"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput56(self):
+        node = GetNodeFromInput("f'{X}'")
+        string = "(f'{X}')"
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput4(self):
+        node = GetNodeFromInput("f\"Unknown norm type {type}\"")
+        string = "f\"Unknown norm type {type}\""
+        self._assert_match(node.value, string)
+
+    def testBasicMatchFromInput41(self):
+        node = GetNodeFromInput("f\"Unknown norm type {type}\"")
+        string = "(f\"Unknown norm type {type}\")"
+        self._assert_match(node.value, string)
+
+
+    def testBasicMatchFromInput2(self):
+        node = GetNodeFromInput("f'X{a}'")
+        string = "f'X{a}'"
+        self._assert_match(node.value, string)
+    def testBasicMatchFromInput3(self):
+        node = GetNodeFromInput("f'X{a}[b]'")
+        string = "f'X{a}[b]'"
+        self._assert_match(node.value, string)
+

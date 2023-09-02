@@ -203,6 +203,11 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "(f\"{X}\")"
         self._assert_match(node.value, string)
 
+    def testBasicMatchFromInput56(self):
+        node = GetNodeFromInput("f'{X}'")
+        string = "(f'{X}')"
+        self._assert_match(node.value, string)
+
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""

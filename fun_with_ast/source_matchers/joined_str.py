@@ -23,13 +23,13 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
-        self._extract_jstr_string(string)
+        self._extract_jstr_string(string, False)
         jstr= self.jstr_meta_data["extracted_string"]
         self._check_not_implemented(jstr)
         self.padding_quote = self._get_padding_quqte(jstr)
         jstr = self._convert_to_multi_part_string(jstr)
         if self.USE_NEW_IMPLEMENTATION:
-            embeded_string = self._embed_jstr_into_string(jstr, string)
+            embeded_string = self._embed_jstr_into_string(jstr, string, False)
             matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         else:
             matched_text = super(JoinedStrSourceMatcher, self)._match(jstr)
@@ -105,7 +105,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             # result=result.replace(self.padding_quote*2+'{', '{')
             # result=result.replace('}'+self.padding_quote*2, '}')
             # return result
-            result = _in
+            self._extract_jstr_string(_in, True)
+            extracted_multipart_string = self.jstr_meta_data["matched_multipart_string"]
+            result = extracted_multipart_string
             result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
             result=result.replace(self.padding_quote*2+'{', '{')
             result=result.replace('}'+self.padding_quote*2, '}')
@@ -113,7 +115,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 if self.jstr_meta_data['extracted_string'] not in result:
                     result += self.padding_quote
             result=result.replace(self.padding_quote*2, self.padding_quote)
-
+            result = self._embed_jstr_into_string(result, _in, True)
             return result
 
     def _get_padding_quqte(self, string):
@@ -151,7 +153,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
 
-    def _extract_jstr_string(self, string):
+    def _extract_jstr_string(self, string ,is_multi_part):
         self.jstr_meta_data['orig_string'] = string
         start = string.find("f'")
         if start == -1:
@@ -170,13 +172,22 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if stripped_string != extracted_string:
             if stripped_string[end+1] != ')':
                 raise NotImplementedError("extracted_string is not followed by ')'")
-        self.jstr_meta_data["extracted_string"] = extracted_string
-        self.jstr_meta_data["start_at"] = start
-        self.jstr_meta_data["end_at"] = end
+        if not is_multi_part:
+            self.jstr_meta_data["extracted_string"] = extracted_string
+            self.jstr_meta_data["start_at"] = start
+            self.jstr_meta_data["end_at"] = end
+        else:
+            self.jstr_meta_data["matched_multipart_string"] = extracted_string
+            self.jstr_meta_data["multipart_start_at"] = start
+            self.jstr_meta_data["multipart_end_at"] = end
 
-    def _embed_jstr_into_string(self, jstr, string):
-        jstr_start = self.jstr_meta_data["start_at"]
-        jstr_end = self.jstr_meta_data["end_at"]
+    def _embed_jstr_into_string(self, jstr, string, is_multi_part):
+        if not is_multi_part:
+            jstr_start = self.jstr_meta_data["start_at"]
+            jstr_end = self.jstr_meta_data["end_at"]
+        else:
+            jstr_start = self.jstr_meta_data["multipart_start_at"]
+            jstr_end = self.jstr_meta_data["multipart_end_at"]
         prefix = string[:jstr_start]
         suffix = string[jstr_end+1:]
         result = prefix + jstr + suffix

@@ -13,7 +13,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
             ListFieldPlaceholder(r'values'),
-            TextPlaceholder(r'[\'\"]', '')
+            TextPlaceholder(r'[\'\"][ \t\n]*', '', no_transform=True),
         ]
         super(JoinedStrSourceMatcher, self).__init__(
             node, expected_parts, starting_parens)
@@ -102,7 +102,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         extracted_string = string[start:end+1]
         stripped_string = string.strip()
         if stripped_string != extracted_string:
-            if stripped_string[end+1] != ')':
+            if stripped_string[end+1] not in [')', '\n']:
                 raise NotImplementedError("extracted_string is not followed by ')'")
         self._save_meta_data(end, extracted_string, is_multi_part, start)
 
@@ -123,11 +123,19 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return end, start
 
     def _guess_end_of_jstr(self, string, quote):
+        lines = string.split('\n')
+        if len(lines) > 1 and lines[1].startswith('f'):
+            raise NotImplementedError('len(lines) > 1')
+
+        jstr_end = lines[0].rfind(quote)
+
         new_line = string.find('\n')
         if new_line == -1 :
             end = string.rfind(quote)
         else:
             end = string.rfind(quote, 0, new_line)
+        if jstr_end != end:
+            raise NotImplementedError('jstr_end != end')
         return end
 
     def _save_meta_data(self, end, extracted_string, is_multi_part, start):

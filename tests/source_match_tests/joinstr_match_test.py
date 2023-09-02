@@ -228,3 +228,29 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "f'X{a}[b]'"
         self._assert_match(node.value, string)
 
+    def testMatchMultilLine(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'X'\n"
+        self._assert_match(node.value, string)
+    def testMatchMultilLine1(self):
+        node = GetNodeFromInput("f'X'")
+        string = "(f'X')"
+        self._assert_match(node.value, string)
+    def testMatchMultilLine11(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "(f'X'\nf'Y')"
+        self._assert_match(node.value, string)
+
+    def testMatchMultilLine11(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "f'X'\nf'Y'"
+        self._assert_match(node.value, string)
+    def testMatchMultilLine12(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "f'XY'"
+        self._assert_match(node.value, string)
+
+    def testMatchMultilLine2(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'X'    "
+        self._assert_match(node.value, string)

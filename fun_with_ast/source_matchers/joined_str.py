@@ -32,24 +32,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             embeded_string = self._embed_jstr_into_string(jstr, string, False)
             matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         else:
-            matched_text = super(JoinedStrSourceMatcher, self)._match(jstr)
+            raise NotImplementedError('deprecated')
         return matched_text
 
     def _convert_to_multi_part_string(self, _in):
         if not self.USE_NEW_IMPLEMENTATION:
-            string = list(Formatter().parse(_in[2:]))
-    #        if len(formatted_string) == 1 and formatted_string[0][1] == None:
-    #            return _in
-            multi_part = _in[0:2]
-            for (literal, name, format_spec, conversion) in string:
-                if literal:
-                    multi_part += self.padding_quote + literal + self.padding_quote
-                if name:
-                    multi_part += self.padding_quote+ '{' + name + '}'+self.padding_quote
-                if format_spec:
-                    raise NotImplementedError
-                if conversion:
-                    raise NotImplementedError
+            raise NotImplementedError('deprecated')
         else:
             if not _in.startswith("f"):
                 raise ValueError("formatted string must start with f")
@@ -81,30 +69,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _convert_to_single_part_string(self, _in):
         if not self.USE_NEW_IMPLEMENTATION:
-            if _in[-2:] == self.padding_quote * 2:
-                result = _in[:-1]
-            if result[0:3] == "f" + self.padding_quote*2:
-                result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
-            result=result.replace(self.padding_quote*2+'{', '{')
-            result=result.replace('}'+self.padding_quote*2, '}')
-            return result
-        else:
-            #if self.jstr_meta_data["start_at"] != 0:
-            #    raise ValueError("start_at is 0")
-            # end_at = self.jstr_meta_data["end_at"]
-            # orig_string = self.jstr_meta_data['orig_string']
-            # orig_suffix = orig_string[end_at-4:end_at+1]
-            # end_of_orig_suffix = _in.rfind(orig_suffix) + len(orig_suffix)-1 + self.jstr_meta_data["start_at"]
-            # last_double_quote = end_of_orig_suffix + 1
-            # if _in[last_double_quote:last_double_quote+2] == self.padding_quote * 2:
-            #     result = _in[:end_of_orig_suffix + self.jstr_meta_data["start_at"]]
-            # else:
-            #     raise ValueError("end_of_orig_suffix is not followed by padding_quote*2")
-            # if result[0:3] == "f" + self.padding_quote*2:
-            #     result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
-            # result=result.replace(self.padding_quote*2+'{', '{')
-            # result=result.replace('}'+self.padding_quote*2, '}')
-            # return result
+            raise NotImplementedError('deprecated')
+        else: # TODO kind of ugly here
             self._extract_jstr_string(_in, True)
             extracted_multipart_string = self.jstr_meta_data["matched_multipart_string"]
             result = extracted_multipart_string
@@ -128,28 +94,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _check_not_implemented(self, string):
         if '\"\"' in string:
             raise NotImplementedError('Double-quotes are not supported yet')
-
-    # def _extract_jstr_string(self, string):
-    #
-    #     start = string.find("f'")
-    #     if start == -1:
-    #         start = string.find("f\"")
-    #         if start == -1:
-    #             raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
-    #         end = string.rfind("\"")
-    #         if end == -1:
-    #             raise BadlySpecifiedTemplateError('Formatted string must end with \"')
-    #     else:
-    #         end = string.rfind("'")
-    #         if end == -1:
-    #             raise BadlySpecifiedTemplateError('Formatted string must end with \'')
-    #     extracted_string = string[start:end+1]
-    #     stripped_string = string.strip()
-    #     if stripped_string != extracted_string:
-    #         if stripped_string[end+1] != ')':
-    #             raise NotImplementedError("extracted_string is not followed by ')'")
-    #     return extracted_string
-
 
 
 

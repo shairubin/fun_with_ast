@@ -126,7 +126,6 @@ class BoolOpMatcherTest(BaseTestUtils):
         string = '(a and ((b) or c))'
         self._assert_match(node, string)
 
-    @pytest.mark.skip('boolop without EOL is not supported' )
     def testOrFromSource(self):
         string = "a or b"
         node = GetNodeFromInput(string)

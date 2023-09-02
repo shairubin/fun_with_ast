@@ -18,7 +18,7 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.skip(reason="not implemented")
+
     def testBasicMatchFromInput(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"

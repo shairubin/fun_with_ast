@@ -173,7 +173,6 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('not supported yet comment in the middle of a dict after call.  issue 91')
     def testBasicDictMatch3(self):
         string = """{
     "E":  C(1.0), # comment1

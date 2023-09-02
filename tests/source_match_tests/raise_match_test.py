@@ -46,3 +46,12 @@ class RaiseMatcherTest(BaseTestUtils):
         string = "raise \t x(f\"Unknown norm type {type}\")"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="not implemented issue 115")
+    def testSimpleRaiseWithString3(self):
+        string = """raise ValueError(
+                f"embed_dim must be divisible by num_heads (got `embed_dim`: {self.embed_dim}"
+                f" and `num_heads`: {self.num_heads})."
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

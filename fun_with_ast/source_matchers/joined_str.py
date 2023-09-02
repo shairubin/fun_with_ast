@@ -36,24 +36,42 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return matched_text
 
     def _convert_to_multi_part_string(self, _in):
-        formatted_string = list(Formatter().parse(_in[2:]))
-#        if len(formatted_string) == 1 and formatted_string[0][1] == None:
-#            return _in
-        multi_part = _in[0:2]
-        for (literal, name, format_spec, conversion) in formatted_string:
-            if literal:
-                multi_part += self.padding_quote + literal + self.padding_quote
-            if name:
-                multi_part += self.padding_quote+ '{' + name + '}'+self.padding_quote
-            if format_spec:
-                raise NotImplementedError
-            if conversion:
-                raise NotImplementedError
-
+        if not self.USE_NEW_IMPLEMENTATION:
+            string = list(Formatter().parse(_in[2:]))
+    #        if len(formatted_string) == 1 and formatted_string[0][1] == None:
+    #            return _in
+            multi_part = _in[0:2]
+            for (literal, name, format_spec, conversion) in string:
+                if literal:
+                    multi_part += self.padding_quote + literal + self.padding_quote
+                if name:
+                    multi_part += self.padding_quote+ '{' + name + '}'+self.padding_quote
+                if format_spec:
+                    raise NotImplementedError
+                if conversion:
+                    raise NotImplementedError
+        else:
+            if not _in.startswith("f"):
+                raise ValueError("formatted string must start with f")
+            if _in[1] != self.padding_quote:
+                raise ValueError("_in[1] must be a padding quote")
+            if not _in.endswith(self.padding_quote):
+                raise ValueError("formatted string must end with '")
+            format_string = _in[2:-1]
+            format_parts = list(Formatter().parse(format_string))
+            multi_part = _in[0:2]
+            for (literal, name, format_spec, conversion) in format_parts:
+                if literal:
+                    multi_part += self.padding_quote + literal + self.padding_quote
+                if name:
+                    multi_part += self.padding_quote + '{' + name + '}' + self.padding_quote
+                if format_spec:
+                    raise NotImplementedError
+                if conversion:
+                    raise NotImplementedError
+            multi_part += self.padding_quote
         return multi_part
 
-#    def MatchStartParens(self, remaining_string):
-#        return remaining_string
 
     def GetSource(self):
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()

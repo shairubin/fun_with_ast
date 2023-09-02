@@ -154,24 +154,39 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _extract_jstr_string(self, string ,is_multi_part):
+        end, start = self._find_start_end_of_jstr(string)
+        extracted_string = string[start:end+1]
+        stripped_string = string.strip()
+        if stripped_string != extracted_string:
+            if stripped_string[end+1] != ')':
+                raise NotImplementedError("extracted_string is not followed by ')'")
+        self._save_meta_data(end, extracted_string, is_multi_part, start)
+
+    def _find_start_end_of_jstr(self, string):
         self.jstr_meta_data['orig_string'] = string
         start = string.find("f'")
         if start == -1:
             start = string.find("f\"")
             if start == -1:
                 raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
-            end = string.rfind("\"")
+            end = self._guess_end_of_jstr(string, "\"")
             if end == -1:
                 raise BadlySpecifiedTemplateError('Formatted string must end with \"')
         else:
-            end = string.rfind("'")
+            end = self._guess_end_of_jstr(string, "'")
             if end == -1:
                 raise BadlySpecifiedTemplateError('Formatted string must end with \'')
-        extracted_string = string[start:end+1]
-        stripped_string = string.strip()
-        if stripped_string != extracted_string:
-            if stripped_string[end+1] != ')':
-                raise NotImplementedError("extracted_string is not followed by ')'")
+        return end, start
+
+    def _guess_end_of_jstr(self, string, quote):
+        new_line = string.find('\n')
+        if new_line == -1 :
+            end = string.rfind(quote)
+        else:
+            end = string.rfind(quote, 0, new_line)
+        return end
+
+    def _save_meta_data(self, end, extracted_string, is_multi_part, start):
         if not is_multi_part:
             self.jstr_meta_data["extracted_string"] = extracted_string
             self.jstr_meta_data["start_at"] = start

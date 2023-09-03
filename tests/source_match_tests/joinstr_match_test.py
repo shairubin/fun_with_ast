@@ -241,11 +241,11 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "(f'X'\nf'Y')"
         self._assert_match(node.value, string)
 
-    def testMatchMultilLine11(self):
+    def testMatchMultilLine12(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'X'\nf'Y'"
         self._assert_match(node.value, string)
-    def testMatchMultilLine12(self):
+    def testMatchMultilLine13(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'XY'"
         self._assert_match(node.value, string)

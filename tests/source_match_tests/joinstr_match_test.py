@@ -145,7 +145,7 @@ class JoinStrMatcherTest(BaseTestUtils):
         node = create_node.JoinedStr([create_node.Constant('', "\"")])
         string = "f\"\""
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(ValueError):
             matcher.do_match(string)
 
 

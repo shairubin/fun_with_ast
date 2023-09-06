@@ -136,6 +136,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def GetSource(self):
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()
         matched_source = self._convert_to_single_part_string(matched_source)
+        matched_source = self._split_back_into_lines(matched_source)
 
         return matched_source
 
@@ -157,8 +158,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if not result.endswith(self.padding_quote+suffix):
                 raise ValueError('We must see \' at the end of match')
 
-            tmp_format_string = result.split('f'+self.padding_quote)[1]
-            tmp_format_string = tmp_format_string[:-1]
+            tmp_format_string = result.removeprefix(prefix + 'f'+self.padding_quote)
+            tmp_format_string = tmp_format_string.removesuffix( self.padding_quote + suffix )
 
             #result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
             tmp_format_string=tmp_format_string.replace(self.padding_quote+'{', '{')
@@ -203,21 +204,21 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         #         raise NotImplementedError("extracted_string is not followed by ')'")
         # self._save_meta_data(end, extracted_string, is_multi_part, start)
 
-    def _find_start_end_of_jstr(self, string):
-
-        start = string.find("f'")
-        if start == -1:
-            start = string.find("f\"")
-            if start == -1:
-                raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
-            end = self._guess_end_of_jstr(string, "\"")
-            if end == -1:
-                raise BadlySpecifiedTemplateError('Formatted string must end with \"')
-        else:
-            end = self._guess_end_of_jstr(string, "'")
-            if end == -1:
-                raise BadlySpecifiedTemplateError('Formatted string must end with \'')
-        return end, start
+    # def _find_start_end_of_jstr(self, string):
+    #
+    #     start = string.find("f'")
+    #     if start == -1:
+    #         start = string.find("f\"")
+    #         if start == -1:
+    #             raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
+    #         end = self._guess_end_of_jstr(string, "\"")
+    #         if end == -1:
+    #             raise BadlySpecifiedTemplateError('Formatted string must end with \"')
+    #     else:
+    #         end = self._guess_end_of_jstr(string, "'")
+    #         if end == -1:
+    #             raise BadlySpecifiedTemplateError('Formatted string must end with \'')
+    #     return end, start
 
     def _guess_end_of_jstr(self, string, quote):
         lines = string.split('\n')
@@ -316,7 +317,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return result
 
     def _split_matched_string_into_multiline(self, matched_text):
-        pass
+        for config in self.jstr_meta_data:
+            format_string = matched_text.find(config.format_string)
+            if format_string == -1:
+                raise NotImplementedError
 
     def _is_jstr(self, line):
         for quote in supported_quotes:
@@ -324,3 +328,14 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if re.search(expr,line):
                 return True
         return False
+
+    def _split_back_into_lines(self, matched_text):
+        if len(self.jstr_meta_data) == 1:
+            return matched_text
+        for config in self.jstr_meta_data:
+            line_start_at = matched_text.find(config.orig_single_line_string)
+            if line_start_at == -1:
+                ValueError('invalid match of line in multiline jstr string')
+            if line_start_at != 0:
+                ValueError('single line must be the start of the multiline jstr string')
+

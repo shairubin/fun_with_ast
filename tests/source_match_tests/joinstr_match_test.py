@@ -231,7 +231,7 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testMatchMultilLine(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'\n"
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
     def testMatchMultilLine1(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"

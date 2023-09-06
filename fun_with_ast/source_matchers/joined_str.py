@@ -330,12 +330,23 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return False
 
     def _split_back_into_lines(self, matched_text):
+        result=''
         if len(self.jstr_meta_data) == 1:
             return matched_text
-        for config in self.jstr_meta_data:
-            line_start_at = matched_text.find(config.orig_single_line_string)
+        remaining_string = matched_text
+        for index, config in enumerate(self.jstr_meta_data):
+            if index == 0:
+                config_contrib = config.prefix_str + config.f_part+config.format_string
+            else:
+                config_contrib = config.format_string
+            line_start_at = remaining_string.find(config_contrib)
             if line_start_at == -1:
                 ValueError('invalid match of line in multiline jstr string')
             if line_start_at != 0:
                 ValueError('single line must be the start of the multiline jstr string')
+            result += config.orig_single_line_string
+            if index != len(self.jstr_meta_data)-1:
+                result += '\n'
+            remaining_string = remaining_string.removeprefix(config_contrib)
+        return result
 

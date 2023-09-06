@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, field
 from string import Formatter
 
@@ -6,26 +7,76 @@ from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 
+supported_quotes = ['\'', "\""]
 @dataclass
-class JstrMetaData:
-    orig_string: str
-    extracted_string: str
-    start_at: int
-    end_at: int
+class JstrConfig:
+    orig_single_line_string: str
+    prefix_re: re.Match
+    suffix_re: re.Match
+    prefix_str: str
+    suffix_str: str
+    f_part: str
+    f_part_location: int
+    format_string: str
+    end_quote_location: int
     matched_multipart_string: str
-    multipart_start_at: int
-    multipart_end_at: int
-    multiline_jstr: bool = False
-    multiline_parts: list = field(default_factory=list)
+    quote_type: str
+
+    def __init__(self, line):
+        self.orig_single_line_string = line
+        self._create_config()
+
+    def _create_config(self):
+        self.suffix_str = ''
+        self.prefix_str = ''
+        self._set_quote_type()
+        self._set_f_prefix()
+        self.end_quote_location = self.orig_single_line_string.rfind(self.quote_type)
+        if self.end_quote_location == -1:
+            raise ValueError('Could not find ending quote')
+        self.suffix_str= self.orig_single_line_string[self.end_quote_location+1:]
+        self.prefix_str = self.orig_single_line_string[:self.f_part_location]
+#        prefix_pattern = '([ \t\(])*(f'+self.quote_type+')'
+#        self.prefix_re = re.match(prefix_pattern, self.orig_single_line_string)
+#        if self.prefix_re:
+#            self.prefix_str = '' if not self.prefix_re.group(1) else self.prefix_re.group(1)
+#            self.f_part = self.prefix_re.group(2)
+#        else:
+#            raise ValueError('We must have f_part')
+        # suffix_pattern = "(.*(\")([ \t]*\)?))$"
+        #                   #""
+        #                   #" "(\\"+self.quote_type +   "[ \t]*\)?)$"
+        #suffix_pattern = "(.*([ \t]*\)?))$"
+        #self.suffix_re = re.match(suffix_pattern, self.orig_single_line_string)
+        #if self.suffix_re:
+        #    self.suffix_str = self.suffix_re.group(1)
+        self.format_string = self.orig_single_line_string
+        #if self.suffix_str:
+        self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
+        self.format_string = self.format_string.removeprefix(self.prefix_str+self.f_part)
+        #if self.format_string[-1] != '\'':
+        #    ValueError('at this point format_string must end with quate')
+        #self.format_string = self.format_string[:-1]
 
 
-class MultiPartJoinedString(Exception):
-    pass
 
+    def _set_quote_type(self):
+        for quote in supported_quotes:
+            if self.orig_single_line_string.find("f"+quote) != -1:
+                self.quote_type = quote
+                return
+        raise ValueError("could not find quote in singlke line string")
 
+    def _set_f_prefix(self):
+        location = self.orig_single_line_string.find("f"+self.quote_type)
+        if location == -1:
+            raise ValueError("could not find quote in singlke line string")
+        self.f_part = self.orig_single_line_string[location:location+2]
+        self.f_part_location = location
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     """Source matcher for _ast.Tuple nodes."""
     USE_NEW_IMPLEMENTATION = True
+
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
@@ -35,55 +86,52 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         super(JoinedStrSourceMatcher, self).__init__(
             node, expected_parts, starting_parens)
         self.padding_quote = None
-        self.jstr_meta_data = JstrMetaData(None, None, None, None, None, None, None)
-        self.lines = []
+        self.jstr_meta_data: list[JstrConfig] = []
 
 
 
     def _match(self, string):
-        self.jstr_meta_data.orig_string = string
-        try:
-            self._extract_jstr_string(string, False)
-        except MultiPartJoinedString as e:
-            self._extract_multiline_jstr(string)
-        jstr= self.jstr_meta_data.extracted_string
-        self._check_not_implemented(jstr)
-        self.padding_quote = self._get_padding_quqte(jstr)
-        jstr = self._convert_to_multi_part_string(jstr)
+        self.orig_string = string
+        self._split_jstr_into_lines(string)
+        self.padding_quote = self.jstr_meta_data[0].quote_type
+        #jstr = self._extract_jstr_string(string, False)
+        jstr = self._generate_to_multi_part_string()
         if self.USE_NEW_IMPLEMENTATION:
-            embeded_string = self._embed_jstr_into_string(jstr, string, False)
+            embeded_string = self._embed_jstr_into_string(jstr, string)
             matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         else:
             raise NotImplementedError('deprecated')
-        if self.jstr_meta_data.multiline_jstr:
-            raise NotImplementedError('Not implemented yet')
         return matched_text
 
-    def _convert_to_multi_part_string(self, _in):
+    def _generate_to_multi_part_string(self,):
         if not self.USE_NEW_IMPLEMENTATION:
             raise NotImplementedError('deprecated')
         else:
-            if not _in.startswith("f"):
-                raise ValueError("formatted string must start with f")
-            if _in[1] != self.padding_quote:
-                raise ValueError("_in[1] must be a padding quote")
-            if not _in.endswith(self.padding_quote):
-                raise ValueError("formatted string must end with '")
-            format_string = _in[2:-1]
+            # if not _in.startswith("f"):
+            #     raise ValueError("formatted string must start with f")
+            # if _in[1] != self.padding_quote:
+            #     raise ValueError("_in[1] must be a padding quote")
+            # if not _in.endswith(self.padding_quote):
+            #     raise ValueError("formatted string must end with '")
+            # format_string = _in[2:-1]
+            multi_part_result = self.jstr_meta_data[0].f_part
+            format_string = ''
+            for config in self.jstr_meta_data:
+                format_string += config.format_string
+            if format_string == '':
+                return multi_part_result + self.padding_quote
             format_parts = list(Formatter().parse(format_string))
-            multi_part = _in[0:2]
             for (literal, name, format_spec, conversion) in format_parts:
                 if literal:
-                    multi_part += self.padding_quote + literal + self.padding_quote
+                    multi_part_result += self.padding_quote + literal + self.padding_quote
                 if name:
-                    multi_part += self.padding_quote + '{' + name + '}' + self.padding_quote
+                    multi_part_result += self.padding_quote + '{' + name + '}' + self.padding_quote
                 if format_spec:
                     raise NotImplementedError
                 if conversion:
                     raise NotImplementedError
-            multi_part += self.padding_quote
-        return multi_part
-
+            multi_part_result += self.padding_quote
+        return multi_part_result
 
     def GetSource(self):
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()
@@ -95,17 +143,31 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if not self.USE_NEW_IMPLEMENTATION:
             raise NotImplementedError('deprecated')
         else: # TODO kind of ugly here
-            self._extract_jstr_string(_in, True)
-            extracted_multipart_string = self.jstr_meta_data.matched_multipart_string
-            result = extracted_multipart_string
-            result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
-            result=result.replace(self.padding_quote*2+'{', '{')
-            result=result.replace('}'+self.padding_quote*2, '}')
-            if not result.endswith(self.padding_quote):
-                if self.jstr_meta_data.extracted_string not in result:
-                    result += self.padding_quote
-            result=result.replace(self.padding_quote*2, self.padding_quote)
-            result = self._embed_jstr_into_string(result, _in, True)
+            #extracted_multipart_string = self._extract_jstr_string(_in, True)
+#            extracted_multipart_string = self.jstr_meta_data.matched_multipart_string
+#            result = extracted_multipart_string
+            result = _in
+            result = result.replace(self.padding_quote * 2, self.padding_quote)
+            if result == self.orig_string:
+                return result
+            prefix = self.jstr_meta_data[0].prefix_str
+            suffix = self.jstr_meta_data[len(self.jstr_meta_data)-1].suffix_str
+            if not result.startswith(prefix + 'f'+self.padding_quote):
+                raise ValueError('We must see f\' at beginning of match')
+            if not result.endswith(self.padding_quote+suffix):
+                raise ValueError('We must see \' at the end of match')
+
+            tmp_format_string = result.split('f'+self.padding_quote)[1]
+            tmp_format_string = tmp_format_string[:-1]
+
+            #result = result.replace("f"+self.padding_quote*2, "f"+ self.padding_quote)
+            tmp_format_string=tmp_format_string.replace(self.padding_quote+'{', '{')
+            tmp_format_string =tmp_format_string.replace('}'+self.padding_quote, '}')
+            #if not result.endswith(self.padding_quote):
+            #    if self.jstr_meta_data.format_string not in result:
+            #        result += self.padding_quote
+            #result = self._embed_jstr_into_string(result, _in, True)
+            result = prefix + 'f'+self.padding_quote +tmp_format_string + self.padding_quote + suffix
             return result
 
     def _get_padding_quqte(self, string):
@@ -115,20 +177,31 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             return "\""
         raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
 
-    def _check_not_implemented(self, string):
-        if '\"\"' in string:
-            raise NotImplementedError('Double-quotes are not supported yet')
+#    def _check_not_implemented(self, string):
+#        if '\"\"' in string:
+#            raise NotImplementedError('Double-quotes are not supported yet')
 
 
 
-    def _extract_jstr_string(self, string ,is_multi_part):
-        end, start = self._find_start_end_of_jstr(string)
-        extracted_string = string[start:end+1]
-        stripped_string = string.strip()
-        if stripped_string != extracted_string:
-            if stripped_string[end+1] not in [')', '\n']:
-                raise NotImplementedError("extracted_string is not followed by ')'")
-        self._save_meta_data(end, extracted_string, is_multi_part, start)
+    # def _extract_jstr_string(self, string ,is_double_quaoted):
+    #     if not is_double_quaoted:
+    #         raise NotImplementedError
+    #     f_part = = self.jstr_meta_data[0].prefix_str
+    #
+    #     suffix = self.jstr_meta_data[len(self.jstr_meta_data)-1].suffix_str
+    #     result = string.split(suffix)[0]
+    #     result = result.split(prefix)[1]
+    #     return result
+        # result = self.jstr_meta_data[0].f_part + result
+        # return result
+
+        # end, start = self._find_start_end_of_jstr(string)
+        # extracted_string = string[start:end+1]
+        # stripped_string = string.strip()
+        # if stripped_string != extracted_string:
+        #     if stripped_string[end+1] not in [')', '\n']:
+        #         raise NotImplementedError("extracted_string is not followed by ')'")
+        # self._save_meta_data(end, extracted_string, is_multi_part, start)
 
     def _find_start_end_of_jstr(self, string):
 
@@ -167,50 +240,81 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _save_meta_data(self, end, extracted_string, is_multi_part, start):
         if not is_multi_part:
-            self.jstr_meta_data.extracted_string = extracted_string
-            self.jstr_meta_data.start_at = start
-            self.jstr_meta_data.end_at = end
+            self.jstr_meta_data.format_string = extracted_string
+            self.jstr_meta_data.format_start_at = start
+            self.jstr_meta_data.format_end_at = end
         else:
             self.jstr_meta_data.matched_multipart_string = extracted_string
             self.jstr_meta_data.multipart_start_at = start
             self.jstr_meta_data.multipart_end_at = end
 
-    def _embed_jstr_into_string(self, jstr, string, is_multi_part):
-        if self.jstr_meta_data.multiline_jstr:
-            self._embed_multiline_jstr_into_string(string)
-        if not is_multi_part:
-            jstr_start = self.jstr_meta_data.start_at
-            jstr_end = self.jstr_meta_data.end_at
-        else:
-            jstr_start = self.jstr_meta_data.multipart_start_at
-            jstr_end = self.jstr_meta_data.multipart_end_at
-        prefix = string[:jstr_start]
-        suffix = string[jstr_end+1:]
+    def _embed_jstr_into_string(self, jstr, string):
+        # if self.jstr_meta_data.multiline_jstr:
+        #     raise NotImplementedError
+        #     return self._embed_multiline_jstr_into_string(jstr, string)
+        # if not is_multi_part:
+        #     jstr_start = self.jstr_meta_data.format_start_at
+        #     jstr_end = self.jstr_meta_data.format_end_at
+        # else:
+        #     jstr_start = self.jstr_meta_data.multipart_start_at
+        #     jstr_end = self.jstr_meta_data.multipart_end_at
+        # prefix = string[:jstr_start]
+        # suffix = string[jstr_end+1:]
+        # result = prefix + jstr + suffix
+        # return result
+
+        if len(self.jstr_meta_data) > 1:
+            raise NotImplementedError
+        prefix = self.jstr_meta_data[0].prefix_str
+        suffix = self.jstr_meta_data[0].suffix_str
         result = prefix + jstr + suffix
         return result
 
-    def _guess_split_of_jstr_into_multiline(self, lines):
-        self.jstr_meta_data.multiline_jstr = True
-        self.jstr_meta_data.multiline_parts = []
+    def _split_jstr_into_lines(self, orig_string):
+        lines = orig_string.split('\n')
+        if len(lines) > 1:
+            raise NotImplementedError
         for line in lines:
-            if line.strip().startswith('f'):
-                self.jstr_meta_data.multiline_parts.append(line)
+            if self._is_jstr(line):
+                self.jstr_meta_data.append(JstrConfig(line))
             else:
-                break
+                raise ValueError
 
-    def _extract_multiline_jstr(self, string):
-        lines = string.split('\n')
-        single_jstr = ''
-        self.jstr_meta_data.multiline_jstr = True
-        for line in  lines:
-            if line.find("f'") != -1 or line.find("f\"") != -1:
-                end, start = self._find_start_end_of_jstr(line)
-                self.jstr_meta_data.multiline_parts.append({"line": line, "start": start, "end": end})
-                single_jstr += line[start+2:end]
-            else:
-                break
-        single_jstr = "f'" + single_jstr + "'"
-        self._extract_jstr_string(single_jstr, False)
+    # def _extract_multiline_jstr(self, string):
+    #     lines = string.split('\n')
+    #     single_jstr = ''
+    #     self.jstr_meta_data.multiline_jstr = True
+    #     for line in  lines:
+    #         if line.find("f'") != -1 or line.find("f\"") != -1:
+    #             end, start = self._find_start_end_of_jstr(line)
+    #             self.jstr_meta_data.multiline_parts.append({"line": line, "start": start, "end": end})
+    #             single_jstr += line[start+2:end]
+    #         else:
+    #             break
+    #     single_jstr = "f'" + single_jstr + "'"
+    #     self._extract_jstr_string(single_jstr, False)
 
-    def _embed_multiline_jstr_into_string(self, string):
-        raise NotImplementedError
+    def _embed_multiline_jstr_into_string(self, single_line_jstr, string):
+        multiline_parts = self.jstr_meta_data.multiline_parts
+        first_part = multiline_parts[0]["line"]
+        last_part = multiline_parts[len(multiline_parts)-1]["line"]
+        first_part_loc = string.find(first_part)
+        if first_part_loc == -1:
+            raise ValueError('could not identify first part')
+        last_part_loc = string.find(last_part)
+        if last_part_loc == -1:
+            raise ValueError('could not identify last part')
+        prefix = string[:first_part_loc]
+        suffix = string[last_part_loc+len(last_part):]
+        result = prefix + single_line_jstr + suffix
+        return result
+
+    def _split_matched_string_into_multiline(self, matched_text):
+        pass
+
+    def _is_jstr(self, line):
+        for quote in supported_quotes:
+            expr = f'[ \t\(]*f'+quote
+            if re.search(expr,line):
+                return True
+        return False

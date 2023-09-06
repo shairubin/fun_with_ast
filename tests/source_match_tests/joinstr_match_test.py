@@ -203,7 +203,7 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "(f\"{X}\")"
         self._assert_match(node.value, string)
 
-    def testBasicMatchFromInput56(self):
+    def testBasicMatchFromInput57(self):
         node = GetNodeFromInput("f'{X}'")
         string = "(f'{X}')"
         self._assert_match(node.value, string)

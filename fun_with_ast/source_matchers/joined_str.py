@@ -263,10 +263,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         # result = prefix + jstr + suffix
         # return result
 
-        if len(self.jstr_meta_data) > 1:
-            raise NotImplementedError
+#        if len(self.jstr_meta_data) > 1:
+#            raise NotImplementedError
         prefix = self.jstr_meta_data[0].prefix_str
-        suffix = self.jstr_meta_data[0].suffix_str
+        suffix = self.jstr_meta_data[len(self.jstr_meta_data)-1].suffix_str
         result = prefix + jstr + suffix
         return result
 
@@ -278,8 +278,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 jstr_lines.append(line)
             else:
                 break
-        if len(jstr_lines) > 1 :
-            raise NotImplementedError
+#        if len(jstr_lines) > 1 :
+#            raise NotImplementedError
         for line in jstr_lines:
             if self._is_jstr(line):
                 self.jstr_meta_data.append(JstrConfig(line))

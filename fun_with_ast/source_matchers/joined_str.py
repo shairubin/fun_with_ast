@@ -272,9 +272,15 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _split_jstr_into_lines(self, orig_string):
         lines = orig_string.split('\n')
-        if len(lines) > 1:
-            raise NotImplementedError
+        jstr_lines = []
         for line in lines:
+            if line.find("f'") != -1 or line.find("f") != -1:
+                jstr_lines.append(line)
+            else:
+                break
+        if len(jstr_lines) > 1 :
+            raise NotImplementedError
+        for line in jstr_lines:
             if self._is_jstr(line):
                 self.jstr_meta_data.append(JstrConfig(line))
             else:

@@ -2,7 +2,6 @@ import re
 from dataclasses import dataclass, field
 from string import Formatter
 
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
@@ -108,8 +107,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         result = result.replace(self.padding_quote * 2, self.padding_quote)
         if result == self.orig_string:
             return result
-        prefix = self.jstr_meta_data[0].prefix_str
-        suffix = self.jstr_meta_data[len(self.jstr_meta_data)-1].suffix_str
+        prefix, suffix = self._get_prefix_suffix()
         if not result.startswith(prefix + 'f'+self.padding_quote):
             raise ValueError('We must see f\' at beginning of match')
         if not result.endswith(self.padding_quote+suffix):
@@ -122,27 +120,15 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         result = prefix + 'f'+self.padding_quote +tmp_format_string + self.padding_quote + suffix
         return result
 
-    def _get_padding_quqte(self, string):
-        if string.startswith("f'"):
-            return "'"
-        elif string.startswith("f\""):
-            return "\""
-        raise BadlySpecifiedTemplateError('Formatted string must start with \' or \"')
+    def _get_prefix_suffix(self):
+        prefix = self.jstr_meta_data[0].prefix_str
+        suffix = self.jstr_meta_data[len(self.jstr_meta_data) - 1].suffix_str
+        return prefix, suffix
 
 
-    def _save_meta_data(self, end, extracted_string, is_multi_part, start):
-        if not is_multi_part:
-            self.jstr_meta_data.format_string = extracted_string
-            self.jstr_meta_data.format_start_at = start
-            self.jstr_meta_data.format_end_at = end
-        else:
-            self.jstr_meta_data.matched_multipart_string = extracted_string
-            self.jstr_meta_data.multipart_start_at = start
-            self.jstr_meta_data.multipart_end_at = end
 
     def _embed_jstr_into_string(self, jstr, string):
-        prefix = self.jstr_meta_data[0].prefix_str
-        suffix = self.jstr_meta_data[len(self.jstr_meta_data)-1].suffix_str
+        prefix, suffix = self._get_prefix_suffix()
         result = prefix + jstr + suffix
         return result
 
@@ -199,14 +185,17 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 config_contrib = config.prefix_str + config.f_part+config.format_string
             else:
                 config_contrib = config.format_string
-            line_start_at = remaining_string.find(config_contrib)
-            if line_start_at == -1:
-                ValueError('invalid match of line in multiline jstr string')
-            if line_start_at != 0:
-                ValueError('single line must be the start of the multiline jstr string')
+            self._get_start_line_location(config_contrib, remaining_string)
             result += config.orig_single_line_string
             if index != len(self.jstr_meta_data)-1:
                 result += '\n'
             remaining_string = remaining_string.removeprefix(config_contrib)
         return result
+
+    def _get_start_line_location(self, config_contrib, remaining_string):
+        line_start_at = remaining_string.find(config_contrib)
+        if line_start_at == -1:
+            ValueError('invalid match of line in multiline jstr string')
+        if line_start_at != 0:
+            ValueError('single line must be the start of the multiline jstr string')
 

@@ -240,11 +240,14 @@ class JoinStrMatcherTest(BaseTestUtils):
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
+    def testBasicMatchFromInputNewLine(self):
+        node = GetNodeFromInput("f'X{a}[b]'")
+        string = "f'X{a}[b]\n'"
+        self._assert_no_match(node.value, string)
+
     def testMatchMultilLine(self):
-        node = GetNodeFromInput("f'X'")
-        string = "f'X'\n"
-        self._verify_match(node.value, string)
-        self._verify_match(node, string)
+        with pytest.raises((SyntaxError)):
+            node = GetNodeFromInput("f'X\n'")
     def testMatchMultilLine1(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"

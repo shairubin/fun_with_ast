@@ -281,3 +281,10 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "f'X'    "
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
+
+    @pytest.mark.skip('not sup[ported yet')
+    def testMatchComment(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'X'   # comment "
+        self._verify_match(node.value, string)
+        self._assert_match(node.value, string)

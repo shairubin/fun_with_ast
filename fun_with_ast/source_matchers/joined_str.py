@@ -103,9 +103,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         multi_part_result += self.padding_quote
         return multi_part_result
 
-
-        return matched_source
-
     def _convert_to_single_part_string(self, _in):
         result = _in
         result = result.replace(self.padding_quote * 2, self.padding_quote)

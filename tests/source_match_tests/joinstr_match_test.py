@@ -282,7 +282,7 @@ class JoinStrMatcherTest(BaseTestUtils):
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
-    @pytest.mark.skip('not sup[ported yet')
+    @pytest.mark.skip('not supported yet')
     def testMatchComment(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'   # comment "

@@ -105,7 +105,6 @@ class JoinStrMatcherTest(BaseTestUtils):
         matcher.do_match(string)
         matched_string = matcher.GetSource()
         self.assertEqual(string, matched_string)
-
     def testNoMatchStringsAndFormatedValue5(self):
         node = create_node.JoinedStr([create_node.Constant('y', "'"),
                                       create_node.FormattedValue(create_node.Name('a')),
@@ -167,90 +166,115 @@ class JoinStrMatcherTest(BaseTestUtils):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
 
+###############################################################
 # From Input tests
+###############################################################
     def testBasicMatchFromInput5(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'"
-        self._assert_match(node.value, string)
+        self._verify_match(node.value, string)
 
     def testBasicMatchFromInput51(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput52(self):
         node = GetNodeFromInput("f\"X\"")
         string = "f\"X\""
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput53(self):
         node = GetNodeFromInput("f\"X\"")
         string = "(f\"X\")"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput54(self):
         node = GetNodeFromInput("f'{X}'")
         string = "f'{X}'"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput55(self):
         node = GetNodeFromInput("f\"{X}\"")
         string = "f\"{X}\""
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput56(self):
         node = GetNodeFromInput("f\"{X}\"")
         string = "(f\"{X}\")"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput57(self):
         node = GetNodeFromInput("f'{X}'")
         string = "(f'{X}')"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
 
     def testBasicMatchFromInput2(self):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
     def testBasicMatchFromInput3(self):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testMatchMultilLine(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'\n"
+        self._verify_match(node.value, string)
         self._verify_match(node, string)
     def testMatchMultilLine1(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("f'XY'")
         string = "(f'X'\nf'Y')"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testMatchMultilLine12(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'X'\nf'Y'"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
+    def testMatchMultilLine14(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "f'X'\nf'Y'"
+        self._verify_match(node.value, string)
+        self._assert_match(node.value, string)
+
     def testMatchMultilLine13(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'XY'"
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
     def testMatchMultilLine2(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'    "
+        self._verify_match(node.value, string)
         self._assert_match(node.value, string)

@@ -73,7 +73,15 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         jstr = self._generate_to_multi_part_string()
         embeded_string = self._embed_jstr_into_string(jstr, string)
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
+        matched_text = self._convert_to_single_part_string(matched_text)
+        matched_text = self._split_back_into_lines(matched_text)
         return matched_text
+
+    def GetSource(self):
+        matched_source = super(JoinedStrSourceMatcher, self).GetSource()
+        matched_source = self._convert_to_single_part_string(matched_source)
+        matched_source = self._split_back_into_lines(matched_source)
+        return matched_source
 
     def _generate_to_multi_part_string(self,):
         multi_part_result = self.jstr_meta_data[0].f_part
@@ -95,10 +103,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         multi_part_result += self.padding_quote
         return multi_part_result
 
-    def GetSource(self):
-        matched_source = super(JoinedStrSourceMatcher, self).GetSource()
-        matched_source = self._convert_to_single_part_string(matched_source)
-        matched_source = self._split_back_into_lines(matched_source)
 
         return matched_source
 

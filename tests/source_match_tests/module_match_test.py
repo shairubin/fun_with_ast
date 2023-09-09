@@ -8,6 +8,48 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+
+module3 = """class FlaxBartAttention(FlaxBartAttention):
+
+
+    def __call__():
+
+        if self.has_variable("cache", "cached_key"):
+            causal_mask = lax.dynamic_slice(
+                self.causal_mask,
+                (0, 0, mask_shift, 0),
+                (1, 1, query_length, max_decoder_length),
+            )
+"""
+
+
+module2 = """class FlaxBartAttention(FlaxBartAttention):
+    \"\"\"
+    Edits:
+    - causal mask is used only in decoder and considers image_length
+    - scale attention heads per NormFormer paper
+    \"\"\"
+
+
+    def __call__():
+        \"\"\"Input shape: Batch x Time x Channel\"\"\"
+
+        # handle cache prepare causal attention mask
+        if self.causal:
+            query_length, key_length = query_states.shape[1], key_states.shape[1]
+            if self.has_variable("cache", "cached_key"):
+                causal_mask = lax.dynamic_slice(
+                    self.causal_mask,
+                    (0, 0, mask_shift, 0),
+                    (1, 1, query_length, max_decoder_length),
+                )
+            else:
+                causal_mask = self.causal_mask[:, :, :query_length, :key_length]
+            causal_mask = jnp.broadcast_to(
+                causal_mask, (batch_size,) + causal_mask.shape[1:]
+            )
+"""
+
 module1 = """ 
 def norm(type, *args, **kwargs):
     if True:
@@ -134,7 +176,19 @@ a.b('cpu')
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputWithJopinedString(self):
+    def testFromInputModule1(self):
         string = module1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testFromInputModule2(self):
+        string = module2
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testFromInputModule3(self):
+        string = module3
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -470,3 +470,49 @@ def __init__():
 """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testCallWithTuple(self):
+        string = """lax.dynamic_slice(
+            (0, 0),
+            (1, 1),
+        )
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testCallWithTuple1(self):
+        string = """lax.dynamic_slice(
+            0, 0,
+            1, 1,
+        )
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testCallWithTuple2(self):
+        string = """a.b(0, 0, 1, 1,
+        )
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithTuple3(self):
+        string = """a.b(0, 0, 1, 1,
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 118')
+    def testCallWithTuple4(self):
+        string = """a.b()
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithTuple5(self):
+        string = """a.b()"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

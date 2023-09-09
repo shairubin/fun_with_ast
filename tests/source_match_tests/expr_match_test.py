@@ -51,7 +51,18 @@ class ExprMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+
     def testSimpleExpr6(self):
         string = "\"\"\"b\"\"\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleExpr7(self):
+        string = "\"b\"\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleExpr8(self):
+        string = "'7'\n   "
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

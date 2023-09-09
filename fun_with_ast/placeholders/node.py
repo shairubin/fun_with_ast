@@ -13,7 +13,7 @@ def ValidateStart(original_string, matched_string):
     stripped_matched, stripped_original = _get_stripped_strings(original_string, matched_string)
     if not stripped_original.startswith(stripped_matched):
         raise BadlySpecifiedTemplateError(
-            'String "{}" should have started with string "{}"'
+            'ValidateStart:\n String "{}" should have started with string "{}"'
                 .format(stripped_original, stripped_matched))
     return {"stripped_matched": stripped_matched, "stripped_original": stripped_original}
 

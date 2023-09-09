@@ -58,6 +58,7 @@ def get_alias_expected_parts():
         FieldPlaceholder(
             'asname',
             before_placeholder=TextPlaceholder(r' *as *', ' as ')),
+        TextPlaceholder(r'([ \t]*(#+.*)*)*', '')  # this is the official end of line comment regex WITHOUT EOL
     ]
 
 
@@ -384,7 +385,7 @@ def get_Import_expected_parts():
         TextPlaceholder(r' *import ', 'import '),
         SeparatedListFieldPlaceholder(
             'names', TextPlaceholder('[ \t]*,[ \t]*', ', ')),
-        TextPlaceholder(r'\n', '\n')
+        TextPlaceholder(r'\n*', '\n')
     ]
 
 

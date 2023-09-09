@@ -28,6 +28,10 @@ class GetSourceTest(BaseTestUtils):
         string = 'import a # comment 1\nimport b #comment 2\n'
         self._verify_source(string, get_module=True)
 
+    def testImportWithComment1(self):
+        string = 'import a # comment 1\nimport b #comment 2'
+        self._verify_source(string, get_module=True)
+
     def testImportWithComment2(self):
         string = '#comment 0\nimport a # comment 1\nimport b #comment 2\n'
         self._verify_source(string, get_module=True)

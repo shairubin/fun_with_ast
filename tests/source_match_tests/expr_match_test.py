@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
@@ -63,6 +65,12 @@ class ExprMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testSimpleExpr8(self):
-        string = "'7'\n   "
+        string = "'7'\n   " # without a module node, this should fail
         node = GetNodeFromInput(string)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+
+    def testSimpleExpr9(self):
+        string = "'7'\n   "
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

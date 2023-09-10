@@ -6,6 +6,7 @@ class SyntaxFreeLine(_ast.stmt):
     """Class defining a new node that has no syntax (only optional comments)."""
     COMMENT_LINE = 'comment_line'
     EMPTY_LINE = 'empty_line'
+    EMPTY_LINE_NO_EOL = 'empty_line_no_eol'
     def __init__(self, comment=None, col_offset=0, comment_indent=1):
         super(SyntaxFreeLine, self).__init__()
         self.col_offset = col_offset
@@ -29,6 +30,10 @@ class SyntaxFreeLine(_ast.stmt):
         if is_empty_line:
              return (is_empty_line, SyntaxFreeLine.EMPTY_LINE)
 
+        is_empty_line = re.match('([ \t]+)$', text)
+        if is_empty_line:
+             return (is_empty_line, SyntaxFreeLine.EMPTY_LINE_NO_EOL)
+
         is_comment_line = re.match('([ \t]*)(#)([ \t]*)(.*)(\n)', text)
         if is_comment_line:
             return (is_comment_line, SyntaxFreeLine.COMMENT_LINE)
@@ -40,7 +45,7 @@ class SyntaxFreeLine(_ast.stmt):
             raise ValueError('line {} is not a valid SyntaxFreeLine'.format(line))
         type = match_type[1]
         match = match_type[0]
-        if type == SyntaxFreeLine.EMPTY_LINE:
+        if type == SyntaxFreeLine.EMPTY_LINE or type == SyntaxFreeLine.EMPTY_LINE_NO_EOL:
             self.col_offset = len(match.group(1))
             self.comment_indent = 0
             self.comment = None

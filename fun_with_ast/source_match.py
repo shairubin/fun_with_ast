@@ -197,7 +197,7 @@ def get_Call_expected_parts():
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
-        TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '\n', no_transform=True)
+        TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '', no_transform=True)
     ]
 
 def get_CallArgs_expected_parts():
@@ -209,7 +209,7 @@ def get_ClassDef_expected_parts():
         ListFieldPlaceholder(
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
-            after_placeholder=TextPlaceholder(r'\n*', '\n')),
+            after_placeholder=TextPlaceholder(r'\n*', '')),
         TextPlaceholder(r'[ \t]*class[ \t]*', 'class '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(?\s*', '('),

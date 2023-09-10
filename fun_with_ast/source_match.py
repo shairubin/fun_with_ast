@@ -209,7 +209,7 @@ def get_ClassDef_expected_parts():
         ListFieldPlaceholder(
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
-            after_placeholder=TextPlaceholder(r'\n', '\n')),
+            after_placeholder=TextPlaceholder(r'\n*', '\n')),
         TextPlaceholder(r'[ \t]*class[ \t]*', 'class '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(?\s*', '('),

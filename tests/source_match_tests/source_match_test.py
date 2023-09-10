@@ -488,7 +488,7 @@ class AugAssignMatcherTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
 
 
-class ClassDefMatcherTest(unittest.TestCase):
+class ClassDefMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.ClassDef('TestClass', body=[create_node.Pass()])

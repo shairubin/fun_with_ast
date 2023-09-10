@@ -102,6 +102,11 @@ class NameMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testNamesInModule3(self):
+        string = 'b\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testLeadingSpaces(self):
         node = create_node.Name('a')
         string = '  a'

@@ -197,6 +197,7 @@ def get_Call_expected_parts():
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
+        TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '\n', no_transform=True)
     ]
 
 def get_CallArgs_expected_parts():
@@ -332,7 +333,7 @@ def get_FunctionDef_expected_parts():
         BodyPlaceholder(
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
-            after_placeholder=TextPlaceholder(r'\n', '\n')),
+            after_placeholder=TextPlaceholder(r'\n*', '\n')),
         TextPlaceholder(r'([ \t]*async[ \t]+)*[ \t]*def ', 'def '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(\s*', '('),

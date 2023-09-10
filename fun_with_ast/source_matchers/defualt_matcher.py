@@ -10,7 +10,7 @@ from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 class DefaultSourceMatcher(SourceMatcher):
     """Class to generate the source for a node."""
-
+    USE_NEW_IMPLEMENTATION = False
     def __init__(self, node, expected_parts, starting_parens=None, parent_node=None):
         super(DefaultSourceMatcher, self).__init__(node, starting_parens)
         previous_was_string = False
@@ -65,7 +65,13 @@ class DefaultSourceMatcher(SourceMatcher):
                     .format(string, self, e.message))
 
         matched_string = DefaultSourceMatcher.GetSource(self)
-        self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
+        if self.USE_NEW_IMPLEMENTATION:
+            if not matched_string.endswith('\n'):
+                self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
+            else:
+                pass
+        else:
+            self.end_of_line_comment = self.MatchCommentEOL(remaining_string)
         end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
         result =  (matched_string + end_ws + self.end_of_line_comment)
         self.matched = True

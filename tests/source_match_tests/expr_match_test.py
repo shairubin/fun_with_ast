@@ -58,8 +58,8 @@ class ExprMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testSimpleExpr7(self):
-        string = "\"b\"\n"
-        node = GetNodeFromInput(string)
+        string = "\"b\"\n # comment"
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testSimpleExpr8(self):

@@ -501,7 +501,6 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple2(self):
         string = """a.b(0, 0, 1, 1,
         )

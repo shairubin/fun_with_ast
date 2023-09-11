@@ -185,7 +185,7 @@ class AssignMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip('issue 118')
+    #@pytest.mark.skip('issue 118')
     def testAssignFromSourceList251(self):
         string = """causal_mask = lax.dynamic_slice(
             (0, 0),

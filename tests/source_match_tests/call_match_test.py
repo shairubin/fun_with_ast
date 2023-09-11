@@ -481,7 +481,6 @@ def __init__():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip('issue 118')
     def testCallWithTuple(self):
         string = """lax(
             (0,1),
@@ -491,7 +490,6 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(
             0, 0,

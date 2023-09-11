@@ -181,13 +181,11 @@ a.b('cpu')
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testFromInputModule2(self):
         string = module2
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testFromInputModule3(self):
         string = module3
         node = GetNodeFromInput(string, get_module=True)

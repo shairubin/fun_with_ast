@@ -67,7 +67,7 @@ def get_Tuple_expected_parts():
     return  [
             SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
                                            # seems to work for now to allow both (a,) and (a)
-                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', '')),
+                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
         ]
 
 def get_And_expected_parts():
@@ -303,7 +303,7 @@ def get_Expr_expected_parts():
     return [
         TextPlaceholder(r' *', ''),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+        TextPlaceholder(r'([ \t]*(#+.*)*\n?)', '') # this is the official comment regex
         #TextPlaceholder(r' *\n', '\n')
     ]
 

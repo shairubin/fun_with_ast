@@ -10,7 +10,7 @@ class SyntaxFreeLineMatcher(DefaultSourceMatcher):
     """Class to generate the source for a node."""
 
     def __init__(self, node, expected_parts, starting_parens=None, parent_node=None):
-        parts = [FieldPlaceholder('full_line'), TextPlaceholder(r'\n', '\n')]
+        parts = [FieldPlaceholder('full_line'), TextPlaceholder(r'\n|[ \t]+', '\n')]
         super(SyntaxFreeLineMatcher, self).__init__(node, parts, starting_parens)
 
     def MatchWhiteSpaces(self, remaining_string):

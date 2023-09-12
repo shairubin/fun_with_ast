@@ -101,6 +101,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             elements.extend(self.args_matcher.start_paren_matchers)
             elements.extend(self.args_matcher.expected_parts)
             elements.extend(self.args_matcher.end_paren_matchers)
+            elements.extend(self.args_matcher.EOL_comment_matcher)
             return elements
         elif self.use_default_matcher == True and not self.args_matcher:
             parts = self._get_parts_for_default_matcher(0, node, '')
@@ -177,7 +178,9 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         result = [(x,y) for x,y in toret.items()]
         result.sort()
         return result
+
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _GetArgsKwargs(self, node):
         return [], list(zip(node.ops, node.comparators))
+

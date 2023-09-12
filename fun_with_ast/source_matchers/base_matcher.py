@@ -3,7 +3,7 @@ import re
 
 from fun_with_ast.common_utils.parenthese_stack import ParanthesisStack
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder
+from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder, EOLCommentMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
@@ -15,11 +15,12 @@ class SourceMatcher(object):
     parentheses_stack = ParanthesisStack()
     def __init__(self, node, stripped_parens=None):
         self.node = node
+        self.EOL_comment_matcher = [EOLCommentMatcher()]
         self.end_paren_matchers = []
         self.start_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
         self.end_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
         self.paren_wrapped = False
-        self.end_of_line_comment = ''
+        self.end_of_line_comment = '' #TODO: remove this use EOL_comment_matcher
         if not stripped_parens:
             stripped_parens = []
         self.start_paren_matchers = stripped_parens
@@ -77,16 +78,12 @@ class SourceMatcher(object):
     def MatchCommentEOL(self, string):
         if string is None:
             return ''
+        try:
+            self.EOL_comment_matcher[0]._match(None, string)
+        except BadlySpecifiedTemplateError:
+            return ''
 
-        remaining_string = string
-        comment = ''
-
-        full_line  = re.match(r'([ \t]*)(#.*)', string)
-        if full_line:
-            comment = full_line.group(2)
-        if comment:
-            self.end_of_line_comment = comment
-        return comment
+        return self.EOL_comment_matcher[0].matched_text
 
 
 

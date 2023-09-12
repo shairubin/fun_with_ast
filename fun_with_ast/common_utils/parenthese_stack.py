@@ -33,7 +33,7 @@ class ParanthesisStack(Stack):
         try:
             MatchPlaceholder(string, None, end_paren_matcher)
         except BadlySpecifiedTemplateError:
-            return
+            return string
 
 
         remaining_string = string

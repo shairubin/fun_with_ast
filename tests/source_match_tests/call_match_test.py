@@ -192,7 +192,7 @@ class CallMatcherTest(BaseTestUtils):
             node = GetNodeFromInput(string)
 
     @pytest.mark.skip('not implemented yet')
-    def testCallMatchWithKwargs4_5(self):
+    def testCallMatchWithKwargs4_51(self):
         string = "a(b=c, *d, e=f)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
@@ -279,6 +279,16 @@ class CallMatcherTest(BaseTestUtils):
         string = "b(x=3)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testCallDoubeAttributeWithParams32(self):
+        string = "b(1.0,) # comment\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallDoubeAttributeWithParams33(self):
+        string = "b(x=3) # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testCallDoubeAttributeWithParams4(self):
         string = "super().__init__()\n"
         node = GetNodeFromInput(string)
@@ -366,7 +376,6 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('not implemented yes - last comment in modul must end with \n ')
     def testCallWithNewLineAndComment2(self):
         string = """T(a,b=x)\n     # X ,  \n   # Y"""
         node = GetNodeFromInput(string, get_module=True)
@@ -471,17 +480,15 @@ def __init__():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple(self):
-        string = """lax.dynamic_slice(
-            (0, 0),
-            (1, 1),
+        string = """lax(
+            (0,1),
+            (2, 3),
         )
         """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(
             0, 0,
@@ -491,7 +498,6 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple2(self):
         string = """a.b(0, 0, 1, 1,
         )
@@ -505,9 +511,8 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 118')
     def testCallWithTuple4(self):
-        string = """a.b()
+        string = """a()
         """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

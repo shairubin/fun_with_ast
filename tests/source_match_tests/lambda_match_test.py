@@ -36,7 +36,6 @@ class LambdaMatcherTest(BaseTestUtils):
             lax.select(x == beta, lax.full_like(g, 1), g))"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="not implemented yet")
     def testMatchComplexLambda(self):
         string = """lambda g, ans, x: lax.select(
             x == -beta,

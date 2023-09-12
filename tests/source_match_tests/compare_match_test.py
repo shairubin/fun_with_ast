@@ -63,7 +63,6 @@ class CompareMatcherTest(BaseTestUtils):
             create_node.Num('1'))
         string = 'a.b() >= 1'
         self._verify_match(node, string)
-    @pytest.mark.skip('not implemented, see anso: testIfFromSource7')
     def testBasicMatch3(self):
         node = create_node.Compare(
             create_node.Call('a.b', args=[create_node.Num('2')]),

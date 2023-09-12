@@ -178,8 +178,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         result = [(x,y) for x,y in toret.items()]
         result.sort()
         return result
-    def MatchCommentEOL(self, string):
-        raise NotImplementedError('OpsComparatorsPlaceholder does not support comments')
 
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):
 

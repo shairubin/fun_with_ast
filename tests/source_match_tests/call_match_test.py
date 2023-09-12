@@ -192,7 +192,7 @@ class CallMatcherTest(BaseTestUtils):
             node = GetNodeFromInput(string)
 
     @pytest.mark.skip('not implemented yet')
-    def testCallMatchWithKwargs4_5(self):
+    def testCallMatchWithKwargs4_51(self):
         string = "a(b=c, *d, e=f)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
@@ -376,7 +376,6 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('not implemented yes - last comment in modul must end with \n ')
     def testCallWithNewLineAndComment2(self):
         string = """T(a,b=x)\n     # X ,  \n   # Y"""
         node = GetNodeFromInput(string, get_module=True)

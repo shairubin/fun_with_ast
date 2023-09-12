@@ -20,7 +20,7 @@ class SourceMatcher(object):
         self.start_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
         self.end_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
         self.paren_wrapped = False
-        self.end_of_line_comment = ''
+        self.end_of_line_comment = '' #TODO: remove this use EOL_comment_matcher
         if not stripped_parens:
             stripped_parens = []
         self.start_paren_matchers = stripped_parens
@@ -84,15 +84,6 @@ class SourceMatcher(object):
             return ''
 
         return self.EOL_comment_matcher[0].matched_text
-        # remaining_string = string
-        # comment = ''
-        #
-        # full_line  = re.match(r'([ \t]*)(#.*)', string)
-        # if full_line:
-        #     comment = full_line.group(2)
-        # if comment:
-        #     self.end_of_line_comment = comment
-        # return comment
 
 
 

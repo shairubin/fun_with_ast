@@ -8,6 +8,52 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module5 = """
+def dot_product_attention_weights():
+    attn_weights -= jax.nn.logsumexp(attn_weights, axis=-1, keepdims=True) """
+module4 = """def dot_product_attention_weights(
+    query: Any,
+    key: Any,
+    bias: Optional[Any] = None,
+    mask: Optional[Any] = None,
+    embed_pos: Optional[Any] = None,
+    broadcast_dropout: bool = True,
+    dropout_rng: Optional[PRNGKey] = None,
+    dropout_rate: float = 0.0,
+    deterministic: bool = False,
+    dtype: Any = jnp.float32,
+    precision: PrecisionLike = None,
+    sinkhorn_iters: int = 1,
+    is_encoder: bool = False,
+    tau=None,
+):
+    \"\"\"
+    Computes dot-product attention weights given query and key.
+    mask is included into the bias.
+
+    Adapted from flax.linen.attention.dot_product_attention_weights"
+    \"\"\"
+    # add relative position
+    if embed_pos is not None:
+        attn_weights = attn_weights + embed_pos
+
+    # normalize the attention weights
+    if not is_encoder or sinkhorn_iters == 1:
+        # sinkhorn does not work for causal (leaks info of future tokens into past)
+        attn_weights = jax.nn.softmax(attn_weights).astype(dtype)
+    else:
+        # adapted from https://github.com/lucidrains/sinkhorn-transformer
+        for i in range(sinkhorn_iters):
+            # when causal, some attn_weights have been set to -inf through bias
+            if i % 2 == 0:
+                attn_weights -= jax.nn.logsumexp(attn_weights, axis=-1, keepdims=True)
+            else:
+                attn_weights -= jax.nn.logsumexp(attn_weights, axis=-2, keepdims=True)
+            if mask is not None:
+                attn_weights = jnp.where(mask, attn_weights, -jnp.inf)
+        attn_weights = jnp.exp(attn_weights).astype(dtype)
+
+"""
 
 module3 = """class FlaxBartAttention(FlaxBartAttention):
 
@@ -190,5 +236,15 @@ a.b('cpu')
     @pytest.mark.skip('issue 118')
     def testFromInputModule3(self):
         string = module3
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule4(self):
+        string = module4
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue #122')
+    def testFromInputModule5(self):
+        string = module5
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -101,5 +101,45 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
+    def testCreateNodeFromInputTupleWithEOL(self):
+        string = '((1,2), (3,4))'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL2(self):
+        string = '((1,2), (3,4),)'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+    def testCreateNodeFromInputTupleWithEOL21(self):
+        string = '((1,2), (3,4),)\n'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL22(self):
+        string = '((1,2), (3,4),)\n     '
+        node =GetNodeFromInput(string, get_module=True)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL23(self):
+        string = '(1,2)\n     '
+        node =GetNodeFromInput(string, get_module=True)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL24(self): # empty line at end is supported only in modules.
+        string = '(1,2)\n     '
+        node =GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError):
+            self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL3(self):
+        string = '((1,2),\n (3,4))'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL31(self):
+        string = '(1,\n 2)'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
     def _assert_match(self, node, string):
         self._verify_match(node, string)

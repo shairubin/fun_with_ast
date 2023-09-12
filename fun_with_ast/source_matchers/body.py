@@ -13,9 +13,13 @@ class BodyPlaceholder(ListFieldPlaceholder):
 
     def MatchSyntaxFreeLine(self, remaining_string):
         try:
+            _ , line_type = SyntaxFreeLine.is_syntaxfree_line(remaining_string)
+            #if line_type == SyntaxFreeLine.EMPTY_LINE_NO_EOL:
+            #    raise NotImplementedError('Empty lines without end of line are not supported')
             line = remaining_string.split('\n', 1)[0]
             syntax_free_node = SyntaxFreeLine()
-            line += '\n'
+            if not line_type == SyntaxFreeLine.EMPTY_LINE_NO_EOL:
+                line += '\n'
             syntax_free_node.SetFromSrcLine(line)
             GetSource(syntax_free_node, text=line)
             remaining_string = remaining_string.removeprefix(line)

@@ -9,3 +9,8 @@ class WhiteSpaceTextPlaceholder(TextPlaceholder):
     def __init__(self):
         super(WhiteSpaceTextPlaceholder, self).__init__(r'[ \t]*', default='', longest_match=False)
 
+class EOLCommentMatcher(TextPlaceholder):
+    """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""
+
+    def __init__(self):
+        super(EOLCommentMatcher, self).__init__(r'([ \t]*)(#.*)$', default='', longest_match=False)

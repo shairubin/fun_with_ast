@@ -58,6 +58,7 @@ def get_alias_expected_parts():
         FieldPlaceholder(
             'asname',
             before_placeholder=TextPlaceholder(r' *as *', ' as ')),
+        TextPlaceholder(r'([ \t]*(#+.*)*)*', '')  # this is the official end of line comment regex WITHOUT EOL
     ]
 
 
@@ -66,7 +67,7 @@ def get_Tuple_expected_parts():
     return  [
             SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
                                            # seems to work for now to allow both (a,) and (a)
-                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*)?', '')),
+                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
         ]
 
 def get_And_expected_parts():
@@ -196,6 +197,7 @@ def get_Call_expected_parts():
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')),
+        TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '', no_transform=True)
     ]
 
 def get_CallArgs_expected_parts():
@@ -207,7 +209,7 @@ def get_ClassDef_expected_parts():
         ListFieldPlaceholder(
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
-            after_placeholder=TextPlaceholder(r'\n', '\n')),
+            after_placeholder=TextPlaceholder(r'\n*', '')),
         TextPlaceholder(r'[ \t]*class[ \t]*', 'class '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(?\s*', '('),
@@ -301,7 +303,7 @@ def get_Expr_expected_parts():
     return [
         TextPlaceholder(r' *', ''),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+        TextPlaceholder(r'([ \t]*(#+.*)*\n?)', '') # this is the official comment regex
         #TextPlaceholder(r' *\n', '\n')
     ]
 
@@ -331,7 +333,7 @@ def get_FunctionDef_expected_parts():
         BodyPlaceholder(
             'decorator_list',
             before_placeholder=TextPlaceholder('[ \t]*@', '@'),
-            after_placeholder=TextPlaceholder(r'\n', '\n')),
+            after_placeholder=TextPlaceholder(r'\n*', '\n')),
         TextPlaceholder(r'([ \t]*async[ \t]+)*[ \t]*def ', 'def '),
         FieldPlaceholder('name'),
         TextPlaceholder(r'\(\s*', '('),
@@ -384,7 +386,7 @@ def get_Import_expected_parts():
         TextPlaceholder(r' *import ', 'import '),
         SeparatedListFieldPlaceholder(
             'names', TextPlaceholder('[ \t]*,[ \t]*', ', ')),
-        TextPlaceholder(r'\n', '\n')
+        TextPlaceholder(r'\n*', '\n')
     ]
 
 

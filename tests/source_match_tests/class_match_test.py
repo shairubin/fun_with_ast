@@ -236,3 +236,16 @@ class ClassMatcherTest(BaseTestUtils):
         string = string_c2
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testClassWithDecorators(self):
+        string = "@dec1\n@dec2\nclass VQGANDiscriminator(nn.Module):\n  def __init__(self, nc=3, ndf=64, n_layers=4, model_path=None):\n     pass"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testClassWithDecorators2(self):
+        string = "@dec1\n@dec2()\nclass VQGANDiscriminator(nn.Module):\n  def __init__(self, nc=3, ndf=64, n_layers=4, model_path=None):\n     pass"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testClassWithDecorators3(self):
+        string = "@dec1\n@dec2() #comment \nclass VQGANDiscriminator(nn.Module):\n  def __init__(self, nc=3, ndf=64, n_layers=4, model_path=None):\n     pass"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

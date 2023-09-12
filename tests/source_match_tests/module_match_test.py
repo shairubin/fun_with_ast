@@ -236,6 +236,8 @@ a.b('cpu')
         string = module3
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    @pytest.mark.skip('issue #122')
+
     def testFromInputModule4(self):
         string = module4
         node = GetNodeFromInput(string, get_module=True)

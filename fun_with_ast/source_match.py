@@ -148,11 +148,11 @@ def get_AugAssign_expected_parts():
     return [
 #        TextPlaceholder(r' *', ''),
         FieldPlaceholder('target'),
-        TextPlaceholder(r' *', ' '),
+        TextPlaceholder(r'[ \t]*', ' '),
         FieldPlaceholder('op'),
-        TextPlaceholder(r'= *', '= '),
+        TextPlaceholder(r'=[ \t]*', '='),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'\n', '\n')
+        #TextPlaceholder(r'\n*', '\n')
     ]
 
 

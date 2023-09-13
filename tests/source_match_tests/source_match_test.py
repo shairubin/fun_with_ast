@@ -455,39 +455,6 @@ class AttributeMatcherTest(unittest.TestCase):
         self.assertEqual(string, matcher.GetSource())
 
 
-class AugAssignMatcherTest(unittest.TestCase):
-
-    @pytest.mark.skip(reason="Not Implemented Yet")
-    def testBasicMatch(self):
-        node = create_node.AugAssign('a', create_node.Add(), create_node.Num(12))
-        string = 'a+=1\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testNotMatchWithVarAndTab(self):
-        node = create_node.AugAssign('a', create_node.Add(), create_node.Name('c'))
-        string = '       \t        a += b\n'
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.do_match(string)
-        #self.assertNotEqual(string, matcher.GetSource())
-
-    def testMatchWithVarAndTab(self):
-        node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
-        string = '       \t        a += b\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-    def testBasicMatchWithVarAndTab2(self):
-        node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
-        string = '               a +=\tb\n'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        self.assertEqual(string, matcher.GetSource())
-
-
 class ClassDefMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):

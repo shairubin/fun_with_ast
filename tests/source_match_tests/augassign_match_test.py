@@ -80,3 +80,13 @@ attn_weights -= a()
         string = """a+='str'"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testFromInput2(self):
+        string = """a+=\n'str'"""
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+
+    def testFromInput3(self):
+        string = """a+= \t 'str' # comment"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

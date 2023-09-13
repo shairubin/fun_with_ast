@@ -13,8 +13,8 @@ class AugAssignMatcherTest(BaseTestUtils):
 
 
     def testBasicMatch(self):
-        node = create_node.AugAssign('a', create_node.Add(), create_node.Num(12))
-        string = 'a+=1\n'
+        node = create_node.AugAssign('a', create_node.Add(), create_node.Num('1'))
+        string = 'a+=1'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
@@ -29,14 +29,14 @@ class AugAssignMatcherTest(BaseTestUtils):
 
     def testMatchWithVarAndTab(self):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
-        string = '       \t        a += b\n'
+        string = '       \t        a += b'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
     def testBasicMatchWithVarAndTab2(self):
         node = create_node.AugAssign('a', create_node.Add(), create_node.Name('b'))
-        string = '               a +=\tb\n'
+        string = '               a +=\tb'
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
@@ -49,7 +49,7 @@ class AugAssignMatcherTest(BaseTestUtils):
         string = """
 attn_weights -= a()
 """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testFromInput1(self):
@@ -65,10 +65,16 @@ attn_weights -= a()
         string = """a += 1\n"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    def testFromInput13(self):
+    def testFromInputModule(self):
+        string = """a += 'str'\n"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputNoModule(self):
         string = """a += 'str'\n"""
         node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
 
     def testFromInput14(self):
         string = """a+='str'"""

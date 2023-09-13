@@ -236,15 +236,40 @@ a.b('cpu')
         string = module3
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('issue #122')
 
     def testFromInputModule4(self):
         string = module4
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue #122')
+
     def testFromInputModule5(self):
         string = module5
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testFromInputModule51(self):
+        string = """
+def dot_product_attention_weights():
+    attn_weights -= a(attn_weights)
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testFromInputModule52(self):
+        string = """
+def dot_product_attention_weights():
+    attn_weights -= a
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule53(self):
+        string = """
+def dot_product_attention_weights():
+    attn_weights -= a()
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

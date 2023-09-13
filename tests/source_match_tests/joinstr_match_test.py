@@ -282,6 +282,12 @@ class JoinStrMatcherTest(BaseTestUtils):
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
+    def testMatchPlaceholderEndOfString(self):
+        string = """f\"FlaxBartEncoderLayer_{i}\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node.value, string)
+        self._assert_match(node.value, string)
+
     @pytest.mark.skip('not supported yet')
     def testMatchComment(self):
         node = GetNodeFromInput("f'X'")

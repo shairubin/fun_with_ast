@@ -71,3 +71,14 @@ class ConstantStrMatcherTest(BaseTestUtils):
         string = "'X '  'Y ' # comment\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testMultiPartEmpty(self):
+        string = "''"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testMultiPartEmpty2(self):
+        string = "''''" # not supported in python 3.10
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+

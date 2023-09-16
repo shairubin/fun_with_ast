@@ -18,10 +18,14 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f\"\"")
         string = "f\"\""
         self._verify_match(node, string)
-    def testBasicMatchEmpty2(self):
-        node = GetNodeFromInput("f''")
-        string = "f''"
+    def testBasicMatchEmpty11(self):
+        node = GetNodeFromInput("f\"\"")
+        string = "f\'\'"
         self._verify_match(node, string)
+
+    def testBasicMatchEmpty2(self):
+        with pytest.raises((SyntaxError)):
+            node = GetNodeFromInput("f'\''") # not supported in python
 
     def testBasicMatchFromInput(self):
         node = GetNodeFromInput("f'X'")

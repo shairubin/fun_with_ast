@@ -130,13 +130,6 @@ class JoinStrMatcherTestCreateNode(BaseTestUtils):
         string = "f\"fun-with-ast\""
         self._assert_no_match(node, string)
 
-    def testBasicnNoMatchEmpty(self):
-        node = create_node.JoinedStr([create_node.Constant('', "\"")])
-        string = "f\"\""
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(ValueError):
-            matcher.do_match(string)
-
 
     def testNoMatchStringsAndFormatedValue(self):
         node = create_node.JoinedStr([create_node.Constant('y', "'"),

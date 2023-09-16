@@ -3,23 +3,30 @@ import unittest
 import pytest
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 
-from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
 
 
 class JoinStrMatcherTests(BaseTestUtils):
+
+    def testBasicMatchEmpty(self):
+        node = GetNodeFromInput("f''")
+        string = "(f'')"
+        self._verify_match(node, string)
+    def testBasicMatchEmpty1(self):
+        node = GetNodeFromInput("f\"\"")
+        string = "f\"\""
+        self._verify_match(node, string)
+    def testBasicMatchEmpty2(self):
+        node = GetNodeFromInput("f''")
+        string = "f''"
+        self._verify_match(node, string)
+
     def testBasicMatchFromInput(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
-        #self._assert_match(node.value, string)
         self._verify_match(node, string)
-###############################################################
-# From Input tests
-###############################################################
     def testBasicMatchFromInput5(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'"

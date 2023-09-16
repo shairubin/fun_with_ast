@@ -85,6 +85,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self._split_jstr_into_lines(string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
+        if self._is_empty_str(jstr):
+            result = self._return_empty()
+            return result
         embeded_string = self._embed_jstr_into_string(jstr, string)
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         matched_text = self._convert_to_single_part_string(matched_text)
@@ -216,4 +219,13 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             ValueError('invalid match of line in multiline jstr string')
         if line_start_at != 0:
             ValueError('single line must be the start of the multiline jstr string')
+
+    def _is_empty_str(self, jstr):
+        quote = self.jstr_meta_data[0].quote_type
+        if jstr == self.jstr_meta_data[0].f_part + quote*3:
+            return True
+        return False
+
+    def _return_empty(self):
+        return self.jstr_meta_data[0].f_part + self.jstr_meta_data[0].quote_type
 

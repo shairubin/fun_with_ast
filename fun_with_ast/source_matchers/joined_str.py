@@ -9,7 +9,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 
 
-NEW_IMPLEMENTATION = True
+NEW_IMPLEMENTATION = False
 supported_quotes = ['\'', "\""]
 @dataclass
 class JstrConfig:
@@ -20,6 +20,7 @@ class JstrConfig:
     f_part_location: int
     format_string: str
     end_quote_location: int
+    start_quote_location: int
     quote_type: str
 
     def __init__(self, line):
@@ -32,6 +33,9 @@ class JstrConfig:
         self._set_quote_type()
         self._set_f_prefix()
         self.end_quote_location = self.orig_single_line_string.rfind(self.quote_type)
+        self.start_quote_location = self.orig_single_line_string.find(self.quote_type)
+        if self.start_quote_location == self.end_quote_location:
+            raise ValueError('joined str string in which start and end quote locations are the same')
         if self.end_quote_location == -1:
             raise ValueError('Could not find ending quote')
         self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
@@ -39,7 +43,10 @@ class JstrConfig:
         if not is_legal_suffix and NEW_IMPLEMENTATION:
             self.suffix_str = ''
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
-        self.format_string = self.orig_single_line_string[:self.end_quote_location]
+        if NEW_IMPLEMENTATION:
+            self.format_string = self.orig_single_line_string[:self.end_quote_location]
+        else:
+            self.format_string = self.orig_single_line_string
         self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
         self.format_string = self.format_string.removeprefix(self.prefix_str+self.f_part)
 
@@ -96,7 +103,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         for config in self.jstr_meta_data:
             format_string += config.format_string
         if format_string == '':
-            return multi_part_result + self.padding_quote
+            return multi_part_result + self.padding_quote*3
         format_parts = list(Formatter().parse(format_string))
         for (literal, name, format_spec, conversion) in format_parts:
             if literal:

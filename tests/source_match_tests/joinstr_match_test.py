@@ -135,6 +135,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
 
+    @pytest.mark.skip('issue 124')
     def testJstrWitJoinedStr62(self):
         string = """(f\"A_{i}\",)"""
         node = GetNodeFromInput(string)

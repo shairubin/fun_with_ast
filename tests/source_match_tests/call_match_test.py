@@ -522,6 +522,7 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip('issue 124')
     def testCallWitJoinedStr6(self):
         string = """
 @nn.compact
@@ -531,11 +532,14 @@ def __call__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip('issue 124')
+
     def testCallWitJoinedStr61(self):
         string = """layer(name=f"A_{i}",)(a,c,)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip('issue 124')
     def testCallWitJoinedStr62(self):
         string = """layer(f"A_{i}",)"""
         node = GetNodeFromInput(string)

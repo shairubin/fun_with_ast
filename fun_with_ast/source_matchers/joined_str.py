@@ -6,6 +6,10 @@ from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 
+
+
+
+NEW_IMPLEMENTATION = True
 supported_quotes = ['\'', "\""]
 @dataclass
 class JstrConfig:
@@ -31,11 +35,11 @@ class JstrConfig:
         if self.end_quote_location == -1:
             raise ValueError('Could not find ending quote')
         self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
-        is_legal_suffix = re.match(r'[ \t\n]*#?', self.suffix_str).group(0)
-        #if not is_legal_suffix:
-        #    self.suffix_str = ''
+        is_legal_suffix = re.match(r'[ \t]*#?', self.suffix_str).group(0)
+        if not is_legal_suffix and NEW_IMPLEMENTATION:
+            self.suffix_str = ''
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
-        self.format_string = self.orig_single_line_string
+        self.format_string = self.orig_single_line_string[:self.end_quote_location]
         self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
         self.format_string = self.format_string.removeprefix(self.prefix_str+self.f_part)
 
@@ -66,7 +70,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             node, expected_parts, starting_parens)
         self.padding_quote = None
         self.jstr_meta_data: list[JstrConfig] = []
-        self.new_implementation = True
+
 
 
     def _match(self, string):

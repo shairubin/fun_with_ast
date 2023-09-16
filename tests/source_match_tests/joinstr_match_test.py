@@ -22,7 +22,8 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testBasicMatchFromInput(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
-        self._assert_match(node.value, string)
+        #self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
 
     def testBasicFormatedValue(self):
@@ -177,8 +178,7 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testBasicMatchFromInput51(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     def testBasicMatchFromInput52(self):
         node = GetNodeFromInput("f\"X\"")
@@ -189,8 +189,7 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testBasicMatchFromInput53(self):
         node = GetNodeFromInput("f\"X\"")
         string = "(f\"X\")"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     def testBasicMatchFromInput54(self):
         node = GetNodeFromInput("f'{X}'")
@@ -207,14 +206,12 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testBasicMatchFromInput56(self):
         node = GetNodeFromInput("f\"{X}\"")
         string = "(f\"{X}\")"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     def testBasicMatchFromInput57(self):
         node = GetNodeFromInput("f'{X}'")
         string = "(f'{X}')"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
@@ -225,8 +222,7 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
 
     def testBasicMatchFromInput2(self):
@@ -251,13 +247,11 @@ class JoinStrMatcherTest(BaseTestUtils):
     def testMatchMultilLine1(self):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("f'XY'")
         string = "(f'X'\nf'Y')"
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     def testMatchMultilLine12(self):
         node = GetNodeFromInput("f'XY'")

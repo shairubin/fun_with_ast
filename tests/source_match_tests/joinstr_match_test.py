@@ -294,3 +294,13 @@ class JoinStrMatcherTest(BaseTestUtils):
         string = "f'X'   # comment "
         self._verify_match(node.value, string)
         self._assert_match(node.value, string)
+
+    def testJstrWitJoinedStr62(self):
+        string = """(f\"A_{i}\",)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWitJoinedStr63(self):
+        string = """f\"A_{i}\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

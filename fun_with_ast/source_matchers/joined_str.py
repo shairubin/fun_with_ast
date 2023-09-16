@@ -30,7 +30,10 @@ class JstrConfig:
         self.end_quote_location = self.orig_single_line_string.rfind(self.quote_type)
         if self.end_quote_location == -1:
             raise ValueError('Could not find ending quote')
-        self.suffix_str= self.orig_single_line_string[self.end_quote_location+1:]
+        self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
+        is_legal_suffix = re.match(r'[ \t\n]*#?', self.suffix_str).group(0)
+        #if not is_legal_suffix:
+        #    self.suffix_str = ''
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
         self.format_string = self.orig_single_line_string
         self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
@@ -63,7 +66,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             node, expected_parts, starting_parens)
         self.padding_quote = None
         self.jstr_meta_data: list[JstrConfig] = []
-
+        self.new_implementation = True
 
 
     def _match(self, string):
@@ -112,6 +115,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if not result.startswith(prefix + 'f'+self.padding_quote):
             raise ValueError('We must see f\' at beginning of match')
         if not result.endswith(self.padding_quote+suffix):
+            raise ValueError('We must see \' at the end of match')
+        format_string = result.removesuffix(suffix)
+        if not format_string.endswith(self.padding_quote):
             raise ValueError('We must see \' at the end of match')
 
         tmp_format_string = result.removeprefix(prefix + 'f'+self.padding_quote)

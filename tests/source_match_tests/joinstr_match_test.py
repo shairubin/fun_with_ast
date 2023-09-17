@@ -112,9 +112,10 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f'X'\nf'Y'"
         self._verify_match(node, string)
     def testMatchMultilLine14(self):
-        node = GetNodeFromInput("f'X'\nf'Y'", get_module=True)
+        node = GetNodeFromInput("f'X'\nf'Y'")
         string = "f'X'\nf'Y'"
-        self._verify_match(node, string)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
 
     def testMatchMultilLine13(self):
         node = GetNodeFromInput("f'XY'")

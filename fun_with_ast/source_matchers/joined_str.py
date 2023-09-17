@@ -43,6 +43,8 @@ class JstrConfig:
         if not is_legal_suffix and NEW_IMPLEMENTATION:
             self.suffix_str = ''
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
+        if self.prefix_str.strip() != '':
+            raise ValueError('joined str string in which prefix is not empty')
         if NEW_IMPLEMENTATION:
             self.format_string = self.orig_single_line_string[:self.end_quote_location]
         else:
@@ -188,9 +190,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             elif self._is_jstr(line) and line.endswith(')'): # need to refine this
                 jstr_lines.append(line)
                 break
-            # elif self._is_jstr(line) and index == len(jstr_lines) and lines[index+1].endswith(')'):
-            #     jstr_lines.append(line)
-            #     break
+            elif self._is_jstr(line)  and len(lines) > index+1 and lines[index+1].endswith(')'):
+                jstr_lines.append(line)
+                break
             else:
                 break
         for line in jstr_lines:
@@ -237,7 +239,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if index == 0:
                 config_contrib = config.prefix_str + config.f_part+config.format_string + config.quote_type
             else:
-                config_contrib = config.f_part+  config.format_string + config.quote_type
+                config_contrib = config.prefix_str + config.f_part+  config.format_string + config.quote_type
             self._get_start_line_location(config_contrib, remaining_string)
             result += config_contrib
 #            result += 'f' + config.quote_type + config_contrib + config.quote_type

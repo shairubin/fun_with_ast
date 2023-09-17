@@ -85,16 +85,25 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self._split_jstr_into_lines(string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
-        if self._is_empty_str(jstr):
-            result = self._return_empty()
-            return result
-        embeded_string = self._embed_jstr_into_string(jstr, string)
+        # if not self._is_empty_str(jstr):
+        #     #result = self._return_empty()
+        #     #return result
+        #     embeded_string = self._embed_jstr_into_string(jstr, string)
+        # else:
+        #     embeded_string = jstr
+#        embeded_string = self._embed_jstr_into_string(jstr, string)
+        embeded_string = jstr
+
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         matched_text = self._convert_to_single_part_string(matched_text)
         matched_text = self._split_back_into_lines(matched_text)
+        self.matched_source = matched_text
+        self.matched = True
         return matched_text
 
     def GetSource(self):
+        if self.matched:
+            return self.matched_source
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()
         matched_source = self._convert_to_single_part_string(matched_source)
         matched_source = self._split_back_into_lines(matched_source)
@@ -128,19 +137,30 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         prefix, suffix = self._get_prefix_suffix()
         if not result.startswith(prefix + 'f'+self.padding_quote):
             raise ValueError('We must see f\' at beginning of match')
-        if not result.endswith(self.padding_quote+suffix):
-            raise ValueError('We must see \' at the end of match')
         format_string = result.removesuffix(suffix)
         if not format_string.endswith(self.padding_quote):
             raise ValueError('We must see \' at the end of match')
 
-        tmp_format_string = result.removeprefix(prefix + 'f'+self.padding_quote)
-        tmp_format_string = tmp_format_string.removesuffix( self.padding_quote + suffix )
-        tmp_format_string=tmp_format_string.replace(self.padding_quote+'{', '{')
-        tmp_format_string =tmp_format_string.replace('}'+self.padding_quote, '}')
-        result = prefix + 'f'+self.padding_quote +tmp_format_string + self.padding_quote + suffix
+        format_string = self._verify_format_string(prefix, result, suffix)
+        result = 'f'+self.padding_quote + format_string + self.padding_quote
         return result
 
+    def _verify_format_string(self, prefix, result, suffix):
+        tmp_format_string = result.removeprefix(prefix + 'f' + self.padding_quote)
+        tmp_format_string = tmp_format_string.removesuffix(self.padding_quote)
+        tmp_format_string = tmp_format_string.replace(self.padding_quote + '{', '{')
+        tmp_format_string = tmp_format_string.replace('}' + self.padding_quote, '}')
+        original_format = ''
+        for config in self.jstr_meta_data:
+            original_format += config.format_string
+        if tmp_format_string != original_format:
+            raise ValueError('format string does not match')
+        # if len(self.jstr_meta_data) == 1:
+        #     if tmp_format_string != self.jstr_meta_data[0].format_string:
+        #         raise ValueError('format string does not match')
+        # else:
+        #     raise NotImplementedError('not supported yet')
+        return tmp_format_string
     def _get_prefix_suffix(self):
         prefix = self.jstr_meta_data[0].prefix_str
         suffix = self.jstr_meta_data[len(self.jstr_meta_data) - 1].suffix_str
@@ -156,9 +176,21 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _split_jstr_into_lines(self, orig_string):
         lines = orig_string.split('\n')
         jstr_lines = []
-        for line in lines:
-            if line.find("f'") != -1 or line.find("f") != -1:
+        for index, line in enumerate(lines):
+#            if self._is_jstr(line):
+#                jstr_lines.append(line)
+#            else:
+#                break
+            if index == 0 and self._is_jstr(line):
                 jstr_lines.append(line)
+            elif index == 0 and not self._is_jstr(line):
+                raise ValueError('Illegal first line of joined str')
+            elif self._is_jstr(line) and line.endswith(')'): # need to refine this
+                jstr_lines.append(line)
+                break
+            # elif self._is_jstr(line) and index == len(jstr_lines) and lines[index+1].endswith(')'):
+            #     jstr_lines.append(line)
+            #     break
             else:
                 break
         for line in jstr_lines:
@@ -203,11 +235,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         remaining_string = matched_text
         for index, config in enumerate(self.jstr_meta_data):
             if index == 0:
-                config_contrib = config.prefix_str + config.f_part+config.format_string
+                config_contrib = config.prefix_str + config.f_part+config.format_string + config.quote_type
             else:
-                config_contrib = config.format_string
+                config_contrib = config.f_part+  config.format_string + config.quote_type
             self._get_start_line_location(config_contrib, remaining_string)
-            result += config.orig_single_line_string
+            result += config_contrib
+#            result += 'f' + config.quote_type + config_contrib + config.quote_type
             if index != len(self.jstr_meta_data)-1:
                 result += '\n'
             remaining_string = remaining_string.removeprefix(config_contrib)

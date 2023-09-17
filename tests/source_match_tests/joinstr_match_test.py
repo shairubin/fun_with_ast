@@ -34,7 +34,7 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testBasicMatchFromInput5(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'"
-        self._verify_match(node.value, string)
+        self._verify_match(node, string)
 
     def testBasicMatchFromInput51(self):
         node = GetNodeFromInput("f'X'")
@@ -92,9 +92,8 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node, string)
 
     def testBasicMatchFromInputNewLine(self):
-        node = GetNodeFromInput("f'X{a}[b]'")
-        string = "f'X{a}[b]\n'"
-        self._verify_match(node, string)
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput("f'X{a}\n[b]'")
 
     def testMatchMultilLine(self):
         with pytest.raises((SyntaxError)):
@@ -104,16 +103,16 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "(f'X')"
         self._verify_match(node, string)
     def testMatchMultilLine11(self):
-        node = GetNodeFromInput("f'XY'")
+        node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
         self._verify_match(node, string)
 
     def testMatchMultilLine12(self):
-        node = GetNodeFromInput("f'XY'")
+        node = GetNodeFromInput("f'X'\nf'Y'", get_module=True)
         string = "f'X'\nf'Y'"
         self._verify_match(node, string)
     def testMatchMultilLine14(self):
-        node = GetNodeFromInput("f'XY'")
+        node = GetNodeFromInput("f'X'\nf'Y'", get_module=True)
         string = "f'X'\nf'Y'"
         self._verify_match(node, string)
 
@@ -136,8 +135,7 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testMatchComment(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'   # comment "
-        self._verify_match(node.value, string)
-        self._assert_match(node.value, string)
+        self._verify_match(node, string)
 
     @pytest.mark.skip('issue 124')
     def testJstrWitJoinedStr62(self):

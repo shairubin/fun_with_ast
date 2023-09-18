@@ -132,7 +132,6 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('not supported yet')
     def testMatchComment(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'   # comment "

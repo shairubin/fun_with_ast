@@ -152,10 +152,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
 
-    def _embed_jstr_into_string(self, jstr, string):
-        prefix, suffix = self._get_prefix_suffix()
-        result = prefix + jstr + suffix
-        return result
 
     def _split_jstr_into_lines(self, orig_string):
         lines = orig_string.split('\n')
@@ -232,12 +228,4 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if line_start_at != 0:
             ValueError('single line must be the start of the multiline jstr string')
 
-    def _is_empty_str(self, jstr):
-        quote = self.jstr_meta_data[0].quote_type
-        if jstr == self.jstr_meta_data[0].f_part + quote*3:
-            return True
-        return False
-
-    def _return_empty(self):
-        return self.jstr_meta_data[0].f_part + self.jstr_meta_data[0].quote_type
 

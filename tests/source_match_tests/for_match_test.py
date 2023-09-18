@@ -73,3 +73,60 @@ class ForMatcherTest(BaseTestUtils):
         string = "for x in range(1,15):\n if (a.b(1)==True):\n  a('fun with ast')\n  pass"
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
+
+
+    def testSimpleFor11(self):
+        string = """
+for i in range(len(v)):
+    new_k = (
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+        *k[name_idx + 1:],
+    )
+    params[new_k] = v[i]        
+"""
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)
+
+
+    def testSimpleFor11(self):
+        string = """for i in range(len(v)):
+    new_k = (
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+        *k[name_idx + 1:],
+    )
+    params[new_k] = v[i]        
+"""
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)
+
+    def testSimpleFor11_1(self):
+        string = """for i in range(len(v)):
+    new_k = (
+        *k[:name_idx],
+    )
+    params[new_k] = v[i]        
+"""
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)
+
+    def testSimpleFor11_2(self):
+        string = """for i in range(len(v)):
+    new_k = (
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+    )      
+"""
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)
+
+    def testSimpleFor11_3(self):
+        string = """for i in range(len(v)):
+    new_k = (
+        f"{k[name_idx][:-1]}_{i}",
+    )
+    params[new_k] = v[i]        
+"""
+        for_node = GetNodeFromInput(string)
+        self._verify_match(for_node, string)

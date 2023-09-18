@@ -193,4 +193,24 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testAssignFromSourceWithJoinedStr1(self):
+        string = """new_k = (
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+    )      
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceWithJoinedStr12(self):
+        string = """new_k = (
+        f"{k[name_idx][:-1]}_{i}",
+    )      
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
+    def testAssignFromSourceWithJoinedStr13(self):
+        string = """new_k = (*k[:name_idx],           f"{k[name_idx][:-1]}_{i}",)      
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

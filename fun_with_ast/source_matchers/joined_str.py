@@ -9,7 +9,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 
 
-NEW_IMPLEMENTATION = False
+
 supported_quotes = ['\'', "\""]
 @dataclass
 class JstrConfig:
@@ -39,14 +39,9 @@ class JstrConfig:
         if self.end_quote_location == -1:
             raise ValueError('Could not find ending quote')
         self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
-        is_legal_suffix = re.match(r'[ \t]*#?', self.suffix_str).group(0)
-        if not is_legal_suffix and NEW_IMPLEMENTATION:
-            self.suffix_str = ''
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
         if self.prefix_str.strip() != '':
             raise ValueError('joined str string in which prefix is not empty')
-        if NEW_IMPLEMENTATION:
-            self.format_string = self.orig_single_line_string[:self.end_quote_location]
         else:
             self.format_string = self.orig_single_line_string
         self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
@@ -87,15 +82,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self._split_jstr_into_lines(string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
-        # if not self._is_empty_str(jstr):
-        #     #result = self._return_empty()
-        #     #return result
-        #     embeded_string = self._embed_jstr_into_string(jstr, string)
-        # else:
-        #     embeded_string = jstr
-#        embeded_string = self._embed_jstr_into_string(jstr, string)
         embeded_string = jstr
-
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
         matched_text = self._convert_to_single_part_string(matched_text)
         matched_text = self._split_back_into_lines(matched_text)
@@ -157,11 +144,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             original_format += config.format_string
         if tmp_format_string != original_format:
             raise ValueError('format string does not match')
-        # if len(self.jstr_meta_data) == 1:
-        #     if tmp_format_string != self.jstr_meta_data[0].format_string:
-        #         raise ValueError('format string does not match')
-        # else:
-        #     raise NotImplementedError('not supported yet')
         return tmp_format_string
     def _get_prefix_suffix(self):
         prefix = self.jstr_meta_data[0].prefix_str
@@ -179,10 +161,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         lines = orig_string.split('\n')
         jstr_lines = []
         for index, line in enumerate(lines):
-#            if self._is_jstr(line):
-#                jstr_lines.append(line)
-#            else:
-#                break
             if index == 0 and self._is_jstr(line):
                 jstr_lines.append(line)
             elif index == 0 and not self._is_jstr(line):
@@ -242,7 +220,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 config_contrib = config.prefix_str + config.f_part+  config.format_string + config.quote_type
             self._get_start_line_location(config_contrib, remaining_string)
             result += config_contrib
-#            result += 'f' + config.quote_type + config_contrib + config.quote_type
             if index != len(self.jstr_meta_data)-1:
                 result += '\n'
             remaining_string = remaining_string.removeprefix(config_contrib)

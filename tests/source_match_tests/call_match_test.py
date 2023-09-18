@@ -521,3 +521,23 @@ def __init__():
         string = """a.b()"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testCallWitJoinedStr6(self):
+        string = """
+@nn.compact
+def __call__():
+        layer(name=f"A_{i}",)(a,c,)
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    def testCallWitJoinedStr61(self):
+        string = """layer(name=f"A_{i}",)(a,c,)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWitJoinedStr62(self):
+        string = """layer(f"A_{i}",)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

@@ -19,9 +19,9 @@ class ResetMatch():
 
     def _validate_node(self):
         nodes = [node for node in ast.walk(self.node)]
-        for node in nodes:
+        for index, node in enumerate(nodes):
             if not hasattr(node, 'node_matcher') and not isinstance(node, ast.Load) and not isinstance(node, ast.Store):
-                raise Exception('node does not have node_matcher attribute')
+                raise Exception('node {index} does not have node_matcher attribute')
             elif isinstance(node, ast.Load) or isinstance(node, ast.Store):
                 continue
             elif hasattr(node.node_matcher , 'matched_text'):

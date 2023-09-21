@@ -30,3 +30,8 @@ class DelMatcherTest(BaseTestUtils):
         string = "del a, b"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testListDel2(self):
+        string = "del a, b # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

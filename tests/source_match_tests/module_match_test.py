@@ -1,4 +1,3 @@
-import unittest
 
 import pytest
 
@@ -7,8 +6,46 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+module7 = \
+"""
+class DalleBart(PretrainedFromWandbMixin, FlaxBartForConditionalGeneration):
+
+    \"\"\"
+    Edits:
+    - renamed from FlaxBartForConditionalGeneration
+    - uses custom FlaxBartForConditionalGenerationModule
+    - no bias in decode method
+    - custom prepare_inputs_for_generation using "max_length - 1" to avoid issues
+      related to position embedding during model.generate()
+    - custom generate method to allow super conditions
+    - num_params property
+    - unscan function
+    \"\"\"
+
+    module_class = FlaxBartForConditionalGenerationModule
+    config_class = DalleBartConfig
+
+    def unscan(self, params):
+        if self.config.use_scan:
+            self.config.use_scan = False
+            params = flatten_dict(params)
+            scanned_keys = [k for k in params.keys() if "layers" in k]
+            for k in scanned_keys:
+                v = params[k]
+                name_idx = k.index("layers") + 1
+                for i in range(len(v)):
+                    new_k = (
+                        *k[:name_idx],
+                        f"{k[name_idx][:-1]}_{i}",
+                        *k[name_idx + 1 :],
+                    )
+                    params[new_k] = v[i]
+                del params[k]
+            params = unflatten_dict(params)
+        return params
 
 
+"""
 
 module6 = """ 
 @nn.compact
@@ -300,5 +337,9 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule6(self):
         string = module6
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule7(self):
+        string = module7
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -141,5 +141,23 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
+    def testCreateNodeFromInputTupleWithJoinedStr(self):
+        string = """(
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+    )
+"""
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithJoinedStr2(self):
+        string = """(
+        a,
+        f"x",
+    )
+"""
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
     def _assert_match(self, node, string):
         self._verify_match(node, string)

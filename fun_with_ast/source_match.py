@@ -247,8 +247,8 @@ def get_Continue_expected_parts():
 def get_Delete_expected_parts():
     return [
         TextPlaceholder(r' *del *'),
-        ListFieldPlaceholder('targets'),
-        TextPlaceholder(r'\n', '\n'),
+        ListFieldPlaceholder('targets', after_placeholder= TextPlaceholder('[ \t]*,[ \t]*', ', '), exclude_last_after=True),
+        TextPlaceholder(r'\n*', ''),
     ]
 
 

@@ -41,7 +41,7 @@ class JstrConfig:
         self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
         if self.prefix_str.strip() != '':
-            raise ValueError('joined str string in which prefix is not empty')
+            raise ValueError('joined str string in which prefix is not white spaces')
         else:
             self.format_string = self.orig_single_line_string
         self.format_string = self.format_string.removesuffix(self.quote_type + self.suffix_str)
@@ -115,7 +115,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError
             if conversion:
                 raise NotImplementedError
-        multi_part_result += self.padding_quote
+        multi_part_result = self.jstr_meta_data[0].prefix_str + multi_part_result + self.padding_quote
         return multi_part_result
 
     def _convert_to_single_part_string(self, _in):
@@ -124,6 +124,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if result == self.orig_string:
             return result
         prefix, suffix = self._get_prefix_suffix()
+#        if not result.startswith('f'+self.padding_quote):
         if not result.startswith(prefix + 'f'+self.padding_quote):
             raise ValueError('We must see f\' at beginning of match')
         format_string = result.removesuffix(suffix)
@@ -131,11 +132,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             raise ValueError('We must see \' at the end of match')
 
         format_string = self._verify_format_string(prefix, result, suffix)
-        result = 'f'+self.padding_quote + format_string + self.padding_quote
+        result = prefix + 'f'+self.padding_quote + format_string + self.padding_quote
         return result
 
     def _verify_format_string(self, prefix, result, suffix):
         tmp_format_string = result.removeprefix(prefix + 'f' + self.padding_quote)
+        #tmp_format_string = result.removeprefix('f' + self.padding_quote)
         tmp_format_string = tmp_format_string.removesuffix(self.padding_quote)
         tmp_format_string = tmp_format_string.replace(self.padding_quote + '{', '{')
         tmp_format_string = tmp_format_string.replace('}' + self.padding_quote, '}')

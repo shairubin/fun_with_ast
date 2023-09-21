@@ -2,6 +2,7 @@ import ast
 
 
 class ResetMatch():
+    no_matchers_ok = (ast.Load, ast.Store, ast.Del)
     def __init__(self, node):
         self.node = node
         self._validate_node()
@@ -9,9 +10,9 @@ class ResetMatch():
     def reset_match(self):
         nodes = [node for node in ast.walk(self.node)]
         for node in nodes:
-            if not hasattr(node, 'node_matcher') and not isinstance(node, ast.Load) and not isinstance(node, ast.Store):
+            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok):
                 raise Exception('node does not have node_matcher attribute')
-            elif isinstance(node, ast.Load) or isinstance(node, ast.Store):
+            elif isinstance(node, self.no_matchers_ok):
                 continue
             else:
                 node.node_matcher.matched = False
@@ -19,10 +20,10 @@ class ResetMatch():
 
     def _validate_node(self):
         nodes = [node for node in ast.walk(self.node)]
-        for node in nodes:
-            if not hasattr(node, 'node_matcher') and not isinstance(node, ast.Load) and not isinstance(node, ast.Store):
-                raise Exception('node does not have node_matcher attribute')
-            elif isinstance(node, ast.Load) or isinstance(node, ast.Store):
+        for index, node in enumerate(nodes):
+            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok) :
+                raise Exception(f'node {index} does not have node_matcher attribute')
+            elif isinstance(node, ast.Load) or isinstance(node, ast.Store) or isinstance(node,ast.Del):
                 continue
             elif hasattr(node.node_matcher , 'matched_text'):
                 raise ValueError()

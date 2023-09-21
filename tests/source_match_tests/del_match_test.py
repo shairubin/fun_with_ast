@@ -14,3 +14,19 @@ class DelMatcherTest(BaseTestUtils):
         string = "del a"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testSimpleDel2(self):
+        string = "del \t a"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleDel3(self):
+        string = "del \t a \t "
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSimpleDel4(self):
+        string = "del \t a \t #comment "
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testListDel(self):
+        string = "del a, b"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

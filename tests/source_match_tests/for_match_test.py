@@ -76,8 +76,7 @@ class ForMatcherTest(BaseTestUtils):
 
 
     def testSimpleFor11(self):
-        string = """
-for i in range(len(v)):
+        string = """for i in range(len(v)):
     new_k = (
         *k[:name_idx],
         f"{k[name_idx][:-1]}_{i}",
@@ -89,7 +88,7 @@ for i in range(len(v)):
         self._verify_match(for_node, string)
 
 
-    def testSimpleFor11(self):
+    def testSimpleFor11_0(self):
         string = """for i in range(len(v)):
     new_k = (
         *k[:name_idx],

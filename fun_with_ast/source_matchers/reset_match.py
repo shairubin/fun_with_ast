@@ -21,8 +21,7 @@ class ResetMatch():
     def _validate_node(self):
         nodes = [node for node in ast.walk(self.node)]
         for index, node in enumerate(nodes):
-            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok) \
-                    and not isinstance(node, ast.Store) and not isinstance(node, ast.Del):
+            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok) :
                 raise Exception(f'node {index} does not have node_matcher attribute')
             elif isinstance(node, ast.Load) or isinstance(node, ast.Store) or isinstance(node,ast.Del):
                 continue

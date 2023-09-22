@@ -6,6 +6,27 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+
+module8 = """
+def generate(
+            **model_kwargs,
+    ):
+
+        if self.config.is_encoder_decoder:
+            # add encoder_outputs to model_kwargs
+            if model_kwargs.get("encoder_outputs") is None:
+                model_kwargs_input = dict(model_kwargs)
+                model_kwargs = self._prepare_encoder_decoder_kwargs_for_generation(
+                    input_ids,
+                    params,
+                    {"attention_mask": attention_mask, **model_kwargs_input},
+                )
+            # prepare decoder_input_ids for generation
+            input_ids = (
+                    jnp.ones((input_ids.shape[0], 1), dtype="i4") * decoder_start_token_id
+            )
+"""
+
 module7 = \
 """
 class DalleBart(PretrainedFromWandbMixin, FlaxBartForConditionalGeneration):
@@ -341,5 +362,11 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule7(self):
         string = module7
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 132')
+    def testFromInputModule8(self):
+        string = module8
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

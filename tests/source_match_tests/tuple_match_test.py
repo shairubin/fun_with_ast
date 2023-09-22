@@ -161,3 +161,36 @@ class TupleTest(BaseTestUtils):
 
     def _assert_match(self, node, string):
         self._verify_match(node, string)
+
+    @pytest.mark.skip('issue 132')
+    def testAssignFromSourceWithTuppleAsValue(self):
+        string = """{"attention_mask": aaa, **mmm}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithTuppleAsValue2(self):
+        string = """{"attention_mask": aaa}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithTuppleAsValue3(self):
+        string = """{"attention_mask": (a,b)}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithTuppleAsValue31(self):
+        string = """{"attention_mask": a,b}"""
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+
+    def testAssignFromSourceWithTuppleAsValue4(self):
+        string = """{"attention_mask": (a, **m)}"""
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+
+    @pytest.mark.skip('issue 132')
+    def testAssignFromSourceWithTuppleAsValue41(self):
+        string = """{"attention_mask": a, **m}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

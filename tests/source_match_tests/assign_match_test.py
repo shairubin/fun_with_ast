@@ -215,7 +215,7 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
+
     def testAssignFromSourceWithDict(self):
         string = """model_kwargs = self._prepare_encoder_decoder_kwargs_for_generation(
     input_ids,
@@ -226,7 +226,6 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithDict2(self):
         string = """model_kwargs = a(
     input_ids,
@@ -237,7 +236,6 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithDict3(self):
         string = """m = a(
     {"attention_mask": attention_mask, **model_kwargs_input},
@@ -246,7 +244,6 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithDict4(self):
         string = """m = a(
     {"attention_mask": aaa, **mmm},
@@ -255,7 +252,6 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithDict5(self):
         string = """m = a({"attention_mask": aaa, **mmm},)"""
         node = GetNodeFromInput(string)
@@ -265,7 +261,6 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithDict7(self):
         string = """m = {**mmm}"""
         node = GetNodeFromInput(string)

@@ -216,3 +216,15 @@ class DictMatcherTest(BaseTestUtils):
     "decoder":  math
 }"""
 
+    def testAssignFromSourceWithDictAsKwargs(self):
+        string = """{**mmm}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceWithDictAsKwargs2(self):
+        string = """{"k": a , **mmm}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceWithDictAsKwargs3(self):
+        string = """{"k": a , **mmm, **kk}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

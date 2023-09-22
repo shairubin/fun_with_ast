@@ -161,8 +161,6 @@ class TupleTest(BaseTestUtils):
 
     def _assert_match(self, node, string):
         self._verify_match(node, string)
-
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithTuppleAsValue(self):
         string = """{"attention_mask": aaa, **mmm}"""
         node = GetNodeFromInput(string)
@@ -188,7 +186,6 @@ class TupleTest(BaseTestUtils):
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string)
 
-    @pytest.mark.skip('issue 132')
     def testAssignFromSourceWithTuppleAsValue41(self):
         string = """{"attention_mask": a, **m}"""
         node = GetNodeFromInput(string)

@@ -6,30 +6,19 @@ from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfManipulatorConfig
+from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-
-@pytest.fixture(params=[('a.b()\n',0),
-                        ('a.c()\n',0),
-                        ('a=44',0),
-                        ("s='fun_with_ast'",0),
-                        ("",0),
-                        ('a.b()\n',1),
-                        ('a.c()\n',1),
-                        ('a=44',1),
-                        ("s='fun_with_ast'",1),
-                        ("",1),
+@pytest.fixture(params=[('a.b()\n',0, 'if (c.d()):\n   a=1'),
+                        ('a.c()\n',0, 'if (c.d()):\n   a=1'),
+                        ('a=44',0, 'if (c.d()):\n   a=1'),
+                        ("s='fun_with_ast'",0, 'if (c.d()):\n   a=1'),
+                        ("",0, 'if (c.d()):\n   a=1'),
+                        ('a.b()\n',1, 'if (c.d()):\n   a=1'),
+                        ('a.c()\n',1, 'if (c.d()):\n   a=1'),
+                        ('a=44',1, 'if (c.d()):\n   a=1'),
+                        ("s='fun_with_ast'",1, 'if (c.d()):\n   a=1'),
+                        ("",1, 'if (c.d()):\n   a=1'),
                         ])
 def injected_source(request):
     yield request.param
@@ -55,7 +44,7 @@ def body_and_orelse(request):
 #@pytest.mark.usefixtures(body_and_orelse)
 class TestIfManupulation:
     def test_If_Manipulation(self, injected_source, capsys):
-        original_if_source = 'if (c.d()):\n   a=1'
+        original_if_source = injected_source[2]
         if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=injected_source[1]))
         manipulator.add_nodes([injected_node])

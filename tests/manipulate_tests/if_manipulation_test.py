@@ -71,7 +71,7 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=injected_source[1]))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        expected_source = self._get_expected_if_source(injected_node, injected_source, original_if_source)
+        expected_source = injected_source[3]
         if injected_source[4]:
             assert composed_source == expected_source
         else:
@@ -203,17 +203,3 @@ class TestIfManupulation:
         test = body_and_orelse['condition']
         return body, body_index, orelse, test
 
-    def _get_expected_if_source(self,  injected_node, injected_source, original_if_source):
-        return injected_source[3]
-        # add_new_line = '' if injected_source[0].endswith('\n') else '\n'
-        # if not IsEmptyModule(injected_node):
-        #     if injected_source[1] == 0:
-        #         expected_source = original_if_source.replace('   a=1',
-        #                                                      '   ' + injected_source[0] + add_new_line + '   a=1\n')
-        #     else:
-        #         expected_source = original_if_source.replace('   a=1', '   a=1\n   ' + injected_source[0] + add_new_line)
-        # else:
-        #     expected_source = original_if_source
-        # if injected_source[3] != expected_source:
-        #     raise ValueError('expected source is not as expected')
-        # return expected_source

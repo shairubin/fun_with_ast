@@ -26,19 +26,19 @@ from tests.manipulate_tests.base_test_utils_manipulate import bcolors
                         ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),
                         ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),
                         ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),
-                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1', # issue 135
+                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1',
                          'if (c.d()):\n   a.b()\n #comment-line\n   a=1\n', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',
                          'if (c.d()):\n #comment-line\n   a.b()\n   a=1\n', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',
                         'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
-                        ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # issue 135
+                        ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',
                         'if (c.d()):\n   a.b()\n\n   a=1\n', True), # TODO: this is currently a weird behavior in which
                                                                     # empty line is counted as a line
-                        ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',
                          'if (c.d()):\n\n   a.b()\n   a=1\n', True),  # TODO: this is currently a weird behavior in
                                                                       # which empty line is counted as a line
-                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # issue 135
+                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',
                          'if (c.d()):\n   a.b()\n   a=1\n # comment\n', True),
 
 ])
@@ -71,7 +71,7 @@ class TestIfManupulation:
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=injected_source[1]))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        expected_source = self._get_expected_if_source(injected_node, injected_source, original_if_source)
+        expected_source = injected_source[3]
         if injected_source[4]:
             assert composed_source == expected_source
         else:
@@ -203,17 +203,3 @@ class TestIfManupulation:
         test = body_and_orelse['condition']
         return body, body_index, orelse, test
 
-    def _get_expected_if_source(self,  injected_node, injected_source, original_if_source):
-        return injected_source[3]
-        # add_new_line = '' if injected_source[0].endswith('\n') else '\n'
-        # if not IsEmptyModule(injected_node):
-        #     if injected_source[1] == 0:
-        #         expected_source = original_if_source.replace('   a=1',
-        #                                                      '   ' + injected_source[0] + add_new_line + '   a=1\n')
-        #     else:
-        #         expected_source = original_if_source.replace('   a=1', '   a=1\n   ' + injected_source[0] + add_new_line)
-        # else:
-        #     expected_source = original_if_source
-        # if injected_source[3] != expected_source:
-        #     raise ValueError('expected source is not as expected')
-        # return expected_source

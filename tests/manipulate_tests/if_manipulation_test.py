@@ -26,19 +26,19 @@ from tests.manipulate_tests.base_test_utils_manipulate import bcolors
                         ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),
                         ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),
                         ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),
-                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1', # issue 135
+                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1',
                          'if (c.d()):\n   a.b()\n #comment-line\n   a=1\n', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',
                          'if (c.d()):\n #comment-line\n   a.b()\n   a=1\n', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',
                         'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
-                        ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # issue 135
+                        ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',
                         'if (c.d()):\n   a.b()\n\n   a=1\n', True), # TODO: this is currently a weird behavior in which
                                                                     # empty line is counted as a line
-                        ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # issue 135
+                        ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',
                          'if (c.d()):\n\n   a.b()\n   a=1\n', True),  # TODO: this is currently a weird behavior in
                                                                       # which empty line is counted as a line
-                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # issue 135
+                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',
                          'if (c.d()):\n   a.b()\n   a=1\n # comment\n', True),
 
 ])

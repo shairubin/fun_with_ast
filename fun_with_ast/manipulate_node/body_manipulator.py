@@ -4,6 +4,7 @@ from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 
 
 class BodyManipulator:
@@ -45,6 +46,8 @@ class BodyManipulator:
     def _get_indentation(self):
         ident = 0
         for stmt in self.body_block:
+            if isinstance(stmt, SyntaxFreeLine):
+                continue
             stmt_ident = stmt.col_offset
             if stmt_ident > ident and ident == 0:
                 ident = stmt_ident

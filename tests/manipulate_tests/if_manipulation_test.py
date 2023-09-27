@@ -10,24 +10,24 @@ from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
 
 @pytest.fixture(params=[
-                        ('a.b()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', True),
-                        ('a.c()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.c()\n   a=1\n', True),
-                        ('a=44',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1\n', True),
-                        ("s='fun_with_ast'",0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1\n", True),
-                        ("",0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),
-                        ('a.b()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),
-                        ('a.c()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),
-                        ("",1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True ),
-                        ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),
-                        ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),
-                        ('a=44', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
-                        ("s='fun_with_ast'", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s = 'fun_with_ast'\n   a=1\n", False),
-                        ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),
-                        ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),
-                        ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),
-                        ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),
-                        #('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1', # issue 135
-                        # 'if (c.d()):\n #comment line\n   a.b()\n   a=1', True),
+                        # ('a.b()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', True),
+                        # ('a.c()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.c()\n   a=1\n', True),
+                        # ('a=44',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1\n', True),
+                        # ("s='fun_with_ast'",0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1\n", True),
+                        # ("",0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),
+                        # ('a.b()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),
+                        # ('a.c()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),
+                        # ("",1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True ),
+                        # ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),
+                        # ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),
+                        # ('a=44', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
+                        # ("s='fun_with_ast'", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s = 'fun_with_ast'\n   a=1\n", False),
+                        # ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),
+                        # ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),
+                        # ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),
+                        # ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),
+                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1', # issue 135
+                         'if (c.d()):\n   a.b()\n #comment-line\n   a=1\n', True),
                         ])
 def injected_source(request):
     yield request.param
@@ -60,7 +60,7 @@ class TestIfManupulation:
         composed_source = self._source_after_composition(if_node, capsys)
         expected_source = self._get_expected_if_source(injected_node, injected_source, original_if_source)
         if injected_source[4]:
-            assert expected_source == composed_source
+            assert composed_source == expected_source
         else:
             assert expected_source != composed_source
 

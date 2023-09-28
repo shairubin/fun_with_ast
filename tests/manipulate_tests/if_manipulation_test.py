@@ -9,6 +9,7 @@ from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfMani
 from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
 
+input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected')
 @pytest.fixture(params=[
                         ('a.b()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', True),
                         ('a.c()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.c()\n   a=1\n', True),
@@ -40,7 +41,6 @@ from tests.manipulate_tests.base_test_utils_manipulate import bcolors
                                                                       # which empty line is counted as a line
                         ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',
                          'if (c.d()):\n   a.b()\n   a=1\n # comment\n', True),
-
 ])
 def injected_source(request):
     yield request.param
@@ -63,19 +63,22 @@ def injected_source(request):
 def body_and_orelse(request):
     yield request.param
 
+def _get_tuple_as_dict(in_tuple):
+    return dict(zip(input_legend, in_tuple))
+
 #@pytest.mark.usefixtures(body_and_orelse)
 class TestIfManupulation:
+
     def test_If_Manipulation(self, injected_source, capsys):
-        original_if_source = injected_source[2]
-        if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=injected_source[1]))
+        dict_input = _get_tuple_as_dict(injected_source)
+        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
-        expected_source = injected_source[3]
-        if injected_source[4]:
-            assert composed_source == expected_source
+        if dict_input['match-expected']:
+            assert composed_source == dict_input['expected']
         else:
-            assert expected_source != composed_source
+            assert dict_input['expected'] != composed_source
 
 
     def test_If_Else_Manipulation(self, injected_source, capsys):

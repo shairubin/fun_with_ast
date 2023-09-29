@@ -7,7 +7,7 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
-
+#issue 140 pass
 class CallMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
@@ -486,22 +486,39 @@ def __init__():
             (2, 3),
         )
         """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testCallWithTuple1_1(self):
+        string = """lax(
+            (0,1),
+            (2, 3),
+        )
+        """
+        node = GetNodeFromInput(string, get_module=False) # note the False
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
 
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(
             0, 0,
             1, 1,
+        )"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def testCallWithTuple1_2(self):
+        string = """lax.dynamic_slice(
+            0, 0,
+            1, 1,
         )
         """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testCallWithTuple2(self):
         string = """a.b(0, 0, 1, 1,
-        )
-        """
+        )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
@@ -511,13 +528,17 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testCallWithTuple4(self):
-        string = """a()
-        """
-        node = GetNodeFromInput(string)
+    def testCall1_1(self):
+        string = """a() #comment 
+         """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testCall1_2(self):
+        string = """a() #comment """
+        node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
-    def testCallWithTuple5(self):
+    def testCall2(self):
         string = """a.b()"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

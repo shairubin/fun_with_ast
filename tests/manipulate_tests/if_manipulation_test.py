@@ -41,8 +41,8 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
                                                                       # which empty line is counted as a line
                         ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',
                          'if (c.d()):\n   a.b()\n   a=1\n # comment\n', True),
-                        # ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',
-                        #  'if (c.d()):\n   a.b()\n   a=1\n   b=1\n', True), # issue 140
+                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',
+                          'if (c.d()):\n   a.b()\n   a=1\n   b=1\n', True), # issue 140
 
 ])
 def injected_source(request):

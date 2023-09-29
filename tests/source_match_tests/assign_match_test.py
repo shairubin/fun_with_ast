@@ -127,6 +127,21 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=1'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testAssignFromSource1(self):
+        string = 'a=1\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSource1_1(self):
+        string = 'a=1      \n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSource1_2(self): # this test should fail - issue 140
+        string = 'a=1\n     '
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testAssignFromSource2(self):
         string = "a='str'"
         node = GetNodeFromInput(string)

@@ -161,6 +161,9 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Str("'0xffaa'")
         string = "'0xffaa'"
         self._verify_match(node, string)
+#############################################################
+#Test From Input
+###########################################################
     def testStringFronInput(self):
         string = "'0xffaa'"
         node = GetNodeFromInput(string)
@@ -169,6 +172,34 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "'   0xffaa'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testStringFronInput2_1(self):
+        string = '1'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringFronInput2_2(self):
+        string = '1\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_3(self):
+        string = '1 # comment \n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_4(self): #issue 140 -- this should not have mached -- but it does
+        string = '1 # comment \n   '
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringFronInput2_5(self): #issue 140 -- this should not have mached -- but it does
+        string = '1\n   '
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringFronInput2_6(self): #issue 140 -- this  SHOUD match
+        string = '1\n   '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testStringFronInput3(self):
         string = "if True:\n   'fun-with-ast'"
         node = GetNodeFromInput(string)

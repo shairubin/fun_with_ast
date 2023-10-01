@@ -401,43 +401,6 @@ class TestGetMatcher(unittest.TestCase):
         self.assertEqual(matcher.GetSource(), 'foo.bar')
 
 
-
-
-
-
-
-class AssertMatcherTest(BaseTestUtils):
-
-    def testBasicMatch(self):
-        node = create_node.Assert(create_node.Name('a'))
-        string = 'assert a\n'
-        self._verify_match(node, string)
-#        matcher = GetDynamicMatcher(node)
-#        matcher.do_match(string)
-#        self.assertEqual(string, matcher.GetSource())
-
-    def testMatchWithMessage(self):
-        node = create_node.Assert(create_node.Name('a'),
-                                  create_node.Constant('message', "\""))
-        string = 'assert a, "message"\n'
-        self._verify_match(node, string)
-#        matcher = GetDynamicMatcher(node)
-#        matcher.do_match(string)
-#        self.assertEqual(string, matcher.GetSource())
-
-    def testNoMatchWithMessage(self):
-        node = create_node.Assert(create_node.Name('a'),
-                                  create_node.Constant('message', "'"))
-        string = 'assert a, "message"\n'
-        self._verify_match(node,string)
-    def testNoMatchWithMessage(self):
-        node = create_node.Assert(create_node.Name('a'),
-                                  create_node.Constant('message', "'"))
-        string = "assert a, 'message'\n"
-        self._verify_match(node,string)
-
-
-
 class AttributeMatcherTest(unittest.TestCase):
 
     def testBasicMatch(self):

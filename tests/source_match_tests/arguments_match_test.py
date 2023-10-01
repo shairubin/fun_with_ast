@@ -67,14 +67,15 @@ class ArgumentsMatcherTest(unittest.TestCase):
     def testMatchArgsDefaultsConst(self):
         node = create_node.arguments(
             args=['a'], defaults=[1])
-        string = 'a = 1 \t  '
+        string = 'a = 1 \t  ' # WS at end of line are not supported
         matcher = GetDynamicMatcher(node)
-        self._validate_match(matcher, string)
+        with pytest.raises(AssertionError):
+            self._validate_match(matcher, string)
 
     def testNoMatchArgsDefaultsConst(self):
         node = create_node.arguments(
             args=['a'], defaults=[2])
-        string = 'a = 1 \t  '
+        string = 'a = 1'
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)

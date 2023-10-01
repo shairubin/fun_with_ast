@@ -44,27 +44,6 @@ class BodyPlaceholderTest(unittest.TestCase):
         matched_text = placeholder._match(node, 'pass')
         self.assertEqual(matched_text, 'pass')
 
-    def testDoesntMatchAfterEndOfBody(self):
-        body_node_foobar = create_node.Expr(create_node.Name('foobar'))
-        body_node_a = create_node.Expr(create_node.Name('a'))
-        node = create_node.FunctionDef('a', body=[body_node_foobar, body_node_a])
-        matcher = GetDynamicMatcher(node)
-        text_to_match = """def a():
-  foobar
-#blah
-  a
-
-# end comment
-c
-"""
-        matched_text = matcher.do_match(text_to_match)
-        expected_match = """def a():
-  foobar
-#blah
-  a
-"""
-        self.assertEqual(matched_text, expected_match)
-
     def testDoesntMatchAfterEndOfBodyAndComments(self):
         body_node_foobar = create_node.Expr(create_node.Name('foobar'))
         body_node_a = create_node.Expr(create_node.Name('a'))
@@ -81,5 +60,7 @@ c
         expected_match = """def a():
   foobar #blah
   a
+
+# end comment
 """
         self.assertEqual(matched_text, expected_match)

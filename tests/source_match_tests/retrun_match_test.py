@@ -18,6 +18,20 @@ class RetrunMatcherTest(BaseTestUtils):
         string = 'return 1'
         node = GetNodeFromInput(string)
         self._assert_match(node, string)
+    def testSimpleReturnFromStringWithNL(self):
+        string = 'return 1\n'
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testSimpleReturnFromStringWithComment(self):
+        string = 'return 1 #comment'
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+    def testSimpleReturnFromStringWithCommentNL(self):
+        string = 'return 1 #comment\n'
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
 
     def testSimpleReturnFromString2(self):
         string = 'return  isPerfectSquare(5 * n * n + 4) or isPerfectSquare(5 * n * n - 4)'
@@ -51,8 +65,4 @@ class RetrunMatcherTest(BaseTestUtils):
         self._assert_match(node, string)
 
     def _assert_match(self, node, string):
-        #matcher = GetDynamicMatcher(node)
-        #matcher.do_match(string)
-        #matcher_source = matcher.GetSource()
-        #self.assertEqual(string, matcher_source)
         self._verify_match(node, string)

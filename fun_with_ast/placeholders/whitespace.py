@@ -3,14 +3,17 @@ import re
 
 from fun_with_ast.placeholders.text import TextPlaceholder
 
-class WhiteSpaceTextPlaceholder(TextPlaceholder):
-    """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""
-
+class WSStartOfLinePlaceholder(TextPlaceholder):
     def __init__(self):
-        super(WhiteSpaceTextPlaceholder, self).__init__(r'[ \t]*', default='', longest_match=False)
+        super(WSStartOfLinePlaceholder, self).__init__(r'[ \t]*', default='', no_transform=True)
+class WSEndOfLinePlaceholder(TextPlaceholder):
+    def __init__(self):
+        super(WSEndOfLinePlaceholder, self).__init__(r'[ \t]*(?=\n)', default='', no_transform=True)
+
+class EOLPlaceholder(TextPlaceholder):
+    def __init__(self):
+        super(EOLPlaceholder, self).__init__(r'\n', default='', longest_match=False)
 
 class EOLCommentMatcher(TextPlaceholder):
-    """Placeholder for text (non-field). For example, 'def (' in FunctionDef."""
-
     def __init__(self):
         super(EOLCommentMatcher, self).__init__(r'([ \t]*)(#.*)$', default='', longest_match=False)

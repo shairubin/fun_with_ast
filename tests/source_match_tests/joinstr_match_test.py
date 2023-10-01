@@ -124,7 +124,12 @@ class JoinStrMatcherTests(BaseTestUtils):
 
     def testMatchMultilLine2(self):
         node = GetNodeFromInput("f'X'")
-        string = "f'X'    "
+        string = "f'X'    " # WS at the end of line not supported
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+    def testMatchMultilLine2_1(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'X'    \n"
         self._verify_match(node, string)
 
     def testMatchPlaceholderEndOfString(self):

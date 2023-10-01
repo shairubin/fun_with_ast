@@ -111,7 +111,7 @@ def get_Assert_expected_parts():
         FieldPlaceholder('test'),
         FieldPlaceholder(
             'msg', before_placeholder=TextPlaceholder(r', *', ', ')),
-        TextPlaceholder(r' *\n', '\n'),
+        #TextPlaceholder(r' *\n', '\n'),
     ]
 def get_Starred_expected_parts():
     return [
@@ -123,7 +123,7 @@ def get_Assign_expected_parts():
     return [
         SeparatedListFieldPlaceholder('targets',   after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+        #TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 def get_AnnAssign_expected_parts():
     return [
@@ -193,7 +193,8 @@ def get_Call_expected_parts():
         FieldPlaceholder('func'),
         ArgsKeywordsPlaceholder(
             TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder('')),
+            TextPlaceholder('')
+        ),
         #TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '', no_transform=True)
     ]
 

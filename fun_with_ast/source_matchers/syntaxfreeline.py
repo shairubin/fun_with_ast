@@ -3,7 +3,7 @@
 from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder
+from fun_with_ast.placeholders.whitespace import WSStartOfLinePlaceholder
 
 
 class SyntaxFreeLineMatcher(DefaultSourceMatcher):
@@ -13,7 +13,7 @@ class SyntaxFreeLineMatcher(DefaultSourceMatcher):
         parts = [FieldPlaceholder('full_line'), TextPlaceholder(r'\n|[ \t]+', '\n')]
         super(SyntaxFreeLineMatcher, self).__init__(node, parts, starting_parens)
 
-    def MatchWhiteSpaces(self, remaining_string):
-        ws_placeholder = WhiteSpaceTextPlaceholder()
+    def MatchWhiteSpaces(self, remaining_string, in_matcher):
+        ws_placeholder = WSStartOfLinePlaceholder()
         self.start_whitespace_matchers.append(ws_placeholder)
         return remaining_string # NOTE: we return remaining_string !

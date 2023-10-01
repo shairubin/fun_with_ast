@@ -42,7 +42,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
                         ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',                                   #21
                          'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
                         ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',                                       #22
-                          'if (c.d()):\n   a.b()\n   a=1\n   b=1', True), # issue 140                     #
+                          'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
 
 ])
 def injected_source(request):

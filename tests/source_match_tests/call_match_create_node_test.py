@@ -7,7 +7,7 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
-#issue 140 pass
+
 class CallMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):

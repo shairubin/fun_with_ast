@@ -66,11 +66,12 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=2'
         self._assert_matched_source(node, string)
 
-    @pytest.mark.skip('Not implemented yet -- whitespace at the end of the line')
+
     def testBasicMatchAssignWithWSAndTab(self):
         node = create_node.Assign('a', create_node.Num('1'))
-        string = ' a  =  1  \t'
-        self._assert_matched_source(node, string)
+        string = 'a  =  1  \t' # WS at the end of the line is bot supported
+        with pytest.raises(AssertionError):
+            self._assert_matched_source(node, string)
 
     def testMatchMultiAssign(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('2'))

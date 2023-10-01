@@ -76,11 +76,11 @@ class ConstantNumMatcherTest(BaseTestUtils):
         #with pytest.raises(BadlySpecifiedTemplateError):
         self._assert_match(node, string)
 
-    @pytest.mark.skip('Not implemented yet - white spaces at the end of a string without NL')
     def testBasicMatchWithdWS(self):
         node = create_node.Num('1')
-        string = '   1   '
-        self._assert_match(node, string)
+        string = '1   ' # white spaces at the end of a line not supported
+        with pytest.raises(AssertionError):
+            self._assert_match(node, string)
 
 
     def testBasicMatchWithdWSExpr(self):
@@ -220,11 +220,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '1\n   '
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('Not implemented yet - white spaces at the end of a string')
-    def testStringFronInput2_7(self):
-        string = '1    '
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+
 
     def testStringFronInput3(self):
         string = "if True:\n   'fun-with-ast'"

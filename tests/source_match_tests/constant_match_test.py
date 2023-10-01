@@ -201,17 +201,22 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('Not implemented yet -- issue #140')
-    def testStringFronInput2_4(self): #issue 140 -- this should NOT have mached -- but it does
+    def testStringFronInput2_4(self):
         string = '1 # comment \n   '
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip('Not implemented yet -- issue #140')
-    def testStringFronInput2_5(self): #issue 140 -- this should NOT have mached -- but it does
+    def testStringFronInput2_41(self):
+        string = '1 # comment \n   '
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+
+    def testStringFronInput2_5(self):
         string = '1\n   '
         node = GetNodeFromInput(string)
-        self._verify_match(node, string)
-    def testStringFronInput2_6(self): #issue 140 -- this  SHOULD match
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+    def testStringFronInput2_6(self):
         string = '1\n   '
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

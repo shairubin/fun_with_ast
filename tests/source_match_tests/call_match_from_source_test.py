@@ -430,3 +430,14 @@ l(a)
         string = """layer(f"A_{i}",)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testCallWithNLString(self):
+        string = """replace("\\n", "")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithNLString(self):
+        string = "replace(\"\\n\", \"\")"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

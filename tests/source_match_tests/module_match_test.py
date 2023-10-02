@@ -7,6 +7,33 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+
+module9_1 = """
+
+
+def _generate_continue(self, sequences, model, tokenizer):
+                generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "")
+
+"""
+module9 = """
+
+
+
+class SentenceContinue:
+
+    @paddle.no_grad()
+    def _generate_continue(self, sequences, model, tokenizer):
+        for i, sequence in enumerate(sequences):
+            augmented_sequence = []
+            for ii in range(self.create_n):
+                continue_sequence = (
+                    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "").replace("\t", "")
+                )
+                augmented_sequence.append(sequence + continue_sequence)
+            augmented_sequences.append(augmented_sequence)
+        return augmented_sequences
+
+"""
 module8 = """
 def generate(
             **model_kwargs,
@@ -368,5 +395,16 @@ def dot_product_attention_weights():
 
     def testFromInputModule8(self):
         string = module8
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #143")
+    def testFromInputModule9(self):
+        string = module9
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    @pytest.mark.skip(reason="issue #143")
+    def testFromInputModule9_1(self):
+        string = module9_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -12,7 +12,7 @@ module9_1 = """
 
 
 def _generate_continue(self, sequences, model, tokenizer):
-                generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "")
+                generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\\n", "")
 
 """
 module9 = """
@@ -27,7 +27,7 @@ class SentenceContinue:
             augmented_sequence = []
             for ii in range(self.create_n):
                 continue_sequence = (
-                    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "").replace("\t", "")
+                    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\\n", "").replace("\\t", "")
                 )
                 augmented_sequence.append(sequence + continue_sequence)
             augmented_sequences.append(augmented_sequence)
@@ -398,12 +398,12 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #143")
+    #@pytest.mark.skip(reason="issue #143")
     def testFromInputModule9(self):
         string = module9
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue #143")
+    #@pytest.mark.skip(reason="issue #143")
     def testFromInputModule9_1(self):
         string = module9_1
         node = GetNodeFromInput(string, get_module=True)

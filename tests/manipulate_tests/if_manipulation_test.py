@@ -8,41 +8,43 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfManipulatorConfig
 from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
-
 input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected')
+
+
 @pytest.fixture(params=[
-                        ('a.b()\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True),        #0
-                        ('a.c()\n',0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True),    #1
-                        ('a=44\n',0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True),          #2
-                        ("s='fun_with_ast'\n",0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),  #3
-                        ("",0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),                         #4
-                        ('a.b()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),      #5
-                        ('a.c()\n',1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),      #6
-                        ("",1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True ),                        #7
-                        ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),   #8
-                        ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),    #9
-                        ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
-                        ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True),
-                        ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),                      #12
-                        ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),    #13
-                        ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),    #14
-                        ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),                       #15
-                        ('a.b()\n',0, 'if (c.d()):\n #comment-line\n   a=1',                                #16
-                         'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',                               #17
-                         'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True),
-                        ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',                               #18
-                        'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
-                        ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',                                             #19
-                        'if (c.d()):\n   a.b()\n\n   a=1', True), # TODO: this is currently a weird behavior in which
-                                                                    # empty line is counted as a line
-                        ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',                                             #20
-                         'if (c.d()):\n\n   a.b()\n   a=1', True),  # TODO: this is currently a weird behavior in
-                                                                      # which empty line is counted as a line #24
-                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',                                   #21
-                         'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
-                        ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',                                       #22
-                          'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True),  # 0
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True),  # 1
+    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True),  # 2
+    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),
+    # 3
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 4
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),  # 5
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),  # 6
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 7
+    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 8
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 9
+    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
+    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True),
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),  # 12
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),  # 13
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),  # 14
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),  # 15
+    ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True),
+    ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
+     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True),
+    ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
+     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
+    ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
+     'if (c.d()):\n   a.b()\n\n   a=1', True),  # TODO: this is currently a weird behavior in which
+    # empty line is counted as a line
+    ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
+     'if (c.d()):\n\n   a.b()\n   a=1', True),  # TODO: this is currently a weird behavior in
+    # which empty line is counted as a line #24
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
+     'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
+     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
 
 ])
 def injected_source(request):
@@ -50,32 +52,40 @@ def injected_source(request):
 
 
 @pytest.fixture(scope="function", params=[
-                        {"body": '   pass\n', "else_body": '', "inject_to": 0, "condition": 'c.d():'},
-                        {"body": '   pass\n   z=x\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
-                        {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
-                        {"body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
-                           "else_body": '  a=1', "inject_to": 0, "condition": 'a>2: #comment'},
-                        {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2',
-                        "inject_to": 0, "condition": 'a and not b and not not c:'},
-                        {"body":  "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n", "else_body":'  a=1',
-                        "inject_to":1, "condition":   '(a and not b) or not (not c):'},
-                        {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to":1, "condition": 'a+b > c/d+c:'},
-                        {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to": 0, "condition": 'a+b > c/(d+c):'}
+    {"body": '   pass\n', "else_body": '', "inject_to": 0, "condition": 'c.d():'},
+    {"body": '   pass\n   z=x\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
+    {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
+    {
+        "body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
+        "else_body": '  a=1', "inject_to": 0, "condition": 'a>2: #comment'},
+    {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2',
+     "inject_to": 0, "condition": 'a and not b and not not c:'},
+    {
+        "body": "  if x%2 == 0:\n    print(\"x is a positive even number\")\n  else:\n    print(\"x is a positive odd number\")\n",
+        "else_body": '  a=1',
+        "inject_to": 1, "condition": '(a and not b) or not (not c):'},
+    {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to": 1,
+     "condition": 'a+b > c/d+c:'},
+    {"body": '#line comment \n   pass #comment 1\n', "else_body": '   a=1 #comment 2', "inject_to": 0,
+     "condition": 'a+b > c/(d+c):'}
 
-                        ])
+])
 def body_and_orelse(request):
     yield request.param
+
 
 def _get_tuple_as_dict(in_tuple):
     return dict(zip(input_legend, in_tuple))
 
-#@pytest.mark.usefixtures(body_and_orelse)
+
+# @pytest.mark.usefixtures(body_and_orelse)
 class TestIfManupulation:
 
     def test_If_Manipulation(self, injected_source, capsys):
         dict_input = _get_tuple_as_dict(injected_source)
         if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
+        manipulator = ManipulateIfNode(if_node,
+                                       IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         if dict_input['match-expected']:
@@ -83,11 +93,10 @@ class TestIfManupulation:
         else:
             assert dict_input['expected'] != composed_source
 
-
     def test_If_Else_Manipulation(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
-        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1,1))
+        manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1, 1))
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
 
@@ -113,7 +122,7 @@ class TestIfManupulation:
 
     def test_get_source_body(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
-        else_string = 'else:\n'  if orelse  else ''
+        else_string = 'else:\n' if orelse else ''
         original_if_source = 'if ' + test + '\n' + body + else_string + orelse
         if_node, injected_node = self._create_nodes(capsys, 'pass', original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(body_index, 1))
@@ -128,14 +137,13 @@ class TestIfManupulation:
         else:
             raise ValueError("body index can be only 0 or 1")
 
-
     def test_switch_body_else(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
         if not orelse:
-            return # nothing to do as there is no else body
-        else_string = 'else:\n'  if orelse  else ''
+            return  # nothing to do as there is no else body
+        else_string = 'else:\n' if orelse else ''
         original_if_source = 'if ' + test + '\n' + body + else_string + orelse
-        if_node,_ = self._create_nodes(capsys, 'pass', original_if_source)
+        if_node, _ = self._create_nodes(capsys, 'pass', original_if_source)
         config = IfManipulatorConfig(0, 1)
         manipulator = ManipulateIfNode(if_node, config)
         body_source = manipulator.get_body_orelse_source()
@@ -187,7 +195,7 @@ class TestIfManupulation:
         if_node_matcher.do_match(original_if_source)
         if_node_source = if_node_matcher.GetSource()
         assert if_node_source == original_if_source
-        #if_node.matcher = if_node_matcher
+        # if_node.matcher = if_node_matcher
         return if_node
 
     def _capture_source(self, capsys, source, title, color, ignore_ident=False):
@@ -208,4 +216,3 @@ class TestIfManupulation:
         body_index = body_and_orelse['inject_to']
         test = body_and_orelse['condition']
         return body, body_index, orelse, test
-

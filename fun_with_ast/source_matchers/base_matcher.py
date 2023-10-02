@@ -3,7 +3,8 @@ import re
 
 from fun_with_ast.common_utils.parenthese_stack import ParanthesisStack
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.placeholders.whitespace import WhiteSpaceTextPlaceholder, EOLCommentMatcher
+from fun_with_ast.placeholders.whitespace import WSStartOfLinePlaceholder, EOLCommentMatcher, EOLPlaceholder, \
+    WSEndOfLinePlaceholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
@@ -16,9 +17,10 @@ class SourceMatcher(object):
     def __init__(self, node, stripped_parens=None):
         self.node = node
         self.EOL_comment_matcher = [EOLCommentMatcher()]
+        self.EOL_matcher = EOLPlaceholder()
         self.end_paren_matchers = []
-        self.start_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
-        self.end_whitespace_matchers =  [WhiteSpaceTextPlaceholder()]
+        self.start_whitespace_matchers =  [WSStartOfLinePlaceholder()]
+        self.end_whitespace_matchers =  [WSEndOfLinePlaceholder()]
         self.paren_wrapped = False
         self.end_of_line_comment = '' #TODO: remove this use EOL_comment_matcher
         if not stripped_parens:
@@ -38,7 +40,7 @@ class SourceMatcher(object):
         if len(result) < len(string):
             try:
                 ast.parse(string)
-            except SyntaxError:
+            except Exception:
                 raise BadlySpecifiedTemplateError(f'string {string} is not valid python')
         return result
 
@@ -79,11 +81,11 @@ class SourceMatcher(object):
         if string is None:
             return ''
         try:
-            self.EOL_comment_matcher[0]._match(None, string)
+            self.end_of_line_comment  = self.EOL_comment_matcher[0]._match(None, string)
+            remaining_string = string[len(self.end_of_line_comment):]
         except BadlySpecifiedTemplateError:
-            return ''
-
-        return self.EOL_comment_matcher[0].matched_text
+            return string
+        return remaining_string
 
 
 
@@ -107,14 +109,7 @@ class SourceMatcher(object):
         return ''
 
     def add_newline_to_source(self):
-        part = self.expected_parts[-1]
-        if isinstance(part, TextPlaceholder):
-            if part.matched_text:
-                part.matched_text += '\n'
-            else:
-                part.matched_text = '\n'
-        else:
-            raise NotImplementedError('Cannot add newline to non-text placeholder')
+        self.EOL_matcher.matched_text = '\n'
         self.matched_source = None
         self.matched = False
     def validated_call_to_match(self):
@@ -136,5 +131,14 @@ class SourceMatcher(object):
         if left != right:
             raise BadlySpecifiedTemplateError('unbalanced parentheses')
 
+    def MatchNewLine(self, remaining_string):
+        try:
+            if self.EOL_matcher == None:
+                return remaining_string
+            match_nl = self.EOL_matcher._match(None, remaining_string)
+        except BadlySpecifiedTemplateError:
+            return remaining_string
+        remaining_string = remaining_string[len(match_nl):]
+        return remaining_string
 
 

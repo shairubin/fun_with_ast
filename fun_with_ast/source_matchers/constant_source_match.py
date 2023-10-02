@@ -15,11 +15,11 @@ class ConstantSourceMatcher(SourceMatcher):
             raise ValueError
         self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
-                                                       TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
+        ])
 
         self.bool_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
-                                                       TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')])
+                                                       TextPlaceholder(r'[ \t]*(#+.*)*?', '')])
         self.parent_node = parent_node
         if isinstance(self.parent_node, ast.JoinedStr):
             self.accept_multiparts_string = False

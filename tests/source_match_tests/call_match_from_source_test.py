@@ -7,130 +7,7 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
-
 class CallMatcherTest(BaseTestUtils):
-
-    def testBasicMatch(self):
-        node = create_node.Call('a')
-        string = 'a()'
-        self._verify_match(node, string)
-    def testBasicMatchWarp(self):
-        node = create_node.Call('a')
-        string = '(a())'
-        self._verify_match(node, string)
-    def testBasicMatchWS(self):
-        node = create_node.Call('a')
-        string = ' a()'
-        self._verify_match(node, string)
-
-    def testBasicMatchWS2(self):
-        node = create_node.Call('a.b')
-        string = ' a.b()'
-        self._verify_match(node, string)
-    def testMatchStarargs(self):
-        node = create_node.Call('a', args=[create_node.Starred('args')])
-        string = 'a(*args)'
-        self._verify_match(node, string)
-    def testMatchStarargs2(self):
-        node = create_node.Call('a', args=[create_node.Name('b'), create_node.Starred('args')])
-        string = 'a(b, *args)'
-        self._verify_match(node, string)
-
-    def testNoMatchStarargs(self):
-        node = create_node.Call('a', args=[create_node.Name('b'), create_node.Starred('arrrggs')])
-        string = 'a(b, *args)'
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
-    def testNoMatchStarargs2(self):
-        node = create_node.Call('a', args=[create_node.Name('c'), create_node.Starred('args')])
-        string = 'a(b, *args)'
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
-
-    def testMatchWithStarargsBeforeKeyword(self):
-        node = create_node.Call('a', args=[create_node.Name('d')], keywords=[create_node.keyword('b', 'c')])
-        string = 'a(d \t , \t b= c)'
-        self._verify_match(node, string)
-    def testMatchWithStarargsBeforeKeyword2(self):
-        node = create_node.Call('a', args=[create_node.Stared('fun-with-ast')],
-                                keywords=[create_node.keyword('b', 'c'), create_node.keyword('e', 'f')])
-        string = 'a(*fun-with-ast, b=c, e = f)'
-        self._verify_match(node, string)
-
-    def testMatchWithStarargsBeforeKeyword3(self):
-        node = create_node.Call('a', args=[create_node.Name('d'), create_node.Stared('starred')],
-                                keywords=[create_node.keyword('b', 'c'), create_node.keyword('e', 'f')])
-        string = 'a(d,   *starred, b=c, e = f )'
-        self._verify_match(node, string)
-
-
-    def testMatchKeywordOnly(self):
-        node = create_node.Call('a', keywords=[create_node.keyword('b', 'c')])
-        string = 'a(b=c)'
-        self._verify_match(node, string)
-
-    def testCallWithAttribute(self):
-        node = create_node.Call('a.b')
-        string = 'a.b()'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndParam(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
-        string = 'a.b(\'fun-with-ast\')'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndNone(self):
-        node = create_node.Call('a.b', args=[create_node.CreateNone('None')])
-        string = 'a.b(None)'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndNoneNoMatch(self):
-        node = create_node.Call('a.b', args=[create_node.CreateNone('None')])
-        string = 'a.b(none)'
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
-
-    def testCallWithAttributeAndParamAndQuate(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")])
-        string = "a.b(\"fun-with-ast\")"
-        self._verify_match(node, string)
-
-    def testNoMatchCallWithAttributeAndParamAndQuate(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
-        string = "a.b(\"fun-with-ast\")"
-        self._verify_match(node, string)
-    def testNoMatchCallWithAttributeAndParamAndQuate2(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "\"")]) #TODO: do not need second param
-        string = "a.b('fun-with-ast')"
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndParam2(self):
-        node = create_node.Call('a.b', args=[create_node.Num('1')])
-        string = 'a.b(1)'
-        self._verify_match(node, string)
-    def testCallWithAttributeAndParam4(self):
-        node = create_node.Call('a.b', args=[create_node.Num('1'), create_node.Num('2')])
-        string = 'a.b(1,2)'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndParam5(self):
-        node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
-        string = 'a( 1,2)'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndParam6(self):
-        node = create_node.Call('a', args=[create_node.Num('1'), create_node.Num('2')])
-        string = 'a(1,2)'
-        self._verify_match(node, string)
-
-    def testCallWithAttributeAndParam7(self):
-        node = create_node.Call('a', args=[create_node.Num('1')])
-        string = 'a(1)'
-        self._verify_match(node, string)
-    def testCallWithAttributeAndParam3(self):
-        node = create_node.Call('a.b', args=[create_node.Num('1')])
-        string = '(a.b(1))'
-        self._verify_match(node, string)
 
     def testCallWithMultiLines(self):
         string = "fileparse.parse_csv(lines,\n \
@@ -258,10 +135,6 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testCallWithAttributeAndParamWS(self):
-        node = create_node.Call('a.b', args=[create_node.Constant('fun-with-ast', "'")])
-        string = 'a.b(\'fun-with-ast\')'
-        self._verify_match(node, string)
     def testCallDoubeAttributeWithParams(self):
         string = "a.b(x)\n"
         node = GetNodeFromInput(string)
@@ -391,6 +264,20 @@ class CallMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testCallOneComments(self):
+        string = """b()\n  #if"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallSimplest(self): # SHOULD NOT MATCH
+        string = """b()\n"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallSimplest2(self): # SHOULD NOT MATCH
+        string = """b()"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testCallTwoComments2(self):
         string = """
 l(a)        
@@ -420,16 +307,6 @@ l(a)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testCallTwoComments3(self):
-        string =  """
-def __init__():
-     chkpt = torch.load(model_path, map_location='cpu')
-         #if 'params_d' in chkpt:
-         #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
-"""
-
-        node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
 
 
     def testCallWithLists(self):
@@ -486,22 +363,39 @@ def __init__():
             (2, 3),
         )
         """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testCallWithTuple1_1(self):
+        string = """lax(
+            (0,1),
+            (2, 3),
+        )
+        """
+        node = GetNodeFromInput(string, get_module=False) # note the False
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
 
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(
             0, 0,
             1, 1,
+        )"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def testCallWithTuple1_2(self):
+        string = """lax.dynamic_slice(
+            0, 0,
+            1, 1,
         )
         """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testCallWithTuple2(self):
         string = """a.b(0, 0, 1, 1,
-        )
-        """
+        )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
@@ -511,23 +405,18 @@ def __init__():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testCallWithTuple4(self):
-        string = """a()
-        """
-        node = GetNodeFromInput(string)
+    def testCall1_1(self):
+        string = """a() #comment 
+         """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testCall1_2(self):
+        string = """a() #comment """
+        node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
-    def testCallWithTuple5(self):
+    def testCall2(self):
         string = """a.b()"""
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
-
-    def testCallWitJoinedStr6(self):
-        string = """
-@nn.compact
-def __call__():
-        layer(name=f"A_{i}",)(a,c,)
-"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

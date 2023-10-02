@@ -46,7 +46,7 @@ class DefaultSourceMatcher(SourceMatcher):
             expected_parts and the string.
           ValueError: If there is more than one TextPlaceholder in a rwo
         """
-        remaining_string = self.MatchWhiteSpaces(string)
+        remaining_string = self.MatchWhiteSpaces(string, self.start_whitespace_matchers[0])
         if not isinstance(self.node, ast.Module):
             remaining_string = self.MatchStartParens(remaining_string)
 
@@ -63,10 +63,13 @@ class DefaultSourceMatcher(SourceMatcher):
                 'error resulted:\n\n{}'
                     .format(string, self, e.message))
 
+
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
+        remaining_string = self.MatchCommentEOL(remaining_string) #TODO: move it before get source
+        remaining_string = self.MatchNewLine(remaining_string)
         matched_string = DefaultSourceMatcher.GetSource(self)
-        self.end_of_line_comment = self.MatchCommentEOL(remaining_string) #TODO: move it before get source
-        end_ws = self.GetWhiteSpaceText(self.end_whitespace_matchers)
-        result =  (matched_string + end_ws + self.end_of_line_comment)
+#        result =  (matched_string + self.end_of_line_comment + self.EOL_matcher.GetSource(None))
+        result = matched_string
         self.matched = True
         self.matched_source = result
         return result
@@ -92,6 +95,9 @@ class DefaultSourceMatcher(SourceMatcher):
             source = '{}{}'.format(source, self.GetWhiteSpaceText(self.end_whitespace_matchers))
         if self.end_of_line_comment:
             source = '{}{}'.format(source, self.end_of_line_comment)
+        if self.EOL_matcher:
+            source = '{}{}'.format(source, self.EOL_matcher.GetSource(None))
+
         return source
 
     def __repr__(self):
@@ -100,9 +106,14 @@ class DefaultSourceMatcher(SourceMatcher):
                         self.node,
                         pprint.pformat(self.expected_parts)))
 
-    def MatchWhiteSpaces(self, remaining_string):
-        ws_placeholder = self.start_whitespace_matchers[0]
-        match_ws = ws_placeholder._match(None, remaining_string)
+    def MatchWhiteSpaces(self, remaining_string, in_matcher):
+        ws_placeholder = in_matcher
+        try:
+            match_ws = ws_placeholder._match(None, remaining_string)
+        except BadlySpecifiedTemplateError:
+            return remaining_string
         remaining_string = remaining_string[len(match_ws):]
         return remaining_string
+
+
 

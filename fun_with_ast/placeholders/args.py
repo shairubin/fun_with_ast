@@ -87,23 +87,21 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         self.stararg_separator = TextPlaceholder(r'\s*,?\s*\*', ', *')
         self.start_paren_matchers = []
         self.args_matcher = None
-        self.use_default_matcher = True # TODO: remove this feature flag
     def _match(self, node, string):
-
-        if self.use_default_matcher == True:
-            default_matcher_result = self._use_default_matcher(node, string)
-            return default_matcher_result
-        else:
-            raise ValueError('old implementation not supported anymore')
+        default_matcher_result = self._use_default_matcher(node, string)
+        return default_matcher_result
     def GetElements(self, node):
-        if self.use_default_matcher == True and self.args_matcher:
+        if self.args_matcher:
             elements = []
             elements.extend(self.args_matcher.start_paren_matchers)
             elements.extend(self.args_matcher.expected_parts)
             elements.extend(self.args_matcher.end_paren_matchers)
             elements.extend(self.args_matcher.EOL_comment_matcher)
+            if self.args_matcher.EOL_matcher:
+                elements.append(self.args_matcher.EOL_matcher)
+
             return elements
-        elif self.use_default_matcher == True and not self.args_matcher:
+        elif not self.args_matcher:
             parts = self._get_parts_for_default_matcher(0, node, '')
             start_paren = TextPlaceholder(r'\(\s*', '(')
             end_paren = TextPlaceholder(r'\s*,?\s*\)', ')')
@@ -119,6 +117,8 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         node.keywords = args_node.keywords # not nice
         parts = self._get_parts_for_default_matcher(arg_index, node, string)
         self.args_matcher = GetDynamicMatcher(args_node, parts_in=parts)
+        self.args_matcher.EOL_matcher = None # args will not end with '\n' -- parent node will consume it
+
         matched_string = self.args_matcher._match(string)
         return matched_string
 

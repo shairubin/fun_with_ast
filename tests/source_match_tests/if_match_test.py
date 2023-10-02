@@ -239,3 +239,13 @@ else:
         string = "if (a.b(1)==7):\n pass"
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
+
+    def testIfFromSource8(self):
+        string = "if True:\n   a=1\n   b=2"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+
+    def testIfFromSource8_1(self):
+        string = "if True:\n   a=1\n   b=2\n"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)

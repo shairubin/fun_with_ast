@@ -72,12 +72,20 @@ class ConstantNumMatcherTest(BaseTestUtils):
 
     def testBasicMatchWithMinusSign(self):
         node = create_node.Num('-1')
-        string = '  -1   \t'
+        string = '  -1   \t\n'
+        #with pytest.raises(BadlySpecifiedTemplateError):
         self._assert_match(node, string)
 
     def testBasicMatchWithdWS(self):
         node = create_node.Num('1')
-        string = '   1   '
+        string = '1   ' # white spaces at the end of a line not supported
+        with pytest.raises(AssertionError):
+            self._assert_match(node, string)
+
+
+    def testBasicMatchWithdWSExpr(self):
+        node = create_node.Expr( create_node.Num('1'))
+        string = '   1   \n'
         self._assert_match(node, string)
 
     def testMatchWSWithComment(self):
@@ -161,6 +169,9 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = create_node.Str("'0xffaa'")
         string = "'0xffaa'"
         self._verify_match(node, string)
+#############################################################
+#Test From Input
+###########################################################
     def testStringFronInput(self):
         string = "'0xffaa'"
         node = GetNodeFromInput(string)
@@ -169,6 +180,48 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "'   0xffaa'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testStringFronInput2_1(self):
+        string = '1'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_31(self):
+        string = '1 #comment '
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_2(self):
+        string = '1\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_3(self):
+        string = '1 # comment \n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_4(self):
+        string = '1 # comment \n   '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testStringFronInput2_41(self):
+        string = '1 # comment \n   '
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+
+    def testStringFronInput2_5(self):
+        string = '1\n   '
+        node = GetNodeFromInput(string)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+    def testStringFronInput2_6(self):
+        string = '1\n   '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
     def testStringFronInput3(self):
         string = "if True:\n   'fun-with-ast'"
         node = GetNodeFromInput(string)

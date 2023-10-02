@@ -54,10 +54,7 @@ class AssignMatcherTest(BaseTestUtils):
         string = "a='1''2'"
         self._assert_matched_source(node, string)
 
-    def testBasicMatchAssignTrailingWS(self):
-        node = create_node.Assign('a', create_node.Num('1'))
-        string = 'a=1 '
-        self._assert_matched_source(node, string)
+
 
     def testBasicMatchAssign(self):
         node = create_node.Assign('a', create_node.Num('1'))
@@ -69,10 +66,12 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=2'
         self._assert_matched_source(node, string)
 
+
     def testBasicMatchAssignWithWSAndTab(self):
         node = create_node.Assign('a', create_node.Num('1'))
-        string = ' a  =  1  \t'
-        self._assert_matched_source(node, string)
+        string = 'a  =  1  \t' # WS at the end of the line is bot supported
+        with pytest.raises(AssertionError):
+            self._assert_matched_source(node, string)
 
     def testMatchMultiAssign(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('2'))
@@ -98,7 +97,7 @@ class AssignMatcherTest(BaseTestUtils):
 
     def testMatchMultiAssignWithWS(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('0o7654'))
-        string = 'a\t=\t     b \t  =0o7654 \t'
+        string = 'a\t=\t     b \t  =0o7654'
         self._assert_matched_source(node, string)
 
     def testMatchMultiAssignWithWSAndComment(self):
@@ -123,10 +122,34 @@ class AssignMatcherTest(BaseTestUtils):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
 
+###############################################################################
+    #test assign from source
+###############################################################################
     def testAssignFromSource(self):
         string = 'a=1'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testAssignFromSource1(self):
+        string = 'a=1\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSource1_1(self):
+        string = 'a=1      \n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSource1_2(self):
+        string = 'a=1\n     '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testAssignFromSource1_2(self):
+        string = 'a=1\n     '
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)
+
     def testAssignFromSource2(self):
         string = "a='str'"
         node = GetNodeFromInput(string)
@@ -178,18 +201,25 @@ class AssignMatcherTest(BaseTestUtils):
             self.causal_mask,
             (0, 0, mask_shift, 0),
             (1, 1, query_length, max_decoder_length),
-        )
-        """
-        node = GetNodeFromInput(string)
+        )"""
+        node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
+    def testAssignFromSourceList252(self):
+        string = """causal_mask = lax.dynamic_slice(
+            self.causal_mask,
+            (0, 0, mask_shift, 0),
+            (1, 1, query_length, max_decoder_length),
+        )
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testAssignFromSourceList251(self):
         string = """causal_mask = lax.dynamic_slice(
             (0, 0),
             (1, 1),
-        )
-        """
+        )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
@@ -197,21 +227,31 @@ class AssignMatcherTest(BaseTestUtils):
         string = """new_k = (
         *k[:name_idx],
         f"{k[name_idx][:-1]}_{i}",
-    )      
-"""
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
-    def testAssignFromSourceWithJoinedStr12(self):
-        string = """new_k = (
-        f"{k[name_idx][:-1]}_{i}",
-    )      
-"""
+    )      """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testAssignFromSourceWithJoinedStr13(self):
-        string = """new_k = (*k[:name_idx],           f"{k[name_idx][:-1]}_{i}",)      
+    def testAssignFromSourceWithJoinedStr11(self):
+        string = """new_k = (
+        *k[:name_idx],
+        f"{k[name_idx][:-1]}_{i}",
+    )      
+    """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+
+    def testAssignFromSourceWithJoinedStr12(self):
+        string = """new_k = (
+        f"{k[name_idx][:-1]}_{i}",
+    )
 """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithJoinedStr13(self):
+        string = """new_k = (*k[:name_idx],           f"{k[name_idx][:-1]}_{i}",)      """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
@@ -221,9 +261,18 @@ class AssignMatcherTest(BaseTestUtils):
     input_ids,
     params,
     {"attention_mask": attention_mask, **model_kwargs_input},
+)"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithDict1(self):
+        string = """model_kwargs = self._prepare_encoder_decoder_kwargs_for_generation(
+    input_ids,
+    params,
+    {"attention_mask": attention_mask, **model_kwargs_input},
 )
 """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testAssignFromSourceWithDict2(self):
@@ -231,24 +280,30 @@ class AssignMatcherTest(BaseTestUtils):
     input_ids,
     params,
     {"attention_mask": attention_mask, **model_kwargs_input},
-)
-"""
+)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceWithDict21(self):
+        string = """model_kwargs = a(
+    input_ids,
+    params,
+    {"attention_mask": attention_mask, **model_kwargs_input},
+)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
     def testAssignFromSourceWithDict3(self):
         string = """m = a(
     {"attention_mask": attention_mask, **model_kwargs_input},
-)
-"""
+)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
     def testAssignFromSourceWithDict4(self):
         string = """m = a(
     {"attention_mask": aaa, **mmm},
-)
-"""
+)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

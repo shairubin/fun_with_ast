@@ -9,6 +9,7 @@ from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
+
 class TupleTest(BaseTestUtils):
 
     def testBasicTuple(self):
@@ -154,6 +155,15 @@ class TupleTest(BaseTestUtils):
         string = """(
         a,
         f"x",
+    )
+"""
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithMultiLineComments(self):
+        string = """(
+        a, #comment 1
+        f, #comment 2
     )
 """
         node = GetNodeFromInput(string)

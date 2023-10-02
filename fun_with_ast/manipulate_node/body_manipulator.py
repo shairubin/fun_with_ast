@@ -36,9 +36,11 @@ class BodyManipulator:
         raise NotImplementedError('get_source not implemented yet')
 
     def _add_newlines(self):
-        for node in self.body_block:
+        for index, node in enumerate(self.body_block):
             node_source = node.node_matcher.GetSource()
             if node_source.endswith("\n"):
+                continue
+            if index == len(self.body_block) - 1:
                 continue
             node.node_matcher.add_newline_to_source()
 

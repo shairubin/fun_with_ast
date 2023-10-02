@@ -28,6 +28,22 @@ class FunctionDefMatcherTest(BaseTestUtils):
         string = 'def test_fun():\n\t\t\t\treturn 0\n'
         self._verify_match(node, string)
 
+    def testCallWitJoinedStr6(self):
+        string = """
+        
+@nn.compact
+def __call__():
+        layer(name=f"A_{i}",)(a,c,)
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallWitJoinedStr61(self):
+        string ="""@nn.compact
+def a():
+   pass"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testSingleArg(self):
         node = create_node.FunctionDef('test_fun', create_node.arguments(args=['a']), body=[create_node.Pass()])
@@ -313,3 +329,13 @@ class FunctionDefMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCallTwoComments3(self):
+        string =  """
+def __init__():
+     chkpt = torch.load(model_path, map_location='cpu')
+         #if 'params_d' in chkpt:
+         #    self.load_state_dict(torch.load(model_path, map_location='cpu')['params_d'])\n
+"""
+
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

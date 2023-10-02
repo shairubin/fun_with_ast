@@ -73,8 +73,7 @@ attn_weights -= a()
     def testFromInputNoModule(self):
         string = """a += 'str'\n"""
         node = GetNodeFromInput(string)
-        with pytest.raises(AssertionError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
 
     def testFromInput14(self):
         string = """a+='str'"""

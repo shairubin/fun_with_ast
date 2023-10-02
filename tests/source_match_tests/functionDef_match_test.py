@@ -332,11 +332,18 @@ def a():
     def testFunctionDefWithSubscript(self):
         string =  """
 def _generate_continue(self, sequences, model, tokenizer):
-    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "")
+    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\\n", "")
 """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testFunctionDefWithSubscript1_1(self):
+        string = """
+def _generate_continue(self, sequences, model, tokenizer):
+    generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "")
+"""
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string, get_module=True)
 
     def testFunctionDefWithSubscript2(self):
         string =  """

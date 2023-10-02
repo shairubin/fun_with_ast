@@ -62,13 +62,29 @@ class StrSourceMatcher(SourceMatcher):
 #                            part.inner_text_placeholder.matched_text + \
 #                            part.quote_match_placeholder.matched_text
 
+        parsed_string = self._construct_parsed_string(end_paran_text, end_quote, start_paran_text, start_quote,
+                                                      string_body)
+
+        return parsed_string
+
+    def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
+        if '\\' in string_body:
+            if not '\n' in self.original_s and not '\t' in self.original_s:
+                raise NotImplementedError('special characters besides \\n in string body are not supported yet')
+            else:
+                if string_body.replace('\\n', '\n') != self.original_s:
+                    if string_body.replace('\\t', '\t') != self.original_s:
+                        raise BadlySpecifiedTemplateError(
+                            f'String body: {string_body} does not match node.s: {self.original_s}')
+                return start_paran_text + start_quote + string_body + end_quote + end_paran_text
+
         if len(string_body) != len(self.original_s):
-            raise BadlySpecifiedTemplateError(f'String body: {string_body} does not match node.s: {self.original_s}')
+            raise BadlySpecifiedTemplateError(
+                f'String body: {string_body} does not match node.s: {self.original_s}')
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
-        if parsed_string !=  start_paran_text +start_quote + self.original_s + end_quote + end_paran_text:
-             raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
-
-
+        original_string = start_paran_text + start_quote + self.original_s + end_quote + end_paran_text
+        if parsed_string != original_string:
+            raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
         return parsed_string
 
     def _handle_multipart(self, remaining_string):

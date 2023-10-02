@@ -61,12 +61,25 @@ class ConstantStrMatcherTest(BaseTestUtils):
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
 
-    def testCallWithNLString(self):
+    def testStringWithNLString(self):
         string = "\"\\n\""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testStringWithNLString2(self):
+        string = "'\\n'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
-    # def _validate_match(self, matcher, string):
-    #     matcher.do_match(string)
-    #     matched_string = matcher.GetSource()
-    #     self.assertEqual(string, matched_string)
+    def testStringWithNLString3(self):
+        string = "'abc\\n'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithNLString4(self):
+        string = "'abc\ndef'"
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string)
+    def testStringWithNLString5(self):
+        string = "'abc\\ndef'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

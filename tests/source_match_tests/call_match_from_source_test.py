@@ -431,12 +431,13 @@ l(a)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+
     def testCallWithNLString(self):
         string = """replace("\\n", "")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testCallWithNLString(self):
+    def testCallWithNLString2(self):
         string = "replace(\"\\n\", \"\")"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

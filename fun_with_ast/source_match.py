@@ -193,7 +193,6 @@ def get_Call_expected_parts():
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder('')
         ),
-        #TextPlaceholder(r'([ \t\n]*)|([ \t]*(#+.*)*\n?)', '', no_transform=True)
     ]
 
 def get_CallArgs_expected_parts():

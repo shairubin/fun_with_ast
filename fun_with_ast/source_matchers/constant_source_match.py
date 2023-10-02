@@ -15,8 +15,6 @@ class ConstantSourceMatcher(SourceMatcher):
             raise ValueError
         self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
-                                                       #TextPlaceholder(r'[ \t]*(#+.*)*\n?', ''),
-                                                      #TextPlaceholder(r'[ \t]*(#^\n)*', ''),
         ])
 
         self.bool_matcher = DefaultSourceMatcher(node, [

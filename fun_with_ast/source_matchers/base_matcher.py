@@ -109,15 +109,6 @@ class SourceMatcher(object):
         return ''
 
     def add_newline_to_source(self):
-#        part = self.expected_parts[-1]
-#        if isinstance(part, TextPlaceholder):
-#         source = part.GetSource(self.node)
-#         if part.matched_text:
-#             part.matched_text += '\n'
-#         else:
-#             part.matched_text = '\n'
-#        else:
-#            raise NotImplementedError('Cannot add newline to non-text placeholder')
         self.EOL_matcher.matched_text = '\n'
         self.matched_source = None
         self.matched = False

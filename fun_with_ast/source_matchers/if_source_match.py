@@ -58,7 +58,8 @@ class IfSourceMatcher(SourceMatcher):
                 self.body_placeholder.MatchSyntaxFreeLine(remaining_string))
             self.node.body.append(syntax_free_node)
         if remaining_string.lstrip().startswith('elif'):
-            self.is_elif = True
+            self.is_elif = True #TODO -- note that we set to True the parent node and not the current node
+                                # (the elif). This is confusing and need to be fixed
             indent = len(remaining_string) - len(remaining_string.lstrip())
             remaining_string = (remaining_string[:indent] +
                                 remaining_string[indent + 2:])

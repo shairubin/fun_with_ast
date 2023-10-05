@@ -32,7 +32,8 @@ class ManipulateIfNode():
         self.config = config
         if not isinstance(node, ast.If):
             raise ValueError('node must be ast.If')
-        self.is_elif = True if hasattr(node, 'is_elif') and node.is_elif else False
+        is_elif = True if hasattr(node, 'is_elif') and node.is_elif else False
+        self.is_elif = is_elif
 
 
     def add_nodes(self, nodes: list):

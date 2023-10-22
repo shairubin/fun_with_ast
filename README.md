@@ -10,10 +10,9 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" 
-          srcset="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." 
+src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
 </picture>
-
 ## Using the library
 
 See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the

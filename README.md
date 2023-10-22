@@ -3,10 +3,6 @@
 Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code
 using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation.
-
-![alt text for screen readers](/docs/fwast_vision.jpg "Text to show on mouseover").
-
-<img src="/docs/fwast_vision.jpg" alt="Alt text" title="Optional title">
 ## Using the library
 
 See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the

@@ -6,7 +6,7 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 
 ![alt text for screen readers](/docs/fwast_vision.jpg "Text to show on mouseover").
 
-<img src="https://drive.google.com/file/d/143ris5WmBqpzB52NH9NYaHxeHWgPF00-/view?usp=share_link" alt="Alt text" title="Optional title">
+<img src="https://drive.google.com/file/d/143ris5WmBqpzB52NH9NYaHxeHWgPF00-/view" alt="Alt text" title="Optional title">
 
 ## Using the library
 

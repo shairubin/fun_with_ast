@@ -4,12 +4,18 @@ Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code
 using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation.
 
-![alt text for screen readers](https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00- "Text to show on mouseover").
-
-<img src="https://drive.google.com/file/d/143ris5WmBqpzB52NH9NYaHxeHWgPF00-/view" alt="Alt text" title="Optional title">
-
+![fun with ast concepts](https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00- "Text to show on mouseover").
 
 <img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" alt="Alt text" title="Optional title">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" 
+          srcset="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
+  <source media="(prefers-color-scheme: light)" 
+          srcset="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." 
+           src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
+</picture>
 
 ## Using the library
 

@@ -13,14 +13,6 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
   <source media="(prefers-color-scheme: dark)" 
           srcset="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
 </picture>
-<picture>
-  <source media="(prefers-color-scheme: light)" 
-          srcset="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
-</picture>  
-<picture>
-  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." 
-           src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
-</picture>
 
 ## Using the library
 

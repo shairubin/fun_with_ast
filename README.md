@@ -6,11 +6,10 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 
 ## What is AST? 
 <figure>
-<div align=center>
+<center>
 <img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
-alt="Alt text" title="Fun with AST concepts">
+alt="Alt text" title="Fun with AST concepts"></center>
 <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
-</div>
 </figure>
 
 

@@ -4,9 +4,9 @@ Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code
 using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation.
 
-![fun with ast concepts](https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00- "Text to show on mouseover").
 <p align="center">
-<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" alt="Alt text" title="This is the title">
+<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
+alt="Alt text" title="Fun with AST concepts">
 </p>
 
 

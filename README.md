@@ -7,7 +7,7 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 ![fun with ast concepts](https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00- "Text to show on mouseover").
 
 <img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" alt="Alt text" 
-title="This is the title", class=center>
+title="This is the title", class="center">
 
 <!--
 <picture>

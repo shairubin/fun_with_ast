@@ -5,11 +5,13 @@ This repository contains a library to analyze and manipulate python code
 using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation.
 
 ## What is AST? 
+<div style="text-align: center;">
 <figure>
 <img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
 alt="Alt text" title="Fun with AST concepts">
 <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
 </figure>
+</div>
 
 
 

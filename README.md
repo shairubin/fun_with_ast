@@ -6,13 +6,15 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 <!---
 ![fun with ast concepts](https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00- "Text to show on mouseover").
 -->
-<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" alt="Alt text" title="Optional title">
+<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" alt="Alt text" 
+title="This is the title", class=center>
 
-
+<!--
 <picture>
   <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." 
 src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-">
 </picture>
+-->
 ## Using the library
 
 See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the

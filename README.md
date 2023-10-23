@@ -7,7 +7,7 @@ using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipu
 ## What is AST? 
 <p align="center" width="100%">
 <img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
-width="66%"  alt="Alt text" title="Fun with AST concepts"></center>
+width="66%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
 

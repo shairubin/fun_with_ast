@@ -4,7 +4,15 @@ Provides developers with a programmatic tool to change our own code.
 This repository contains a library to analyze and manipulate python code
 using [Abstract Systax Tress](https://docs.python.org/3/library/ast.html) manipulation.
 
-## What is AST?
+## A Futuristic Programming Model
+
+The Fun with AST library is driven by the aspiration to enhance the productivity and quality of a software engineer's
+work. Its main goal is to enable developers to focus on implementing the core business values needed to be achieved,
+rather than wasting time on repetitive and routine tasks. You can see this idea in Figure 1. You, a software engineer
+write the business code and provide instructions (in the form of declarative configuration) on the nature of code they
+want to add in a consistent and repetitive way. The Fun with AST engine is then automatically adds the necessary code to
+the your original source code, producing code that contains both the bizness value and the additional code of the
+repetitive task.
 
 <p align="center" width="100%">
 this is my title <br>

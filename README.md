@@ -3,7 +3,7 @@
 
 The Fun with AST library is driven by the aspiration to enhance the productivity and quality of a software engineer's
 work. Its main goal is to enable developers to focus on implementing the core business values needed to be achieved,
-rather than wasting time on repetitive and routine tasks that cab be done automatically. 
+rather than wasting time on repetitive and routine tasks that can be done automatically. 
 
 ## A Hybrid Programming Model
 
@@ -20,8 +20,23 @@ Figure 1: A hybrid programming model <br>
 width="60%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
-### Example of repetitive,  trivial or automated tasks: 
+### Example of repetitive,  trivial or automated tasks 
+##### Automatic Control Flow Optimizations:
+   - Removing common code from `if/else` blocks ([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)). 
+   - Additional if/else optimizations are suggested in this article: [Explaining Refactorings](https://sourcery.ai/blog/explaining-refactorings-3/). 
+   - Optimizing `while` loops in collection-based operations ([link](https://martinfowler.com/articles/refactoring-pipelines.html). 
+   - 
+##### Memory usage optimizations: 
+- Using tail recursion instead of non-tail recursion ([link](https://www.baeldung.com/java-tail-recursion)).
+While some compilers are already implementing this [scale](https://users.scala-lang.org/t/tail-recursion-in-non-final-methods/4867),
+making such optimizations accessible to our platform and languages is important. 
+##### Automatic parallelism optimizations:
+([link](https://www.researchgate.net/publication/224206747_A_Refactoring_Approach_to_Parallelism))
+(java [link](https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html)))
 
+
+Although not fully realized yet, this library provides tools for easier 
+code analysis to identify when such optimizations are feasible.
 ## Challenges 
 ## Using the library
 

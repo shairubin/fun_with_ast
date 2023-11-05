@@ -5,18 +5,18 @@ The Fun with AST library is driven by the aspiration to enhance the productivity
 work. Its main goal is to enable developers to focus on implementing the core business values needed to be achieved,
 rather than wasting time on repetitive and routine tasks that can be done automatically. 
 
-## A Hybrid Programming Model
+## A Hybrid Programming Model with Source to Source Transformations
 
 
 You can see this idea in Figure 1. You, a software engineer
 write the business code (1) and provide instructions (in the form of declarative configuration) (2) on the nature of code they
 want to add in a consistent and repetitive way. The Fun with AST engine (3) is then automatically adds the necessary code to
-the your original source code, producing code that contains both the business value and the additional code of the
+the original source code, producing code that contains both the business value and the additional code of the
 repetitive task.
 
 <p align="center" width="100%">
 Figure 1: A hybrid programming model <br>
-<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
+<img src="https://drive.google.com/uc?=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
 width="60%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
@@ -40,8 +40,6 @@ code analysis to identify when such optimizations are feasible.
 ## Challenges 
 ## Using the library
 
-See the [test-fun-with-ast](https://github.com/shairubin/test-fun-with-ast) project for examples of using the
-fun-with-ast library.
 
 ## Why Fun-with-AST
 

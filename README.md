@@ -1,4 +1,4 @@
-# Fun with AST
+## Fun with AST
 
 The Fun with AST library is driven by the
 aspiration to enhance the productivity and quality of a software engineer's
@@ -7,7 +7,7 @@ implementing the core business values needed to be achieved,
 rather than wasting time on
 repetitive and routine tasks that can be done automatically.
 
-## A Hybrid Programming Model with Source to Source Transformations
+### A Hybrid Programming Model with Source to Source Transformations
 
 We envision a hybrid programming model that combines human and machine elements. 
 Figure 1 visualizes the concept of this
@@ -27,9 +27,9 @@ Figure 1: A hybrid programming model <br><br>
 width="70%" height="120"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
-### Example of repetitive, trivial or automated tasks
+#### Example of repetitive, trivial or automated tasks
 
-##### Automatic Control Flow Optimizations:
+###### Automatic Control Flow Optimizations:
 
 - Removing common code from `if/else`
   blocks ([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)).

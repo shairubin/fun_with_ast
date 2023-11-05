@@ -10,14 +10,14 @@ repetitive and routine tasks that can be done automatically.
 ### A Hybrid Programming Model with Source to Source Transformations
 
 We envision a hybrid programming model that combines human and machine elements. 
-Figure 1 visualizes the concept of this
+Figure 1 visualizes the concept of
 hybrid programming.
 
 (1) A developer writes the business code. Then, the developer also 
 provides instructions (e.g., declarative
 configuration) regarding the nature of code they want to add 
 consistently and repetitively. The Fun with AST engine (3)
-automatically adds the required code to the original source code, 
+automatically adds the required source code to the original source code, 
 creating code that includes **both** the business value
 and the additional code for the repetitive task (4).
 

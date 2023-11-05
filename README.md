@@ -1,46 +1,62 @@
 # Fun with AST
 
-
-The Fun with AST library is driven by the aspiration to enhance the productivity and quality of a software engineer's
-work. Its main goal is to enable developers to focus on implementing the core business values needed to be achieved,
-rather than wasting time on repetitive and routine tasks that can be done automatically. 
+The Fun with AST library is driven by the
+aspiration to enhance the productivity and quality of a software engineer's
+work. Its main goal is to enable developers to focus on
+implementing the core business values needed to be achieved,
+rather than wasting time on
+repetitive and routine tasks that can be done automatically.
 
 ## A Hybrid Programming Model with Source to Source Transformations
 
+We envision a hybrid programming model that combines human and machine elements. 
+Figure 1 visualizes the concept of this
+hybrid programming.
 
-You can see this idea in Figure 1. You, a software engineer
-write the business code (1) and provide instructions (in the form of declarative configuration) (2) on the nature of code they
-want to add in a consistent and repetitive way. The Fun with AST engine (3) is then automatically adds the necessary code to
-the original source code, producing code that contains both the business value and the additional code of the
-repetitive task.
+(1) A developer writes the business code. Then, the developer also 
+provides instructions (e.g., declarative
+configuration) regarding the nature of code they want to add 
+consistently and repetitively. The Fun with AST engine (3)
+automatically adds the required code to the original source code, 
+creating code that includes **both** the business value
+and the additional code for the repetitive task (4).
 
-
-<p align="center" width="100%">
+<p align="center" width="100%" height="100%">
 Figure 1: A hybrid programming model <br><br>
 <img src="https://drive.google.com/uc?id=1eXeoMTbTcaKnGBqgkxRsHu0iA2wkV9cw" 
-width="70%"  alt="Alt text" title="Fun with AST concepts">
+width="70%" height="120"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
-### Example of repetitive,  trivial or automated tasks 
+### Example of repetitive, trivial or automated tasks
+
 ##### Automatic Control Flow Optimizations:
-   - Removing common code from `if/else` blocks ([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)). 
-   - Additional if/else optimizations are suggested in this article: [Explaining Refactorings](https://sourcery.ai/blog/explaining-refactorings-3/). 
-   - Optimizing `while` loops in collection-based operations ([link](https://martinfowler.com/articles/refactoring-pipelines.html). 
-   - 
-##### Memory usage optimizations: 
+
+- Removing common code from `if/else`
+  blocks ([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)).
+- Additional if/else optimizations are suggested in this
+  article: [Explaining Refactorings](https://sourcery.ai/blog/explaining-refactorings-3/).
+- Optimizing `while` loops in collection-based
+  operations ([link](https://martinfowler.com/articles/refactoring-pipelines.html).
+-
+
+##### Memory usage optimizations:
+
 - Using tail recursion instead of non-tail recursion ([link](https://www.baeldung.com/java-tail-recursion)).
-While some compilers are already implementing this [scale](https://users.scala-lang.org/t/tail-recursion-in-non-final-methods/4867),
-making such optimizations accessible to our platform and languages is important. 
+  While some compilers are already implementing
+  this [scale](https://users.scala-lang.org/t/tail-recursion-in-non-final-methods/4867),
+  making such optimizations accessible to our platform and languages is important.
+
 ##### Automatic parallelism optimizations:
+
 ([link](https://www.researchgate.net/publication/224206747_A_Refactoring_Approach_to_Parallelism))
 (java [link](https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html)))
 
-
-Although not fully realized yet, this library provides tools for easier 
+Although not fully realized yet, this library provides tools for easier
 code analysis to identify when such optimizations are feasible.
-## Challenges 
-## Using the library
 
+## Challenges
+
+## Using the library
 
 ## Why Fun-with-AST
 

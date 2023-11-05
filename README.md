@@ -16,7 +16,14 @@ repetitive task.
 
 <p align="center" width="100%">
 Figure 1: A hybrid programming model <br>
-<img src="https://drive.google.com/uc?=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
+<img src="https://drive.google.com/uc?id=143ris5WmBqpzB52NH9NYaHxeHWgPF00-" 
+width="60%"  alt="Alt text" title="Fun with AST concepts">
+</p>
+
+
+<p align="center" width="100%">
+Figure 1: A hybrid programming model <br>
+<img src="https://drive.google.com/uc?id=1eXeoMTbTcaKnGBqgkxRsHu0iA2wkV9cw" 
 width="60%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 

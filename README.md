@@ -23,7 +23,7 @@ and the additional code for the repetitive task (4).
 
 <p align="center" width="100%" height="100%">
 Figure 1: A hybrid programming model <br><br>
-<img src="https://drive.google.com/uc?id=1eXeoMTbTcaKnGBqgkxRsHu0iA2wkV9cw" 
+<img src="https://drive.google.com/uc?id=1vXPpQ_gIbCmBQUdQEYnf_JFVbILppGSF" 
 width="70%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 

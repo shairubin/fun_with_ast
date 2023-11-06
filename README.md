@@ -1,4 +1,4 @@
-## Fun with AST
+# Fun with AST
 
 The Fun with AST library is driven by the
 aspiration to enhance the productivity and quality of a software engineer's
@@ -7,7 +7,7 @@ implementing the core business values needed to be achieved,
 rather than wasting time on
 repetitive and routine tasks that can be done automatically.
 
-### A Hybrid Programming Model with Source to Source Transformations
+## A Hybrid Programming Model with Source-to-Source Transformations
 
 We envision a hybrid programming model that combines human and machine elements. 
 Figure 1 visualizes the concept of
@@ -22,39 +22,43 @@ creating code that includes **both** the business value
 and the additional code for the repetitive task (4).
 
 <p align="center" width="100%" height="100%">
-Figure 1: A hybrid programming model <br><br>
+**Figure 1: A hybrid programming model** <br><br>
 <img src="https://drive.google.com/uc?id=1vXPpQ_gIbCmBQUdQEYnf_JFVbILppGSF" 
 width="70%"  alt="Alt text" title="Fun with AST concepts">
 </p>
 
-#### Example of repetitive, trivial or automated tasks
+### Example of repetitive, trivial or automated tasks
+When thinking of software engineering tasks, we can split them into two groups.
+The first group requires the engineer to implement specific and typically
+innovative capabilities. Examples might include developing a new computer game or creating 
+a new algorithm for financial trading.
+In the second group we find, tasks that are
+common to every software, regardless of the business domain. 
+We provide some examples of such common tasks below.
 
-###### Automatic Control Flow Optimizations:
+1. Removing common code from `if/else` blocks is a common optimization to
+increase code readability
+([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)).
+2. Other `if/else` optimizations for readability and simplicity are suggested
+[here](https://sourcery.ai/blog/explaining-refactorings-3/). For example, reducing
+redundancy of code in nested if statements."
+3. Optimizing while loops into collection-based operations is suggested in this 
+[article](https://martinfowler.com/articles/refactoring-pipelines.html).
 
-- Removing common code from `if/else`
-  blocks ([link](https://xp123.com/articles/refactoring-pull-common-code-conditional/)).
-- Additional if/else optimizations are suggested in this
-  article: [Explaining Refactorings](https://sourcery.ai/blog/explaining-refactorings-3/).
-- Optimizing `while` loops in collection-based
-  operations ([link](https://martinfowler.com/articles/refactoring-pipelines.html).
--
+4. Here is a more challenging problem, which represents the next level of 
+control flow optimization: automatically convert a non-tail recursion 
+into a [tail recursion](https://en.wikipedia.org/wiki/Tail_call). 
+While a few [compilers](https://blog.knoldus.com/tail-recursion-in-java-8/) do that, engineers are typically not aware of this 
+possibility. Having a tool for source-to-source transformations can help 
+engineers understand this optimization and use it safely, without introducing errors.
+5. Refactor long functions
+6. testing - complete asserts , creating mocks for all dependencies
 
-##### Memory usage optimizations:
+While we're not there yet, the fun-with-ast library enables easier code 
+analysis and transformation to identify when such optimizations are possible.
 
-- Using tail recursion instead of non-tail recursion ([link](https://www.baeldung.com/java-tail-recursion)).
-  While some compilers are already implementing
-  this [scale](https://users.scala-lang.org/t/tail-recursion-in-non-final-methods/4867),
-  making such optimizations accessible to our platform and languages is important.
 
-##### Automatic parallelism optimizations:
-
-([link](https://www.researchgate.net/publication/224206747_A_Refactoring_Approach_to_Parallelism))
-(java [link](https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html)))
-
-Although not fully realized yet, this library provides tools for easier
-code analysis to identify when such optimizations are feasible.
-
-## Challenges
+## Challenges of Source to SourceTransformations 
 
 ## Using the library
 

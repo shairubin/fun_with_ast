@@ -83,3 +83,18 @@ class ConstantStrMatcherTest(BaseTestUtils):
         string = "'abc\\ndef'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testStringWithParenthesis(self):
+        string = "line.split('(')[1].strip(' \\t\\n\\r')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis2(self):
+        string = "line.split('(')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3(self):
+        string = "a('(')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

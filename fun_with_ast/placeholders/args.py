@@ -150,7 +150,9 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         return parts
 
     def _should_exclude_last_after(self, string):
-        parens_pairs = self._find_parens(string)
+        if string == '':
+            return False
+        parens_pairs = self._find_external_parens_of_orgs(string)
         if not parens_pairs:
             return True
         first_pair = parens_pairs[0]
@@ -161,7 +163,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             return False
         return  True
 
-    def _find_parens(self, s): # from stack overflow
+    def _find_external_parens_of_orgs(self, s): # from stack overflow
         toret = {}
         pstack = []
 
@@ -174,9 +176,27 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
                 toret[pstack.pop()] = i
 
         if len(pstack) > 0:
-            raise IndexError("No matching opening parens at: " + str(pstack.pop()))
+            to_return = self._handle_parens_in_strings(pstack, toret)
         result = [(x,y) for x,y in toret.items()]
         result.sort()
+        return result
+
+    def _handle_parens_in_strings(self, pstack, to_return):
+        result = {}
+        if not pstack:
+            raise ValueError("pstack must have at least one element")
+        if pstack[0] != 0:
+            raise ValueError("pstack should start with 0")
+        if len(to_return) == 0 :
+            raise ValueError("to_return should not be empty at this point")
+        #if len(to_return) > 1:
+        #    raise NotImplementedError("not implemented: args string not handled yet")
+
+        for i,(k,v) in enumerate(to_return.items()):
+            if i == 0:
+                result[0] = v
+            else :
+                result[k] = v
         return result
 
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):

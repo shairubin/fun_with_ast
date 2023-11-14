@@ -185,8 +185,11 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         result = {}
         if not pstack:
             raise ValueError("pstack must have at least one element")
-        if pstack[0] != 0:
+        if pstack[0] != 0 and not to_return.get(0,None):
             raise ValueError("pstack should start with 0")
+        elif pstack[0] != 0 and to_return.get(0,None):
+            result[0] = to_return[0]
+            return result
         if len(to_return) == 0 :
             raise ValueError("to_return should not be empty at this point")
         #if len(to_return) > 1:

@@ -69,10 +69,10 @@ class StrSourceMatcher(SourceMatcher):
 
     def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
         if '\\' in string_body:
-            if not '\n' in self.original_s and not '\t' in self.original_s:
+            if not '\n' in self.original_s and not '\t' in self.original_s and not '\r' in self.original_s:
                 raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
             else:
-                clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t')
+                clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r')
                 if clean_string != self.original_s:
                         raise BadlySpecifiedTemplateError(
                             f'String body: {string_body} does not match node.s: {self.original_s}')

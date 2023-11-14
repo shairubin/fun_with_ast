@@ -443,7 +443,7 @@ l(a)
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip(reason="issue #146")
+    #@pytest.mark.skip(reason="issue #146")
     def testStringWithParenthesisAndChainedCall(self):
         string = "line.split('(')[1].strip(' \\t\\n\\r')"
         node = GetNodeFromInput(string)
@@ -456,6 +456,11 @@ l(a)
 
     def testStringWithParenthesisAndChainedCall3(self):
         string = "strip(' \\n\\t')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesisAndChainedCall3(self):
+        string = "strip(' \\n\\r')"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

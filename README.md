@@ -70,9 +70,12 @@ indentation, comments, spacing, and readability based on standards like PEP8.
 ### Source-to-Source transformation example: AST Parse vs. AST Unparse
 
 Python allows you to perform source-to-source transformations using the AST module. You can parse source code into an
-Abstract Syntax Tree (AST), apply necessary modifications based on the desired transformation, and then unparse the tree
-back into source code. However, the unparsing process doesn't retain essential elements from the original code,
-including comments, spacing, indentation, quote types, line length, line breaks, and more. I'll provide some examples of
+Abstract Syntax Tree (AST), apply necessary modifications based on the 
+desired transformation, and then unparse the tree
+back into source code. However, the unparsing process doesn't retain 
+essential elements from the original code,
+including comments, spacing, indentation, quote types, line length, 
+line breaks, and more. I'll provide some examples of
 these issues below.
 
 ## Using the library

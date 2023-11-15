@@ -7,6 +7,27 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_11_1 = """
+
+WRAPPER_SRC_NAMES = {
+    # add additoonal:
+    "A": "B",
+    
+    "C": "D"
+}
+"""
+
+module_11 = """
+
+WRAPPER_SRC_NAMES = {
+
+    # add additoonal:
+    "ALL_AVX512F_MICROKERNEL_SRCS": "defined(__i386__) || defined(__i686__) || defined(__x86_64__)",
+
+    "PROD_SCALAR_MICROKERNEL_SRCS": "defined(__arm__)",
+
+}
+"""
 module_10_1 = """
 if line.startswith("SET") and line.split('(')[1].strip(' \\t\\n\\r'):
                 name = x
@@ -433,5 +454,18 @@ def dot_product_attention_weights():
 
     def testFromInputModule10_1(self):
         string = module_10_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule11(self):
+        string = module_11
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+
+
+    def testFromInputModule11_1(self):
+        string = module_11_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

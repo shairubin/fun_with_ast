@@ -215,6 +215,8 @@ class DictMatcherTest(BaseTestUtils):
     "encoder":  sqrt(1.0),
     "decoder":  math
 }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testAssignFromSourceWithDictAsKwargs(self):
         string = """{**mmm}"""
@@ -226,5 +228,41 @@ class DictMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
     def testAssignFromSourceWithDictAsKwargs3(self):
         string = """{"k": a , **mmm, **kk}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictWithEmptyLines(self):
+        string = """{
+    "A":  "B",
+    
+    "C":  "D",
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictWithEmptyLines2(self):
+        string = """{
+    "A":  "B",
+    "C":  "D",
+    
+    
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictWithEmptyLines3(self):
+        string = """{
+        
+    "A":  "B",    
+    "C":  "D",
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictWithOutEmptyLines(self):
+        string = """{
+    "A":  "B",
+    "C":  "D",
+}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

@@ -442,3 +442,84 @@ l(a)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+
+    def testStringWithParenthesisAndChainedCall(self):
+        string = "line.split('(')[1].strip(' \\t\\n\\r')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesisAndChainedCall2(self):
+        string = "strip(' \\n')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesisAndChainedCall3(self):
+        string = "strip(' \\n\\t')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesisAndChainedCall3(self):
+        string = "strip(' \\n\\r')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesisAndChainedCall1(self):
+        string = "line.split('(').strip('a')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis2(self):
+        string = "line.split('(')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3(self):
+        string = "a('(')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3_1(self):
+        string = "a('(')# comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3_2(self):
+        string = "a('(')# comm(ent"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3_3(self):
+        string = "a('()(((')"
+        node = GetNodeFromInput(string)
+        #with pytest.raises(NotImplementedError):
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis3_4(self): # TODO: this test pass but it is incorrect, see test 3_5
+        string = "a(')')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    @pytest.mark.skip(reason="not implemented yet see 3_4 above")
+    def testStringWithParenthesis3_5(self):
+        string = "a(')',)"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis4(self):
+        string = "a('()')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStringWithParenthesis5(self):
+        string = "a('())')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis5_1(self):
+        string = "a('())') # comment\n#comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringWithParenthesis5_2(self):
+        string = "a('()') # comment)\n#comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

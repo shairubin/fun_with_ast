@@ -7,7 +7,26 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_10_1 = """
+if line.startswith("SET") and line.split('(')[1].strip(' \\t\\n\\r'):
+                name = x
+"""
 
+
+module_10 = """
+
+def update_sources(xnnpack_path, cmakefile = "XNNPACK/CMakeLists.txt"):
+    sources = collections.defaultdict(list)
+    while i < len(lines):
+            line = lines[i]
+
+
+            if line.startswith("SET") and line.split('(')[1].strip(' \\t\\n\\r') in set(WRAPPER_SRC_NAMES.keys()) | set(SRC_NAMES):
+                name = line.split('(')[1].strip(' \\t\\n\\r')
+            else:
+                i += 1
+    return sources
+"""
 module9_1 = """
 
 
@@ -404,5 +423,15 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule9_1(self):
         string = module9_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule10(self):
+        string = module_10
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule10_1(self):
+        string = module_10_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

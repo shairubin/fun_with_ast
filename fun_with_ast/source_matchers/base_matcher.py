@@ -38,11 +38,14 @@ class SourceMatcher(object):
             self.node.parent_node = None
         result = self._match(string)
         if len(result) < len(string):
-            try:
-                ast.parse(string)
-            except Exception:
-                raise BadlySpecifiedTemplateError(f'string {string} is not valid python')
+            self._validate_python_module(string)
         return result
+
+    def _validate_python_module(self, string):
+        try:
+            ast.parse(string)
+        except Exception:
+            raise BadlySpecifiedTemplateError(f'string {string} is not valid python, unballaced parens?')
 
 
     def _match(self, string):
@@ -129,7 +132,7 @@ class SourceMatcher(object):
                 right += 1
 
         if left != right:
-            raise BadlySpecifiedTemplateError('unbalanced parentheses')
+            self._validate_python_module(string)
 
     def MatchNewLine(self, remaining_string):
         try:

@@ -150,7 +150,9 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
         return parts
 
     def _should_exclude_last_after(self, string):
-        parens_pairs = self._find_parens(string)
+        if string == '':
+            return True
+        parens_pairs = self._find_external_parens_of_args(string)
         if not parens_pairs:
             return True
         first_pair = parens_pairs[0]
@@ -161,7 +163,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             return False
         return  True
 
-    def _find_parens(self, s): # from stack overflow
+    def _find_external_parens_of_args(self, s): # from stack overflow
         toret = {}
         pstack = []
 
@@ -174,9 +176,32 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
                 toret[pstack.pop()] = i
 
         if len(pstack) > 0:
-            raise IndexError("No matching opening parens at: " + str(pstack.pop()))
+            to_return = self._ignore_parens_in_string_arguments(pstack, toret)
         result = [(x,y) for x,y in toret.items()]
         result.sort()
+        return result
+
+    # this method trying to address the following "foo('(')"
+    # the problem is that the parens are not part of the args, but part of the string
+    # so we need to ignore them
+    # this method is not perfect, but it is good enough for now
+    def _ignore_parens_in_string_arguments(self, pstack, to_return):
+        result = {}
+        if not pstack:
+            raise ValueError("pstack must have at least one element")
+        if pstack[0] != 0 and not to_return.get(0,None):
+            raise ValueError("pstack should start with 0")
+        elif pstack[0] != 0 and to_return.get(0,None):
+            result[0] = to_return[0]
+            return result
+        if len(to_return) == 0 :
+            raise ValueError("to_return should not be empty at this point")
+
+        for i,(k,v) in enumerate(to_return.items()):
+            if i == 0:
+                result[0] = v
+            else :
+                result[k] = v
         return result
 
 class OpsComparatorsPlaceholder(ArgsDefaultsPlaceholder):

@@ -151,8 +151,8 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
 
     def _should_exclude_last_after(self, string):
         if string == '':
-            return False
-        parens_pairs = self._find_external_parens_of_orgs(string)
+            return True
+        parens_pairs = self._find_external_parens_of_args(string)
         if not parens_pairs:
             return True
         first_pair = parens_pairs[0]
@@ -163,7 +163,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             return False
         return  True
 
-    def _find_external_parens_of_orgs(self, s): # from stack overflow
+    def _find_external_parens_of_args(self, s): # from stack overflow
         toret = {}
         pstack = []
 
@@ -176,12 +176,16 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
                 toret[pstack.pop()] = i
 
         if len(pstack) > 0:
-            to_return = self._handle_parens_in_strings(pstack, toret)
+            to_return = self._ignore_parens_in_string_arguments(pstack, toret)
         result = [(x,y) for x,y in toret.items()]
         result.sort()
         return result
 
-    def _handle_parens_in_strings(self, pstack, to_return):
+    # this method trying to address the following "foo('(')"
+    # the problem is that the parens are not part of the args, but part of the string
+    # so we need to ignore them
+    # this method is not perfect, but it is good enough for now
+    def _ignore_parens_in_string_arguments(self, pstack, to_return):
         result = {}
         if not pstack:
             raise ValueError("pstack must have at least one element")
@@ -192,8 +196,6 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             return result
         if len(to_return) == 0 :
             raise ValueError("to_return should not be empty at this point")
-        #if len(to_return) > 1:
-        #    raise NotImplementedError("not implemented: args string not handled yet")
 
         for i,(k,v) in enumerate(to_return.items()):
             if i == 0:

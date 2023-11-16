@@ -7,6 +7,30 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_12_1= """
+def throw_abstract_impl_not_imported_error(opname, module, context):
+    if module in sys.modules:
+        pass
+    else:
+        raise NotImplementedError(
+            f"{opname}: operator. "
+            f"The '{module}' "
+            f"Python  {context}"
+        )
+"""
+
+module_12 = """
+def throw_abstract_impl_not_imported_error(opname, module, context):
+    if module in sys.modules:
+        pass
+    else:
+        raise NotImplementedError(
+            f"{opname}: We could not find the abstract impl for this operator. "
+            f"The operator specified that you may need to import the '{module}' "
+            f"Python module to load the abstract impl. {context}"
+        )
+"""
+
 module_11_1 = """
 
 WRAPPER_SRC_NAMES = {
@@ -23,10 +47,10 @@ WRAPPER_SRC_NAMES = {
 
     # add additoonal:
     "ALL_AVX512F_MICROKERNEL_SRCS": "defined(__i386__) || defined(__i686__) || defined(__x86_64__)",
-
     "PROD_SCALAR_MICROKERNEL_SRCS": "defined(__arm__)",
 
 }
+
 """
 module_10_1 = """
 if line.startswith("SET") and line.split('(')[1].strip(' \\t\\n\\r'):
@@ -467,5 +491,17 @@ def dot_product_attention_weights():
 
     def testFromInputModule11_1(self):
         string = module_11_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 151")
+    def testFromInputModule12(self):
+        string = module_12
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 151")
+    def testFromInputModule12_1(self):
+        string = module_12_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -151,3 +151,33 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = """f\"A_{i}\""""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams(self):
+        string = """f"{opname}: operator. "
+f"The '{module}' "
+f"Python  {context}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams2(self):
+        string = """f"{opname}: operator. "\nf"The '{module}' "\nf"Python  {context}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams3(self):
+        string = """f"X"\nf"Y"\nf"Z" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    @pytest.mark.skip(reason="issue 151")
+    def testJstrWithsLinesAndParams4(self):
+        string = """a(f"X"\nf"Y"\nf"Z") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 151")
+    def testJstrWithsLinesAndParams5(self):
+        string = """a(f"X"
+f"Y"
+f"Z") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

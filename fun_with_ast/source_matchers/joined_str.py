@@ -79,7 +79,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _match(self, string):
         self.orig_string = string
-        self._split_jstr_into_lines(string)
+        self._new_split_jstr_into_lines(string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
         embeded_string = jstr
@@ -154,7 +154,42 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
 
+    def _new_split_jstr_into_lines(self, orig_string):
+        lines = orig_string.split('\n')
+        jstr_lines = []
+        for index, line in enumerate(lines):
+            if self._is_jstr(line):
+                jstr_lines.append(line)
+                #if index == 0 and self._is_jstr(line):
+                #    jstr_lines.append(line)
+                #elif self._is_jstr(line) and line.endswith(')'): # need to refine this
+                #    jstr_lines.append(line)
+                #elif self._is_jstr(line)  and len(lines) > index+1 and lines[index+1].endswith(')'):
+                #    jstr_lines.append(line)
+            else:
+                break
+        self._get_lines_based_on_context(jstr_lines, lines)
 
+    def _get_lines_based_on_context(self, jstr_lines, lines):
+        if len(jstr_lines) == 0:
+            raise ValueError('could not find jstr lines')
+        if re.search(r'[ \t]*\)[ \t]*$', jstr_lines[len(jstr_lines)-1]): # this is call_args context
+        #if jstr_lines[len(jstr_lines)-1].endswith(')'): # this is call_args context
+            for line in jstr_lines:
+                self.jstr_meta_data.append(JstrConfig(line))
+            return
+        elif len(jstr_lines) == len(lines): # this is module context
+            self.jstr_meta_data.append(JstrConfig(jstr_lines[0]))
+            return
+        elif re.match(r'[ \t]*\)', lines[len(jstr_lines)]): # this is args context
+            for line in jstr_lines:
+                self.jstr_meta_data.append(JstrConfig(line))
+            return
+        elif re.match(r'[ \t\n]*', lines[len(jstr_lines)]):  # we assume this is module context
+            self.jstr_meta_data.append(JstrConfig(jstr_lines[0]))
+            return
+        else:
+            raise ValueError("unrecognized context for jst string")
     def _split_jstr_into_lines(self, orig_string):
         lines = orig_string.split('\n')
         jstr_lines = []

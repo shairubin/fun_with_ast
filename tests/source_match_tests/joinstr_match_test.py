@@ -168,16 +168,21 @@ f"Python  {context}" """
         string = """f"X"\nf"Y"\nf"Z" """
         node = GetNodeFromInput(string, get_module=True) # node the module context these are not joined strings
         self._verify_match(node, string)
-    #@pytest.mark.skip(reason="issue 151")
     def testJstrWithsLinesAndParams4(self):
         string = """a(f"X"\nf"Y"\nf"Z") """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 151")
     def testJstrWithsLinesAndParams5(self):
         string = """a(f"X"
 f"Y"
 f"Z") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams6(self):
+        string = """a(f"X"
+f"Y"
+f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

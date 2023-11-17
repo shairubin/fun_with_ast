@@ -128,7 +128,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         with pytest.raises(AssertionError):
             self._verify_match(node, string)
     def testMatchMultilLine2_1(self):
-        node = GetNodeFromInput("f'X'")
+        node = GetNodeFromInput("f'X'", get_module=True)
         string = "f'X'    \n"
         self._verify_match(node, string)
 
@@ -149,5 +149,40 @@ class JoinStrMatcherTests(BaseTestUtils):
 
     def testJstrWitJoinedStr63(self):
         string = """f\"A_{i}\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams(self):
+        string = """f"{opname}: operator. "
+f"The '{module}' "
+f"Python  {context}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams2(self):
+        string = """f"{opname}: operator. "\nf"The '{module}' "\nf"Python  {context}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams3(self):
+        string = """f"X"\nf"Y"\nf"Z" """
+        node = GetNodeFromInput(string, get_module=True) # node the module context these are not joined strings
+        self._verify_match(node, string)
+    def testJstrWithsLinesAndParams4(self):
+        string = """a(f"X"\nf"Y"\nf"Z") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams5(self):
+        string = """a(f"X"
+f"Y"
+f"Z") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParams6(self):
+        string = """a(f"X"
+f"Y"
+f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

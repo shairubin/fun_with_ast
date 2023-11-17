@@ -61,6 +61,29 @@ class RaiseMatcherTest(BaseTestUtils):
             )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testSimpleRaiseWithString31_1(self):
+        string = """raise ValueError(
+                f"X"
+                f"Y"
+                f"Z"
+            )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleRaiseWithString31_2(self):
+        string = """raise ValueError(
+                f"X"
+                f"Y"
+                f"Z")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testSimpleRaiseWithString31_3(self):
+        string = """raise ValueError(
+                f"X"
+                f"Y")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testSimpleRaiseWithString32(self):
         string = """raise ValueError(

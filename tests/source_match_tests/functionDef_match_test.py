@@ -267,6 +267,45 @@ def a():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testFunctionLevelAnnotation5(self):
+        string = """def argumenttype_type(
+        t: Type, *, mutable: bool, binds: ArgName, symint: bool
+        ) -> NamedCType:
+        pass
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation5_3(self):
+        string = """def argumenttype_type(
+        t: Type, *, mutable: bool
+        ) -> NamedCType:
+        pass
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation5_3_1(self):
+        string = """def a(\n\tt: Type, *, mutable: bool\n\t) -> NamedCType:\n\t\tpass"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation5_2(self):
+        string = """def argumenttype_type(
+        t: Type
+        ) -> NamedCType:
+        pass
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFunctionLevelAnnotation5_1(self):
+        string = """def a(
+        ) -> NamedCType:
+        pass
+        """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testFunctionMultiLine(self):
         string = """def a(

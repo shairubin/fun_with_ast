@@ -42,6 +42,21 @@ class CallMatcherTest(BaseTestUtils):
         string = "a(d=c)\n"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallWithMultiLinesSimple5_1(self):
+        string = "a(d)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithMultiLinesSimple5_2(self):
+        string = "a(d,)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallWithMultiLinesSimple5_3(self):
+        string = "a(d,7)\n"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testCallMatchWithKwargs(self):
         string = "a(**args)\n"
         node = GetNodeFromInput(string)

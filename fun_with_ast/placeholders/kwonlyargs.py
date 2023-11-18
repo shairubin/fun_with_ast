@@ -21,11 +21,22 @@ class KwOnlyArgsPlaceholder(ArgsDefaultsPlaceholder):
     """
 
     def __init__(self, kwonlyarg_separator_placeholder, kw_only_defaults_seperator_placeholder):
-        super(KwOnlyArgsPlaceholder, self).__init__(kwonlyarg_separator_placeholder, kw_only_defaults_seperator_placeholder)
+        super(KwOnlyArgsPlaceholder, self).__init__(kwonlyarg_separator_placeholder,
+                                                    kw_only_defaults_seperator_placeholder)
 
     def _GetArgsKwargs(self, node):
-        n_kwonlyargs = len(node.kwonlyargs)
-        n_kw_defaults = len(node.kw_defaults)
-        kwonlyargs_with_defaults = list(zip(node.kwonlyargs[n_kwonlyargs - n_kw_defaults:], node.kw_defaults))
-        kwonlyargs = node.kwonlyargs[:-len(kwonlyargs_with_defaults)] if kwonlyargs_with_defaults else node.kwonlyargs
+        if len(node.kwonlyargs) != len(node.kw_defaults):
+            raise ValueError('kwonlyargs and kw_defaults must be of equal length')
+        kwonlyargs_with_defaults = []
+        kwonlyargs = []
+        for kwonlyarg, kw_default in zip(node.kwonlyargs, node.kw_defaults):
+            if kw_default is None:
+                kwonlyargs.append(kwonlyarg)
+            else:
+                kwonlyargs_with_defaults.append((kwonlyarg, kw_default))
         return kwonlyargs, kwonlyargs_with_defaults
+        # n_kwonlyargs = len(node.kwonlyargs)
+        # n_kw_defaults = len(node.kw_defaults)
+        # kwonlyargs_with_defaults = list(zip(node.kwonlyargs[n_kwonlyargs - n_kw_defaults:], node.kw_defaults))
+        # kwonlyargs = node.kwonlyargs[:-len(kwonlyargs_with_defaults)] if kwonlyargs_with_defaults else node.kwonlyargs
+        # return kwonlyargs, kwonlyargs_with_defaults

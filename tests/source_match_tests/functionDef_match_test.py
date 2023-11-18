@@ -266,7 +266,7 @@ def a():
     return jnp.where(x >= beta, x, jnp.square(x + beta) / (4 * beta))"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5(self):
         string = """def argumenttype_type(
         t: Type, *, mutable: bool, binds: ArgName, symint: bool
@@ -276,7 +276,7 @@ def a():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5_3(self):
         string = """def argumenttype_type(
         t: Type, *, mutable: bool
@@ -286,22 +286,22 @@ def a():
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5_3_1(self):
         string = """def a(\n\tt: Type, *, mutable: bool\n\t) -> NamedCType:\n\t\tpass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5_3_2(self):
         string = """def a(\n\tt, *, mutable) -> NamedCType:\n\t\tpass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5_3_3(self):
         string = """def a(\n\tt, *, mutable):\n\t\tpass"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 154")
     def testFunctionLevelAnnotation5_3_4(self):
         string = """def a(t, *, mutable):\n\t\tpass"""
         node = GetNodeFromInput(string)
@@ -410,27 +410,33 @@ def _generate_continue(self, sequences, model, tokenizer):
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip(reason="issue 154")
+    #@pytest.mark.skip(reason="issue 151")
     def testStarArgs(self):
         string = 'def test_fun(*,a):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 151")
+    #@pytest.mark.skip(reason="issue 151")
 
     def testStarArgs2(self):
         string = 'def test_fun(*b,a):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 151")
-    def testStarArgs2_1(self):
-        string = 'def test_fun(*b,a=3):\n  pass\n'
+    #@pytest.mark.skip(reason="issue 151")
+    def testStarArgs2_2(self):
+        string = 'def test_fun(*b,a:int, c:bool):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 151")
+
+    #@pytest.mark.skip(reason="issue 151")
     def testStarArgs3(self):
         string = 'def test_fun(*b,a, c):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs4(self):
+        string = 'def test_fun(*,a, c, **d):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

@@ -93,7 +93,8 @@ def get_arguments_expected_parts():
             TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder(
             'vararg',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *')),
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *'),
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
         KwOnlyArgsPlaceholder( # kwonlyargs
             TextPlaceholder(r'\s*,\s*', ', '),
             TextPlaceholder(r'\s*=\s*', '=')),

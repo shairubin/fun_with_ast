@@ -8,11 +8,11 @@ class Placeholder(object):
         self.starting_parens = []
         self._id = Placeholder.id
         Placeholder.id += 1
-    def __repr__(self):
-        return 'Placeholder {}'.format(self._id)
-
-    def __str__(self):
-        return repr(self)
+    # def __repr__(self):
+    #     return 'Placeholder {}'.format(self._id)
+    #
+    # def __str__(self):
+    #     return repr(self)
 
     def _match(self, node, string):
         raise NotImplementedError

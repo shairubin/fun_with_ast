@@ -48,6 +48,14 @@ class ArgumentsMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         self._validate_match(matcher, string)
 
+    @pytest.mark.skip(reason="issue 151")
+    def testArgsWithVarargsAndKwonlyargs(self):
+        node = create_node.arguments(
+            args=[], defaults=[], vararg='b', kwonlyargs=['a'])
+        string = '*b,a'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
     def testArgsDefaultsVarargs(self):
         node = create_node.arguments(
             args=['e', 'f', 'a', 'c'], defaults=['b', 'd'],

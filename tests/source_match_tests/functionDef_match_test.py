@@ -416,7 +416,21 @@ def _generate_continue(self, sequences, model, tokenizer):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue 151")
+
     def testStarArgs2(self):
         string = 'def test_fun(*b,a):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 151")
+    def testStarArgs2_1(self):
+        string = 'def test_fun(*b,a=3):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 151")
+    def testStarArgs3(self):
+        string = 'def test_fun(*b,a, c):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

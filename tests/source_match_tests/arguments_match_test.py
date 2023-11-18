@@ -23,6 +23,13 @@ class ArgumentsMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         self._validate_match(matcher, string)
 
+    def testSingleArg2(self): # create node does not support this match with arguments alone
+        node = create_node.arguments(args=['a'])
+        string = 'a,'
+        matcher = GetDynamicMatcher(node)
+        with pytest.raises(AssertionError):
+            self._validate_match(matcher, string)
+
     def testMultipleArgs(self):
         node = create_node.arguments(args=['a', 'b'])
         string = 'a, b'
@@ -36,15 +43,51 @@ class ArgumentsMatcherTest(unittest.TestCase):
         self._validate_match(matcher, string)
 
     def testDefaults(self):
-        node = create_node.arguments(args=['a', 'c'], defaults=['b', 'd'])
-        string = 'a=b, c=d'
+        node = create_node.arguments(args=['a', 'c'], defaults=[7, 'd'])
+        string = 'a=7, c=d'
         matcher = GetDynamicMatcher(node)
         self._validate_match(matcher, string)
+
+    def testDefaultsAndArgs(self):
+        node = create_node.arguments(args=['a', 'c'], defaults=[ 'd'])
+        string = 'a, c=d'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
 
     def testArgsAndDefaults(self):
         node = create_node.arguments(
             args=['e', 'f', 'a', 'c'], defaults=['b', 'd'])
         string = 'e, f, a=b, c=d'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+    def testArgsWithEmptyVarargsAndKwonlyargs(self):
+        node = create_node.arguments(
+            args=[], defaults=[], vararg=None, kwonlyargs=['a'], kw_defaults=[None])
+        string = '*,a'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+
+    def testArgsWithVarargsAndKwonlyargs(self):
+        node = create_node.arguments(
+            args=[], defaults=[], vararg='b', kwonlyargs=['a'], kw_defaults=[None])
+        string = '*b,a'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+    def testArgsWithVarargsAndKwonlyargs2(self):
+        node = create_node.arguments(
+            args=[], defaults=[], vararg='b', kwonlyargs=['a','c'], kw_defaults=[None, None])
+        string = '*b , a,    c'
+        matcher = GetDynamicMatcher(node)
+        self._validate_match(matcher, string)
+
+    def testArgsWithVarargsAndKwonlyargs3(self):
+        node = create_node.arguments(
+            args=[], defaults=[], vararg='b', kwonlyargs=['a','c'], kw_defaults=[None, '7'] )
+        string = '*b , a,    c=7'
         matcher = GetDynamicMatcher(node)
         self._validate_match(matcher, string)
 

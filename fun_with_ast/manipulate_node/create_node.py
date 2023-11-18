@@ -138,14 +138,13 @@ def arguments(posonlyargs=[], args=[], vararg=None, kwonlyargs=[], kw_defaults=[
         vararg = _WrapWithArgs(vararg)
     args, defaults = _ToArgsWithDefaults(args, defaults)
     return _ast.arguments(
-        posonlyargs=posonlyargs,
-        args=args,
-        vararg=vararg,
-        kwonlyargs=kwonlyargs,
-        kw_defaults=kw_defaults,
-        kwarg=kwarg,
-        defaults=defaults)
-
+    posonlyargs=posonlyargs,
+    args=args,
+    vararg=vararg,
+    kwonlyargs=kwonlyargs,
+    kw_defaults=kw_defaults,
+    kwarg=kwarg,
+    defaults=defaults)
 
 def Add():
     return _ast.Add()

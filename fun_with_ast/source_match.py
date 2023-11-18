@@ -2,6 +2,7 @@
 
 import _ast
 
+from fun_with_ast.placeholders.kwonlyargs import KwOnlyArgsPlaceholder
 from fun_with_ast.source_matchers.boolop import BoolOpSourceMatcher
 from fun_with_ast.source_matchers.body import BodyPlaceholder
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
@@ -92,7 +93,11 @@ def get_arguments_expected_parts():
             TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder(
             'vararg',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *')),
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *'),
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
+        KwOnlyArgsPlaceholder( # kwonlyargs
+            TextPlaceholder(r'\s*,\s*', ', '),
+            TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder(
             'kwarg',
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*\s*', ', **'))

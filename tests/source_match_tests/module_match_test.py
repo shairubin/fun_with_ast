@@ -7,6 +7,18 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_13_1 = """def argumenttype_type(
+    t: Type, *, mutable: bool, binds: ArgName, symint: bool
+    ) -> NamedCType:
+    pass
+"""
+
+module_13 = """def argumenttype_type(
+    t: Type, *, mutable: bool, binds: ArgName, symint: bool
+    ) -> NamedCType:
+    return NamedCType(binds, MutRefCType(tensor_type))
+"""
+
 module_12_1= """
 def throw_abstract_impl_not_imported_error(opname, module, context):
     if module in sys.modules:
@@ -501,5 +513,14 @@ def dot_product_attention_weights():
 
     def testFromInputModule12_1(self):
         string = module_12_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule13(self):
+        string = module_13
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule13_1(self):
+        string = module_13_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -21,7 +21,8 @@ class CompositePlaceholder(Placeholder):
         elements = self._set_parents(elements, node)
         parser = StringParser(
             string, elements, starting_parens=self.starting_parens)
-        return parser.GetMatchedText()
+        matched_text = parser.GetMatchedText()
+        return matched_text
 
     def _set_parents(self, elements, node):
         if isinstance(node, ast.Constant):
@@ -46,28 +47,28 @@ class FieldPlaceholder(CompositePlaceholder):
     """Placeholder for a field."""
 
     def __init__(
-            self, field_name, before_placeholder=None):
+            self, field_name, before_placeholder=None, after_placeholder=None):
         super(FieldPlaceholder, self).__init__()
         self.field_name = field_name
         self.before_placeholder = before_placeholder
+        self.after_placeholder = after_placeholder
 
     def GetElements(self, node):
         if isinstance(node, _ast.Call) and self.field_name == 'kwargs':
             field_value = getattr(node, self.field_name, None)
-
         else:
             field_value = getattr(node, self.field_name)
 
         if not self._isNoneLiteral(field_value, node):
             return []
 
-        #if field_value is None:
-        #    return []
-
         elements = []
         if self.before_placeholder:
             elements.append(self.before_placeholder)
         elements.append(NodePlaceholder(field_value))
+        if self.after_placeholder:
+            elements.append(self.after_placeholder)
+
         return elements
 
     def _match(self, node, string):
@@ -88,6 +89,9 @@ class FieldPlaceholder(CompositePlaceholder):
             self.field_name)
 
     def _isNoneLiteral(self, field_value, node):
+        if (self.field_name == 'vararg' and field_value == None and
+                isinstance(node, _ast.arguments) and node.kwonlyargs):
+            return True # see test testArgsWithVarargsAndKwonlyargs
         # TODO: this seems like a hack to identify None in source code as opposed to None in the AST
         if not field_value and field_value != 0:
             if isinstance(node, SyntaxFreeLine) and field_value == '':

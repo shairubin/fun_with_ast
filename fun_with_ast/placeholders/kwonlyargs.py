@@ -35,8 +35,3 @@ class KwOnlyArgsPlaceholder(ArgsDefaultsPlaceholder):
             else:
                 kwonlyargs_with_defaults.append((kwonlyarg, kw_default))
         return kwonlyargs, kwonlyargs_with_defaults
-        # n_kwonlyargs = len(node.kwonlyargs)
-        # n_kw_defaults = len(node.kw_defaults)
-        # kwonlyargs_with_defaults = list(zip(node.kwonlyargs[n_kwonlyargs - n_kw_defaults:], node.kw_defaults))
-        # kwonlyargs = node.kwonlyargs[:-len(kwonlyargs_with_defaults)] if kwonlyargs_with_defaults else node.kwonlyargs
-        # return kwonlyargs, kwonlyargs_with_defaults

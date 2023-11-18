@@ -91,7 +91,7 @@ class FieldPlaceholder(CompositePlaceholder):
     def _isNoneLiteral(self, field_value, node):
         if (self.field_name == 'vararg' and field_value == None and
                 isinstance(node, _ast.arguments) and node.kwonlyargs):
-            return True
+            return True # see test testArgsWithVarargsAndKwonlyargs
         # TODO: this seems like a hack to identify None in source code as opposed to None in the AST
         if not field_value and field_value != 0:
             if isinstance(node, SyntaxFreeLine) and field_value == '':

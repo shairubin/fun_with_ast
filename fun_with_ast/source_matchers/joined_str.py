@@ -78,20 +78,23 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
+        remaining_string = string
         #remaining_string = self.MatchStartParens(string)
-        self.orig_string = string
-        self._split_jstr_into_lines(string)
+        self.orig_string = remaining_string
+        self._split_jstr_into_lines(remaining_string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
         embeded_string = jstr
         # default string match 
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
-
+        self.matched = False # ugly hack to force the next line to work
+        self.matched_source = None
         matched_text = self._convert_to_single_part_string(matched_text)
         matched_text = self._split_back_into_lines(matched_text)
         #remaining_string = remaining_string.removeprefix(matched_text)
         #remaining_string = self.MatchEndParen(remaining_string)
 
+        matched_text = self.GetSource()
         self.matched_source = matched_text
         self.matched = True
         return matched_text
@@ -130,7 +133,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if result == self.orig_string:
             return result
         prefix, suffix = self._get_prefix_suffix()
-#        if not result.startswith('f'+self.padding_quote):
         if not result.startswith(prefix + 'f'+self.padding_quote):
             raise ValueError('We must see f\' at beginning of match')
         format_string = result.removesuffix(suffix)
@@ -143,7 +145,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _verify_format_string(self, prefix, result, suffix):
         tmp_format_string = result.removeprefix(prefix + 'f' + self.padding_quote)
-        #tmp_format_string = result.removeprefix('f' + self.padding_quote)
         tmp_format_string = tmp_format_string.removesuffix(self.padding_quote)
         tmp_format_string = tmp_format_string.replace(self.padding_quote + '{', '{')
         tmp_format_string = tmp_format_string.replace('}' + self.padding_quote, '}')
@@ -154,9 +155,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             raise ValueError('format string does not match')
         return tmp_format_string
     def _get_prefix_suffix(self):
-        prefix = self.jstr_meta_data[0].prefix_str
-        suffix = self.jstr_meta_data[len(self.jstr_meta_data) - 1].suffix_str
-        return prefix, suffix
+        prefix_before_f = self.jstr_meta_data[0].prefix_str
+        suffix_after_jsdr = self.jstr_meta_data[len(self.jstr_meta_data) - 1].suffix_str
+        return prefix_before_f, suffix_after_jsdr
 
 
 

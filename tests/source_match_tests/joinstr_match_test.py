@@ -212,11 +212,39 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix2(self):
         string = """msg = (
         f"C"
         "o"
         "a")
   """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 157")
+    def testJstrWithsLinesNoF_Prefix3(self):
+        string = """msg = (
+        f"C"
+        "o"
+        )
+  """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 157")
+    def testJstrWithsLinesNoF_Prefix3_1(self):
+        string = """msg = (\nf"C"\n)
+  """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_2(self):
+        string = """msg = (f"C")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_3(self):
+        string = """msg = f\"C\""""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

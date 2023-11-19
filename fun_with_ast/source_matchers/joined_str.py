@@ -78,14 +78,20 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
+        #remaining_string = self.MatchStartParens(string)
         self.orig_string = string
         self._split_jstr_into_lines(string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         jstr = self._generate_to_multi_part_string()
         embeded_string = jstr
+        # default string match 
         matched_text = super(JoinedStrSourceMatcher, self)._match(embeded_string)
+
         matched_text = self._convert_to_single_part_string(matched_text)
         matched_text = self._split_back_into_lines(matched_text)
+        #remaining_string = remaining_string.removeprefix(matched_text)
+        #remaining_string = self.MatchEndParen(remaining_string)
+
         self.matched_source = matched_text
         self.matched = True
         return matched_text

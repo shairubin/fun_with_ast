@@ -7,6 +7,33 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_14 = """
+def get_source_lines_and_file(
+    obj: Any,
+    error_msg: Optional[str] = None,
+) -> Tuple[List[str], int, Optional[str]]:
+    \"\"\"
+    Wrapper around inspect.getsourcelines and inspect.getsourcefile.
+
+    Returns: (sourcelines, file_lino, filename)
+    \"\"\"
+    filename = None  # in case getsourcefile throws
+    try:
+        filename = inspect.getsourcefile(obj)
+        sourcelines, file_lineno = inspect.getsourcelines(obj)
+    except OSError as e:
+        msg = (
+            f"Can't get source for {obj}. TorchScript requires source access in "
+            "order to carry out compilation, make sure original .py files are "
+            "available."
+        )
+        if error_msg:
+            msg += "\\n" + error_msg
+        raise OSError(msg) from e
+
+    return sourcelines, file_lineno, filename
+"""
+
 module_13_1 = """def argumenttype_type(
     t: Type, *, mutable: bool, binds: ArgName, symint: bool
     ) -> NamedCType:
@@ -522,5 +549,10 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule13_1(self):
         string = module_13_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule14(self):
+        string = module_14
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

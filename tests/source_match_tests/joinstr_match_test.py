@@ -186,3 +186,37 @@ f"Y"
 f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix(self):
+        string = """msg = (
+            f"Can't get source for {obj}. TorchScript requires source access in "
+            "order to carry out compilation, make sure original .py files are "
+            "available."
+        )
+  """
+    @pytest.mark.skip(reason="issue 157")
+    def testJstrWithsLinesNoF_Prefix(self):
+        string = """msg = (
+            f"Can't get source for {obj}. TorchScript requires source access in "
+            "order to carry out compilation, make sure original .py files are "
+            "available."
+        )
+  """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue 157")
+    def testJstrWithsLinesNoF_Prefix1(self):
+        string = """msg = (f"C"\n "o"\n "a")
+  """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix2(self):
+        string = """msg = (
+        f"C"
+        "o"
+        "a")
+  """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

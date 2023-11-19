@@ -90,9 +90,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self.matched = False # ugly hack to force the next line to work
         self.matched_source = None
         matched_text = self._convert_to_single_part_string(matched_text)
-        matched_text = self._split_back_into_lines(matched_text)
-        #remaining_string = remaining_string.removeprefix(matched_text)
-        #remaining_string = self.MatchEndParen(remaining_string)
+        self._split_back_into_lines(matched_text)
+        remaining_string = remaining_string.removeprefix(matched_text)
+        remaining_string = self.MatchEndParen(remaining_string)
 
         matched_text = self.GetSource()
         self.matched_source = matched_text

@@ -25,7 +25,7 @@ class JstrConfig:
     start_quote_location: int
     quote_type: str
     jstr_length: int = 0
-
+    f_part_type: str = 'not_set'
     def __init__(self, line, line_index):
         self.orig_single_line_string = line
         self._create_config(line_index)
@@ -72,8 +72,11 @@ class JstrConfig:
         if f_type == 'f':
             self.f_part = self.orig_single_line_string[location:location+2]
             self.f_part_location = location
+            self.f_part_type = 'f'
         elif f_type == 'quote_only':
-            raise NotImplementedError
+            self.f_part = self.orig_single_line_string[location:location+1]
+            self.f_part_location = location
+            self.f_part_type = 'quote_only'
         else:
             raise ValueError('could not find f or quote at the beginning of string')
 
@@ -183,7 +186,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return end_result
 
     def _verify_format_string(self, prefix, result, suffix):
-        reconstructed_format_string = result.removeprefix(prefix + 'f' + self.padding_quote)
+        reconstructed_format_string = result
+        for start_paren in self.start_paren_matchers:
+            reconstructed_format_string = reconstructed_format_string.removeprefix(start_paren.matched_text)
+        reconstructed_format_string = reconstructed_format_string.removeprefix(prefix + 'f' + self.padding_quote)
         reconstructed_format_string = reconstructed_format_string.removesuffix(suffix)
         for end_paren in self.end_paren_matchers:
             reconstructed_format_string = reconstructed_format_string.removesuffix(end_paren.matched_text)

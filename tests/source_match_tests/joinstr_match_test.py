@@ -205,9 +205,9 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 157")
+    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix1(self):
-        string = """msg = (f"C"\n "o"\n "a")
+        string = """msg = (f"C"\n"o"\n"a")
   """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

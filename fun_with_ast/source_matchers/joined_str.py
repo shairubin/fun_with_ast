@@ -13,6 +13,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 supported_quotes = ['\'', "\""]
 @dataclass
 class JstrConfig:
+    line_index: int
     orig_single_line_string: str
     prefix_str: str
     suffix_str: str
@@ -25,11 +26,12 @@ class JstrConfig:
     quote_type: str
     jstr_length: int = 0
 
-    def __init__(self, line):
+    def __init__(self, line, line_index):
         self.orig_single_line_string = line
-        self._create_config()
+        self._create_config(line_index)
 
-    def _create_config(self):
+    def _create_config(self, line_index):
+        self.line_index = line_index
         self.suffix_str = ''
         self.prefix_str = ''
         self._set_quote_type()
@@ -59,17 +61,33 @@ class JstrConfig:
 
     def _set_quote_type(self):
         for quote in supported_quotes:
-            if self.orig_single_line_string.find("f"+quote) != -1:
+#            if self.orig_single_line_string.find("f"+quote) != -1:
+             if re.match(r'[ \t]*f?'+quote, self.orig_single_line_string):
                 self.quote_type = quote
                 return
         raise ValueError("could not find quote in single line string")
 
     def _set_f_prefix(self):
-        location = self.orig_single_line_string.find("f"+self.quote_type)
-        if location == -1:
-            raise ValueError("could not find quote in singlke line string")
-        self.f_part = self.orig_single_line_string[location:location+2]
-        self.f_part_location = location
+        (f_type, location) = self._set_prefix_type()
+        if f_type == 'f':
+            self.f_part = self.orig_single_line_string[location:location+2]
+            self.f_part_location = location
+        elif f_type == 'quote_only':
+            raise NotImplementedError
+        else:
+            raise ValueError('could not find f or quote at the beginning of string')
+
+    def _set_prefix_type(self):
+        f_type = self.orig_single_line_string.find("f"+self.quote_type)
+        if f_type != -1:
+            return ('f',f_type)
+        f_type = self.orig_single_line_string.find(self.quote_type)
+        if f_type != -1 and self.line_index != 0:
+            return ('quote_only', f_type)
+        raise ValueError("could not find quote of f+quote in single line string")
+
+
+
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
     def __init__(self, node, starting_parens=None, parent=None):
@@ -192,7 +210,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
         jstr_lines = []
         for index, line in enumerate(lines):
-            if self._is_jstr(line):
+            if self._is_jstr(line, index):
                 jstr_lines.append(line)
             else:
                 break
@@ -216,18 +234,18 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
             return
         elif len(jstr_lines) == len(lines):                            # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line))
+            self.jstr_meta_data.append(JstrConfig(first_jstr_line,0))
             return
         elif re.match(r'[ \t\n]*', lines[len_jstr_lines]):      # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line))
+            self.jstr_meta_data.append(JstrConfig(first_jstr_line,0))
             return
 
         else:
             raise ValueError("unrecognized context for jst string")
 
     def __appnd_jstr_lines_to_metadata(self, jstr_lines):
-        for line in jstr_lines:
-            self.jstr_meta_data.append(JstrConfig(line))
+        for line_index, line in enumerate(jstr_lines):
+            self.jstr_meta_data.append(JstrConfig(line, line_index))
 
 
     def _embed_multiline_jstr_into_string(self, single_line_jstr, string):
@@ -251,9 +269,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if format_string == -1:
                 raise NotImplementedError
 
-    def _is_jstr(self, line):
+    def _is_jstr(self, line, line_index):
         for quote in supported_quotes:
-            expr = f'[ \t\(]*f'+quote
+            if line_index == 0:
+                expr = r'[ \t]*f'+quote
+            else:
+                expr = r'[ \t]*f?' + quote
             if re.search(expr,line):
                 return True
         return False

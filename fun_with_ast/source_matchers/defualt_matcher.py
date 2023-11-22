@@ -68,7 +68,7 @@ class DefaultSourceMatcher(SourceMatcher):
         remaining_string = self.MatchCommentEOL(remaining_string) #TODO: move it before get source
         remaining_string = self.MatchNewLine(remaining_string)
         matched_string = DefaultSourceMatcher.GetSource(self)
-#        result =  (matched_string + self.end_of_line_comment + self.EOL_matcher.GetSource(None))
+
         result = matched_string
         self.matched = True
         self.matched_source = result

@@ -144,11 +144,16 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testAssignFromSource1_2(self):
+    def testAssignFromSource1_3(self):
         string = 'a=1\n     '
         node = GetNodeFromInput(string, get_module=False)
         with pytest.raises(AssertionError):
             self._verify_match(node, string)
+
+    def testAssignFromSource1_4(self):
+        string = 'a=(1)\n     '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testAssignFromSource2(self):
         string = "a='str'"

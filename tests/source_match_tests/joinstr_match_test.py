@@ -186,3 +186,64 @@ f"Y"
 f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix(self):
+        string = """msg = (
+            f"Can't get source for {obj}. TorchScript requires source access in "
+            "order to carry out compilation, make sure original .py files are "
+            "available."
+        )
+  """
+    def testJstrWithsLinesNoF_Prefix(self):
+        string = """msg = (
+            f"Can't get source for {obj}. TorchScript requires source access in "
+            "order to carry out compilation, make sure original .py files are "
+            "available."
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix1(self):
+        string = """msg = (f"C"\n"o"\n"a")
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix2(self):
+        string = """msg = (
+        f"C"
+        "o"
+        "a")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3(self):
+        string = """msg = (
+        f"C"
+        "o"
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_1(self):
+        string = """msg = (\nf"C"\n)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_2(self):
+        string = """msg = (f"C")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_3(self):
+        string = """msg = f\"C\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesNoF_Prefix3_4(self):
+        string = """msg = (
+        f"C"
+        f"o"
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

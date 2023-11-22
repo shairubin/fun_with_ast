@@ -292,6 +292,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         remaining_string = matched_text
         for index, config in enumerate(self.jstr_meta_data):
             if index == 0:
+                for start_paren in self.start_paren_matchers:
+                    result += start_paren.matched_text
                 config_contrib = config.prefix_str + config.f_part+config.format_string + config.quote_type
             else:
                 config_contrib = config.prefix_str + config.f_part+  config.format_string + config.quote_type

@@ -194,7 +194,6 @@ f"Z") # comment """
             "available."
         )
   """
-    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
@@ -204,14 +203,12 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix1(self):
         string = """msg = (f"C"\n"o"\n"a")
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix2(self):
         string = """msg = (
         f"C"
@@ -220,7 +217,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix3(self):
         string = """msg = (
         f"C"
@@ -229,7 +225,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 157")
     def testJstrWithsLinesNoF_Prefix3_1(self):
         string = """msg = (\nf"C"\n)"""
         node = GetNodeFromInput(string)

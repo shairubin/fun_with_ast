@@ -7,6 +7,28 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+
+module_15_1 = """
+#!/usr/bin/env python3
+
+def main() -> None:
+    print(f"Exporting labels for {args.org}/{args.repo}")
+    labels_file_name = "pytorch_labels.json"
+    obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
+
+"""
+
+module_15 = """
+#!/usr/bin/env python3
+
+def main() -> None:
+    args = parse_args()
+    print(f"Exporting labels for {args.org}/{args.repo}")
+    labels_file_name = "pytorch_labels.json"
+    obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
+    obj.put(Body=json.dumps(gh_get_labels(args.org, args.repo)).encode())
+
+"""
 module_14 = """
 def get_source_lines_and_file(
     obj: Any,
@@ -554,5 +576,16 @@ def dot_product_attention_weights():
 
     def testFromInputModule14(self):
         string = module_14
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testFromInputModule15(self):
+        string = module_15
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule15_1(self):
+        string = module_15_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

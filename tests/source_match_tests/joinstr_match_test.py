@@ -247,3 +247,11 @@ f"Z") # comment """
         )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testJstrFindQuoteInaSingleString(self):
+        string = """
+print(f"Exporting labels for {args.org}/{args.repo}")
+obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

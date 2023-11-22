@@ -188,7 +188,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 expr = r'[ \t]*f'+quote
             else:
                 expr = r'[ \t]*f?' + quote
-            if re.search(expr,line):
+            if re.match(expr,line):
                 return True
         return False
 

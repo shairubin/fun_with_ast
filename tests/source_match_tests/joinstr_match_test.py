@@ -309,10 +309,20 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue 164")
+    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4_3(self):
-        string = """\"X \"
-                                     f\"Y\" 
-                                     \"Z\" """
+        string = """(\"X \"
+                                     f\"Y\"
+                                     \"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_1(self):
+        string = """(\"X \"\nf\"Y\"\n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_2(self):
+        string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

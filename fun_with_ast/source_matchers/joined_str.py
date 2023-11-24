@@ -29,7 +29,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         self.padding_quote = self.jstr_meta_data[0].quote_type
         multi_part_string = self._convert_to_multi_part_string()
         embedded_string = multi_part_string
-        # default string matcher will match the multi part string
+        # default string matcher will match the multipart string
         matched_text = super(JoinedStrSourceMatcher, self)._match(embedded_string)
         self.matched = False # ugly hack to force the next line to work
         self.matched_source = None
@@ -72,6 +72,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if self.jstr_meta_data[0].f_part_type != 'f':
             # a joined string that its first element is not 'f' e.g., "X"\nf"Y"
             multi_part_result = 'f' + multi_part_result
+            #self.jstr_meta_data[0].jstr_length += 1
         return multi_part_result
 
     def _convert_to_single_part_string(self, _in):
@@ -224,4 +225,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         result = 0
         for config in self.jstr_meta_data:
             result += config.jstr_length
+            #if re.match(r'[ \t]+$', config.suffix_str):
+            #    result += len(config.suffix_str)
         return result + len(self.jstr_meta_data) - 1

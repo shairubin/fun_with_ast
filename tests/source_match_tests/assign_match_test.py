@@ -231,7 +231,7 @@ class AssignMatcherTest(BaseTestUtils):
     def testAssignFromSourceWithJoinedStr1(self):
         string = """new_k = (
         *k[:name_idx],
-        f"{k[name_idx][:-1]}_{i}",
+        f"{k[name_idx][:-1]}_{i}",  
     )      """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

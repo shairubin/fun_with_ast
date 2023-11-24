@@ -60,7 +60,8 @@ class ConstantStrMatcherTest(BaseTestUtils):
         matcher = GetDynamicMatcher(node)
         with pytest.raises(BadlySpecifiedTemplateError):
             matcher.do_match(string)
-
+########################################################################
+# get node tests
     def testStringWithNLString(self):
         string = "\"\\n\""
         node = GetNodeFromInput(string)
@@ -82,4 +83,19 @@ class ConstantStrMatcherTest(BaseTestUtils):
     def testStringWithNLString5(self):
         string = "'abc\\ndef'"
         node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringMultipart(self):
+        string = "'abc''def'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringMultipart2(self):
+        string = "'abc'\n'def'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringSinglePart(self):
+        string = "'abcdef'"
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

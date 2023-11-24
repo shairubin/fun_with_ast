@@ -7,6 +7,14 @@ from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
+module_16 = """
+def collect_license(current):
+    try:
+       ident = identify_license(license_file)
+    except ValueError:
+        raise ValueError('could not identify license file '
+                        f'for {root}') from None
+"""
 
 module_15_1 = """
 #!/usr/bin/env python3
@@ -587,5 +595,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule15_1(self):
         string = module_15_1
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #164")
+    def testFromInputModule16(self):
+        string = module_16
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

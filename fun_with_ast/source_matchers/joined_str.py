@@ -23,7 +23,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
-        #remaining_string = string
         self.orig_string = string
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
@@ -70,6 +69,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if conversion:
                 raise NotImplementedError
         multi_part_result = self.jstr_meta_data[0].prefix_str + multi_part_result + self.padding_quote
+        if self.jstr_meta_data[0].f_part_type != 'f':
+            # a joined string that its first element is not 'f' e.g., "X"\nf"Y"
+            multi_part_result = 'f' + multi_part_result
         return multi_part_result
 
     def _convert_to_single_part_string(self, _in):
@@ -183,11 +185,17 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError
 
     def _is_jstr(self, line, line_index):
+        # for quote in SUPPORTED_QUOTES:
+        #     if line_index == 0:
+        #         expr = r'[ \t]*f'+quote
+        #     else:
+        #         expr = r'[ \t]*f?' + quote
+        #     if re.match(expr,line):
+        #         return True
+        # return False
+
         for quote in SUPPORTED_QUOTES:
-            if line_index == 0:
-                expr = r'[ \t]*f'+quote
-            else:
-                expr = r'[ \t]*f?' + quote
+            expr = r'[ \t]*f?' + quote
             if re.match(expr,line):
                 return True
         return False

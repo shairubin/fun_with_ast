@@ -73,6 +73,6 @@ class JstrConfig:
         if f_type != -1:
             return ('f',f_type)
         f_type = self.orig_single_line_string.find(self.quote_type)
-        if f_type != -1 and self.line_index != 0:
+        if f_type != -1:
             return ('quote_only', f_type)
         raise ValueError("could not find quote of f+quote in single line string")

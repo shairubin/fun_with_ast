@@ -91,7 +91,23 @@ class ConstantStrMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testStringMultipart2(self):
+        string = "('abc'\n'def')"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringMultipart4(self):
+        string = "'abc'\t'def'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringMultipart5(self):
         string = "'abc'\n'def'"
+        node = GetNodeFromInput(string, get_module=True)
+        with pytest.raises(ValueError, match='.*two consecutive strings with new-line seperator between them.*'):
+            self._verify_match(node, string)
+
+    def testStringMultipart3(self):
+        string = "'abc''def'"
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 

@@ -92,10 +92,15 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue 164")
+    #@pytest.mark.skip("issue 164")
     def testRaiseWithMixedJstr(self):
-        string = """raise ValueError('could not identify license file '
-                                     f'for {root}') from None"""
+        string = """raise ValueError('could not identify license file '\nf'for {root}') from None"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("issue 164")
+    def testRaiseWithMixedJstr2(self):
+        string = """raise ValueError('could not identify license file ' \nf'for {root}') from None"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

@@ -137,6 +137,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines):
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
+        if len(jstr_lines) == 1: # simple case
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         first_jstr_line = jstr_lines[0]
         len_jstr_lines = len(jstr_lines)
@@ -149,15 +152,17 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
             return
-        elif len(jstr_lines) == len(lines):                            # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-            return
-        elif re.match(r'[ \t\n]*', lines[len_jstr_lines]):      # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-            return
+        elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+        #elif len(jstr_lines) == len(lines):                            # we assume this is module context
+        #    self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
+        #    return
+        #elif re.match(r'[ \t\n]*', lines[len_jstr_lines]):      # we assume this is module context
+        #    self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
+        #    return
 
         else:
-            raise ValueError("unrecognized context for jst string")
+            raise ValueError("Not supported - jstr string not in call_args context ")
 
     def __appnd_jstr_lines_to_metadata(self, jstr_lines):
         for line_index, line in enumerate(jstr_lines):

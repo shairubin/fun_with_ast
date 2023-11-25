@@ -18,7 +18,6 @@ class StrSourceMatcher(SourceMatcher):
         self.separator_placeholder = TextPlaceholder(r'[ \t\n]*', '')
         self.quote_parts = []
         self.separators = []
-        # If set, will apply to all parts of the string.
 
         if  hasattr(node, 'default_quote'):
             self.quote_type = node.default_quote
@@ -80,8 +79,6 @@ class StrSourceMatcher(SourceMatcher):
                 return start_paran_text + start_quote + string_body + end_quote + end_paran_text
 
         if len(string_body) != len(self.original_s):
-            #raise BadlySpecifiedTemplateError(
-            #    f'String body: {string_body} does not XXX  match node.s: {self.original_s}')
             raise ValueError(
                 f'can happen in two cases:\n'
                 f'1. Real mismatch (i.e., error) - between matched string and original string\n'

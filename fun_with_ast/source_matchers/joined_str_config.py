@@ -41,7 +41,6 @@ class JstrConfig:
             raise ValueError('joined str string in which prefix is not white spaces')
         else:
             self.format_string = self.orig_single_line_string
-        #self.full_jstr_including_prefix = self.format_string
         self.format_string = self.format_string.removesuffix(self.suffix_str)
         self.full_jstr_including_prefix = self.format_string
         if re.match(r'[ \t]+$', self.suffix_str):

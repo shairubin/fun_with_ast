@@ -72,7 +72,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if self.jstr_meta_data[0].f_part_type != 'f':
             # a joined string that its first element is not 'f' e.g., "X"\nf"Y"
             multi_part_result = 'f' + multi_part_result
-            #self.jstr_meta_data[0].jstr_length += 1
         return multi_part_result
 
     def _convert_to_single_part_string(self, _in):
@@ -133,7 +132,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if len(jstr_lines) >= self.MAX_LINES_IN_JSTR-1:
             raise ValueError('too many lines in jstr string')
         self._update_jstr_meta_data_based_on_context(jstr_lines, lines)
-
+    # not clear why we need this fucntion below
     def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines):
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
@@ -154,12 +153,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             return
         elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
-        #elif len(jstr_lines) == len(lines):                            # we assume this is module context
-        #    self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-        #    return
-        #elif re.match(r'[ \t\n]*', lines[len_jstr_lines]):      # we assume this is module context
-        #    self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-        #    return
 
         else:
             raise ValueError("Not supported - jstr string not in call_args context ")
@@ -191,15 +184,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError
 
     def _is_jstr(self, line, line_index):
-        # for quote in SUPPORTED_QUOTES:
-        #     if line_index == 0:
-        #         expr = r'[ \t]*f'+quote
-        #     else:
-        #         expr = r'[ \t]*f?' + quote
-        #     if re.match(expr,line):
-        #         return True
-        # return False
-
         for quote in SUPPORTED_QUOTES:
             expr = r'[ \t]*f?' + quote
             if re.match(expr,line):
@@ -230,6 +214,4 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         result = 0
         for config in self.jstr_meta_data:
             result += config.jstr_length
-            #if re.match(r'[ \t]+$', config.suffix_str):
-            #    result += len(config.suffix_str)
         return result + len(self.jstr_meta_data) - 1

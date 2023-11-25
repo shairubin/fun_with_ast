@@ -256,7 +256,6 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes(self):
         string = """('could not identify license file '
                                      f'for {root}')"""
@@ -268,7 +267,7 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
                                      'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    #@pytest.mark.skip("issue 164")
+
     def testJstrMixedFTypes3(self):
         string = """(f'could not identify license file '
 f'for {root}') """
@@ -295,7 +294,6 @@ f'Y{W}') """
             node = GetNodeFromInput(string, get_module=True)
             self._verify_match(node, string)
 
-    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4(self):
         string = """\"could not identify license file \"
 f\"for {root}\""""
@@ -314,7 +312,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=False)  # this is an expression with One strings
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4_1(self):
         string = """\"X \"\nf\"Y{root}\" """
         node = GetNodeFromInput(string, get_module=True)
@@ -341,7 +338,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4_3(self):
         string = """(\"X \"
                                      f\"Y\"

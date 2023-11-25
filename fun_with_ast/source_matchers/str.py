@@ -14,10 +14,10 @@ class StrSourceMatcher(SourceMatcher):
 
     def __init__(self, node, starting_parens=None, accept_multiparts_string=True):
         super(StrSourceMatcher, self).__init__(node, starting_parens)
-        self.separator_placeholder = TextPlaceholder(r'\s*', '')
+#        self.separator_placeholder = TextPlaceholder(r'\s*', '')
+        self.separator_placeholder = TextPlaceholder(r'[ \t\n]*', '')
         self.quote_parts = []
         self.separators = []
-        # If set, will apply to all parts of the string.
 
         if  hasattr(node, 'default_quote'):
             self.quote_type = node.default_quote
@@ -79,8 +79,12 @@ class StrSourceMatcher(SourceMatcher):
                 return start_paran_text + start_quote + string_body + end_quote + end_paran_text
 
         if len(string_body) != len(self.original_s):
-            raise BadlySpecifiedTemplateError(
-                f'String body: {string_body} does not match node.s: {self.original_s}')
+            raise ValueError(
+                f'can happen in two cases:\n'
+                f'1. Real mismatch (i.e., error) - between matched string and original string\n'
+                f'2. Not Supported (i.e., false error) : matched string longer than original string\n'
+                f'Can happen with two consecutive strings with new-line seperator between them.')
+
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
         original_string = start_paran_text + start_quote + self.original_s + end_quote + end_paran_text
         if parsed_string != original_string:

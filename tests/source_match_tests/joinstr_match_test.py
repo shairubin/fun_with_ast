@@ -108,13 +108,13 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node, string)
 
     def testMatchMultilLine12(self):
-        node = GetNodeFromInput("f'X'\nf'Y'", get_module=True)
-        string = "f'X'\nf'Y'"
+        node = GetNodeFromInput("(f'X'\nf'Y')", get_module=True)
+        string = "(f'X'\nf'Y')"
         self._verify_match(node, string)
     def testMatchMultilLine14(self):
         node = GetNodeFromInput("f'X'\nf'Y'")
         string = "f'X'\nf'Y'"
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*'):
             self._verify_match(node, string)
 
     def testMatchMultilLine13(self):
@@ -156,18 +156,18 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = """f"{opname}: operator. "
 f"The '{module}' "
 f"Python  {context}" """
-        node = GetNodeFromInput(string, get_module=True)
+        node = GetNodeFromInput(string, get_module=True) # note that these are 3! different strings
+        with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*') :
+            self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParamsAndParen(self):
+        string = """(f"{opname}: operator. "
+f"The '{module}' "
+f"Python  {context}") """
+        node = GetNodeFromInput(string, get_module=True)  # note that thisd is 1 (one)! jstr string
+        #with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*'):
         self._verify_match(node, string)
 
-    def testJstrWithsLinesAndParams2(self):
-        string = """f"{opname}: operator. "\nf"The '{module}' "\nf"Python  {context}" """
-        node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
-
-    def testJstrWithsLinesAndParams3(self):
-        string = """f"X"\nf"Y"\nf"Z" """
-        node = GetNodeFromInput(string, get_module=True) # node the module context these are not joined strings
-        self._verify_match(node, string)
     def testJstrWithsLinesAndParams4(self):
         string = """a(f"X"\nf"Y"\nf"Z") """
         node = GetNodeFromInput(string)
@@ -253,5 +253,105 @@ f"Z") # comment """
 print(f"Exporting labels for {args.org}/{args.repo}")
 obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
 """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes(self):
+        string = """('could not identify license file '
+                                     f'for {root}')"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes1(self):
+        string = """('could not identify license file '
+                                     'for {root}') """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes3(self):
+        string = """(f'could not identify license file '
+f'for {root}') """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testJstrMixedFTypes3_02(self):
+        string = """(f'X '
+'Y{W}') """ # please not that this part is a regular string and NOT a jstr string, henc this is not supported at this time
+        node = GetNodeFromInput(string, get_module=True)
+        with pytest.raises(ValueError, match=r'.*two consecutive strings with new-line seperator between them.*'):
+            self._verify_match(node, string)
+
+
+    def testJstrMixedFTypes3_03(self):
+        string = """(f'X '
+f'Y{W}') """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes3_04(self):
+            string = """(f'X '\n     f'Y{W}') """
+            node = GetNodeFromInput(string, get_module=True)
+            self._verify_match(node, string)
+
+    def testJstrMixedFTypes4(self):
+        string = """\"could not identify license file \"
+f\"for {root}\""""
+        node = GetNodeFromInput(string, get_module=True) # this is a module with TWO strings
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_01(self):
+        string = """(\"could not identify license file \"
+f\"for {root}\")"""
+        node = GetNodeFromInput(string, get_module=True)  # this is a module with One strings
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_02(self):
+        string = """(\"could not identify license file \"
+f\"for {root}\")"""
+        node = GetNodeFromInput(string, get_module=False)  # this is an expression with One strings
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_1(self):
+        string = """\"X \"\nf\"Y{root}\" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testJstrMixedFTypes4_2(self):
+        string = """\"X \"\nf\"Y\" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_2_1(self):
+        string = """(\"X \"\nf\"Y\" )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_2_2(self):
+        string = """(f\"X \"\nf\"Y\" )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_2_3(self):
+        string = """(\"X \"\n\"Y\" )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3(self):
+        string = """(\"X \"
+                                     f\"Y\"
+                                     \"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_1(self):
+        string = """(\"X \"\nf\"Y\"\n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported - missing the whitespace between the f and the string  ")
+    def testJstrMixedFTypes4_3_2(self):
+        string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

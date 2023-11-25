@@ -23,14 +23,13 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
-        #remaining_string = string
         self.orig_string = string
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
         self.padding_quote = self.jstr_meta_data[0].quote_type
         multi_part_string = self._convert_to_multi_part_string()
         embedded_string = multi_part_string
-        # default string matcher will match the multi part string
+        # default string matcher will match the multipart string
         matched_text = super(JoinedStrSourceMatcher, self)._match(embedded_string)
         self.matched = False # ugly hack to force the next line to work
         self.matched_source = None
@@ -70,6 +69,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if conversion:
                 raise NotImplementedError
         multi_part_result = self.jstr_meta_data[0].prefix_str + multi_part_result + self.padding_quote
+        if self.jstr_meta_data[0].f_part_type != 'f':
+            # a joined string that its first element is not 'f' e.g., "X"\nf"Y"
+            multi_part_result = 'f' + multi_part_result
         return multi_part_result
 
     def _convert_to_single_part_string(self, _in):
@@ -130,10 +132,13 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         if len(jstr_lines) >= self.MAX_LINES_IN_JSTR-1:
             raise ValueError('too many lines in jstr string')
         self._update_jstr_meta_data_based_on_context(jstr_lines, lines)
-
+    # not clear why we need this fucntion below
     def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines):
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
+        if len(jstr_lines) == 1: # simple case
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         first_jstr_line = jstr_lines[0]
         len_jstr_lines = len(jstr_lines)
@@ -146,15 +151,11 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
             return
-        elif len(jstr_lines) == len(lines):                            # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-            return
-        elif re.match(r'[ \t\n]*', lines[len_jstr_lines]):      # we assume this is module context
-            self.jstr_meta_data.append(JstrConfig(first_jstr_line, 0))
-            return
+        elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)
 
         else:
-            raise ValueError("unrecognized context for jst string")
+            raise ValueError("Not supported - jstr string not in call_args context ")
 
     def __appnd_jstr_lines_to_metadata(self, jstr_lines):
         for line_index, line in enumerate(jstr_lines):
@@ -184,10 +185,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
     def _is_jstr(self, line, line_index):
         for quote in SUPPORTED_QUOTES:
-            if line_index == 0:
-                expr = r'[ \t]*f'+quote
-            else:
-                expr = r'[ \t]*f?' + quote
+            expr = r'[ \t]*f?' + quote
             if re.match(expr,line):
                 return True
         return False

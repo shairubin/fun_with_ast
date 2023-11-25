@@ -43,6 +43,8 @@ class JstrConfig:
             self.format_string = self.orig_single_line_string
         self.format_string = self.format_string.removesuffix(self.suffix_str)
         self.full_jstr_including_prefix = self.format_string
+        if re.match(r'[ \t]+$', self.suffix_str):
+            self.full_jstr_including_prefix += self.suffix_str
         self.format_string = self.format_string.removesuffix(self.quote_type)
         self.format_string = self.format_string.removeprefix(self.prefix_str+self.f_part)
         self.jstr_length = len(self.full_jstr_including_prefix)
@@ -73,6 +75,6 @@ class JstrConfig:
         if f_type != -1:
             return ('f',f_type)
         f_type = self.orig_single_line_string.find(self.quote_type)
-        if f_type != -1 and self.line_index != 0:
+        if f_type != -1:
             return ('quote_only', f_type)
         raise ValueError("could not find quote of f+quote in single line string")

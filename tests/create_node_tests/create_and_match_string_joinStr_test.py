@@ -146,5 +146,5 @@ class JoinStrMatcherTestCreateNode(BaseTestUtils):
 
     def _assert_no_match(self, node, string):
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(BadlySpecifiedTemplateError):
+        with pytest.raises(Exception):
             matcher.do_match(string)

@@ -598,7 +598,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #164")
+    #@pytest.mark.skip(reason="issue #164")
     def testFromInputModule16(self):
         string = module_16
         node = GetNodeFromInput(string, get_module=True)

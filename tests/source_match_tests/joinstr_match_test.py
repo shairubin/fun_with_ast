@@ -256,9 +256,9 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue 164")
+    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes(self):
-        string = """'could not identify license file '
+        string = """('could not identify license file '
                                      f'for {root}')"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

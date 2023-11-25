@@ -268,21 +268,53 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
                                      'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip("issue 164")
+    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes3(self):
-        string = """f'could not identify license file '
-                                     'for {root}' """
+        string = """(f'could not identify license file '
+f'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue 164")
+
+    def testJstrMixedFTypes3_02(self):
+        string = """(f'X '
+'Y{W}') """ # please not that this part is a regular string and NOT a jstr string, henc this is not supported at this time
+        node = GetNodeFromInput(string, get_module=True)
+        with pytest.raises(ValueError, match=r'.*two consecutive strings with new-line seperator between them.*'):
+            self._verify_match(node, string)
+
+
+    def testJstrMixedFTypes3_03(self):
+        string = """(f'X '
+f'Y{W}') """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes3_04(self):
+            string = """(f'X '\n     f'Y{W}') """
+            node = GetNodeFromInput(string, get_module=True)
+            self._verify_match(node, string)
+
+    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4(self):
         string = """\"could not identify license file \"
-                                     f\"for {root}\""""
-        node = GetNodeFromInput(string, get_module=True)
+f\"for {root}\""""
+        node = GetNodeFromInput(string, get_module=True) # this is a module with TWO strings
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue 164")
+    def testJstrMixedFTypes4_01(self):
+        string = """(\"could not identify license file \"
+f\"for {root}\")"""
+        node = GetNodeFromInput(string, get_module=True)  # this is a module with One strings
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_02(self):
+        string = """(\"could not identify license file \"
+f\"for {root}\")"""
+        node = GetNodeFromInput(string, get_module=False)  # this is an expression with One strings
+        self._verify_match(node, string)
+
+    #@pytest.mark.skip("issue 164")
     def testJstrMixedFTypes4_1(self):
         string = """\"X \"\nf\"Y{root}\" """
         node = GetNodeFromInput(string, get_module=True)

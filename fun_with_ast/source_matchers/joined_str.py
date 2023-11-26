@@ -125,6 +125,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     def _split_jstr_into_lines(self, orig_string):
         if isinstance(self.node.parent_node, ast.Dict):
             lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
+        elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
+            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
         else:
             lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
         jstr_lines = []
@@ -144,7 +146,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
             return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
-        first_jstr_line = jstr_lines[0]
         len_jstr_lines = len(jstr_lines)
         if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line):      # this is call_args context
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
@@ -188,8 +189,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError
 
     def _is_jstr(self, line, line_index):
-        if line_index > 0 and isinstance(self.node.parent_node, ast.Dict):
-            return False # we assume that the dict has only one-liners as jstr
+        if line_index > 0 and isinstance(self.node.parent_node, (ast.Dict, ast.List, ast.Tuple)):
+            return False # we assume that the dict /listhas only one-liners as jstr
         for quote in SUPPORTED_QUOTES:
             expr = r'^[ \t]*f?' + quote
             match = re.match(expr, line)

@@ -10,83 +10,27 @@ from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
 
-class TupleTest(BaseTestUtils):
+class ListTest(BaseTestUtils):
 
-    def testBasicTuple(self):
-        node = create_node.Tuple(['a', 'b'])
-        string = '(a,b)'
-        self._assert_match(node, string)
-
-    def testBasicTupleNone(self):
-        node = create_node.Tuple(['a', 'None'])
-        string = '(a,None)'
-        self._assert_match(node, string)
-
-
-    def testBasicTupleNoParans(self):
-        node = create_node.Tuple(['a', 'b'])
-        string = 'a,b'
-        self._assert_match(node, string)
-
-    def testBasicTupleNoParansComment(self):
-        node = create_node.Tuple(['a', 'b'])
-        string = '\t a,\t\tb \t #comment'
-        self._assert_match(node, string)
-
-    def testBasicTupleNoIllegal(self):
-        node = create_node.Tuple(['a', 'b'])
-        string = '(\t a,\t\tb \t #comment'
-        matcher = GetDynamicMatcher(node)
-        with pytest.raises(BadlySpecifiedTemplateError):
-            matcher.do_match(string)
-
-    def testBasicSingleTuple(self):
-        node = create_node.Tuple(['a'])
-        string = '(\t   a, \t)'
-        self._assert_match(node, string)
-    def testBasicSingleTuple3(self):
-        node = create_node.Tuple(['a'])
-        string = '(a,)'
-        self._assert_match(node, string)
-
-    def testBasicSingleTuple4(self):
-        node = create_node.Tuple(['a'])
-        string = 'a,'
-        self._assert_match(node, string)
-
-    def testBasicSingleTuple2(self):
-        node = create_node.Tuple(['a'])
-        string = '(\t   a \t)'
-        self._assert_match(node, string)
-
-    def testTupleWithCommentAndWS2(self):
-        node = create_node.Tuple(['a', 'b'])
-        string = ' (\t   a, b \t)#comment'
-        self._assert_match(node, string)
-
-    def testTupleWithCommentAndWSAndConst(self):
-        node = create_node.Tuple(['a', 1])
-        string = ' (\t   a\t, 1 \t) \t #comment'
-        self._assert_match(node, string)
     def testCreateNodeFromInput(self):
-        string = '(\t   a\t, 1 \t) \t #comment'
+        string = '[\t   a\t, 1 \t] \t #comment'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
     def testCreateNodeFromInput1(self):
-        string = '(a, 1,) \t #comment'
+        string = '[a, 1,] \t #comment'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
     def testCreateNodeFromInput11(self):
-        string = '(a, 1)  #comment'
+        string = '[a, 1]  #comment'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
     def testCreateNodeFromInput2(self):
-        string = '(a,)'
+        string = '[a,]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
     def testCreateNodeFromInput3(self):
-        string = '(a,  \t b,   )'
+        string = '[a,  \t b,   ]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
     def testCreateNodeFromInput4(self):
@@ -98,119 +42,119 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
     def testCreateNodeFromInput6(self):
-        string = '(-1,)'
+        string = '[-1,]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL(self):
-        string = '((1,2), (3,4))'
+    def testCreateNodeFromInputListWithEOL(self):
+        string = '[[1,2], [3,4]]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL2(self):
-        string = '((1,2), (3,4),)'
+    def testCreateNodeFromInputListWithEOL2(self):
+        string = '[[1,2], [3,4],]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
-    def testCreateNodeFromInputTupleWithEOL21(self):
-        string = '((1,2), (3,4),)\n'
+    def testCreateNodeFromInputListWithEOL21(self):
+        string = '[[1,2], [3,4],]\n'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL22(self):
-        string = '((1,2), (3,4),)\n     '
+    def testCreateNodeFromInputListWithEOL22(self):
+        string = '[[1,2], [3,4],]\n     '
         node =GetNodeFromInput(string, get_module=True)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL23(self):
-        string = '(1,2)\n     '
+    def testCreateNodeFromInputListWithEOL23(self):
+        string = '[1,2]\n     '
         node =GetNodeFromInput(string, get_module=True)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL24(self): # empty line at end is supported only in modules.
-        string = '(1,2)\n     '
+    def testCreateNodeFromInputListWithEOL24(self): # empty line at end is supported only in modules.
+        string = '[1,2]\n     '
         node =GetNodeFromInput(string, get_module=False)
         with pytest.raises(AssertionError):
             self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL3(self):
-        string = '((1,2),\n (3,4))'
+    def testCreateNodeFromInputListWithEOL3(self):
+        string = '[[1,2],\n [3,4]]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL31(self):
-        string = '(1,\n 2)'
+    def testCreateNodeFromInputListWithEOL31(self):
+        string = '[1,\n 2]'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithJoinedStr(self):
-        string = """(
+    def testCreateNodeFromInputListWithJoinedStr(self):
+        string = """[
         *k[:name_idx],
         f"{k[name_idx][:-1]}_{i}",
-    )
+    ]
 """
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithJoinedStr2(self):
-        string = """(
+    def testCreateNodeFromInputListWithJoinedStr2(self):
+        string = """[
         a,
         f"x",
-    )
+    ]
 """
         node = GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithMultiLineComments(self):
-        string = """(
+    def testCreateNodeFromInputListWithMultiLineComments(self):
+        string = """[
         a, #comment 1
         f, #comment 2
-    )
+    ]
 """
         node = GetNodeFromInput(string)
         self._assert_match(node, string)
 
     def _assert_match(self, node, string):
         self._verify_match(node, string)
-    def testAssignFromSourceWithTuppleAsValue(self):
+    def testAssignFromSourceWithListAsValue(self):
         string = """{"attention_mask": aaa, **mmm}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testAssignFromSourceWithTuppleAsValue2(self):
+    def testAssignFromSourceWithListAsValue2(self):
         string = """{"attention_mask": aaa}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testAssignFromSourceWithTuppleAsValue3(self):
-        string = """{"attention_mask": (a,b)}"""
+    def testAssignFromSourceWithListAsValue3(self):
+        string = """{"attention_mask": [a,b]}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    def testAssignFromSourceWithTuppleAsValue31(self):
+    def testAssignFromSourceWithListAsValue31(self):
         string = """{"attention_mask": a,b}"""
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string)
 
-    def testAssignFromSourceWithTuppleAsValue4(self):
-        string = """{"attention_mask": (a, **m)}"""
+    def testAssignFromSourceWithListAsValue4(self):
+        string = """{"attention_mask": [a, **m]}"""
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string)
 
-    def testAssignFromSourceWithTuppleAsValue41(self):
+    def testAssignFromSourceWithListAsValue41(self):
         string = """{"attention_mask": a, **m}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
     def testAssignFromSourceWithJstr(self):
-        string = """(
+        string = """[
             f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",
             f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",
-        )"""
+        ]"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
 
     def testAssignFromSourceWithJstr2(self):
-        string = """(f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",)"""
+        string = """[f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",]"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

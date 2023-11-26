@@ -6,6 +6,32 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+module_18 = """
+## @package get_python_cmake_flags
+# Module scripts.get_python_cmake_flags
+##############################################################################
+# Use this script to find your preferred python installation.
+##############################################################################
+#
+# You can use the following to build with your preferred version of python
+# if your installation is not being properly detected by CMake.
+#
+#   mkdir -p build && cd build
+#   cmake $(python ../scripts/get_python_cmake_flags.py) ..
+#   make
+#
+
+
+import sys
+import sysconfig
+
+flags = [
+    f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",
+    f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",
+]
+
+print(" ".join(flags), end="")
+"""
 module_17 = """
 
 def _translate_api(self, query, from_lang, to_lang):
@@ -622,5 +648,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule17(self):
         string = module_17
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule18(self):
+        string = module_18
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

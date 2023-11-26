@@ -266,3 +266,32 @@ class DictMatcherTest(BaseTestUtils):
 }"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testBasicDictWithJstr(self):
+        string = """{
+        "appid": f"{self.appid}",
+        "q": f"{query}",
+        "from": from_lang,
+        "to": to_lang,
+        "salt": f"{salt}",
+        "sign": f"{sign}",
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    def testBasicDictWithJstr2(self):
+        string = """{
+        "appid": f"{self.appid}",
+        "q": f"{query}",
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testBasicDictWithJstr3(self):
+        string = """{
+        f"q{number}": f"{query}",
+        "q": f"{query}",
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

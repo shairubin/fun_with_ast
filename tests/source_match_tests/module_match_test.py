@@ -6,7 +6,24 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+module_17 = """
 
+def _translate_api(self, query, from_lang, to_lang):
+
+    # Build request
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    payload = {
+        "appid": f"{self.appid}",
+        "q": f"{query}",
+        "from": from_lang,
+        "to": to_lang,
+        "salt": f"{salt}",
+        "sign": f"{sign}",
+    }
+
+    # Send request
+    time.sleep(1 / self.qps)
+"""
 module_16 = """
 def collect_license(current):
     try:
@@ -600,5 +617,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule16(self):
         string = module_16
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule17(self):
+        string = module_17
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

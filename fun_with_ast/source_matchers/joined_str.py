@@ -1,3 +1,4 @@
+import ast
 import re
 from string import Formatter
 
@@ -122,7 +123,10 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _split_jstr_into_lines(self, orig_string):
-        lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+        if isinstance(self.node.parent_node, ast.Dict):
+            lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
+        else:
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
         jstr_lines = []
         for index, line in enumerate(lines):
             if self._is_jstr(line, index):
@@ -133,7 +137,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             raise ValueError('too many lines in jstr string')
         self._update_jstr_meta_data_based_on_context(jstr_lines, lines)
     # not clear why we need this fucntion below
-    def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines):
+    def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines): # this function mostly for debugging purposes
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
         if len(jstr_lines) == 1: # simple case
@@ -184,9 +188,12 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 raise NotImplementedError
 
     def _is_jstr(self, line, line_index):
+        if line_index > 0 and isinstance(self.node.parent_node, ast.Dict):
+            return False # we assume that the dict has only one-liners as jstr
         for quote in SUPPORTED_QUOTES:
-            expr = r'[ \t]*f?' + quote
-            if re.match(expr,line):
+            expr = r'^[ \t]*f?' + quote
+            match = re.match(expr, line)
+            if match:
                 return True
         return False
 

@@ -83,3 +83,12 @@ class ConstantStrMatcherTest(BaseTestUtils):
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string)
 
+
+    @pytest.mark.skip(reason="bug #172")
+    def testMultiPartMultiLine(self):
+        string = """a(r'(test_hardsigmoid'  # Does not support Hardsigmoid.
+'|test_hardmax'  # Does not support Hardmax.
+')')
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

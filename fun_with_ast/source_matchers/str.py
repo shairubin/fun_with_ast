@@ -1,5 +1,6 @@
 import re
 
+from fun_with_ast.placeholders.whitespace import EOLCommentMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
@@ -11,11 +12,14 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 class StrSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.Str node."""
-
+    USE_NEW_MULTIPARTS_IMPL  = False
     def __init__(self, node, starting_parens=None, accept_multiparts_string=True):
         super(StrSourceMatcher, self).__init__(node, starting_parens)
 #        self.separator_placeholder = TextPlaceholder(r'\s*', '')
-        self.separator_placeholder = TextPlaceholder(r'[ \t\n]*', '')
+        if not  self.USE_NEW_MULTIPARTS_IMPL:
+            self.separator_placeholder = TextPlaceholder(r'[ \t\n]*', '')
+        else:
+            self.separator_placeholder = TextPlaceholder(r'([ \t]*)(#.*)*\n*[ \t]*', '', no_transform=True)
         self.quote_parts = []
         self.separators = []
 
@@ -90,8 +94,13 @@ class StrSourceMatcher(SourceMatcher):
         if parsed_string != original_string:
             raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
         return parsed_string
-
     def _handle_multipart(self, remaining_string):
+        if self.USE_NEW_MULTIPARTS_IMPL:
+            return self._handle_multipart_new(remaining_string)
+        else:
+            return self._handle_multipart_old(remaining_string)
+
+    def _handle_multipart_new(self, remaining_string):
         if not self.accept_multiparts_string:
             return remaining_string
         while True:
@@ -99,6 +108,26 @@ class StrSourceMatcher(SourceMatcher):
             trial_string = MatchPlaceholder(remaining_string, None, separator)
             if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
                     not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
+                break
+            remaining_string = trial_string
+            self.separators.append(separator)
+            part = StringPartPlaceholder(self.accept_multiparts_string)
+            remaining_string = MatchPlaceholder(remaining_string, None, part)
+            self.quote_parts.append(part)
+        return remaining_string
+
+    def _handle_multipart_old(self, remaining_string):
+        if not self.accept_multiparts_string:
+            return remaining_string
+        while True:
+            separator = self.separator_placeholder.Copy()
+            trial_string = MatchPlaceholder(remaining_string, None, separator)
+#            if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
+#                    not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
+            if (not re.match(r'r"|R"|"', trial_string) and
+                    not re.match(r"r'|R'|'", trial_string)):
+                #if trial_string:
+                #    raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
                 break
             remaining_string = trial_string
             self.separators.append(separator)

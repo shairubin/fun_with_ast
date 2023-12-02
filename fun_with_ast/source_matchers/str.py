@@ -1,5 +1,6 @@
 import re
 
+from fun_with_ast.placeholders.whitespace import EOLCommentMatcher
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
@@ -11,11 +12,9 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 class StrSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.Str node."""
-
     def __init__(self, node, starting_parens=None, accept_multiparts_string=True):
         super(StrSourceMatcher, self).__init__(node, starting_parens)
-#        self.separator_placeholder = TextPlaceholder(r'\s*', '')
-        self.separator_placeholder = TextPlaceholder(r'[ \t\n]*', '')
+        self.separator_placeholder = TextPlaceholder(r'([ \t]*)(#.*)*\n*[ \t]*', '', no_transform=True)
         self.quote_parts = []
         self.separators = []
 
@@ -97,8 +96,8 @@ class StrSourceMatcher(SourceMatcher):
         while True:
             separator = self.separator_placeholder.Copy()
             trial_string = MatchPlaceholder(remaining_string, None, separator)
-            if (not re.match(r'ur"|uR"|Ur"|UR"|u"|U"|r"|R"|"', trial_string) and
-                    not re.match(r"ur'|uR'|Ur'|UR'|u'|U'|r'|R'|'", trial_string)):
+            if (not re.match(r'r"|R"|"', trial_string) and
+                    not re.match(r"r'|R'|'", trial_string)):
                 break
             remaining_string = trial_string
             self.separators.append(separator)

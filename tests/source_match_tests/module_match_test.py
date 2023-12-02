@@ -1,4 +1,5 @@
 
+
 import pytest
 
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
@@ -6,6 +7,14 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+module_19 = """
+backend_test.exclude(r'(test_hardsigmoid'  # Does not support Hardsigmoid.
+                     '|test_hardmax'  # Does not support Hardmax.
+                     '|test_.*FLOAT16.*'  # Does not support Cast on Float16.
+                     '|test_depthtospace.*'  # Does not support DepthToSpace.
+                     '|test_reduce_l1.*'  # Does not support ReduceL1.
+                     ')')
+"""
 module_18 = """
 ## @package get_python_cmake_flags
 # Module scripts.get_python_cmake_flags
@@ -653,5 +662,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule18(self):
         string = module_18
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule19(self):
+        string = module_19
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

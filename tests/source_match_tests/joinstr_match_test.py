@@ -266,7 +266,7 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         string = """('could not identify license file '
                                      'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
+        self._verify_match(node, string) # note that this is a module with ONE strings
 
     def testJstrMixedFTypes3(self):
         string = """(f'could not identify license file '

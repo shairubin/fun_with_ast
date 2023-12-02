@@ -12,7 +12,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder
 
 class StrSourceMatcher(SourceMatcher):
     """Class to generate the source for an _ast.Str node."""
-    USE_NEW_MULTIPARTS_IMPL  = False
+    USE_NEW_MULTIPARTS_IMPL  = True
     def __init__(self, node, starting_parens=None, accept_multiparts_string=True):
         super(StrSourceMatcher, self).__init__(node, starting_parens)
 #        self.separator_placeholder = TextPlaceholder(r'\s*', '')

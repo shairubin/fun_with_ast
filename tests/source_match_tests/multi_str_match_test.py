@@ -84,7 +84,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
             node = GetNodeFromInput(string)
 
 
-    @pytest.mark.skip(reason="bug #172")
+    #@pytest.mark.skip(reason="bug #172")
     def testMultiPartMultiLine(self):
         string = """a(r'(test_hardsigmoid'  # Does not support Hardsigmoid.
 '|test_hardmax'  # Does not support Hardmax.

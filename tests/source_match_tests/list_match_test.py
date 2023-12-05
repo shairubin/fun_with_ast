@@ -158,3 +158,8 @@ class ListTest(BaseTestUtils):
         string = """[f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",]"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testListEllipsis(self):
+        string = """[...,1,...]"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

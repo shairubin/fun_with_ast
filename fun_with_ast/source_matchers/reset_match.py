@@ -10,8 +10,6 @@ class ResetMatch():
     def reset_match(self):
         nodes = [node for node in ast.walk(self.node)]
         for node in nodes:
-#            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok):
-#                raise Exception('node does not have node_matcher attribute')
             if not self._is_valid_matcher(node):
                 raise Exception('node does not have node_matcher attribute')
             elif isinstance(node, self.no_matchers_ok):

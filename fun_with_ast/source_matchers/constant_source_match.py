@@ -12,7 +12,7 @@ class ConstantSourceMatcher(SourceMatcher):
     def __init__(self, node, starting_parens=None, parent_node=None):
         SourceMatcher.__init__(self, node)
         if not isinstance(node, ast.Constant):
-            raise ValueError
+            raise ValueError("Must be a Constant node")
         self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
         ])
@@ -40,6 +40,8 @@ class ConstantSourceMatcher(SourceMatcher):
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher._match(string)
         if isinstance(self.node.n, NoneType) and isinstance(self.node.s, NoneType):
+            return self.num_matcher._match(string)
+        if self.node.n == Ellipsis:
             return self.num_matcher._match(string)
         raise NotImplementedError('Unknown constant type')
 

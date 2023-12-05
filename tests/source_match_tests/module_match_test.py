@@ -405,6 +405,14 @@ def dot_product_attention_weights(
 
     pass
 """
+module_20 = """def exposed_in(module):
+    def wrapper(fn):
+        fn.__module__ = module
+        return fn
+    return wrapper
+
+argnums_t = Union[int, Tuple[int, ...]]
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -567,6 +575,7 @@ def dot_product_attention_weights():
     attn_weights -= a()
 """
         node = GetNodeFromInput(string, get_module=True)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
     def testFromInputModule6(self):
         string = module6
@@ -667,5 +676,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule19(self):
         string = module_19
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule20(self):
+        string = module_20
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

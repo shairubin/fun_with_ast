@@ -43,6 +43,9 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
         return str(field)
+    if isinstance(field, ast.Constant) and field.value == Ellipsis:
+        return "..."
+
     if hasattr(field, 'node_matcher') and field.node_matcher:
         source = field.node_matcher.GetSource()
         return source

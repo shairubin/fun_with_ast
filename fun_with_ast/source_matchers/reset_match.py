@@ -10,9 +10,13 @@ class ResetMatch():
     def reset_match(self):
         nodes = [node for node in ast.walk(self.node)]
         for node in nodes:
-            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok):
+#            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok):
+#                raise Exception('node does not have node_matcher attribute')
+            if not self._is_valid_matcher(node):
                 raise Exception('node does not have node_matcher attribute')
             elif isinstance(node, self.no_matchers_ok):
+                continue
+            elif isinstance(node, ast.Constant) and node.value == Ellipsis:
                 continue
             else:
                 node.node_matcher.matched = False
@@ -21,9 +25,11 @@ class ResetMatch():
     def _validate_node(self):
         nodes = [node for node in ast.walk(self.node)]
         for index, node in enumerate(nodes):
-            if not hasattr(node, 'node_matcher') and not isinstance(node, self.no_matchers_ok) :
+            if  not self._is_valid_matcher(node):
                 raise Exception(f'node {index} does not have node_matcher attribute')
             elif isinstance(node, ast.Load) or isinstance(node, ast.Store) or isinstance(node,ast.Del):
+                continue
+            elif isinstance(node, ast.Constant) and node.value == Ellipsis:
                 continue
             elif hasattr(node.node_matcher , 'matched_text'):
                 raise ValueError()
@@ -32,3 +38,13 @@ class ResetMatch():
                     raise ValueError("one of the fields is not set")
             elif not node.node_matcher.matched and node.node_matcher.matched_source:
                 raise ValueError("one of the fields is not set")
+
+    def _is_valid_matcher(self,  node):
+        if hasattr(node,'node_matcher'):
+            return True
+        if isinstance(node, ast.Constant):
+            if node.value ==  Ellipsis:
+                return True
+        if isinstance(node, self.no_matchers_ok):
+            return True
+        return False

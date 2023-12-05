@@ -226,3 +226,8 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "if True:\n   'fun-with-ast'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testEllipsis(self):
+        string = "..."
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

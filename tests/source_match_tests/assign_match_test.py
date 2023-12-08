@@ -325,3 +325,12 @@ class AssignMatcherTest(BaseTestUtils):
         string = """m = {**mmm}"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testAssignUnion(self):
+        string = """_TensorOrTensorsOrGradEdge = Union[
+torch.Tensor, Sequence[torch.Tensor],
+"torch.autograd.graph.GradientEdge",
+Sequence["torch.autograd.graph.GradientEdge"]]
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

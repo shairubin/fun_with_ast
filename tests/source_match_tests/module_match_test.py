@@ -413,6 +413,23 @@ module_20 = """def exposed_in(module):
 
 argnums_t = Union[int, Tuple[int, ...]]
 """
+module_21="""
+
+# Convenience aliases for common composite types that we need
+# to talk about in PyTorch
+
+_TensorOrTensorsOrGradEdge = Union[
+    torch.Tensor, Sequence[torch.Tensor],
+    "torch.autograd.graph.GradientEdge",
+    Sequence["torch.autograd.graph.GradientEdge"]]
+
+"""
+module_21_1="""
+_TensorOrTensorsOrGradEdge = Union[
+    torch.Tensor, Sequence[torch.Tensor],
+    "torch.autograd.graph.GradientEdge"]
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -681,5 +698,17 @@ def dot_product_attention_weights():
 
     def testFromInputModule20(self):
         string = module_20
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #179")
+    def testFromInputModule21(self):
+        string = module_21
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #179")
+    def testFromInputModule21_1(self):
+        string = module_21_1
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

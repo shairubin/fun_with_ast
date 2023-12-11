@@ -413,6 +413,13 @@ module_20 = """def exposed_in(module):
 
 argnums_t = Union[int, Tuple[int, ...]]
 """
+
+module_22="""
+def skip_init(module_cls, *args, **kwargs):
+    if 'device' not in inspect.signature(module_cls).parameters:
+        raise RuntimeError('Module must support a \\'device\\' arg to skip initialization')
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -681,5 +688,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule20(self):
         string = module_20
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule22(self):
+        string = module_22
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

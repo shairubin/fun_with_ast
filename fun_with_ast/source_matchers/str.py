@@ -69,20 +69,7 @@ class StrSourceMatcher(SourceMatcher):
     def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
         #quote_in_string = False
         if '\\' in string_body:
-            if     (not '\n' in self.original_s and
-                    not '\t' in self.original_s and
-                    not '\r' in self.original_s and not "\\\'"  in string_body):
-                #if "\\\'"  in string_body:
-                #    quote_in_string = True
-                #else:
-                    raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
-            else:
-                clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r').replace("\\\'", "'")
-                if clean_string != self.original_s:
-                        raise BadlySpecifiedTemplateError(
-                            f'String body: {string_body} does not match node.s: {self.original_s}')
-                return start_paran_text + start_quote + string_body + end_quote + end_paran_text
-
+            string_body = self.__handle_special_chars(string_body)
         if len(string_body) != len(self.original_s):
             raise ValueError(
                 f'can happen in two cases:\n'
@@ -95,6 +82,20 @@ class StrSourceMatcher(SourceMatcher):
         if parsed_string != original_string:
                 raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
         return parsed_string
+
+    def __handle_special_chars(self, string_body):
+        if (not '\n' in self.original_s and
+                not '\t' in self.original_s and
+                not '\r' in self.original_s and not "\\\'" in string_body):
+            raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
+        else:
+            clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r').replace("\\\'",
+                                                                                                              "'")
+            if clean_string != self.original_s:
+                raise BadlySpecifiedTemplateError(
+                    f'String body: {string_body} does not match node.s: {self.original_s}')
+            string_body = clean_string
+        return string_body
 
     def _handle_multipart(self, remaining_string):
         if not self.accept_multiparts_string:

@@ -67,11 +67,17 @@ class StrSourceMatcher(SourceMatcher):
         return parsed_string
 
     def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
+        #quote_in_string = False
         if '\\' in string_body:
-            if not '\n' in self.original_s and not '\t' in self.original_s and not '\r' in self.original_s:
-                raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
+            if     (not '\n' in self.original_s and
+                    not '\t' in self.original_s and
+                    not '\r' in self.original_s and not "\\\'"  in string_body):
+                #if "\\\'"  in string_body:
+                #    quote_in_string = True
+                #else:
+                    raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
             else:
-                clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r')
+                clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r').replace("\\\'", "'")
                 if clean_string != self.original_s:
                         raise BadlySpecifiedTemplateError(
                             f'String body: {string_body} does not match node.s: {self.original_s}')
@@ -87,7 +93,7 @@ class StrSourceMatcher(SourceMatcher):
         parsed_string = start_paran_text + start_quote + string_body + end_quote + end_paran_text
         original_string = start_paran_text + start_quote + self.original_s + end_quote + end_paran_text
         if parsed_string != original_string:
-            raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
+                raise BadlySpecifiedTemplateError(f'Parsed body: {parsed_string} does not match node.s: {self.original_s}')
         return parsed_string
 
     def _handle_multipart(self, remaining_string):

@@ -115,3 +115,13 @@ class ConstantStrMatcherTest(BaseTestUtils):
         string = "'abcdef'"
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testStringSingleQuoteAndBackslash(self):
+        string = """'Module must support a \\'device\\' arg to skip initialization'"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStringSingleQuoteAndBackslash(self):
+        string = "'A\\'B\\'C'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

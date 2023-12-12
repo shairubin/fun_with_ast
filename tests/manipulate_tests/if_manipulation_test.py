@@ -1,3 +1,4 @@
+import ast
 import sys
 import pytest
 
@@ -45,6 +46,44 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
      'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
      'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
+    ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
+    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
+    ('a.b()\n', 0, """if _utils.is_sparse(A):
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+""",  # 24
+     """if _utils.is_sparse(A):
+        a.b()
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+"""
+     , True),
+
+    ('a.b()\n', 0, """if True:
+            if False:
+                raise ValueError("test")
+            c = a
+""",  # 25
+                """if True:
+            a.b()
+            if False:
+                raise ValueError("test")
+            c = a
+""", True),
+
+    ('a.b()\n', 0, """if True:
+        if False:
+            a=1
+        c = a
+""",  # 26
+     """if True:
+        a.b()
+        if False:
+            a=1
+        c = a
+""" , True),
 
 ])
 def injected_source(request):
@@ -52,6 +91,8 @@ def injected_source(request):
 
 
 @pytest.fixture(scope="function", params=[
+    #{"body": '   if True:\n      pass\n   a=88', "else_body": '', "inject_to": 0, "condition": 'c.d():'},
+
     {"body": '   pass\n', "else_body": '', "inject_to": 0, "condition": 'c.d():'},
     {"body": '   pass\n   z=x\n', "else_body": '   a=1\n', "inject_to": 0, "condition": 'c.d():'},
     {"body": '   a=1\n', "else_body": '   pass', "inject_to": 0, "condition": 'c.d(): # comment'},
@@ -83,6 +124,7 @@ class TestIfManupulation:
 
     def test_If_Manipulation(self, injected_source, capsys):
         dict_input = _get_tuple_as_dict(injected_source)
+        parsed_node = ast.parse(dict_input['original-if'])
         if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
         manipulator = ManipulateIfNode(if_node,
                                        IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))

@@ -548,7 +548,7 @@ def get_Raise_expected_parts():
     return [
         TextPlaceholder(r'[ \t]*raise[ \t]*', 'raise '),
         FieldPlaceholder('exc'),
-        FieldPlaceholder('cause', before_placeholder=TextPlaceholder(r'[ \t]*(from)?[ \t]*', '')),
+        FieldPlaceholder('cause', before_placeholder=TextPlaceholder(r'([ \t]*(from)[ \t]*)*', '')),
     ]
 
 

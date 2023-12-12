@@ -15,7 +15,8 @@ class BodyManipulator:
         if IsEmptyModule(node_to_inject):
             return
         ident = self._get_indentation()
-        GetSource(node_to_inject, assume_no_indent=True)
+
+        source = GetSource(node_to_inject, assume_no_indent=True)
         # if not isinstance(node_to_inject, ast.Expr):
         #     node_to_inject.node_matcher.FixIndentation(ident)
         # else:

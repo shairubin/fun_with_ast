@@ -48,11 +48,17 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
     #  'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
     # ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
     # 'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
-    ('a.b()\n', 0, """if _utils.is_sparse(A):
-        if len(A.shape) != 2:
-            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
-        c = torch.sparse.sum(A, dim=(-2,)) / m
-""",  # 24
+#     ('a.b()\n', 0, """if _utils.is_sparse(A):
+#         if len(A.shape) != 2:
+#             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+#         c = torch.sparse.sum(A, dim=(-2,)) / m
+# """,  # 24
+#      'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
+    ('a.b()\n', 0, """if True:
+        if C != 2:
+            raise ValueError("test")
+        c = a
+""",  # 25
      'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
 
 ])

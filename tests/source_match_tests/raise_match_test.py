@@ -102,3 +102,12 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testRaiseWithNewLine(self):
+        string = """raise x\n     """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testRaiseWithNewLine2(self):
+        string = """raise x\n     """
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError):
+            self._verify_match(node, string)

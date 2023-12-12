@@ -249,3 +249,9 @@ else:
         string = "if True:\n   a=1\n   b=2\n"
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
+
+    def testIfWithIf(self):
+        string = "if B:\n   if A:\n      a=1\n   b=2\n   c=22"
+        if_node = GetNodeFromInput(string)
+        self._verify_match(if_node, string)
+

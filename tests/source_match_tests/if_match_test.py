@@ -255,3 +255,21 @@ else:
         if_node = GetNodeFromInput(string)
         self._verify_match(if_node, string)
 
+    def testIfWithIf2(self):
+        string = """if _utils.is_sparse(A):
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+"""
+        if_node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(if_node, string)
+
+    def testIfWithIf3(self):
+        string = """
+if _utils.is_sparse(A):
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+"""
+        if_node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(if_node, string)

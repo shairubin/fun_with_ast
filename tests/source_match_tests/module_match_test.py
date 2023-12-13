@@ -419,7 +419,9 @@ def skip_init(module_cls, *args, **kwargs):
     if 'device' not in inspect.signature(module_cls).parameters:
         raise RuntimeError('Module must support a \\'device\\' arg to skip initialization')
 """
-
+module_23="""def __getattr__(name):
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -693,5 +695,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule22(self):
         string = module_22
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule23(self):
+        string = module_23
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

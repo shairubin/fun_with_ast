@@ -275,6 +275,7 @@ f'for {root}') """
         self._verify_match(node, string)
 
 
+
     def testJstrMixedFTypes3_02(self):
         string = """(f'X '
 'Y{W}') """ # please not that this part is a regular string and NOT a jstr string, henc this is not supported at this time
@@ -355,3 +356,31 @@ f\"for {root}\")"""
         string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testJstrWithConversion(self):
+        string = """f"module {__name__!r} has no attribute {name!r}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testJstrWithConversion2(self):
+        string = """f"module {__name__!r}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithConversion3(self):
+        string = """f"{abc!r}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion4(self):
+        string = """f"{abc!s}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion5(self):
+        string = """f"{abc!a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion6(self):
+        string = """f"{abc!c}" """
+        with pytest.raises(SyntaxError):
+            node = GetNodeFromInput(string, get_module=True)

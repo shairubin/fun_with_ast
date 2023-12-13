@@ -19,6 +19,7 @@ class JstrConfig:
     quote_type: str
     jstr_length: int = 0
     f_part_type: str = 'not_set'
+    conversion: str = ''
     def __init__(self, line, line_index):
         self.orig_single_line_string = line
         self._create_config(line_index)
@@ -47,6 +48,9 @@ class JstrConfig:
             self.full_jstr_including_prefix += self.suffix_str
         self.format_string = self.format_string.removesuffix(self.quote_type)
         self.format_string = self.format_string.removeprefix(self.prefix_str+self.f_part)
+        conversion = re.search(r"![ras]}", self.format_string)
+        if conversion:
+            self.conversion = conversion.group(0)[0:2]
         self.jstr_length = len(self.full_jstr_including_prefix)
 
 
@@ -78,3 +82,5 @@ class JstrConfig:
         if f_type != -1:
             return ('quote_only', f_type)
         raise ValueError("could not find quote of f+quote in single line string")
+
+

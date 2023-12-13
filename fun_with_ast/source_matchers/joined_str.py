@@ -52,7 +52,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         matched_source = self._split_back_into_lines(matched_source)
         return matched_source
 
-    def _convert_to_multi_part_string(self, ):
+    def _convert_to_multi_part_string(self):
         multi_part_result = self.jstr_meta_data[0].f_part
         format_string = ''
         for config in self.jstr_meta_data:
@@ -66,9 +66,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if name:
                 multi_part_result += self.padding_quote + '{' + name + '}' + self.padding_quote
             if format_spec:
-                raise NotImplementedError("format_spec not supported in format string, yet")
+                raise NotImplementedError("format_spec not supported in format string yet")
             if conversion:
-                raise NotImplementedError("conversion not supported in format string, yet")
+                pass
         multi_part_result = self.jstr_meta_data[0].prefix_str + multi_part_result + self.padding_quote
         if self.jstr_meta_data[0].f_part_type != 'f':
             # a joined string that its first element is not 'f' e.g., "X"\nf"Y"
@@ -96,6 +96,22 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return end_result
 
     def _verify_format_string(self, prefix, result, suffix):
+        reconstructed_format_string = self.__reconstruct_format_from_matcher_result(prefix, result, suffix)
+        original_format = ''
+        conversion_exists = False
+        for config in self.jstr_meta_data:
+            original_format += config.format_string
+            conversion_exists = conversion_exists or config.conversion
+        if reconstructed_format_string != original_format:
+            for end_paren in self.end_paren_matchers:
+                reconstructed_format_string = reconstructed_format_string.removesuffix(end_paren.matched_text)
+            if reconstructed_format_string != original_format:
+                if not conversion_exists:
+                    raise ValueError('format string does not match')
+                self.__verify_format_string_with_conversion(original_format, reconstructed_format_string)
+        return original_format
+
+    def __reconstruct_format_from_matcher_result(self, prefix, result, suffix):
         reconstructed_format_string = result
         for start_paren in self.start_paren_matchers:
             reconstructed_format_string = reconstructed_format_string.removeprefix(start_paren.matched_text)
@@ -106,15 +122,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         reconstructed_format_string = reconstructed_format_string.removesuffix(self.padding_quote)
         reconstructed_format_string = reconstructed_format_string.replace(self.padding_quote + '{', '{')
         reconstructed_format_string = reconstructed_format_string.replace('}' + self.padding_quote, '}')
-        original_format = ''
-        for config in self.jstr_meta_data:
-            original_format += config.format_string
-        if reconstructed_format_string != original_format:
-            for end_paren in self.end_paren_matchers:
-                reconstructed_format_string = reconstructed_format_string.removesuffix(end_paren.matched_text)
-            if reconstructed_format_string != original_format:
-                raise ValueError('format string does not match')
         return reconstructed_format_string
+
     def _get_prefix_suffix(self):
         prefix_before_f = self.jstr_meta_data[0].prefix_str
         suffix_after_jsdr = self.jstr_meta_data[len(self.jstr_meta_data) - 1].suffix_str
@@ -223,3 +232,21 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         for config in self.jstr_meta_data:
             result += config.jstr_length
         return result + len(self.jstr_meta_data) - 1
+
+    def __verify_format_string_with_conversion(self, original_format, reconstructed_format_string):
+        if len(original_format) <= len(reconstructed_format_string):
+            raise ValueError('format string does not contain conversion')
+        reconstruct_index = 0
+        original_index = 0
+        while original_index < len(original_format):
+            orig = original_format[original_index]
+            recon = reconstructed_format_string[reconstruct_index]
+            if orig == recon:
+                reconstruct_index += 1
+                original_index += 1
+                continue
+            conversion = original_format[original_index:original_index+2]
+            if conversion in  ['!r', '!a', '!s']:
+                original_index += 2
+            else:
+                raise ValueError('format string does not match reconstruction')

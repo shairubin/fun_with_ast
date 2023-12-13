@@ -66,9 +66,9 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
             if name:
                 multi_part_result += self.padding_quote + '{' + name + '}' + self.padding_quote
             if format_spec:
-                raise NotImplementedError
+                raise NotImplementedError("format_spec not supported in format string, yet")
             if conversion:
-                raise NotImplementedError
+                raise NotImplementedError("conversion not supported in format string, yet")
         multi_part_result = self.jstr_meta_data[0].prefix_str + multi_part_result + self.padding_quote
         if self.jstr_meta_data[0].f_part_type != 'f':
             # a joined string that its first element is not 'f' e.g., "X"\nf"Y"

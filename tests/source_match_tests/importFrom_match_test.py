@@ -48,3 +48,28 @@ class ImportMatcherTest(BaseTestUtils):
   )\n"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testFromImportWithParens(self):
+        string = """from .api import (ShardingPlan, ShardingPlanner)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromImportWithParens2(self):
+        string = """from .api import (ShardingPlan, 
+        ShardingPlanner)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromImportWithParens3(self):
+        string = """from .api import (ShardingPlan, 
+        ShardingPlanner
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testFromImportWithParens4(self):
+        string = """from .api import (ShardingPlan,
+        ShardingPlanner
+        )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

@@ -75,4 +75,3 @@ class ImportMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-

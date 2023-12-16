@@ -62,6 +62,11 @@ class ConstantStrMatcherTest(BaseTestUtils):
             matcher.do_match(string)
 ########################################################################
 # get node tests
+    def testSimple(self):
+        string = "'X'"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testStringWithNLString(self):
         string = "\"\\n\""
         node = GetNodeFromInput(string)

@@ -535,13 +535,13 @@ def get_Print_expected_parts():
         TextPlaceholder(r' *,? *\n', '\n')
     ]
 
-def get_JoinedStr_expected_parts():
-    return [
-        TextPlaceholder(r'f\'', 'f\''),
-        ListFieldPlaceholder(
-            r'values'),
-        TextPlaceholder(r'\'', '\'')
-    ]
+# def get_JoinedStr_expected_parts():
+#     return [
+#         TextPlaceholder(r'f\'', 'f\''),
+#         ListFieldPlaceholder(
+#             r'values'),
+#         TextPlaceholder(r'\'', '\'')
+#     ]
 
 
 def get_Raise_expected_parts():

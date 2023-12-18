@@ -5,7 +5,7 @@ import sys
 import fun_with_ast.manipulate_node.create_node
 import fun_with_ast.manipulate_node.syntax_free_line_node
 import fun_with_ast.manipulate_node.call_args_node
-import fun_with_ast.manipulate_node.constant_for_jstr
+import fun_with_ast.manipulate_node.nodes_for_jstr
 
 
 def GetDynamicMatcher(node, starting_parens=None, parent_node=None, parts_in=None):
@@ -135,6 +135,9 @@ _dynamic_matchers = {
     fun_with_ast.manipulate_node.call_args_node.CallArgs: ['get_CallArgs_expected_parts', 'fun_with_ast.source_match'],
 
     fun_with_ast.manipulate_node.call_args_node.KWKeyword: ['get_KWKeyword_expected_parts', 'fun_with_ast.source_match'],
-    fun_with_ast.manipulate_node.constant_for_jstr.ConstantForJstr: ['ConstantJstrMatcher',
+    fun_with_ast.manipulate_node.nodes_for_jstr.ConstantForJstr: ['ConstantJstrMatcher',
                                                                      'fun_with_ast.source_matchers.constant_jstr_matcher'],
+    #fun_with_ast.manipulate_node.nodes_for_jstr.NameForJstr: ['NameJstrMatcher',
+    #                                                              'fun_with_ast.source_matchers.name_jstr_matcher'],
+
 }

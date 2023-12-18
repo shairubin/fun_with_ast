@@ -52,7 +52,7 @@ def get_FormattedValue_expected_parts():
     return [
         TextPlaceholder(r'\{|[\'\"]\{', '{'),
         FieldPlaceholder('value'),
-        TextPlaceholder(r"(\}[\'\"]|\})", default='', longest_match=False)
+        TextPlaceholder(r"(\}[\'\"]|\})", default='}', longest_match=False)
     ]
 
 def get_alias_expected_parts():
@@ -494,8 +494,6 @@ def get_Name_expected_parts():
     return [TextPlaceholder(r'[ \t]*', ''),
             FieldPlaceholder('id'),
             TextPlaceholder(r'([ \t]*)(#.*)*', '')]
-#            TextPlaceholder(r'[ \t]+|[ \t]*#.*', '')]
-#    return [FieldPlaceholder('id')]
 
 
 def get_NotEq_expected_parts():

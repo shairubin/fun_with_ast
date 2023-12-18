@@ -5,6 +5,7 @@ import _ast
 from fun_with_ast.placeholders.kwonlyargs import KwOnlyArgsPlaceholder
 from fun_with_ast.source_matchers.boolop import BoolOpSourceMatcher
 from fun_with_ast.source_matchers.body import BodyPlaceholder
+from fun_with_ast.source_matchers.constant_jstr_matcher import ConstantJstrMatcher
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.args import ArgsDefaultsPlaceholder, KeysValuesPlaceholder, ArgsKeywordsPlaceholder, \
     OpsComparatorsPlaceholder
@@ -26,7 +27,7 @@ from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher,
-                JoinedStrSourceMatcher, JoinedStrSourceMatcherNew,
+                JoinedStrSourceMatcher, JoinedStrSourceMatcherNew, ConstantJstrMatcher,
                  ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):

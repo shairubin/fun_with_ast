@@ -2,11 +2,13 @@ import ast
 import re
 from string import Formatter
 
+from fun_with_ast.get_source import GetSource
+from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
+from fun_with_ast.manipulate_node.constant_for_jstr import ConstantForJstr
 from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
 
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
-from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
@@ -27,13 +29,25 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match(self, string):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
+        remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
         format_string = self._get_format_string()
         format_parts = self._get_format_parts(format_string)
-        self._match_format_parts(format_parts)
-        matched_source = self.GetSource()
-        default_matcher_result = self._use_default_matcher( string)
-        return default_matcher_result
+        format_string_source = self._match_format_parts(format_parts)
+        if format_string_source != format_string:
+            raise ValueError('format strings does not match')
+        #source =   self.jstr_meta_data[0].f_part + format_string_source
+        self.matched = False  # ugly hack to force the next line to work
+        self.matched_source = None
+        #len_jstr = self._get_size_of_jstr_string()
+        remaining_string = remaining_string[len(format_string_source):]
+        remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
+        remaining_string = self.MatchEndParen(remaining_string)
+        remaining_string = self.MatchCommentEOL(remaining_string)
 
+        matched_source = self.GetSource()
+        self.matched = True
+        self.matched_source = matched_source
+        return matched_source
     def _get_format_string(self):
         format_string = ''
         for config in self.jstr_meta_data:
@@ -121,6 +135,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return False
 
     def _match_format_parts(self, format_parts):
+         format_string = ''
          if len(self.node.values) != 1:
              raise NotImplementedError('Only one value is supported')
          for index, part in enumerate(format_parts):
@@ -130,12 +145,18 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                  raise NotImplementedError('Only positional args are supported')
              if constatnt_part:
                 constant_node = self.node.values[index]
-                matcher = GetDynamicMatcher(constant_node)
-                matched_string = constant_node.s
-                matcher.matched_source = matched_string
-                matcher.matched = True
-                self.expected_parts.insert(index+1, NodePlaceholder(constant_node))
-         return
+                #matcher = GetDynamicMatcher(constant_node)
+                value = constant_node.value
+                constant_node_for_jstr = ConstantForJstr(value)
+                constant_node_for_jstr.default_quote = '\''
+                #matcher = GetDynamicMatcher(constant_node_for_jstr, [], parent_node=self.node)
+                matched_string = GetSource(constant_node_for_jstr)
+                #matcher.matched_source = matched_string
+                #matcher.matched = True
+                self.node.values[index] = constant_node_for_jstr
+                self.expected_parts.insert(index+1, NodePlaceholder(constant_node_for_jstr))
+                format_string += matched_string
+         return format_string
 
 
 

@@ -5,7 +5,7 @@ from string import Formatter
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
-from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr
+from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr, NameForJstr
 from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
 
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
@@ -30,7 +30,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
-        format_string = self._get_format_string()
+        format_string = self._get_format_string(None)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
         if format_string_source != format_string:
@@ -48,10 +48,18 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.matched = True
         self.matched_source = matched_source
         return matched_source
-    def _get_format_string(self):
+    def _get_format_string(self, format_string_to_match= None):
         format_string = ''
         for config in self.jstr_meta_data:
-            format_string += config.format_string
+            if format_string_to_match is None or format_string_to_match == '':
+                format_string += config.format_string
+            else:
+                bare_format_string = config.format_string.removeprefix('{').removesuffix('}')
+                if bare_format_string.strip() == format_string_to_match:
+                    format_string =  config.format_string
+                    break
+        if  format_string_to_match and format_string == '':
+            raise ValueError('format string not found')
         return format_string
 
     def _get_format_parts(self, format_string):
@@ -158,13 +166,17 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
-        value_node = format_value_node.value
-        if not isinstance(value_node, ast.Name):
+        name_node = format_value_node.value
+        if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')
-        matched_string = GetSource(format_value_node)
+        stripped_format  = GetSource(name_node)
+        #name_node_for_jstr = NameForJstr(name_node)
+        matcher = GetDynamicMatcher(format_value_node)
+        format_string = self._get_format_string(stripped_format)
+        matched_string = matcher._match(format_string)
+
         #self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
-        format_string += matched_string
         return format_string
 
     def _handle_jstr_constant(self, format_string, index):

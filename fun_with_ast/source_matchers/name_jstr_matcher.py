@@ -11,7 +11,8 @@ class NameJstrMatcher(DefaultSourceMatcher):
         DefaultSourceMatcher.__init__(self, node, starting_parens, parent_node)
 
     def _match(self, string):
-        raise NotImplementedError('Do not use ConstantJstrMatcher._match')
+        result = super(NameJstrMatcher, self)._match(string)
+        return result
 
     def GetSource(self):
         raise NotImplementedError('Do not use NameJstrMatcher.GetSource')

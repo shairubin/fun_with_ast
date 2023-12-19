@@ -18,6 +18,7 @@ from fun_with_ast.placeholders.text import TextPlaceholder, GetStartParenMatcher
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.source_matchers.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.joined_str_new import JoinedStrSourceMatcherNew
+from fun_with_ast.source_matchers.name_jstr_matcher import NameJstrMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
@@ -27,7 +28,7 @@ from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher,
-                JoinedStrSourceMatcher, JoinedStrSourceMatcherNew, ConstantJstrMatcher,
+                JoinedStrSourceMatcher, JoinedStrSourceMatcherNew, NameJstrMatcher, ConstantJstrMatcher,
                  ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
@@ -52,7 +53,7 @@ def get_FormattedValue_expected_parts():
     return [
         TextPlaceholder(r'\{|[\'\"]\{', '{'),
         FieldPlaceholder('value'),
-        TextPlaceholder(r"(\}[\'\"]|\})", default='}', longest_match=False)
+        TextPlaceholder(r"(\}[\'\"]|[ \t]*\})", default='}', longest_match=False)
     ]
 
 def get_alias_expected_parts():

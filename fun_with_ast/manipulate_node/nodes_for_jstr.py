@@ -6,5 +6,5 @@ class ConstantForJstr(ast.Constant):
         super(ConstantForJstr, self).__init__(value)
 
 class NameForJstr(ast.Name):
-    def __init__(self, id, ctx):
-        super(NameForJstr, self).__init__(id, ctx)
+    def __init__(self, name_node):
+        super(NameForJstr, self).__init__(name_node.id, name_node.ctx)

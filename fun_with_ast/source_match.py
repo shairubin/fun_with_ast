@@ -53,7 +53,9 @@ def get_FormattedValue_expected_parts():
     return [
         TextPlaceholder(r'\{|[\'\"]\{', '{'),
         FieldPlaceholder('value'),
-        TextPlaceholder(r"(\}[\'\"]|[ \t]*\})", default='}', longest_match=False)
+ #       TextPlaceholder(r"(!a\}[\'\"]|[ \t]*\})", default='}', longest_match=False)
+        TextPlaceholder(r"(!a)?[\t ]*}", default='}', longest_match=False)
+
     ]
 
 def get_alias_expected_parts():

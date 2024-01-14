@@ -153,9 +153,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              constatnt_part = part[0]
              conversion_part = part[3]
              name_part = part[1:3]
-             if conversion_part:
-                    raise NotImplementedError('conversion not supported yet')
-             elif name_part[0] is not None:
+             if name_part[0] is not None:
                  if name_part[1] is not '' or constatnt_part:
                      raise NotImplementedError('named index not supported yet')
                  format_string = self._handle_jstr_name(index, conversion_part)
@@ -167,7 +165,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         if format_value_node.conversion != -1:
-            raise NotImplementedError('conversion not supported yet')
+            if conversion == 'a' and format_value_node.conversion != 97:
+                raise NotImplementedError('conversion not supported yet')
         name_node = format_value_node.value
         if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')
@@ -176,7 +175,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             stripped_format = stripped_format + "!"+ conversion
         #name_node_for_jstr = NameForJstr(name_node)
         matcher = GetDynamicMatcher(format_value_node)
-        format_string = self._get_format_string(stripped_format, conversion)
+        format_string = self._get_format_string(conversion, stripped_format)
         matched_string = matcher._match(format_string)
 
         #self.node.values[index] = constant_node_for_jstr

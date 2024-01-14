@@ -431,6 +431,10 @@ f\"for {root}\")"""
         string = """f"{abc!a}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testJstrWithConversion5_1(self):
+        string = """f"{abc !a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
     def testJstrWithConversion6(self):
         string = """f"{abc!c}" """
         with pytest.raises(SyntaxError):

@@ -55,7 +55,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 format_string += config.format_string
             else:
                 bare_format_string = config.format_string.removeprefix('{').removesuffix('}')
-                if bare_format_string.strip() == format_string_to_match:
+#                if bare_format_string.strip() == format_string_to_match:
+                if bare_format_string == format_string_to_match:
                     format_string =  config.format_string
                     break
         if  format_string_to_match and format_string == '':
@@ -156,11 +157,11 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              if name_part[0] is not None:
                  if name_part[1] is not '' or constatnt_part:
                      raise NotImplementedError('named index not supported yet')
-                 format_string = self._handle_jstr_name(index, conversion_part)
+                 format_string = self._handle_jstr_name(index, conversion_part, name_part)
              elif constatnt_part:
                 format_string = self._handle_jstr_constant(format_string, index)
          return format_string
-    def _handle_jstr_name(self, index, conversion):
+    def _handle_jstr_name(self, index, conversion, name_part):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
@@ -170,7 +171,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         name_node = format_value_node.value
         if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')
-        stripped_format  = GetSource(name_node)
+        stripped_format  = GetSource(name_node, text=name_part[0])
+        if stripped_format != name_part[0]:
+            raise ValueError('format string does not match')
         if conversion:
             stripped_format = stripped_format + "!"+ conversion
         #name_node_for_jstr = NameForJstr(name_node)

@@ -426,7 +426,7 @@ f\"for {root}\")"""
         string = """f"{abc!s}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithConversion5(self):
         string = """f"{abc!a}" """
         node = GetNodeFromInput(string, get_module=True)

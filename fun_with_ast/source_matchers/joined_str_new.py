@@ -30,7 +30,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
-        format_string = self._get_format_string(None)
+        format_string = self._get_format_string()
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
         if format_string_source != format_string:
@@ -48,7 +48,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.matched = True
         self.matched_source = matched_source
         return matched_source
-    def _get_format_string(self, format_string_to_match= None):
+    def _get_format_string(self, conversion='', format_string_to_match= None):
         format_string = ''
         for config in self.jstr_meta_data:
             if format_string_to_match is None or format_string_to_match == '':
@@ -158,21 +158,25 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              elif name_part[0] is not None:
                  if name_part[1] is not '' or constatnt_part:
                      raise NotImplementedError('named index not supported yet')
-                 format_string = self._handle_jstr_name(format_string, index)
+                 format_string = self._handle_jstr_name(index, conversion_part)
              elif constatnt_part:
                 format_string = self._handle_jstr_constant(format_string, index)
          return format_string
-    def _handle_jstr_name(self, format_string, index):
+    def _handle_jstr_name(self, index, conversion):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
+        if format_value_node.conversion != -1:
+            raise NotImplementedError('conversion not supported yet')
         name_node = format_value_node.value
         if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')
         stripped_format  = GetSource(name_node)
+        if conversion:
+            stripped_format = stripped_format + "!"+ conversion
         #name_node_for_jstr = NameForJstr(name_node)
         matcher = GetDynamicMatcher(format_value_node)
-        format_string = self._get_format_string(stripped_format)
+        format_string = self._get_format_string(stripped_format, conversion)
         matched_string = matcher._match(format_string)
 
         #self.node.values[index] = constant_node_for_jstr

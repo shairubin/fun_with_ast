@@ -62,7 +62,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f\"{X}\""
         self._verify_match(node, string)
 
-    pytest.mark.skip("new implementation - not supported yet")
+    #pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput56(self):
         node = GetNodeFromInput("f\"{X}\"")
         string = "(f\"{X}\")"
@@ -208,7 +208,7 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
@@ -251,19 +251,19 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_1(self):
         string = """msg = (\nf"C"\n)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_2(self):
         string = """msg = (f"C")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_3(self):
         string = """msg = f\"C\""""
         node = GetNodeFromInput(string)
@@ -360,7 +360,7 @@ f\"for {root}\")"""
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_2(self):
         string = """\"X \"\nf\"Y\" """
         node = GetNodeFromInput(string, get_module=True)

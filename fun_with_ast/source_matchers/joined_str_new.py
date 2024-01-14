@@ -168,6 +168,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         name_node = format_value_node.value
         if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')
+
+
         stripped_format  = GetSource(name_node, text=name_part[0])
         if stripped_format != name_part[0]:
             raise ValueError('format string does not match')

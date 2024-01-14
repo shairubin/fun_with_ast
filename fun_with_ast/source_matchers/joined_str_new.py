@@ -165,9 +165,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
-        if format_value_node.conversion != -1:
-            if conversion == 'a' and format_value_node.conversion != 97:
-                raise NotImplementedError('conversion not supported yet')
         name_node = format_value_node.value
         if not isinstance(name_node, ast.Name):
             raise NotImplementedError('only name nodes are supported')

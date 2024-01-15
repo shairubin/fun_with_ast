@@ -189,7 +189,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             stripped_format = stripped_format + "!"+ conversion
         #name_node_for_jstr = NameForJstr(name_node)
         matcher = GetDynamicMatcher(format_value_node)
-        format_string = self._get_format_string(conversion, stripped_format)
+        format_string = "{" + stripped_format + "}"
         matched_string = matcher._match(format_string)
 
         #self.node.values[index] = constant_node_for_jstr

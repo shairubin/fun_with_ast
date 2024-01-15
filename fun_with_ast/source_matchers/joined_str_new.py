@@ -151,26 +151,25 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              raise NotImplementedError('Only one value is supported')
 
          for index, part in enumerate(format_parts):
-             constatnt_part = part[0]
+             literal_part = part[0]
              conversion_part = part[3]
-             name_part = part[1:3]
-             if name_part[0] is not None:
-                 if name_part[1] is not '' or constatnt_part:
+             field_name_part = part[1:3]
+             if field_name_part[0] is not None:
+                 if field_name_part[1] is not '' or literal_part:
                      raise NotImplementedError('named index not supported yet')
-                 format_string = self._handle_jstr_name(index, conversion_part, name_part)
-             elif constatnt_part:
+                 format_string = self._handle_jstr_field_name(index, conversion_part, field_name_part)
+             elif literal_part:
                 format_string = self._handle_jstr_constant(format_string, index)
          return format_string
-    def _handle_jstr_name(self, index, conversion, name_part):
+    def _handle_jstr_field_name(self, index, conversion, name_part):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
-        name_node = format_value_node.value
-        if not isinstance(name_node, ast.Name):
+        value_node = format_value_node.value
+        if not isinstance(value_node, (ast.Name, ast.Constant)):
             raise NotImplementedError('only name nodes are supported')
 
-
-        stripped_format  = GetSource(name_node, text=name_part[0])
+        stripped_format  = GetSource(value_node, text=name_part[0])
         if stripped_format != name_part[0]:
             raise ValueError('format string does not match')
         if conversion:

@@ -3,6 +3,7 @@ import re
 from string import Formatter
 
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
 from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr, NameForJstr
@@ -29,12 +30,29 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match(self, string):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
-        if len(self.jstr_meta_data)>1:
-            raise NotImplementedError('multi line jstr is not supported yet')
-#            for index, line in enumerate(self.jstr_meta_data):
-#                line_match = self._match_single_line_jstr(line.full_jstr_including_prefix, index)
-#                print(line_match)
-        return self._match_single_line_jstr(remaining_string, 0)
+        source = ''
+        if len(self.jstr_meta_data)>1: # this is multi line jstr
+            self.node.values[0].node_matcher = DefaultSourceMatcher(self.node.values[0], [])
+            for index, line in enumerate(self.jstr_meta_data):
+                one_line_node =GetNodeFromInput(line.full_jstr_including_prefix)
+                matcher = GetDynamicMatcher(one_line_node)
+                matched_line_text = matcher._match(line.full_jstr_including_prefix)
+                if index != len(self.jstr_meta_data)-1:
+                    matcher.matched_source = matched_line_text +"\n"
+                    source += matched_line_text +"\n"
+                else:
+                    matcher.matched_source = matched_line_text
+                    source += matched_line_text
+                self.expected_parts.insert(index + 1, NodePlaceholder(one_line_node))
+            self.expected_parts.pop(0)
+            self.expected_parts.pop()
+            remaining_string = remaining_string[len(source):]
+            #remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
+            self._conclude_jstr_match(source, remaining_string)
+
+        elif len(self.jstr_meta_data) == 1:
+            source =  self._match_single_line_jstr(remaining_string,0)
+        return source
 
     def _match_single_line_jstr(self, remaining_string, index):
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
@@ -49,6 +67,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         # len_jstr = self._get_size_of_jstr_string()
         remaining_string = remaining_string[len(format_string_source):]
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
+        return self._conclude_jstr_match(format_string_source, remaining_string)
+
+    def _conclude_jstr_match(self, format_string_source, remaining_string):
         remaining_string = self.MatchEndParen(remaining_string)
         remaining_string = self.MatchCommentEOL(remaining_string)
         matched_source = self.GetSource()

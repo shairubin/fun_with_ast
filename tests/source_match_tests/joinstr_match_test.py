@@ -77,13 +77,13 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "(f'{X}')"
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
@@ -101,7 +101,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f'X{a}[b]'"
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInputNewLine(self):
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput("f'X{a}\n[b]'")
@@ -113,7 +113,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'X'")
         string = "(f'X')"
         self._verify_match(node, string)
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"

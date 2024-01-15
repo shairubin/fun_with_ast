@@ -92,7 +92,6 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"
         self._verify_match(node, string)
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput3(self):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
@@ -110,7 +109,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'XY'")
         string = "(f'XY')"
         self._verify_match(node, string)
-    @pytest.mark.skip("new implementation - not supported yet")
+
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
@@ -175,7 +174,7 @@ f"Python  {context}" """
         with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*') :
             self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesAndParamsAndParen(self):
         string = """(f"{opname}: operator. "
 f"The '{module}' "

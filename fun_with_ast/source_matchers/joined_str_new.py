@@ -179,10 +179,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
     def _match_format_parts(self, format_parts):
          format_string = ''
-         if len(format_parts) > 1:
-                raise NotImplementedError('Only one format part is supported')
-         #if len(self.node.values) > 1:
-         #    raise NotImplementedError('Only one value is supported')
+         #if len(format_parts) > 1:
+         #       raise NotImplementedError('Only one format part is supported')
          index_in_jstr_values = 0
          for part in format_parts:
              literal_part = part[0]
@@ -193,7 +191,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              #        raise NotImplementedError('named index not supported yet')
              format_string_literal = format_string_field_name = ''
              if literal_part:
-                format_string_literal = self._handle_jstr_constant(format_string, index_in_jstr_values)
+                format_string_literal = self._handle_jstr_constant(index_in_jstr_values)
                 index_in_jstr_values += 1
              if field_name_part[0] is not None:
                 format_string_field_name = self._handle_jstr_field_name(index_in_jstr_values,
@@ -228,7 +226,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
         return format_string
 
-    def _handle_jstr_constant(self, format_string, index):
+    def _handle_jstr_constant(self, index):
         constant_node = self.node.values[index]
         value = constant_node.value
         constant_node_for_jstr = ConstantForJstr(value)
@@ -236,9 +234,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         matched_string = GetSource(constant_node_for_jstr)
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
-        format_string += matched_string
-        return format_string
-
+    #    format_string += matched_string
+    #    return format_string
+        return matched_string
 
 
 

@@ -113,13 +113,13 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'XY'")
         string = "(f'XY')"
         self._verify_match(node, string)
-    #@pytest.mark.skip("new implementation - not supported yet")
+    @pytest.mark.skip("new implementation - not supported yet")
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testMatchMultilLine12(self):
         node = GetNodeFromInput("(f'X'\nf'Y')", get_module=True)
         string = "(f'X'\nf'Y')"
@@ -162,13 +162,13 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f'X'   # comment "
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWitJoinedStr62(self):
         string = """(f\"A_{i}\",)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWitJoinedStr63(self):
         string = """f\"A_{i}\""""
         node = GetNodeFromInput(string)
@@ -268,7 +268,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_3(self):
         string = """msg = f\"C\""""
         node = GetNodeFromInput(string)

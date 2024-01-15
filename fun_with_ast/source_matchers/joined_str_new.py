@@ -30,9 +30,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
         if len(self.jstr_meta_data)>1:
-            for index, line in enumerate(self.jstr_meta_data):
-                line_match = self._match_single_line_jstr(line.full_jstr_including_prefix, index)
-                print(line_match)
+            raise NotImplementedError('multi line jstr is not supported yet')
+#            for index, line in enumerate(self.jstr_meta_data):
+#                line_match = self._match_single_line_jstr(line.full_jstr_including_prefix, index)
+#                print(line_match)
         return self._match_single_line_jstr(remaining_string, 0)
 
     def _match_single_line_jstr(self, remaining_string, index):

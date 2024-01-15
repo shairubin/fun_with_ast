@@ -444,6 +444,15 @@ f\"for {root}\")"""
         string = """f"{7!a}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testJstrWithConversion5_4(self):
+        string = """f"{ 7   !a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion5_5(self):
+        string = """f"{ 7!a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
 
     def testJstrWithConversion6(self):
         string = """f"{abc!c}" """

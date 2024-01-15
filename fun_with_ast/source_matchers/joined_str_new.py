@@ -169,7 +169,12 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(value_node, (ast.Name, ast.Constant)):
             raise NotImplementedError('only name nodes are supported')
 
-        stripped_format  = GetSource(value_node, text=name_part[0])
+#        stripped_format  = GetSource(value_node, text=name_part[0])
+        stripped_format  = GetSource(value_node)
+        ws_parts = name_part[0].split(stripped_format)
+        if len(ws_parts) != 2:
+            raise ValueError('none whitespace in format string')
+        stripped_format = ws_parts[0] + stripped_format + ws_parts[1]
         if stripped_format != name_part[0]:
             raise ValueError('format string does not match')
         if conversion:

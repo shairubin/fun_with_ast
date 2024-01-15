@@ -110,8 +110,8 @@ class JoinStrMatcherTests(BaseTestUtils):
         with pytest.raises((SyntaxError)):
             node = GetNodeFromInput("f'X\n'")
     def testMatchMultilLine1(self):
-        node = GetNodeFromInput("f'X'")
-        string = "(f'X')"
+        node = GetNodeFromInput("f'XY'")
+        string = "(f'XY')"
         self._verify_match(node, string)
     #@pytest.mark.skip("new implementation - not supported yet")
     def testMatchMultilLine11(self):
@@ -133,6 +133,12 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testMatchMultilLine13(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'XY'"
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported yet")
+    def testMatchMultilLine15(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "f'X'f'Y'"
         self._verify_match(node, string)
 
     def testMatchMultilLine2(self):

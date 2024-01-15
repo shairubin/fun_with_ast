@@ -29,38 +29,48 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match(self, string):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
+        if len(self.jstr_meta_data)>1:
+            for index, line in enumerate(self.jstr_meta_data):
+                line_match = self._match_single_line_jstr(line.full_jstr_including_prefix, index)
+                print(line_match)
+        return self._match_single_line_jstr(remaining_string, 0)
+
+    def _match_single_line_jstr(self, remaining_string, index):
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
-        format_string = self._get_format_string()
+        format_string = self._get_format_string(index)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
-        if format_string_source != format_string:
-            raise ValueError('format strings does not match')
-        #source =   self.jstr_meta_data[0].f_part + format_string_source
+        # if format_string_source != format_string:
+        #    raise ValueError('format strings does not match')
+        # source =   self.jstr_meta_data[0].f_part + format_string_source
         self.matched = False  # ugly hack to force the next line to work
         self.matched_source = None
-        #len_jstr = self._get_size_of_jstr_string()
+        # len_jstr = self._get_size_of_jstr_string()
         remaining_string = remaining_string[len(format_string_source):]
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
         remaining_string = self.MatchEndParen(remaining_string)
         remaining_string = self.MatchCommentEOL(remaining_string)
-
         matched_source = self.GetSource()
         self.matched = True
         self.matched_source = matched_source
         return matched_source
-    def _get_format_string(self, conversion='', format_string_to_match= None):
+
+    def _get_format_string(self, index):
         format_string = ''
-        for config in self.jstr_meta_data:
-            if format_string_to_match is None or format_string_to_match == '':
-                format_string += config.format_string
-            else:
-                bare_format_string = config.format_string.removeprefix('{').removesuffix('}')
-#                if bare_format_string.strip() == format_string_to_match:
-                if bare_format_string == format_string_to_match:
-                    format_string =  config.format_string
-                    break
-        if  format_string_to_match and format_string == '':
-            raise ValueError('format string not found')
+        config = self.jstr_meta_data[index]
+        format_string = config.format_string
+#         for config in self.jstr_meta_data:
+#             if format_string_to_match is None or format_string_to_match == '':
+#                 format_string += config.format_string
+#             else:
+#                 raise ValueError('deprecated')
+#                 bare_format_string = config.format_string.removeprefix('{').removesuffix('}')
+# #                if bare_format_string.strip() == format_string_to_match:
+#                 if bare_format_string == format_string_to_match:
+#                     format_string =  config.format_string
+#                     break
+#        if  format_string_to_match and format_string == '':
+#            raise ValueError('format string not found')
         return format_string
 
     def _get_format_parts(self, format_string):

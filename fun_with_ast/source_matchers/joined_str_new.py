@@ -147,21 +147,29 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
     def _match_format_parts(self, format_parts):
          format_string = ''
-         if len(self.node.values) > 1:
-             raise NotImplementedError('Only one value is supported')
-
-         for index, part in enumerate(format_parts):
+         if len(format_parts) > 1:
+                raise NotImplementedError('Only one format part is supported')
+         #if len(self.node.values) > 1:
+         #    raise NotImplementedError('Only one value is supported')
+         index_in_jstr_values = 0
+         for part in format_parts:
              literal_part = part[0]
              conversion_part = part[3]
              field_name_part = part[1:3]
+             #if field_name_part[0] is not None:
+             #    if field_name_part[1] is not '' or literal_part:
+             #        raise NotImplementedError('named index not supported yet')
+             format_string_literal = format_string_field_name = ''
+             if literal_part:
+                format_string_literal = self._handle_jstr_constant(format_string, index_in_jstr_values)
+                index_in_jstr_values += 1
              if field_name_part[0] is not None:
-                 if field_name_part[1] is not '' or literal_part:
-                     raise NotImplementedError('named index not supported yet')
-                 format_string = self._handle_jstr_field_name(index, conversion_part, field_name_part)
-             elif literal_part:
-                format_string = self._handle_jstr_constant(format_string, index)
+                format_string_field_name = self._handle_jstr_field_name(index_in_jstr_values,
+                                                                        conversion_part, field_name_part)
+                index_in_jstr_values += 1
+             format_string += format_string_literal + format_string_field_name
          return format_string
-    def _handle_jstr_field_name(self, index, conversion, name_part):
+    def _handle_jstr_field_name(self, index, conversion, field_name_part):
         format_value_node = self.node.values[index]
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
@@ -171,11 +179,11 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
 #        stripped_format  = GetSource(value_node, text=name_part[0])
         stripped_format  = GetSource(value_node)
-        ws_parts = name_part[0].split(stripped_format)
+        ws_parts = field_name_part[0].split(stripped_format)
         if len(ws_parts) != 2:
             raise ValueError('none whitespace in format string')
         stripped_format = ws_parts[0] + stripped_format + ws_parts[1]
-        if stripped_format != name_part[0]:
+        if stripped_format != field_name_part[0]:
             raise ValueError('format string does not match')
         if conversion:
             stripped_format = stripped_format + "!"+ conversion

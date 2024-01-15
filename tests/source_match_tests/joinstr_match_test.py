@@ -62,7 +62,6 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f\"{X}\""
         self._verify_match(node, string)
 
-    #pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput56(self):
         node = GetNodeFromInput("f\"{X}\"")
         string = "(f\"{X}\")"
@@ -91,7 +90,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node, string)
 
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput2(self):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"

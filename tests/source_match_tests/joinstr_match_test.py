@@ -77,31 +77,28 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "(f'{X}')"
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
+
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
         self._verify_match(node, string)
 
-
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput2(self):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"
         self._verify_match(node, string)
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testBasicMatchFromInput3(self):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
+
     def testBasicMatchFromInputNewLine(self):
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput("f'X{a}\n[b]'")
@@ -119,7 +116,6 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "(f'X'\nf'Y')"
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testMatchMultilLine12(self):
         node = GetNodeFromInput("(f'X'\nf'Y')", get_module=True)
         string = "(f'X'\nf'Y')"
@@ -151,7 +147,6 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f'X'    \n"
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testMatchPlaceholderEndOfString(self):
         string = """f\"FlaxBartEncoderLayer_{i}\""""
         node = GetNodeFromInput(string)
@@ -162,13 +157,11 @@ class JoinStrMatcherTests(BaseTestUtils):
         string = "f'X'   # comment "
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWitJoinedStr62(self):
         string = """(f\"A_{i}\",)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWitJoinedStr63(self):
         string = """f\"A_{i}\""""
         node = GetNodeFromInput(string)
@@ -191,13 +184,11 @@ f"Python  {context}") """
         #with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*'):
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesAndParams4(self):
         string = """a(f"X"\nf"Y"\nf"Z") """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesAndParams5(self):
         string = """a(f"X"
 f"Y"
@@ -205,7 +196,6 @@ f"Z") """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesAndParams6(self):
         string = """a(f"X"
 f"Y"
@@ -213,7 +203,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
@@ -231,7 +220,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix1(self):
         string = """msg = (f"C"\n"o"\n"a")
 """
@@ -298,7 +286,7 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes1(self):
         string = """('could not identify license file '
                                      'for {root}') """

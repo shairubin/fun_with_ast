@@ -236,8 +236,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         matched_string = GetSource(constant_node_for_jstr)
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
-    #    format_string += matched_string
-    #    return format_string
         return matched_string
 
     def _mark_node_values_as_potentially_matched(self):

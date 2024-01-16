@@ -213,7 +213,7 @@ f"Z") # comment """
             "available."
         )
   """
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix0_1(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
@@ -229,7 +229,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix2(self):
         string = """msg = (
         f"C"
@@ -238,7 +237,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3(self):
         string = """msg = (
         f"C"
@@ -262,7 +260,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_4(self):
         string = """msg = (
         f"C"
@@ -271,7 +268,7 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrFindQuoteInaSingleString(self):
         string = """
 print(f"Exporting labels for {args.org}/{args.repo}")
@@ -376,7 +373,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("not supported - missing the whitespace between the f and the string  ")
     def testJstrMixedFTypes4_3_2(self):
         string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
@@ -415,7 +411,6 @@ f\"for {root}\")"""
         string = """f"{abc!s}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithConversion5(self):
         string = """f"{abc!a}" """
         node = GetNodeFromInput(string, get_module=True)

@@ -36,11 +36,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if len(self.jstr_meta_data)>1: # this is multi line jstr
             self._mark_node_values_as_potentially_matched()
             for index, line in enumerate(self.jstr_meta_data):
-                if line.prefix_str:
-                    #raise NotImplementedError('prefix string not supported yet')
-                    string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
-                else:
-                    string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
+                string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
                 one_line_node =GetNodeFromInput(string_to_match)
                 matcher = GetDynamicMatcher(one_line_node)
                 matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]

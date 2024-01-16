@@ -37,11 +37,15 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             self._mark_node_values_as_potentially_matched()
             for index, line in enumerate(self.jstr_meta_data):
                 if line.prefix_str:
-                    raise NotImplementedError('prefix string not supported yet')
-                one_line_node =GetNodeFromInput(line.full_jstr_including_prefix)
+                    #raise NotImplementedError('prefix string not supported yet')
+                    string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
+                else:
+                    string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
+                one_line_node =GetNodeFromInput(string_to_match)
                 matcher = GetDynamicMatcher(one_line_node)
                 matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]
-                matched_line_text = matcher._match(line.full_jstr_including_prefix)
+                matched_line_text = line.prefix_str +  matcher._match(string_to_match)
+                #matched_line_text = line.prefix_str +  matcher._match(line.full_jstr_including_prefix)
                 if index != len(self.jstr_meta_data)-1:
                     matcher.matched_source = matched_line_text +"\n"
                     source += matched_line_text +"\n"

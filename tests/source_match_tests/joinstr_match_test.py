@@ -229,7 +229,7 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix2(self):
         string = """msg = (
         f"C"
@@ -238,7 +238,7 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3(self):
         string = """msg = (
         f"C"
@@ -262,7 +262,7 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix3_4(self):
         string = """msg = (
         f"C"
@@ -280,7 +280,6 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes(self):
         string = """('could not identify license file '
                                      f'for {root}')"""
@@ -314,7 +313,7 @@ f'Y{W}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3_04(self):
             string = """(f'X '\n     f'Y{W}') """
             node = GetNodeFromInput(string, get_module=True)
@@ -364,7 +363,7 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("new implementation - not supported yet")
+    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_3(self):
         string = """(\"X \"
                                      f\"Y\"
@@ -377,7 +376,7 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported - missing the whitespace between the f and the string  ")
+    #@pytest.mark.skip("not supported - missing the whitespace between the f and the string  ")
     def testJstrMixedFTypes4_3_2(self):
         string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)

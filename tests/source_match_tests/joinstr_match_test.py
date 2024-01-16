@@ -393,6 +393,11 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testJstrMixedFTypes4_3_5(self):
+        string = """(f\"Y\"\n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testJstrWithConversion(self):
         string = """f"module {__name__!r} has no attribute {name!r}" """
         node = GetNodeFromInput(string, get_module=True)

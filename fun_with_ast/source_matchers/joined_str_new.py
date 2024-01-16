@@ -25,6 +25,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             node, expected_parts, starting_parens)
         self.padding_quote = None
         self.jstr_meta_data = []
+        #self.end_whitespace_matchers = [TextPlaceholder(r'[ \t\n]*', '')]
 
 
     def _match(self, string):
@@ -34,10 +35,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
         if len(self.jstr_meta_data)>1: # this is multi line jstr
             self._mark_node_values_as_potentially_matched()
-            #self.node.values[0].node_matcher = DefaultSourceMatcher(self.node.values[0], [])
             for index, line in enumerate(self.jstr_meta_data):
                 one_line_node =GetNodeFromInput(line.full_jstr_including_prefix)
                 matcher = GetDynamicMatcher(one_line_node)
+                matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]
                 matched_line_text = matcher._match(line.full_jstr_including_prefix)
                 if index != len(self.jstr_meta_data)-1:
                     matcher.matched_source = matched_line_text +"\n"
@@ -49,8 +50,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             self.expected_parts.pop(0)
             self.expected_parts.pop()
             remaining_string = remaining_string[len(source):]
-            #remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
-            self._conclude_jstr_match(source, remaining_string)
+            self._conclude_jstr_match(remaining_string)
 
         elif len(self.jstr_meta_data) == 1:
             source =  self._match_single_line_jstr(remaining_string,0)
@@ -69,9 +69,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         # len_jstr = self._get_size_of_jstr_string()
         remaining_string = remaining_string[len(format_string_source):]
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
-        return self._conclude_jstr_match(format_string_source, remaining_string)
+        return self._conclude_jstr_match( remaining_string)
 
-    def _conclude_jstr_match(self, format_string_source, remaining_string):
+    def _conclude_jstr_match(self, remaining_string):
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
         remaining_string = self.MatchEndParen(remaining_string)
         remaining_string = self.MatchCommentEOL(remaining_string)
         matched_source = self.GetSource()

@@ -31,8 +31,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
         source = ''
+
         if len(self.jstr_meta_data)>1: # this is multi line jstr
-            self.node.values[0].node_matcher = DefaultSourceMatcher(self.node.values[0], [])
+            self._mark_node_values_as_potentially_matched()
+            #self.node.values[0].node_matcher = DefaultSourceMatcher(self.node.values[0], [])
             for index, line in enumerate(self.jstr_meta_data):
                 one_line_node =GetNodeFromInput(line.full_jstr_including_prefix)
                 matcher = GetDynamicMatcher(one_line_node)
@@ -237,6 +239,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     #    format_string += matched_string
     #    return format_string
         return matched_string
+
+    def _mark_node_values_as_potentially_matched(self):
+        for node in self.node.values:
+            if isinstance(node, ast.FormattedValue):
+                if isinstance(node.value, ast.Name):
+                    node.value.no_matchers_ok = True
+            node.no_matchers_ok = True
 
 
 

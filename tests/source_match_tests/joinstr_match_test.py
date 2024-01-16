@@ -180,7 +180,12 @@ f"Python  {context}" """
 f"The '{module}' "
 f"Python  {context}") """
         node = GetNodeFromInput(string, get_module=True)  # note that thisd is 1 (one)! jstr string
-        #with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*'):
+        self._verify_match(node, string)
+
+    def testJstrWithsLinesAndParamsAndParen2(self):
+        string = """(f"{opname}: operator. "
+f"'{module}'") """
+        node = GetNodeFromInput(string, get_module=True)  # note that this is 1 (one)! jstr string
         self._verify_match(node, string)
 
     def testJstrWithsLinesAndParams4(self):

@@ -292,8 +292,6 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
                                      'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string) # note that this is a module with ONE strings
-
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3(self):
         string = """(f'could not identify license file '
 f'for {root}') """
@@ -305,13 +303,11 @@ f'for {root}') """
     @pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3_02(self):
         string = """(f'X '
-'Y{W}') """ # please not that this part is a regular string and NOT a jstr string, henc this is not supported at this time
+'Y{W}') """ # please note that this part is a regular string and NOT a jstr string, henc this is not supported at this time
         node = GetNodeFromInput(string, get_module=True)
         with pytest.raises(ValueError, match=r'.*two consecutive strings with new-line seperator between them.*'):
             self._verify_match(node, string)
 
-
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3_03(self):
         string = """(f'X '
 f'Y{W}') """
@@ -324,14 +320,12 @@ f'Y{W}') """
             node = GetNodeFromInput(string, get_module=True)
             self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4(self):
         string = """\"could not identify license file \"
 f\"for {root}\""""
         node = GetNodeFromInput(string, get_module=True) # this is a module with TWO strings
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_01(self):
         string = """(\"could not identify license file \"
 f\"for {root}\")"""
@@ -345,26 +339,21 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=False)  # this is an expression with One strings
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_1(self):
         string = """\"X \"\nf\"Y{root}\" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_2(self):
         string = """\"X \"\nf\"Y\" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_2_1(self):
         string = """(\"X \"\nf\"Y\" )"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_2_2(self):
         string = """(f\"X \"\nf\"Y\" )"""
         node = GetNodeFromInput(string)
@@ -383,7 +372,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_3_1(self):
         string = """(\"X \"\nf\"Y\"\n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
@@ -395,25 +383,30 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
+    def testJstrMixedFTypes4_3_3(self):
+        string = """(\"X \"    \n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_4(self):
+        string = """(f\"Y\"       \n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testJstrWithConversion(self):
         string = """f"module {__name__!r} has no attribute {name!r}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithConversion2(self):
         string = """f"module {__name__!r}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithConversion3(self):
         string = """f"{abc!r}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithConversion4(self):
         string = """f"{abc!s}" """
         node = GetNodeFromInput(string, get_module=True)

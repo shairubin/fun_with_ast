@@ -457,3 +457,13 @@ f\"for {root}\")"""
         string =  """f"{k[:-1]}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testModule18Partial(self):
+        string =  """f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testModule18Partial2(self):
+        string =  """f"{a.b('include')}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

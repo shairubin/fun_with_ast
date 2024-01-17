@@ -2,6 +2,7 @@ import unittest
 
 import pytest
 
+from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -130,3 +131,18 @@ class ConstantStrMatcherTest(BaseTestUtils):
         string = "'A\\'B\\'C'"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+
+    def testNativeGetSource(self):
+        string = "'abc' "
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        with pytest.raises(AssertionError):
+            assert source == string, "The space is missing since this is NOT part of an expression"
+
+    @pytest.mark.skip(reason="issue #196")
+    def testNativeGetSource2(self):
+        string = """"abc" """
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string

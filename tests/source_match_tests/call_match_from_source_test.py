@@ -538,3 +538,13 @@ l(a)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testModule18Partial(self):
+        string = "sysconfig.get_path('include')"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testModule18Partial2(self):
+        string = "sysconfig.get_path(\"include\")"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

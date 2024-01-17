@@ -209,14 +209,18 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         value_node = format_value_node.value
-        if not isinstance(value_node, (ast.Name, ast.Constant, ast.Attribute, ast.Subscript  )):
-            raise NotImplementedError('only Name , Constant, and Attribute nodes are supported')
+        if not isinstance(value_node, (ast.Name, ast.Constant, ast.Attribute, ast.Subscript , ast.Call)):
+            raise NotImplementedError('only Name , Constant, Attribute and Call nodes are supported')
 
-#        stripped_format  = GetSource(value_node, text=name_part[0])
-        stripped_format  = GetSource(value_node)
+        stripped_format  = GetSource(value_node, text=field_name_part[0])
+#        stripped_format  = GetSource(value_node)
         ws_parts = field_name_part[0].split(stripped_format)
-        if len(ws_parts) != 2: #or ws_parts[0] != '' or ws_parts[1] != '':
+        if len(ws_parts) == 1:
+            stripped_format = self._fix_quotes_in_format_string(stripped_format, field_name_part[0])
+            ws_parts = ["",""]
+        elif len(ws_parts) != 2:
             raise ValueError('none whitespace in format string')
+
         stripped_format = ws_parts[0] + stripped_format + ws_parts[1]
         if stripped_format != field_name_part[0]:
             raise ValueError('format string does not match')
@@ -247,6 +251,22 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 if isinstance(node.value, ast.Name):
                     node.value.no_matchers_ok = True
             node.no_matchers_ok = True
+
+    def _fix_quotes_in_format_string(self, matched_text, original):
+        if len(matched_text) != len(original):
+            raise ValueError('cannot fix quotes on different lengths of string')
+        result = matched_text.replace("\"", "'")
+        if result != original:
+            raise ValueError('cannot fix quotes')
+        return result
+#co-pilot code
+        # if stripped_format.startswith('"') and stripped_format.endswith('"'):
+        #     param = param.replace('"', '')
+        # elif stripped_format.startswith("'") and stripped_format.endswith("'"):
+        #     param = param.replace("'", '')
+        # else:
+        #     raise ValueError('format string does not match')
+        # return param
 
 
 

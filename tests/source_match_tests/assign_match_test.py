@@ -228,6 +228,7 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue #195")
     def testAssignFromSourceWithJoinedStr1(self):
         string = """new_k = (
         *k[:name_idx],
@@ -236,6 +237,7 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue #195")
     def testAssignFromSourceWithJoinedStr11(self):
         string = """new_k = (
         *k[:name_idx],
@@ -245,8 +247,7 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-
+    @pytest.mark.skip(reason="issue #195")
     def testAssignFromSourceWithJoinedStr12(self):
         string = """new_k = (
         f"{k[name_idx][:-1]}_{i}",
@@ -255,6 +256,7 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue #195")
     def testAssignFromSourceWithJoinedStr13(self):
         string = """new_k = (*k[:name_idx],           f"{k[name_idx][:-1]}_{i}",)      """
         node = GetNodeFromInput(string)

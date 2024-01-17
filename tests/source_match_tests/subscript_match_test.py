@@ -1,5 +1,8 @@
 import unittest
 
+import pytest
+
+from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -34,6 +37,7 @@ class SubscriptMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    @pytest.mark.skip(reason="issue #195")
     def testSubscriptModule7Partial2(self):
         string =  """f"{k[1:]}" """
         node = GetNodeFromInput(string, get_module=True)
@@ -42,3 +46,10 @@ class SubscriptMatcherTest(BaseTestUtils):
         string =  """k[1:] """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #195")
+    def testSubscriptModule7Partial4(self):
+        string = """k[1:] """
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string

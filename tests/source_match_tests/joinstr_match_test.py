@@ -89,7 +89,9 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""
         self._verify_match(node, string)
-
+        string = "f\"Unknown norm type {tpe}\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
@@ -99,6 +101,10 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"
         self._verify_match(node, string)
+        string = "f\"X{b}\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+
     def testBasicMatchFromInput3(self):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
@@ -136,6 +142,9 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'XY'")
         string = "f'XY'"
         self._verify_match(node, string)
+        string = "f\"YX\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
 
     @pytest.mark.skip("not supported yet")
     def testMatchMultilLine15(self):
@@ -187,7 +196,11 @@ f"The '{module}' "
 f"Python  {context}") """
         node = GetNodeFromInput(string, get_module=True)  # note that thisd is 1 (one)! jstr string
         self._verify_match(node, string)
-
+        string = """(f"{opname}: operator. "
+f"Th '{module}' "
+f"Python  {context}") """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testJstrWithsLinesAndParamsAndParen2(self):
         string = """(f"{opname}: operator. "
 f"'{module}'") """
@@ -242,7 +255,12 @@ f"Z") # comment """
         "a")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
+        string = """msg = (
+        f"C"
+        "i"
+        "a")"""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testJstrWithsLinesNoF_Prefix3(self):
         string = """msg = (
         f"C"
@@ -407,7 +425,9 @@ f\"for {root}\")"""
         string = """f"module {__name__!r}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-
+        string = """f"module {__name__!a}" """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testJstrWithConversion3(self):
         string = """f"{abc!r}" """
         node = GetNodeFromInput(string, get_module=True)
@@ -441,7 +461,9 @@ f\"for {root}\")"""
         string = """f"{ 7!a}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-
+        string = """f"{ 7  !a}" """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
 
     def testJstrWithConversion6(self):
         string = """f"{abc!c}" """

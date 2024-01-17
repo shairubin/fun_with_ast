@@ -22,7 +22,6 @@ from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
 from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
-from fun_with_ast.placeholders.docstring import DocStringTextPlaceholder
 from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 

@@ -276,7 +276,6 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         for value in node.values:
             if isinstance(value, ast.Constant):
                 source = GetSource(value,  parent_node=node)
-                #constant_matcher = GetDynamicMatcher(value)
                 result += source
                 remaining_string = remaining_string[len(result):]
             else:

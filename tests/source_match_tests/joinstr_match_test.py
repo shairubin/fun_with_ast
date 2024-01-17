@@ -2,6 +2,7 @@ import unittest
 
 import pytest
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -14,6 +15,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f''")
         string = "(f'')"
         self._verify_match(node, string)
+
     def testBasicMatchEmpty1(self):
         node = GetNodeFromInput("f\"\"")
         string = "f\"\""
@@ -35,6 +37,12 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'X'")
         string = "f'X'"
         self._verify_match(node, string)
+
+    def testBasicNoMatchFromInput5(self):
+        node = GetNodeFromInput("f'X'")
+        string = "f'Y'"
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
 
     def testBasicMatchFromInput51(self):
         node = GetNodeFromInput("f'X'")
@@ -65,31 +73,43 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f\"{X}\"")
         string = "(f\"{X}\")"
         self._verify_match(node, string)
+    def testBasicMatchFromInput56_1(self):
+        node = GetNodeFromInput("f\"{X }\"")
+        string = "(f\"{X }\")"
+        self._verify_match(node, string)
+
 
     def testBasicMatchFromInput57(self):
         node = GetNodeFromInput("f'{X}'")
         string = "(f'{X}')"
         self._verify_match(node, string)
 
+
     def testBasicMatchFromInput4(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "f\"Unknown norm type {type}\""
         self._verify_match(node, string)
-
+        string = "f\"Unknown norm type {tpe}\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testBasicMatchFromInput41(self):
         node = GetNodeFromInput("f\"Unknown norm type {type}\"")
         string = "(f\"Unknown norm type {type}\")"
         self._verify_match(node, string)
 
-
     def testBasicMatchFromInput2(self):
         node = GetNodeFromInput("f'X{a}'")
         string = "f'X{a}'"
         self._verify_match(node, string)
+        string = "f\"X{b}\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+
     def testBasicMatchFromInput3(self):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
         self._verify_match(node, string)
+
 
     def testBasicMatchFromInputNewLine(self):
         with pytest.raises(SyntaxError):
@@ -99,9 +119,10 @@ class JoinStrMatcherTests(BaseTestUtils):
         with pytest.raises((SyntaxError)):
             node = GetNodeFromInput("f'X\n'")
     def testMatchMultilLine1(self):
-        node = GetNodeFromInput("f'X'")
-        string = "(f'X')"
+        node = GetNodeFromInput("f'XY'")
+        string = "(f'XY')"
         self._verify_match(node, string)
+
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
@@ -120,6 +141,15 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testMatchMultilLine13(self):
         node = GetNodeFromInput("f'XY'")
         string = "f'XY'"
+        self._verify_match(node, string)
+        string = "f\"YX\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported yet")
+    def testMatchMultilLine15(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "f'X'f'Y'"
         self._verify_match(node, string)
 
     def testMatchMultilLine2(self):
@@ -165,7 +195,16 @@ f"Python  {context}" """
 f"The '{module}' "
 f"Python  {context}") """
         node = GetNodeFromInput(string, get_module=True)  # note that thisd is 1 (one)! jstr string
-        #with pytest.raises(ValueError, match=r'.*jstr string not in call_args context.*'):
+        self._verify_match(node, string)
+        string = """(f"{opname}: operator. "
+f"Th '{module}' "
+f"Python  {context}") """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+    def testJstrWithsLinesAndParamsAndParen2(self):
+        string = """(f"{opname}: operator. "
+f"'{module}'") """
+        node = GetNodeFromInput(string, get_module=True)  # note that this is 1 (one)! jstr string
         self._verify_match(node, string)
 
     def testJstrWithsLinesAndParams4(self):
@@ -194,7 +233,7 @@ f"Z") # comment """
             "available."
         )
   """
-    def testJstrWithsLinesNoF_Prefix(self):
+    def testJstrWithsLinesNoF_Prefix0_1(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
             "order to carry out compilation, make sure original .py files are "
@@ -216,7 +255,12 @@ f"Z") # comment """
         "a")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
+        string = """msg = (
+        f"C"
+        "i"
+        "a")"""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testJstrWithsLinesNoF_Prefix3(self):
         string = """msg = (
         f"C"
@@ -256,6 +300,11 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testJstrFindQuoteInaSingleString2(self):
+        string = """f"{args.org}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testJstrMixedFTypes(self):
         string = """('could not identify license file '
                                      f'for {root}')"""
@@ -267,7 +316,6 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
                                      'for {root}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string) # note that this is a module with ONE strings
-
     def testJstrMixedFTypes3(self):
         string = """(f'could not identify license file '
 f'for {root}') """
@@ -278,11 +326,9 @@ f'for {root}') """
 
     def testJstrMixedFTypes3_02(self):
         string = """(f'X '
-'Y{W}') """ # please not that this part is a regular string and NOT a jstr string, henc this is not supported at this time
+'Y{W}') """ # please note that this part is a regular string and NOT a jstr string, henc this is not supported at this time
         node = GetNodeFromInput(string, get_module=True)
-        with pytest.raises(ValueError, match=r'.*two consecutive strings with new-line seperator between them.*'):
-            self._verify_match(node, string)
-
+        self._verify_match(node, string)
 
     def testJstrMixedFTypes3_03(self):
         string = """(f'X '
@@ -318,7 +364,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
     def testJstrMixedFTypes4_2(self):
         string = """\"X \"\nf\"Y\" """
         node = GetNodeFromInput(string, get_module=True)
@@ -351,9 +396,23 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported - missing the whitespace between the f and the string  ")
     def testJstrMixedFTypes4_3_2(self):
         string = """(\"X \"\nf\"Y\"    \n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_3(self):
+        string = """(\"X \"    \n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_4(self):
+        string = """(f\"Y\"       \n\"Z\" ) """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrMixedFTypes4_3_5(self):
+        string = """(f\"Y\"\n\"Z\" ) """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
@@ -362,12 +421,13 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
     def testJstrWithConversion2(self):
         string = """f"module {__name__!r}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-
+        string = """f"module {__name__!a}" """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
     def testJstrWithConversion3(self):
         string = """f"{abc!r}" """
         node = GetNodeFromInput(string, get_module=True)
@@ -380,7 +440,59 @@ f\"for {root}\")"""
         string = """f"{abc!a}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testJstrWithConversion5_1(self):
+        string = """f"{abc !a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion5_2(self):
+        string = """f"{   abc !a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testJstrWithConversion5_3(self):
+        string = """f"{7!a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion5_4(self):
+        string = """f"{ 7   !a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testJstrWithConversion5_5(self):
+        string = """f"{ 7!a}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+        string = """f"{ 7  !a}" """
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+
     def testJstrWithConversion6(self):
         string = """f"{abc!c}" """
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string, get_module=True)
+
+    @pytest.mark.skip(reason="issue #195")
+    def testModule7Partial(self):
+        string =  """new_k = f"{k[name_idx][:-1]}_{i}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    @pytest.mark.skip(reason="issue #195")
+    def testModule7Partial2(self):
+        string =  """f"{k[name_idx][:-1]}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #195")
+    def testModule7Partial3(self):
+        string =  """f"{k[:-1]}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testModule18Partial(self):
+        string =  """f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testModule18Partial2(self):
+        string =  """f"{a.b('include')}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

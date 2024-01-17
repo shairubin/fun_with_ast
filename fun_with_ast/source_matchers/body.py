@@ -29,7 +29,7 @@ class BodyPlaceholder(ListFieldPlaceholder):
 
     def _match(self, node, string):
         remaining_string = string
-        new_node = []
+        statement_list = []
         if not getattr(node, self.field_name):
             return ''
         if self.prefix_placeholder:
@@ -37,8 +37,8 @@ class BodyPlaceholder(ListFieldPlaceholder):
                 remaining_string, node, self.prefix_placeholder)
         field_value = getattr(node, self.field_name)
         for index, child in enumerate(field_value):
-            remaining_string = self._skip_syntax_free_lines(new_node, remaining_string)
-            new_node.append(child)
+            remaining_string = self._skip_syntax_free_lines(statement_list, remaining_string)
+            statement_list.append(child)
             number_of_indents = (len(remaining_string) -
                                   len(remaining_string.lstrip()))
             indent_level = ' ' * number_of_indents
@@ -51,8 +51,8 @@ class BodyPlaceholder(ListFieldPlaceholder):
                (remaining_string.startswith(indent_level) or self.match_after)):
             remaining_string, syntax_free_node = self.MatchSyntaxFreeLine(
                 remaining_string)
-            new_node.append(syntax_free_node)
-        setattr(node, self.field_name, new_node)
+            statement_list.append(syntax_free_node)
+        setattr(node, self.field_name, statement_list)
         matched_string = string
         if remaining_string:
             matched_string = string[:-len(remaining_string)]

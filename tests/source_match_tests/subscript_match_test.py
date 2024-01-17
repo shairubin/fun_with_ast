@@ -1,10 +1,15 @@
 import unittest
 
+import pytest
+
+from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class SubscriptMatcherTest(unittest.TestCase):
+class SubscriptMatcherTest(BaseTestUtils):
 
     def testBasicMatch(self):
         node = create_node.Subscript('a', 1)
@@ -26,3 +31,25 @@ class SubscriptMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         matcher.do_match(string)
         self.assertEqual('a [ 1 : 2 : 3 ]', matcher.GetSource())
+
+    def testSubscriptModule7Partial(self):
+        string =  """f"k[a][:-1]" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #195")
+    def testSubscriptModule7Partial2(self):
+        string =  """f"{k[1:]}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testSubscriptModule7Partial3(self):
+        string =  """k[1:] """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip(reason="issue #195")
+    def testSubscriptModule7Partial4(self):
+        string = """k[1:] """
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string

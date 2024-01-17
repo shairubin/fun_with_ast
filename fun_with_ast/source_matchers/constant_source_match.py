@@ -48,7 +48,7 @@ class ConstantSourceMatcher(SourceMatcher):
     def GetSource(self):
         self.validated_call_to_match()
         if self.matched:
-            return self.matched_text
+            return self.matched_source
         if isinstance(self.node.n, bool) and isinstance(self.node.s, int):
             return self.bool_matcher.GetSource()
         if isinstance(self.node.n, int) and isinstance(self.node.s, int):

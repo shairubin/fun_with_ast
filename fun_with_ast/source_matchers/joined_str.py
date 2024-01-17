@@ -2,15 +2,19 @@ import ast
 import re
 from string import Formatter
 
+from fun_with_ast.get_source import GetSource
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.source_matchers.joined_str_config import JstrConfig, SUPPORTED_QUOTES
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class JoinedStrSourceMatcher(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
+    NEW_IMPLEMENTATION = False
     def __init__(self, node, starting_parens=None, parent=None):
+        raise NotImplementedError('Depricated - use JoinedStrSourceMatcherNew')
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
             ListFieldPlaceholder(r'values'),
@@ -24,6 +28,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
+        raise NotImplementedError('Depricated - use JoinedStrSourceMatcherNew')
         self.orig_string = string
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)
@@ -31,13 +36,22 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         multi_part_string = self._convert_to_multi_part_string()
         embedded_string = multi_part_string
         # default string matcher will match the multipart string
-        matched_text = super(JoinedStrSourceMatcher, self)._match(embedded_string)
-        self.matched = False # ugly hack to force the next line to work
-        self.matched_source = None
-        len_jstr = self._get_size_of_jstr_string()
-        remaining_string = remaining_string[len_jstr:]
-        remaining_string = self.MatchEndParen(remaining_string)
-        remaining_string = self.MatchCommentEOL(remaining_string)
+        if not self.NEW_IMPLEMENTATION:
+            matched_text = super(JoinedStrSourceMatcher, self)._match(embedded_string)
+            self.matched = False # ugly hack to force the next line to work
+            self.matched_source = None
+            len_jstr = self._get_size_of_jstr_string()
+            remaining_string = remaining_string[len_jstr:]
+            remaining_string = self.MatchEndParen(remaining_string)
+            remaining_string = self.MatchCommentEOL(remaining_string)
+        else:
+            matched_text_new = self._match_new(string)
+            self.matched = False # ugly hack to force the next line to work
+            self.matched_source = None
+            #len_jstr = self._get_size_of_jstr_string()
+            remaining_string = remaining_string[len(matched_text_new):]
+            remaining_string = self.MatchEndParen(remaining_string)
+            remaining_string = self.MatchCommentEOL(remaining_string)
 
         matched_text = self.GetSource()
         self.matched_source = matched_text
@@ -250,3 +264,23 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
                 original_index += 2
             else:
                 raise ValueError('format string does not match reconstruction')
+
+    def _match_new(self, orig_string):
+        matched_text = super(JoinedStrSourceMatcher, self)._match(orig_string)
+        result = ''
+        remaining_string = orig_string
+        remaining_string = remaining_string.removeprefix('f')
+        node = self.node
+        if len(node.values) > 1:
+            raise NotImplementedError('not implemented yet')
+        for value in node.values:
+            if isinstance(value, ast.Constant):
+                source = GetSource(value,  parent_node=node)
+                result += source
+                remaining_string = remaining_string[len(result):]
+            else:
+                raise NotImplementedError('not implemented yet')
+        return 'f'+ result
+
+def GetElements(self, node):
+    raise NotImplementedError('not implemented yet')

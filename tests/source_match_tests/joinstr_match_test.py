@@ -277,6 +277,11 @@ obj = boto3.resource("s3").Object("ossci-metrics", labels_file_name)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testJstrFindQuoteInaSingleString2(self):
+        string = """f"{args.org}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testJstrMixedFTypes(self):
         string = """('could not identify license file '
                                      f'for {root}')"""

@@ -209,8 +209,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         value_node = format_value_node.value
-        if not isinstance(value_node, (ast.Name, ast.Constant)):
-            raise NotImplementedError('only name nodes are supported')
+        if not isinstance(value_node, (ast.Name, ast.Constant, ast.Attribute)):
+            raise NotImplementedError('only Name , Constant, and Attribute nodes are supported')
 
 #        stripped_format  = GetSource(value_node, text=name_part[0])
         stripped_format  = GetSource(value_node)

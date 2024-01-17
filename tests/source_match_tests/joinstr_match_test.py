@@ -213,7 +213,6 @@ f"Z") # comment """
             "available."
         )
   """
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrWithsLinesNoF_Prefix0_1(self):
         string = """msg = (
             f"Can't get source for {obj}. TorchScript requires source access in "
@@ -268,7 +267,6 @@ f"Z") # comment """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrFindQuoteInaSingleString(self):
         string = """
 print(f"Exporting labels for {args.org}/{args.repo}")
@@ -301,13 +299,11 @@ f'for {root}') """
 
 
 
-    @pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3_02(self):
         string = """(f'X '
 'Y{W}') """ # please note that this part is a regular string and NOT a jstr string, henc this is not supported at this time
         node = GetNodeFromInput(string, get_module=True)
-        with pytest.raises(ValueError, match=r'.*two consecutive strings with new-line seperator between them.*'):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
 
     def testJstrMixedFTypes3_03(self):
         string = """(f'X '
@@ -315,7 +311,6 @@ f'Y{W}') """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes3_04(self):
             string = """(f'X '\n     f'Y{W}') """
             node = GetNodeFromInput(string, get_module=True)
@@ -333,7 +328,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)  # this is a module with One strings
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_02(self):
         string = """(\"could not identify license file \"
 f\"for {root}\")"""
@@ -365,7 +359,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip("new implementation - not supported yet")
     def testJstrMixedFTypes4_3(self):
         string = """(\"X \"
                                      f\"Y\"

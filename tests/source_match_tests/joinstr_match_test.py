@@ -440,3 +440,17 @@ f\"for {root}\")"""
         string = """f"{abc!c}" """
         with pytest.raises(SyntaxError):
             node = GetNodeFromInput(string, get_module=True)
+
+    def testModule7Partial(self):
+        string =  """new_k = f"{k[name_idx][:-1]}_{i}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testModule7Partial2(self):
+        string =  """f"{k[name_idx][:-1]}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testModule7Partial3(self):
+        string =  """f"{k[:-1]}" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

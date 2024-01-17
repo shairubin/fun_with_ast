@@ -209,13 +209,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         value_node = format_value_node.value
-        if not isinstance(value_node, (ast.Name, ast.Constant, ast.Attribute)):
+        if not isinstance(value_node, (ast.Name, ast.Constant, ast.Attribute, ast.Subscript  )):
             raise NotImplementedError('only Name , Constant, and Attribute nodes are supported')
 
 #        stripped_format  = GetSource(value_node, text=name_part[0])
         stripped_format  = GetSource(value_node)
         ws_parts = field_name_part[0].split(stripped_format)
-        if len(ws_parts) != 2:
+        if len(ws_parts) != 2: #or ws_parts[0] != '' or ws_parts[1] != '':
             raise ValueError('none whitespace in format string')
         stripped_format = ws_parts[0] + stripped_format + ws_parts[1]
         if stripped_format != field_name_part[0]:

@@ -14,6 +14,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
     NEW_IMPLEMENTATION = False
     def __init__(self, node, starting_parens=None, parent=None):
+        raise NotImplementedError('Depricated - use JoinedStrSourceMatcherNew')
         expected_parts = [
             TextPlaceholder(r'f[\'\"]', 'f\''),
             ListFieldPlaceholder(r'values'),
@@ -27,6 +28,7 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
 
 
     def _match(self, string):
+        raise NotImplementedError('Depricated - use JoinedStrSourceMatcherNew')
         self.orig_string = string
         remaining_string = self.MatchStartParens(string)
         self._split_jstr_into_lines(remaining_string)

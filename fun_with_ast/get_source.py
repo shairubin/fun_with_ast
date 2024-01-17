@@ -45,8 +45,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return str(field)
     if isinstance(field, ast.Constant) and field.value == Ellipsis:
         return "..."
-    #if isinstance(field, ast.Constant) and not hasattr(field, 'default_quote'):
-    #    raise ValueError('Constant nodes must of type string must have a default_quote attribute')
+
     if hasattr(field, 'node_matcher') and field.node_matcher:
         source = field.node_matcher.GetSource()
         return source

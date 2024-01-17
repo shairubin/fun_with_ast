@@ -64,9 +64,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_string = self._get_format_string(index)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
-        # if format_string_source != format_string:
-        #    raise ValueError('format strings does not match')
-        # source =   self.jstr_meta_data[0].f_part + format_string_source
         self.matched = False  # ugly hack to force the next line to work
         self.matched_source = None
         # len_jstr = self._get_size_of_jstr_string()
@@ -84,21 +81,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return matched_source
 
     def _get_format_string(self, index):
-        format_string = ''
         config = self.jstr_meta_data[index]
         format_string = config.format_string
-#         for config in self.jstr_meta_data:
-#             if format_string_to_match is None or format_string_to_match == '':
-#                 format_string += config.format_string
-#             else:
-#                 raise ValueError('deprecated')
-#                 bare_format_string = config.format_string.removeprefix('{').removesuffix('}')
-# #                if bare_format_string.strip() == format_string_to_match:
-#                 if bare_format_string == format_string_to_match:
-#                     format_string =  config.format_string
-#                     break
-#        if  format_string_to_match and format_string == '':
-#            raise ValueError('format string not found')
         return format_string
 
     def _get_format_parts(self, format_string):
@@ -106,28 +90,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type
-
-
-
-
-
-
-
-#     def _use_default_matcher(self, string):
-# #        parts = self._get_parts_for_default_matcher(self.node)
-#         self.values_matcher = GetDynamicMatcher(self.node, parts_in=parts)
-#         self.values_matcher.EOL_matcher = None # args will not end with '\n' -- parent node will consume it
-#         matched_string = self.values_matcher._match(string)
-#         return matched_string
-
-    # def _get_parts_for_default_matcher(self, node):
-    #     expected_parts =[]
-    #     expected_parts.append(TextPlaceholder(r'f', 'f'))
-    #     if len(self.node.values) != 1:
-    #         raise NotImplementedError('Only one value is supported')
-    #     expected_parts.append(ListFieldPlaceholder(r'values'))
-    #     expected_parts.append(TextPlaceholder(r'[\'\"][ \t\n]*', '', no_transform=True))
-    #     return expected_parts
 
     def _split_jstr_into_lines(self, orig_string):
         if isinstance(self.node.parent_node, ast.Dict):
@@ -185,16 +147,11 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
     def _match_format_parts(self, format_parts):
          format_string = ''
-         #if len(format_parts) > 1:
-         #       raise NotImplementedError('Only one format part is supported')
          index_in_jstr_values = 0
          for part in format_parts:
              literal_part = part[0]
              conversion_part = part[3]
              field_name_part = part[1:3]
-             #if field_name_part[0] is not None:
-             #    if field_name_part[1] is not '' or literal_part:
-             #        raise NotImplementedError('named index not supported yet')
              format_string_literal = format_string_field_name = ''
              if literal_part:
                 format_string_literal = self._handle_jstr_constant(index_in_jstr_values, literal_part)

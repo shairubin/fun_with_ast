@@ -7,6 +7,7 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
 from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr, NameForJstr
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
 
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
@@ -18,7 +19,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
-         TextPlaceholder(r'f[\'\"]', 'f\''),
+         TextPlaceholder(r'[ \t]*f[\'\"]', 'f\''),
          TextPlaceholder(r'[\'\"]', '\'')
      ]
         super(JoinedStrSourceMatcherNew, self).__init__(
@@ -196,7 +197,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              #        raise NotImplementedError('named index not supported yet')
              format_string_literal = format_string_field_name = ''
              if literal_part:
-                format_string_literal = self._handle_jstr_constant(index_in_jstr_values)
+                format_string_literal = self._handle_jstr_constant(index_in_jstr_values, literal_part)
                 index_in_jstr_values += 1
              if field_name_part[0] is not None:
                 format_string_field_name = self._handle_jstr_field_name(index_in_jstr_values,
@@ -235,12 +236,14 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
         return format_string
 
-    def _handle_jstr_constant(self, index):
+    def _handle_jstr_constant(self, index, source_from_format):
         constant_node = self.node.values[index]
         value = constant_node.value
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
         matched_string = GetSource(constant_node_for_jstr)
+        if matched_string != source_from_format:
+            raise BadlySpecifiedTemplateError('format string does not match')
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
         return matched_string

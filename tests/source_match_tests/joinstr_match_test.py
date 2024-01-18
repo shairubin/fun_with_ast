@@ -517,3 +517,8 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testSubscriptWithConstant(self):
+        string =  """f"{c['Name']}\\n" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

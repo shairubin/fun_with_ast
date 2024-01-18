@@ -171,7 +171,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             raise NotImplementedError('only Name , Constant, Attribute and Call nodes are supported')
 
         stripped_format  = GetSource(value_node, text=field_name_part[0])
-#        stripped_format  = GetSource(value_node)
         ws_parts = field_name_part[0].split(stripped_format)
         if len(ws_parts) == 1:
             stripped_format = self._fix_quotes_in_format_string(stripped_format, field_name_part[0])
@@ -184,12 +183,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             raise ValueError('format string does not match')
         if conversion:
             stripped_format = stripped_format + "!"+ conversion
-        #name_node_for_jstr = NameForJstr(name_node)
         matcher = GetDynamicMatcher(format_value_node)
         format_string = "{" + stripped_format + "}"
         matched_string = matcher._match(format_string)
 
-        #self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
         return format_string
 
@@ -208,8 +205,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _mark_node_values_as_potentially_matched(self):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
-                if isinstance(node.value, ast.Name):
-                    node.value.no_matchers_ok = True
+                for child in ast.walk(node):
+                    if isinstance(child, (ast.Name, ast.Attribute)):
+                        child.no_matchers_ok = True
             node.no_matchers_ok = True
 
     def _fix_quotes_in_format_string(self, matched_text, original):

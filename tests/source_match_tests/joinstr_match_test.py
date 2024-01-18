@@ -1,6 +1,8 @@
 import unittest
 
 import pytest
+from fun_with_ast.source_matchers.reset_match import ResetMatch
+
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
@@ -109,6 +111,9 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'X{a}[b]'")
         string = "f'X{a}[b]'"
         self._verify_match(node, string)
+        string = "f\"X{a}[b]\""
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
 
 
     def testBasicMatchFromInputNewLine(self):
@@ -122,7 +127,10 @@ class JoinStrMatcherTests(BaseTestUtils):
         node = GetNodeFromInput("f'XY'")
         string = "(f'XY')"
         self._verify_match(node, string)
-
+        string2 = "(f'X Y')"
+        with pytest.raises(BadlySpecifiedTemplateError):
+            node2 = GetNodeFromInput("f'XY'")
+            self._verify_match(node2, string2)
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
@@ -206,6 +214,14 @@ f"Python  {context}") """
 f"'{module}'") """
         node = GetNodeFromInput(string, get_module=True)  # note that this is 1 (one)! jstr string
         self._verify_match(node, string)
+
+    def testJstrMultipleParts(self):
+        string = """(f"{opname}{abc}{xyz}") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+        node2 = GetNodeFromInput(string)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node2, string.replace('x', 'y'))
 
     def testJstrWithsLinesAndParams4(self):
         string = """a(f"X"\nf"Y"\nf"Z") """
@@ -494,3 +510,10 @@ f\"for {root}\")"""
         string =  """f"{a.b('include')}" """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testDoubleLineCausesResetMissing(self):
+        string =  """(f"embed_dim must be divisible by num_heads (got `embed_dim`: {self.embed_dim}"
+                f" and `num_heads`: {self.num_heads}).") """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

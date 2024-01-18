@@ -215,6 +215,14 @@ f"'{module}'") """
         node = GetNodeFromInput(string, get_module=True)  # note that this is 1 (one)! jstr string
         self._verify_match(node, string)
 
+    def testJstrMultipleParts(self):
+        string = """(f"{opname}{abc}{xyz}") """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+        node2 = GetNodeFromInput(string)
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node2, string.replace('x', 'y'))
+
     def testJstrWithsLinesAndParams4(self):
         string = """a(f"X"\nf"Y"\nf"Z") """
         node = GetNodeFromInput(string)

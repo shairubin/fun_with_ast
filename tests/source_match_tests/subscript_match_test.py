@@ -37,7 +37,6 @@ class SubscriptMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testSubscriptModule7Partial2(self):
         string =  """f"{k[1:]}" """
         node = GetNodeFromInput(string, get_module=True)
@@ -46,10 +45,42 @@ class SubscriptMatcherTest(BaseTestUtils):
         string =  """k[1:] """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testSubscriptModule7Partial5(self):
+        string =  'k[:1]'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testSubscriptSlices(self):
+        string = 'a[:, :, :query_length, :key_length]'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #195")
-    def testSubscriptModule7Partial4(self):
-        string = """k[1:] """
+###################################################################
+###################  GetSource tests NOT SUPPORTED ################
+###################################################################
+# GetSource Without getting string to match cannot support all scenarios
+#  because it cannot know the parts of the slices and therefore assumes
+#  they are all  ':'
+    def testSubscriptGetSource(self):
+        string = 'k[1]'
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string
+
+    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+    def testSubscriptGetSource1(self):
+        string = 'k[1:]'
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string
+    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+    def testSubscriptGetSource2(self):
+        string = 'k[1:2]'
+        node = GetNodeFromInput(string)
+        source = GetSource(node.value)
+        assert source == string
+    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+    def testSubscriptGetSource3(self):
+        string = 'k[:2]'
         node = GetNodeFromInput(string)
         source = GetSource(node.value)
         assert source == string

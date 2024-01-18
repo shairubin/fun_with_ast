@@ -472,7 +472,7 @@ class ModuleMatcherTest(BaseTestUtils):
         node = GetNodeFromInput('a=1', get_module=True)
         string = 'a=1'
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue #41")
+    #@pytest.mark.skip(reason="issue #41")
     def testTupleOperation(self):
         node = GetNodeFromInput('(1,)+tuple(ch_mult)', get_module=True)
         string = '(1,)+tuple(ch_mult)'
@@ -591,7 +591,6 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testFromInputModule7(self):
         string = module7
         node = GetNodeFromInput(string, get_module=True)

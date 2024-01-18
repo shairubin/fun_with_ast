@@ -142,7 +142,6 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testCreateNodeFromInputTupleWithJoinedStr(self):
         string = """(
         *k[:name_idx],

@@ -587,6 +587,14 @@ def get_Slice_expected_parts():
         FieldPlaceholder('step'),
     ]
 
+# def get_Slice_expected_parts():
+#      return [
+#          FieldPlaceholder('lower', after_placeholder=TextPlaceholder(r'\s*:?\s*', ':')),
+#          #TextPlaceholder(r'\s*:?\s*', ':'),
+#          FieldPlaceholder('upper', before_placeholder=TextPlaceholder(r'\s*:?\s*', ':')),
+#          #TextPlaceholder(r'\s*:?\s*', ':'),
+#          FieldPlaceholder('step', before_placeholder=TextPlaceholder(r'\s*:?\s*', ':') ),
+#      ]
 
 
 

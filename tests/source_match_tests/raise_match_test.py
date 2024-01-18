@@ -45,7 +45,7 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #195")
+    @pytest.mark.skip(reason="bug #198")
     def testSimpleRaiseWithString3(self):
         string = """raise ValueError(
                 f"embed_dim must be divisible by num_heads (got `embed_dim`: {self.embed_dim}"

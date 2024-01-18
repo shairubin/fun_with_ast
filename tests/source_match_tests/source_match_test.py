@@ -707,17 +707,6 @@ class IfExpMatcherTest(unittest.TestCase):
         matcher.do_match(string)
         self.assertEqual(string, matcher.GetSource())
 
-    @pytest.mark.skip(reason="Not Implemented Yet")
-    def testChangeParts(self):
-        node = create_node.IfExp(
-            create_node.Name('True'), create_node.Name('a'), create_node.Name('b'))
-        string = 'a if True else b'
-        matcher = GetDynamicMatcher(node)
-        matcher.do_match(string)
-        node.test = create_node.Name('False')
-        node.body = create_node.Name('c')
-        node.orelse = create_node.Name('d')
-        self.assertEqual('c if False else d', matcher.GetSource())
 
 
 class ListComprehensionMatcherTest(BaseTestUtils):

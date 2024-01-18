@@ -51,7 +51,6 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return source
     else:
         field.node_matcher = GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
-        #GetDynamicMatcher(field, starting_parens, parent_node=parent_node)
         _match_text(assume_no_indent, field, text, parent_node)
         _set_elif(assume_elif, field)
         source_code = field.node_matcher.GetSource()

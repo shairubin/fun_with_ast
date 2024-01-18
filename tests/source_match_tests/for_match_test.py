@@ -74,7 +74,6 @@ class ForMatcherTest(BaseTestUtils):
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testSimpleFor11(self):
         string = """for i in range(len(v)):
     new_k = (
@@ -87,8 +86,6 @@ class ForMatcherTest(BaseTestUtils):
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-
-    @pytest.mark.skip(reason="issue #195")
     def testSimpleFor11_0(self):
         string = """for i in range(len(v)):
     new_k = (
@@ -111,7 +108,6 @@ class ForMatcherTest(BaseTestUtils):
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testSimpleFor11_2(self):
         string = """for i in range(len(v)):
     new_k = (
@@ -122,7 +118,6 @@ class ForMatcherTest(BaseTestUtils):
         for_node = GetNodeFromInput(string)
         self._verify_match(for_node, string)
 
-    @pytest.mark.skip(reason="issue #195")
     def testSimpleFor11_3(self):
         string = """for i in range(len(v)):
     new_k = (

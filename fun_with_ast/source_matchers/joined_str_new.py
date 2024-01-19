@@ -203,19 +203,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
         return matched_string
 
-
-        # value = constant_node.value
-        # constant_node_for_jstr = ConstantForJstr(value)
-        # constant_node_for_jstr.default_quote = self._get_quote_type()
-        # matched_string = GetSource(constant_node_for_jstr)
-        # if matched_string != source_from_format:
-        #     if not self._is_escape_string(source_from_format, matched_string):
-        #         raise ValueError('format string does not match with escape chars')
-        #     matched_string = source_from_format
-        # self.node.values[index] = constant_node_for_jstr
-        # self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
-        # return matched_string
-
     def _mark_node_values_as_potentially_matched(self):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):

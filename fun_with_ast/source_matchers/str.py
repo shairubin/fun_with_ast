@@ -71,7 +71,6 @@ class StrSourceMatcher(SourceMatcher):
             string_body = self.__handle_special_chars(string_body)
         if len(string_body) != len(self.original_s):
             raise BadlySpecifiedTemplateError(
-            #raise ValueError(
                 f'can happen in two cases:\n'
                 f'1. Real mismatch (i.e., error) - between matched string and original string\n'
                 f'2. Not Supported (i.e., false error) : matched string longer than original string\n'

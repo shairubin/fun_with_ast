@@ -109,7 +109,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
     def testStringMultipart5(self):
         string = "'abc'\n'def'"
         node = GetNodeFromInput(string, get_module=True)
-        with pytest.raises(ValueError, match='.*two consecutive strings with new-line seperator between them.*'):
+        with pytest.raises(BadlySpecifiedTemplateError, match='.*two consecutive strings with new-line seperator between them.*'):
             self._verify_match(node, string)
 
     def testStringMultipart3(self):

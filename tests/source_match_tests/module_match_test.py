@@ -525,6 +525,14 @@ a.b('cpu')
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testFromInput9(self):
+        string = """def create_bundled(d, outstream, include_files=False):
+    \"\"\"Write the information to an open outstream\"\"\"
+    outstream.write(f"Name: {c['Name']}\\n")
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def testFromInputParantheses(self):
         string = """(a)"""
         node = GetNodeFromInput(string, get_module=True)

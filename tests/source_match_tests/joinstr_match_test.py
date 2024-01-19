@@ -123,14 +123,16 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testMatchMultilLine(self):
         with pytest.raises((SyntaxError)):
             node = GetNodeFromInput("f'X\n'")
-    def testMatchMultilLine1(self):
+    def testMatchMultilLine1NoMatch(self):
+        node = GetNodeFromInput("f'XY'")
+        string = "(f'X Y')"
+        with pytest.raises(BadlySpecifiedTemplateError):
+            self._verify_match(node, string)
+    def testMatchMultilLine1Match(self):
         node = GetNodeFromInput("f'XY'")
         string = "(f'XY')"
         self._verify_match(node, string)
-        string2 = "(f'X Y')"
-        with pytest.raises(BadlySpecifiedTemplateError):
-            node2 = GetNodeFromInput("f'XY'")
-            self._verify_match(node2, string2)
+
     def testMatchMultilLine11(self):
         node = GetNodeFromInput("(f'X'\nf'Y')")
         string = "(f'X'\nf'Y')"
@@ -515,5 +517,21 @@ f\"for {root}\")"""
         string =  """(f"embed_dim must be divisible by num_heads (got `embed_dim`: {self.embed_dim}"
                 f" and `num_heads`: {self.num_heads}).") """
         node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported yet - issue 196")
+    def testSubscriptWithConstant(self):
+        string =  """f"{c['Name']}\\n" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testSubscriptWithConstant2(self):
+        string =  "f\"{c['Name']}\\n\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported yet - issue 196")
+    def testSubscriptWithConstant3(self):
+        string =  "f\"{c['Name']}\\n\" "
+        node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

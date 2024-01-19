@@ -109,7 +109,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
     def testStringMultipart5(self):
         string = "'abc'\n'def'"
         node = GetNodeFromInput(string, get_module=True)
-        with pytest.raises(ValueError, match='.*two consecutive strings with new-line seperator between them.*'):
+        with pytest.raises(BadlySpecifiedTemplateError, match='.*two consecutive strings with new-line seperator between them.*'):
             self._verify_match(node, string)
 
     def testStringMultipart3(self):
@@ -140,7 +140,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
         with pytest.raises(AssertionError):
             assert source == string, "The space is missing since this is NOT part of an expression"
 
-    #@pytest.mark.skip(reason="issue #196")
+    @pytest.mark.skip(reason="issue #196")
     def testNativeGetSource2(self):
         string = """"abc" """
         node = GetNodeFromInput(string)

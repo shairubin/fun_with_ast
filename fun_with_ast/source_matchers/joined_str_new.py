@@ -59,8 +59,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             source =  self._match_single_line_jstr(remaining_string,0)
         return source
 
-    def _match_single_line_jstr(self, remaining_string, index):
-        remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[0])
+    def _match_single_line_jstr(self, string, index):
+        remaining_string = MatchPlaceholder(string, self.node, self.expected_parts[0])
         format_string = self._get_format_string(index)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
@@ -193,14 +193,28 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _handle_jstr_constant(self, index, source_from_format):
         constant_node = self.node.values[index]
         value = constant_node.value
+        if not isinstance(value, str):
+            raise ValueError("in joined str only str constants are supported")
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
-        matched_string = GetSource(constant_node_for_jstr)
-        if matched_string != source_from_format:
-            raise BadlySpecifiedTemplateError('format string does not match')
+        matcher = GetDynamicMatcher(constant_node_for_jstr)
+        matched_string = matcher._match(source_from_format)
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
         return matched_string
+
+
+        # value = constant_node.value
+        # constant_node_for_jstr = ConstantForJstr(value)
+        # constant_node_for_jstr.default_quote = self._get_quote_type()
+        # matched_string = GetSource(constant_node_for_jstr)
+        # if matched_string != source_from_format:
+        #     if not self._is_escape_string(source_from_format, matched_string):
+        #         raise ValueError('format string does not match with escape chars')
+        #     matched_string = source_from_format
+        # self.node.values[index] = constant_node_for_jstr
+        # self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
+        # return matched_string
 
     def _mark_node_values_as_potentially_matched(self):
         for node in self.node.values:
@@ -217,7 +231,23 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if result != original:
             raise ValueError('cannot fix quotes')
         return result
+
+    def _is_escape_string(self, source_from_format, matched_string):
+        with_escape = matched_string.replace("\n", "\\n")
+        if with_escape == source_from_format:
+            return True
+        return False
 #co-pilot code
+#         if source_from_format.startswith('"') and source_from_format.endswith('"'):
+#             param = source_from_format.replace('"', '')
+#         elif source_from_format.startswith("'") and source_from_format.endswith("'"):
+#             param = source_from_format.replace("'", '')
+#         else:
+#             raise ValueError('format string does not match')
+#         if param != matched_string:
+#             raise ValueError('format string does not match')
+#         return param
+# #co-pilot code
         # if stripped_format.startswith('"') and stripped_format.endswith('"'):
         #     param = param.replace('"', '')
         # elif stripped_format.startswith("'") and stripped_format.endswith("'"):

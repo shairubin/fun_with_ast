@@ -9,7 +9,12 @@ class ConstantJstrMatcher(ConstantSourceMatcher):
         ConstantSourceMatcher.__init__(self, node, starting_parens, parent_node)
 
     def _match(self, string):
-        raise NotImplementedError('Do not use ConstantJstrMatcher._match')
+#        string = self.node.default_quote + string + self.node.default_quote
+        string = '\"' + string + '\"'
+        result = super(ConstantJstrMatcher, self)._match(string)
+        result = self.GetSource()
+        return result
+        #raise NotImplementedError('Do not use ConstantJstrMatcher._match')
 
     def GetSource(self):
         result = super(ConstantJstrMatcher, self).GetSource()

@@ -67,11 +67,11 @@ class StrSourceMatcher(SourceMatcher):
         return parsed_string
 
     def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
-        #quote_in_string = False
         if '\\' in string_body:
             string_body = self.__handle_special_chars(string_body)
         if len(string_body) != len(self.original_s):
-            raise ValueError(
+            raise BadlySpecifiedTemplateError(
+            #raise ValueError(
                 f'can happen in two cases:\n'
                 f'1. Real mismatch (i.e., error) - between matched string and original string\n'
                 f'2. Not Supported (i.e., false error) : matched string longer than original string\n'

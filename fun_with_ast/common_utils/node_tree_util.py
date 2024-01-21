@@ -1,6 +1,5 @@
 
 import _ast
-import ast
 import collections
 import copy
 

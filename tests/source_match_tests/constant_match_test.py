@@ -1,14 +1,12 @@
-import unittest
-
 import pytest
 
+from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
-
-from fun_with_ast.manipulate_node import create_node
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+
 
 @pytest.fixture(autouse=True)
 def run_around_tests(): # TODO not very smart global variable

@@ -1,8 +1,6 @@
 import ast
-import re
 
 from fun_with_ast.common_utils.parenthese_stack import ParanthesisStack
-from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.placeholders.whitespace import WSStartOfLinePlaceholder, EOLCommentMatcher, EOLPlaceholder, \
     WSEndOfLinePlaceholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError

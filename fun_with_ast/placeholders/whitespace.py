@@ -1,6 +1,3 @@
-
-import re
-
 from fun_with_ast.placeholders.text import TextPlaceholder
 
 class WSStartOfLinePlaceholder(TextPlaceholder):

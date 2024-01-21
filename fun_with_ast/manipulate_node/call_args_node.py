@@ -1,6 +1,5 @@
 import _ast
 import ast
-from copy import copy
 
 
 class KWKeyword(ast.keyword):

@@ -1,10 +1,7 @@
-import unittest
-
 import pytest
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.manipulate_node import create_node as create_node
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 

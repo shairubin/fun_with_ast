@@ -3,11 +3,10 @@ import ast
 from types import NoneType
 
 from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
-
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_placeholder import Placeholder
-from fun_with_ast.placeholders.string_parser import StringParser
 from fun_with_ast.placeholders.node import NodePlaceholder
+from fun_with_ast.placeholders.string_parser import StringParser
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
 class CompositePlaceholder(Placeholder):

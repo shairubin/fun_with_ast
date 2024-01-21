@@ -19,14 +19,15 @@ Tests for py
 import unittest
 
 import pytest
+
+import fun_with_ast.manipulate_node.create_node as create_node
+from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.list_placeholder import SeparatedListFieldPlaceholder
-from fun_with_ast.placeholders.composite import FieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-import fun_with_ast.manipulate_node.create_node as create_node
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from fun_with_ast.source_matchers import defualt_matcher
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 DEFAULT_TEXT = 'default'

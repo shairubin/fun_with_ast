@@ -4,14 +4,12 @@ from string import Formatter
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
-from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr, NameForJstr
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
-
-from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.text import TextPlaceholder
+from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
+from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
@@ -207,7 +205,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
                 for child in ast.walk(node):
-                    if isinstance(child, (ast.Name, ast.Attribute)):
+                    if isinstance(child, (ast.Name, ast.Attribute, ast.Call)):
                         child.no_matchers_ok = True
             node.no_matchers_ok = True
 

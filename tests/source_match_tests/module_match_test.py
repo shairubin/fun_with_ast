@@ -1,12 +1,8 @@
-
-
-import pytest
-
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
-
 from fun_with_ast.manipulate_node import create_node
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
+
 module_19 = """
 backend_test.exclude(r'(test_hardsigmoid'  # Does not support Hardsigmoid.
                      '|test_hardmax'  # Does not support Hardmax.
@@ -422,6 +418,14 @@ def skip_init(module_cls, *args, **kwargs):
 module_23="""def __getattr__(name):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 """
+
+module_24 = """
+def _gen_invalid_iterdatapipe_msg(datapipe):
+    return ("This iterator has been invalidated because another iterator has been created "
+    f"from the same IterDataPipe: {_generate_iterdatapipe_msg(datapipe)}\\n"
+    "This may be caused multiple references to the same IterDataPipe. We recommend "
+    "using .fork() if that is necessary.")
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -709,5 +713,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule23(self):
         string = module_23
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule24(self):
+        string = module_24
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

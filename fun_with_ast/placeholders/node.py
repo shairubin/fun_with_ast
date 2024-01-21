@@ -1,12 +1,10 @@
-import _ast
 import ast
-
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
-#from source_match import ValidateStart
+# from source_match import ValidateStart
 from fun_with_ast.placeholders.string_parser import StripStartParens
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
 def ValidateStart(original_string, matched_string):

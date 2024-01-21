@@ -207,7 +207,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
                 for child in ast.walk(node):
-                    if isinstance(child, (ast.Name, ast.Attribute)):
+                    if isinstance(child, (ast.Name, ast.Attribute, ast.Call)):
                         child.no_matchers_ok = True
             node.no_matchers_ok = True
 

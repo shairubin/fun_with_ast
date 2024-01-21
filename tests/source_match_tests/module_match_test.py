@@ -425,7 +425,7 @@ module_23="""def __getattr__(name):
 module_24 = """
 def _gen_invalid_iterdatapipe_msg(datapipe):
     return ("This iterator has been invalidated because another iterator has been created "
-    f"from the same IterDataPipe: {_generate_iterdatapipe_msg(datapipe)}\n"
+    f"from the same IterDataPipe: {_generate_iterdatapipe_msg(datapipe)}\\n"
     "This may be caused multiple references to the same IterDataPipe. We recommend "
     "using .fork() if that is necessary.")
 """
@@ -719,8 +719,6 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-    @pytest.mark.skip(reason="issue #205")
     def testFromInputModule24(self):
         string = module_24
         node = GetNodeFromInput(string, get_module=True)

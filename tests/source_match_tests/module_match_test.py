@@ -1,5 +1,4 @@
 
-
 import pytest
 
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
@@ -422,6 +421,14 @@ def skip_init(module_cls, *args, **kwargs):
 module_23="""def __getattr__(name):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 """
+
+module_24 = """
+def _gen_invalid_iterdatapipe_msg(datapipe):
+    return ("This iterator has been invalidated because another iterator has been created "
+    f"from the same IterDataPipe: {_generate_iterdatapipe_msg(datapipe)}\n"
+    "This may be caused multiple references to the same IterDataPipe. We recommend "
+    "using .fork() if that is necessary.")
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -709,5 +716,12 @@ def dot_product_attention_weights():
 
     def testFromInputModule23(self):
         string = module_23
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    @pytest.mark.skip(reason="issue #205")
+    def testFromInputModule24(self):
+        string = module_24
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

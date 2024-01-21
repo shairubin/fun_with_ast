@@ -1,6 +1,4 @@
-name: run-tests-with-poetry
-# source: https://github.com/marketplace/actions/install-poetry-action
-
+name: lint-and-unit-tests
 
 on:
   push:

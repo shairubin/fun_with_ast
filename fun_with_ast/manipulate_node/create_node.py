@@ -2,9 +2,6 @@
 import _ast
 import ast
 
-from fun_with_ast.manipulate_node.call_args_node import LambdaArg
-from fun_with_ast.manipulate_node.get_node_from_input import FWANodeGenerator
-
 
 class Error(Exception):
     pass

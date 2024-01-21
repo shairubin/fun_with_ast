@@ -1,8 +1,8 @@
 
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
 from fun_with_ast.placeholders.text import StartParenMatcher
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
 def StripStartParens(string):

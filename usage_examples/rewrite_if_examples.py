@@ -6,6 +6,7 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfManipulatorConfig
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

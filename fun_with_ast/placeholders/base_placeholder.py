@@ -1,6 +1,3 @@
-import random
-
-
 class Placeholder(object):
     """Base class for other placeholder objects."""
     id = 0

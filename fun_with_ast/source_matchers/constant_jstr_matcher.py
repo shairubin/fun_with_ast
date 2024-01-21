@@ -1,6 +1,3 @@
-import ast
-from types import NoneType
-
 from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
 
 

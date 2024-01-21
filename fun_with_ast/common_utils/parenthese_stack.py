@@ -1,11 +1,7 @@
-import ast
-
-from fun_with_ast.manipulate_node.call_args_node import CallArgs
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
-
+from fun_with_ast.common_utils.stack import Stack
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.text import StartParenMatcher, EndParenMatcher
-from fun_with_ast.common_utils.stack import Stack
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError, EmptyStackException
 
 
 class ParanthesisStack(Stack):

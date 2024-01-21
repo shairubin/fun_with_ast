@@ -3,10 +3,6 @@ import ast
 from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 
 
-
-
-
-
 class IfManipulatorConfig():
     def __init__(self, body_index: int, location_in_body_index: int):
         self._body_index = body_index

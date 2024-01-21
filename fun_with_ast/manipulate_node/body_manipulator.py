@@ -1,5 +1,3 @@
-import ast
-
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node

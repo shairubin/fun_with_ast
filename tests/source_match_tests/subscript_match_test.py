@@ -1,5 +1,3 @@
-import unittest
-
 import pytest
 
 from fun_with_ast.get_source import GetSource

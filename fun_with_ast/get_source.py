@@ -1,9 +1,7 @@
 import _ast
 import ast
-from types import NoneType
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-
 
 
 def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,

@@ -1,8 +1,7 @@
 import re
 
-
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.placeholders.base_placeholder import Placeholder
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
 class TextPlaceholder(Placeholder):

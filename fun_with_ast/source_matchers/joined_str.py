@@ -3,11 +3,10 @@ import re
 from string import Formatter
 
 from fun_with_ast.get_source import GetSource
-from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.placeholders.list_placeholder import ListFieldPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
+from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.source_matchers.joined_str_config import JstrConfig, SUPPORTED_QUOTES
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
 class JoinedStrSourceMatcher(DefaultSourceMatcher):

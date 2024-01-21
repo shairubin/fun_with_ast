@@ -1,5 +1,3 @@
-import unittest
-
 import pytest
 
 from fun_with_ast.manipulate_node import create_node

@@ -1,9 +1,3 @@
-from unittest import TestCase
-
-from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
-from fun_with_ast.source_matchers.reset_match import ResetMatch
-
-
 class ResetMatcher:
     pass
 

@@ -1,5 +1,4 @@
 import fun_with_ast.manipulate_node.syntax_free_line_node
-from fun_with_ast.manipulate_node import create_node
 from tests.create_node_tests.create_node_test_based import CreateNodeTestBase
 
 

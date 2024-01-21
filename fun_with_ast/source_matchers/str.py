@@ -1,13 +1,11 @@
 import re
 
-from fun_with_ast.placeholders.whitespace import EOLCommentMatcher
-from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
-
-from fun_with_ast.placeholders.base_match import MatchPlaceholder
-from fun_with_ast.source_matchers.base_matcher import SourceMatcher
-from fun_with_ast.placeholders.string_part import StringPartPlaceholder
 from fun_with_ast.common_utils.utils_source_match import _GetListDefault
+from fun_with_ast.placeholders.base_match import MatchPlaceholder
+from fun_with_ast.placeholders.string_part import StringPartPlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
+from fun_with_ast.source_matchers.base_matcher import SourceMatcher
+from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
 class StrSourceMatcher(SourceMatcher):

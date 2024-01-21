@@ -1,3 +1,4 @@
 [flake8]
 exclude =
     ./tests
+    __init__.py

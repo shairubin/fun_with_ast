@@ -529,3 +529,12 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testBinOp(self):
+        string = "f\"number of nodes not the same {old_num_nodes - delta}, {new_num_nodes}\\n {fx_g.graph} \\n {new_graph}\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testListComprehension(self):
+        string = "f\"{[x for x in range(10)]}\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

@@ -535,7 +535,12 @@ f\"for {root}\")"""
         self._verify_match(node, string)
 
     def testQuotesInJstStr(self):
-        string = """f'__load_module("{self.index.module}").{self.index.qualname}' """
+        string = """f'__load_module("{self.index.module}").{self.index.qualname}'"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr2(self):
+        string = """f'__a("{b}").{c}'"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

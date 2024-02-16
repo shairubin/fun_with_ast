@@ -437,6 +437,12 @@ def _process_batched_inputs(
             f'in_dims has structure {tree_flatten(in_dims)[1]} but inputs '
             f'has structure {args_spec}.')
 """
+module_26 = """
+def name(self):
+    if isinstance(self.index, type):
+        rep = f'__load_module("{self.index.module}").{self.index.qualname}'
+        return f"___odict_getitem({self.base.name()}, {rep})"
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -733,5 +739,9 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule25(self):
         string = module_25
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule26(self):
+        string = module_26
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -2,7 +2,6 @@ from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMat
 
 
 class ConstantJstrMatcher(ConstantSourceMatcher):
-    magic = '\\"'
     def __init__(self, node, starting_parens=None, parent_node=None):
         ConstantSourceMatcher.__init__(self, node, starting_parens, parent_node)
         self.added_quote = '"'

@@ -741,7 +741,7 @@ def dot_product_attention_weights():
         string = module_25
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def testFromInputModule26(self):
+    def testFromInputModule26(self): # issue 214
         string = module_26
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

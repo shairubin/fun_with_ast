@@ -2,7 +2,7 @@ import ast
 
 from fun_with_ast.common_utils.parenthese_stack import ParanthesisStack
 from fun_with_ast.placeholders.whitespace import WSStartOfLinePlaceholder, EOLCommentMatcher, EOLPlaceholder, \
-    WSEndOfLinePlaceholder
+    WSEndOfLinePlaceholder, WSEndOfFilePlaceholder
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 
 
@@ -18,7 +18,7 @@ class SourceMatcher(object):
         self.EOL_matcher = EOLPlaceholder()
         self.end_paren_matchers = []
         self.start_whitespace_matchers =  [WSStartOfLinePlaceholder()]
-        self.end_whitespace_matchers =  [WSEndOfLinePlaceholder()]
+        self.end_whitespace_matchers =  [WSEndOfLinePlaceholder(), WSEndOfFilePlaceholder()]
         self.paren_wrapped = False
         self.end_of_line_comment = '' #TODO: remove this use EOL_comment_matcher
         if not stripped_parens:

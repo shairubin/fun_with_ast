@@ -64,11 +64,12 @@ class ListTest(BaseTestUtils):
         node =GetNodeFromInput(string, get_module=True)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputListWithEOL24(self): # empty line at end is supported only in modules.
+    def testCreateNodeFromInputListWithEOL24(self): # fixed in issue 196
         string = '[1,2]\n     '
         node =GetNodeFromInput(string, get_module=False)
-        with pytest.raises(AssertionError):
-            self._assert_match(node, string)
+        self._verify_match(node, string)
+        #with pytest.raises(AssertionError):
+        #    self._assert_match(node, string)
 
     def testCreateNodeFromInputListWithEOL3(self):
         string = '[[1,2],\n [3,4]]'

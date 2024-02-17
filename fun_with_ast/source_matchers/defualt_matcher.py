@@ -64,7 +64,8 @@ class DefaultSourceMatcher(SourceMatcher):
                     .format(string, self, e.message))
 
 
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0]) # EOL
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1]) # EOF
         remaining_string = self.MatchCommentEOL(remaining_string) #TODO: move it before get source
         remaining_string = self.MatchNewLine(remaining_string)
         matched_string = DefaultSourceMatcher.GetSource(self)

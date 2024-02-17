@@ -106,13 +106,14 @@ class ArgumentsMatcherTest(unittest.TestCase):
         matcher = GetDynamicMatcher(node)
         self._validate_match(matcher, string)
 
-    def testMatchArgsDefaultsConst(self):
+    def testMatchArgsDefaultsConst(self): #fixed in issue 196
         node = create_node.arguments(
             args=['a'], defaults=[1])
         string = 'a = 1 \t  ' # WS at end of line are not supported
         matcher = GetDynamicMatcher(node)
-        with pytest.raises(AssertionError):
-            self._validate_match(matcher, string)
+        self._validate_match(matcher, string)
+        #with pytest.raises(AssertionError):
+        #    self._validate_match(matcher, string)
 
     def testNoMatchArgsDefaultsConst(self):
         node = create_node.arguments(

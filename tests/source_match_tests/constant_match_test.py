@@ -74,11 +74,13 @@ class ConstantNumMatcherTest(BaseTestUtils):
         #with pytest.raises(BadlySpecifiedTemplateError):
         self._assert_match(node, string)
 
-    def testBasicMatchWithdWS(self):
+    def testBasicMatchWithdWS(self): # fixed in issue 196
         node = create_node.Num('1')
-        string = '1   ' # white spaces at the end of a line not supported
-        with pytest.raises(AssertionError):
-            self._assert_match(node, string)
+        string = '1   '
+        self._verify_match(node, string)
+
+#        with pytest.raises(AssertionError):
+#            self._assert_match(node, string)
 
 
     def testBasicMatchWithdWSExpr(self):
@@ -203,17 +205,21 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '1 # comment \n   '
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def testStringFronInput2_41(self):
+    def testStringFronInput2_41(self): # fixed in issue 196
         string = '1 # comment \n   '
         node = GetNodeFromInput(string, get_module=False)
-        with pytest.raises(AssertionError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
 
-    def testStringFronInput2_5(self):
+#        with pytest.raises(AssertionError):
+#            self._verify_match(node, string)
+
+    def testStringFronInput2_5(self): # fixed in issue 196
         string = '1\n   '
         node = GetNodeFromInput(string)
-        with pytest.raises(AssertionError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
+
+#        with pytest.raises(AssertionError):
+#            self._verify_match(node, string)
     def testStringFronInput2_6(self):
         string = '1\n   '
         node = GetNodeFromInput(string, get_module=True)

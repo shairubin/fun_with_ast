@@ -7,6 +7,10 @@ class WSEndOfLinePlaceholder(TextPlaceholder):
     def __init__(self):
         super(WSEndOfLinePlaceholder, self).__init__(r'[ \t]*(?=\n)', default='', no_transform=True)
 
+class WSEndOfFilePlaceholder(TextPlaceholder):
+    def __init__(self):
+        super(WSEndOfFilePlaceholder, self).__init__(r'[ \t]+$', default='', no_transform=True)
+
 class EOLPlaceholder(TextPlaceholder):
     def __init__(self):
         super(EOLPlaceholder, self).__init__(r'\n', default='', longest_match=False)

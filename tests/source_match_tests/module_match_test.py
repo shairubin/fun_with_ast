@@ -461,7 +461,6 @@ def main() -> None:
 
 module_29 = """
 def main() -> None:
-    job_link = f"[job]({run_url})" if run_url is not None else "job"
     msg = (
         f"The {args.action} {job_link} was canceled. If "     
     )

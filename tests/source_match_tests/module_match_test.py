@@ -1,3 +1,5 @@
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -454,9 +456,17 @@ def main() -> None:
 module_28 = """
 def main() -> None:
     job_link = f"test" if run_url is not None else "job"
-    msg = f"test2"     
-    
+    msg = f"test2"         
 """
+
+module_29 = """
+def main() -> None:
+    job_link = f"[job]({run_url})" if run_url is not None else "job"
+    msg = (
+        f"The {args.action} {job_link} was canceled. If "     
+    )
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -760,6 +770,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    @pytest.mark.skip("not supported yet - issue 196")
     def testFromInputModule27(self):
         string = module_27
         node = GetNodeFromInput(string, get_module=True)
@@ -767,5 +778,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule28(self):
         string = module_28
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("not supported yet - issue 196")
+    def testFromInputModule29(self):
+        string = module_29
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

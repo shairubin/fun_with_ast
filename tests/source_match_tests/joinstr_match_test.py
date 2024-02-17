@@ -554,3 +554,23 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip("not supported yet - issue 196")
+    def testQuotesInJstStr4(self):
+        string = """(
+        f"The"
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr4_1(self):
+        string = """(
+        f"The  If "
+)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr5(self):
+        string = """(
+        f"The {args.action} {job_link} was canceled. If ")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

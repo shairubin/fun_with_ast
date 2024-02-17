@@ -138,7 +138,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
         with pytest.raises(AssertionError):
             assert source == string, "The space is missing since this is NOT part of an expression"
 
-    @pytest.mark.skip(reason="issue #TBD")
+    @pytest.mark.skip(reason="issue #220")
     def testNativeGetSource2(self):
         string = """"abc" """
         node = GetNodeFromInput(string)

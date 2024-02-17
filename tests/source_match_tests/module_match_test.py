@@ -769,7 +769,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue TBD")
+    @pytest.mark.skip("not supported yet - issue 220")
     def testFromInputModule27(self):
         string = module_27
         node = GetNodeFromInput(string, get_module=True)
@@ -780,7 +780,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue TBD")
+    @pytest.mark.skip("not supported yet - issue 220")
     def testFromInputModule29(self):
         string = module_29
         node = GetNodeFromInput(string, get_module=True)

@@ -37,7 +37,7 @@ class StringParser(object):
         stripped_remaining = StripStartParens(self.remaining_string)
         if not stripped_remaining.startswith(stripped_substring):
             raise BadlySpecifiedTemplateError(
-                'string "{}" should be in string "{}"'
+                'string: \n"{}"\nshould be in string: \n"{}"'
                     .format(stripped_substring, stripped_remaining))
         if stripped_substring == '' and substring == '(':
             self.remaining_string = stripped_remaining

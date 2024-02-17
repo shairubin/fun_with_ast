@@ -534,6 +534,12 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+
+    def testListComprehension(self):
+        string = "f\"{[x for x in range(10)]}\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testQuotesInJstStr(self):
         string = """f'__load_module("{self.index.module}").{self.index.qualname}'"""
         node = GetNodeFromInput(string)
@@ -543,8 +549,28 @@ f\"for {root}\")"""
         string = """f'__a("{b}").{c}'"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testQuotesInJstStr3(self):
+        string = "f\"test\" if run_url is not None else \"job\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
-    def testListComprehension(self):
-        string = "f\"{[x for x in range(10)]}\""
+    @pytest.mark.skip("not supported yet - issue 196")
+    def testQuotesInJstStr4(self):
+        string = """(
+        f"The"
+        )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr4_1(self):
+        string = """(
+        f"The  If "
+)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr5(self):
+        string = """(
+        f"The {args.action} {job_link} was canceled. If ")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

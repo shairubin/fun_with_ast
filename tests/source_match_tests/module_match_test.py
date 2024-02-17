@@ -1,5 +1,3 @@
-import pytest
-
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -769,7 +767,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue 220")
+    #@pytest.mark.skip("not supported yet - issue 220")
     def testFromInputModule27(self):
         string = module_27
         node = GetNodeFromInput(string, get_module=True)
@@ -780,7 +778,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue 220")
+    #@pytest.mark.skip("not supported yet - issue 220")
     def testFromInputModule29(self):
         string = module_29
         node = GetNodeFromInput(string, get_module=True)

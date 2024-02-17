@@ -38,9 +38,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
                 one_line_node =GetNodeFromInput(string_to_match)
                 matcher = GetDynamicMatcher(one_line_node)
-                #matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]
                 matched_line_text = line.prefix_str +  matcher._match(string_to_match)
-                #matched_line_text = line.prefix_str +  matcher._match(line.full_jstr_including_prefix)
                 if index != len(self.jstr_meta_data)-1:
                     matcher.matched_source = matched_line_text +"\n"
                     source += matched_line_text +"\n"
@@ -64,14 +62,15 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_string_source = self._match_format_parts(format_parts)
         self.matched = False  # ugly hack to force the next line to work
         self.matched_source = None
-        # len_jstr = self._get_size_of_jstr_string()
         remaining_string = remaining_string[len(format_string_source):]
         remaining_string = MatchPlaceholder(remaining_string, self.node, self.expected_parts[-1])
         return self._conclude_jstr_match( remaining_string)
 
     def _conclude_jstr_match(self, remaining_string):
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
         remaining_string = self.MatchEndParen(remaining_string)
+
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])
         remaining_string = self.MatchCommentEOL(remaining_string)
         matched_source = self.GetSource()
         self.matched = True

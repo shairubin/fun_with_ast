@@ -443,6 +443,14 @@ def name(self):
         rep = f'__load_module("{self.index.module}").{self.index.qualname}'
         return f"___odict_getitem({self.base.name()}, {rep})"
 """
+
+module_27 = """
+def main() -> None:
+    job_link = f"[job]({run_url})" if run_url is not None else "job"
+    msg = (
+        f"The {args.action} {job_link} was canceled. If "     
+    )
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -743,5 +751,10 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule26(self): # issue 214
         string = module_26
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule27(self): # issue 214
+        string = module_27
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

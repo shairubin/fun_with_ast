@@ -60,12 +60,10 @@ class ExprMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testSimpleExpr8(self): # fixed in issue 196
+    def testSimpleExpr8(self):
         string = "'7'\n   "
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-        #with pytest.raises(AssertionError):
-        #    self._verify_match(node, string)
 
     def testSimpleExpr9(self):
         string = "'7'\n   "

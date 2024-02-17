@@ -378,7 +378,7 @@ l(a)
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testCallWithTuple1_1(self): # fixed in issue 196
+    def testCallWithTuple1_1(self):
         string = """lax(
             (0,1),
             (2, 3),
@@ -386,8 +386,6 @@ l(a)
         """
         node = GetNodeFromInput(string, get_module=False) # note the False
         self._verify_match(node, string)
-        #with pytest.raises(AssertionError):
-        #    self._verify_match(node, string)
 
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(

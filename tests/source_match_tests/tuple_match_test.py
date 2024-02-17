@@ -123,13 +123,10 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string, get_module=True)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInputTupleWithEOL24(self): # fixed in issue 196
+    def testCreateNodeFromInputTupleWithEOL24(self):
         string = '(1,2)\n     '
         node =GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
-
-#        with pytest.raises(AssertionError):
-#            self._assert_match(node, string)
 
     def testCreateNodeFromInputTupleWithEOL3(self):
         string = '((1,2),\n (3,4))'

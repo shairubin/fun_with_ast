@@ -74,13 +74,10 @@ class ConstantNumMatcherTest(BaseTestUtils):
         #with pytest.raises(BadlySpecifiedTemplateError):
         self._assert_match(node, string)
 
-    def testBasicMatchWithdWS(self): # fixed in issue 196
+    def testBasicMatchWithdWS(self):
         node = create_node.Num('1')
         string = '1   '
         self._verify_match(node, string)
-
-#        with pytest.raises(AssertionError):
-#            self._assert_match(node, string)
 
 
     def testBasicMatchWithdWSExpr(self):
@@ -205,21 +202,18 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '1 # comment \n   '
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def testStringFronInput2_41(self): # fixed in issue 196
+
+    def testStringFronInput2_41(self):
         string = '1 # comment \n   '
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
-#        with pytest.raises(AssertionError):
-#            self._verify_match(node, string)
 
-    def testStringFronInput2_5(self): # fixed in issue 196
+    def testStringFronInput2_5(self):
         string = '1\n   '
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-#        with pytest.raises(AssertionError):
-#            self._verify_match(node, string)
     def testStringFronInput2_6(self):
         string = '1\n   '
         node = GetNodeFromInput(string, get_module=True)

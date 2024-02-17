@@ -64,13 +64,10 @@ class AssignMatcherTest(BaseTestUtils):
         self._assert_matched_source(node, string)
 
 
-    def testBasicMatchAssignWithWSAndTab(self): # fixed in issue 196
+    def testBasicMatchAssignWithWSAndTab(self):
         node = create_node.Assign('a', create_node.Num('1'))
         string = 'a  =  1  \t'
         self._verify_match(node, string)
-
-#        with pytest.raises(AssertionError):
-#            self._assert_matched_source(node, string)
 
     def testMatchMultiAssign(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('2'))
@@ -143,13 +140,11 @@ class AssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testAssignFromSource1_3(self): # fixed in issue 196
+    def testAssignFromSource1_3(self):
         string = 'a=1\n     '
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
-#        with pytest.raises(AssertionError):
-#            self._verify_match(node, string)
 
     def testAssignFromSource1_4(self):
         string = 'a=(1)\n     '

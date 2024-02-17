@@ -451,6 +451,12 @@ def main() -> None:
         f"The {args.action} {job_link} was canceled. If "     
     )
 """
+module_28 = """
+def main() -> None:
+    job_link = f"test" if run_url is not None else "job"
+    msg = f"test2"     
+    
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -749,12 +755,17 @@ def dot_product_attention_weights():
         string = module_25
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def testFromInputModule26(self): # issue 214
+    def testFromInputModule26(self):
         string = module_26
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputModule27(self): # issue 214
+    def testFromInputModule27(self):
         string = module_27
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule28(self):
+        string = module_28
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

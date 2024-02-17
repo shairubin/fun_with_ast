@@ -32,13 +32,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self._split_jstr_into_lines(remaining_string)
         source = ''
 
-        if len(self.jstr_meta_data)>1: # this is multi line jstr
+        if len(self.jstr_meta_data) > 1: # this is multi line jstr
             self._mark_node_values_as_potentially_matched()
             for index, line in enumerate(self.jstr_meta_data):
                 string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
                 one_line_node =GetNodeFromInput(string_to_match)
                 matcher = GetDynamicMatcher(one_line_node)
-                matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]
+                #matcher.end_whitespace_matchers = [TextPlaceholder(r'[ \t]*', '', no_transform=True)]
                 matched_line_text = line.prefix_str +  matcher._match(string_to_match)
                 #matched_line_text = line.prefix_str +  matcher._match(line.full_jstr_including_prefix)
                 if index != len(self.jstr_meta_data)-1:

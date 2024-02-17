@@ -63,18 +63,18 @@ class DefaultSourceMatcher(SourceMatcher):
                 'error resulted:\n\n{}'
                     .format(string, self, e.message))
 
-
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0]) # EOL
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1]) # EOF
-        remaining_string = self.MatchCommentEOL(remaining_string) #TODO: move it before get source
-        remaining_string = self.MatchNewLine(remaining_string)
+        self._conclude_match(remaining_string)
         matched_string = DefaultSourceMatcher.GetSource(self)
-
         result = matched_string
         self.matched = True
         self.matched_source = result
         return result
 
+    def _conclude_match(self, remaining_string):
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])  # EOL
+        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])  # EOF
+        remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
+        remaining_string = self.MatchNewLine(remaining_string)
 
     def GetSource(self):
         self.validated_call_to_match()

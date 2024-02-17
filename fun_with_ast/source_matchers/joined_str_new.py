@@ -69,9 +69,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _conclude_jstr_match(self, remaining_string):
         remaining_string = self.MatchEndParen(remaining_string)
 
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])
-        remaining_string = self.MatchCommentEOL(remaining_string)
+        self._conclude_match(remaining_string)
         matched_source = self.GetSource()
         self.matched = True
         self.matched_source = matched_source

@@ -31,8 +31,7 @@ class BinOpMatcherTest(BaseTestUtils):
             create_node.Sub(),
             create_node.Num('1'))
         string = '\ta - 1  \t' # WS end of line not supported now
-        with pytest.raises(BadlySpecifiedTemplateError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
 
 
     def testSubBinOpNegativeTest(self):

@@ -159,8 +159,7 @@ class JoinStrMatcherTests(BaseTestUtils):
     def testMatchMultilLine2(self):
         node = GetNodeFromInput("f'X'")
         string = "f'X'    " # WS at the end of line not supported
-        with pytest.raises(AssertionError):
-            self._verify_match(node, string)
+        self._verify_match(node, string)
     def testMatchMultilLine2_1(self):
         node = GetNodeFromInput("f'X'", get_module=True)
         string = "f'X'    \n"
@@ -513,7 +512,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue 196")
     def testSubscriptWithConstant(self):
         string =  """f"{c['Name']}\\n" """
         node = GetNodeFromInput(string)
@@ -523,7 +521,6 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue 196")
     def testSubscriptWithConstant3(self):
         string =  "f\"{c['Name']}\\n\" "
         node = GetNodeFromInput(string)
@@ -554,18 +551,25 @@ f\"for {root}\")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("not supported yet - issue 196")
+
     def testQuotesInJstStr4(self):
-        string = """(
-        f"The"
-        )"""
+        string = """"The"
+
+        """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
+    @pytest.mark.skip("not supported yet - issue 220")
     def testQuotesInJstStr4_1(self):
+        string = """\"The\"\n\"problem\"
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testQuotesInJstStr4_5(self):
         string = """(
         f"The  If "
-)"""
+)
+"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

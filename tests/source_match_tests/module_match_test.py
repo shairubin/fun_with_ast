@@ -463,7 +463,15 @@ def main() -> None:
         f"The {args.action} {job_link} was canceled. If "     
     )
 """
+module_30 = """
+def main():
 
+        print(
+            f"Type {t.__name__} had a minimum time of {10**6 * bench_min} us"
+            f" and a standard deviation of {(10**6) * bench_std} us."
+        )
+
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -779,5 +787,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule29(self):
         string = module_29
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule30(self):
+        string = module_30
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -470,8 +470,12 @@ def main():
             f"Type {t.__name__} had a minimum time of {10**6 * bench_min} us"
             f" and a standard deviation of {(10**6) * bench_std} us."
         )
-
 """
+module_31 = """
+def construct_name(fwd_bwd, test_name):
+    return f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}"
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -792,5 +796,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule30(self):
         string = module_30
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testFromInputModule31(self):
+        string = module_31
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

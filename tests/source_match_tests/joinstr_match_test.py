@@ -596,3 +596,8 @@ def main() -> None:
 """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def testTBD(self):
+        string = """f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

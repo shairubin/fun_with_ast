@@ -202,9 +202,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
                 for child in ast.walk(node):
-                    if isinstance(child, (ast.Name, ast.Attribute, ast.Call, ast.Subscript, ast.Constant, ast.BinOp,
-                                          ast.ListComp)):
-                        child.no_matchers_ok = True
+                    #if isinstance(child, (ast.Name, ast.Attribute, ast.Call, ast.Subscript, ast.Constant, ast.BinOp,
+                    #                      ast.ListComp)):
+                    child.no_matchers_ok = True
             node.no_matchers_ok = True
 
     def _fix_quotes_in_format_string(self, matched_text, original):

@@ -475,6 +475,16 @@ module_31 = """
 def construct_name(fwd_bwd, test_name):
     return f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}"
 """
+module_32 = """
+class HierarchicalModelAverager(averagers.ModelAverager):
+    def init(self, period_group_size_dict=None, warmup_steps=0, process_group=None):
+        if list(period_group_size_dict.values())[-1] != overall_group_size:
+            raise ValueError(
+                f"The last value in arg period_process_group_dict {list(period_group_size_dict.values())[-1]} "
+                f"must be equal to the size of arg process_group {overall_group_size}."
+        )
+"""
+
 
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
@@ -802,5 +812,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule31(self):
         string = module_31
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule33(self):
+        string = module_32
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

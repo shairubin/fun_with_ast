@@ -1,7 +1,7 @@
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
@@ -78,7 +78,7 @@ class ConstantStrMatcherTest(BaseTestUtils):
 
     def testMultiPartEmpty2(self):
         string = "''''" # not supported in python 3.10
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testMultiPartMultiLine(self):

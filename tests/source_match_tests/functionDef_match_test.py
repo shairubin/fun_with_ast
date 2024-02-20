@@ -1,7 +1,7 @@
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
@@ -389,7 +389,7 @@ def _generate_continue(self, sequences, model, tokenizer):
 def _generate_continue(self, sequences, model, tokenizer):
     generated_sequences[i * self.create_n + ii].replace(" ", "").replace("\n", "")
 """
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string, get_module=True)
 
     def testFunctionDefWithSubscript2(self):

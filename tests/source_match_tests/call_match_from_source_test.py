@@ -1,6 +1,6 @@
 import pytest
 
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
@@ -77,7 +77,7 @@ class CallMatcherTest(BaseTestUtils):
 
     def testCallMatchWithKwargs4_5(self):
         string = "a(b=c, *d, e)\n"
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     @pytest.mark.skip('not implemented yet')
@@ -97,7 +97,7 @@ class CallMatcherTest(BaseTestUtils):
 
     def testCallMatchWithKwargs7(self):
         string = "a(c=d, e)\n"
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testCallDoubeAttribute(self):

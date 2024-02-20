@@ -4,9 +4,16 @@ import re
 from fun_with_ast.common_utils.constant_visitor import ConstantVisitor
 
 
+class FailedToCreateNodeFromInput(BaseException):
+    pass
+
+
 def GetNodeFromInput(string, body_index = 0, get_module = False):
-    generator = FWANodeGenerator()
-    return generator.GetNodeFromInputV1(string, body_index, get_module)
+    try: 
+        generator = FWANodeGenerator()
+        return generator.GetNodeFromInputV1(string, body_index, get_module)
+    except Exception as e:
+        raise FailedToCreateNodeFromInput(f'Error in GetNodeFromInput: {e}')
 
 # will be used in next generation of the library
 class FWANodeGenerator():

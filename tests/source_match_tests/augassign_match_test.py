@@ -1,7 +1,7 @@
 import pytest
 
 from fun_with_ast.manipulate_node import create_node as create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
@@ -80,7 +80,7 @@ attn_weights -= a()
 
     def testFromInput2(self):
         string = """a+=\n'str'"""
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testFromInput3(self):

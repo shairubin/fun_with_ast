@@ -1,6 +1,6 @@
 import pytest
 
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
@@ -126,12 +126,12 @@ class ListTest(BaseTestUtils):
 
     def testAssignFromSourceWithListAsValue31(self):
         string = """{"attention_mask": a,b}"""
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testAssignFromSourceWithListAsValue4(self):
         string = """{"attention_mask": [a, **m]}"""
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testAssignFromSourceWithListAsValue41(self):

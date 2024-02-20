@@ -1,7 +1,7 @@
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
@@ -184,12 +184,12 @@ class TupleTest(BaseTestUtils):
 
     def testAssignFromSourceWithTuppleAsValue31(self):
         string = """{"attention_mask": a,b}"""
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testAssignFromSourceWithTuppleAsValue4(self):
         string = """{"attention_mask": (a, **m)}"""
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
 
     def testAssignFromSourceWithTuppleAsValue41(self):

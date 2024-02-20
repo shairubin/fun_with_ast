@@ -1,7 +1,7 @@
 import pytest
 
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from tests.create_node_tests.create_node_test_based import CreateNodeTestBase
 
 
@@ -14,11 +14,11 @@ class CreateStrTest(CreateNodeTestBase):
         self.assertNodesEqual(expected_node, test_node)
     def testStrWithWSBefore(self):
         expected_string = ' "a"' # in fun-with-ast string should not have WS before it
-        with pytest.raises(IndentationError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             GetNodeFromInput(expected_string).value
     def testStrWithWSBefore2(self):
         expected_string = ' "a"' # in fun-with-ast string should not have WS before it
-        with pytest.raises(IndentationError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             GetNodeFromInput(expected_string)
 
 

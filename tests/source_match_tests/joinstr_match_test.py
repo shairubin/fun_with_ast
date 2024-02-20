@@ -1,6 +1,6 @@
 import pytest
 
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from fun_with_ast.source_matchers.exceptions import BadlySpecifiedTemplateError
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -22,7 +22,7 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node, string)
 
     def testBasicMatchEmpty2(self):
-        with pytest.raises((SyntaxError)):
+        with pytest.raises((FailedToCreateNodeFromInput)):
             node = GetNodeFromInput("f'\''") # not supported in python
 
     def testBasicMatchFromInput(self):
@@ -111,11 +111,11 @@ class JoinStrMatcherTests(BaseTestUtils):
 
 
     def testBasicMatchFromInputNewLine(self):
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput("f'X{a}\n[b]'")
 
     def testMatchMultilLine(self):
-        with pytest.raises((SyntaxError)):
+        with pytest.raises((FailedToCreateNodeFromInput)):
             node = GetNodeFromInput("f'X\n'")
     def testMatchMultilLine1NoMatch(self):
         node = GetNodeFromInput("f'XY'")
@@ -478,7 +478,7 @@ f\"for {root}\")"""
 
     def testJstrWithConversion6(self):
         string = """f"{abc!c}" """
-        with pytest.raises(SyntaxError):
+        with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string, get_module=True)
 
     def testModule7Partial(self):

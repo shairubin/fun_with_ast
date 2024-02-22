@@ -453,7 +453,12 @@ def _generate_continue(self, sequences, model, tokenizer):
         self._verify_match(node, string)
 
     def testStarArgs5_5(self):
-        string = 'def impl(d=("D",a), x=7):\n  pass\n'
+        string = 'def impl(kw1=("D",a), kw2=7):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_6(self):
+        string = 'def impl(kw1=[(1, y),r]):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

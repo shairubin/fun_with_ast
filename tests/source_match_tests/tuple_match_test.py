@@ -98,6 +98,15 @@ class TupleTest(BaseTestUtils):
         string = '(-1,)'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
+    def testCreateNodeFromInput7(self):
+        string = '(1),'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInput7(self):
+        string = '((1),),'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
 
     def testCreateNodeFromInputTupleWithEOL(self):
         string = '((1,2), (3,4))'

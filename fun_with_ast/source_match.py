@@ -99,15 +99,15 @@ def get_LambdaArg_expected_parts():
 def get_arguments_expected_parts():
     return [
         ArgsDefaultsPlaceholder(
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*=\s*', '=')),
+            TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True),
+            TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'vararg',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *'),
-            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *', no_transform=True),
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True)),
         KwOnlyArgsPlaceholder( # kwonlyargs
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*=\s*', '=')),
+            TextPlaceholder(r'\s*,\s*', ',', no_transform=True),
+            TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'kwarg',
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*\s*', ', **'))
@@ -452,7 +452,15 @@ def get_Lambda_expected_parts():
         FieldPlaceholder('body'),
     ]
 
-# def get_Tuple_expected_parts():
+def get_Tuple_expected_parts():
+   return  [
+           SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
+                                          # seems to work for now to allow both (a,) and (a)
+               'elts',
+               after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
+               exclude_last_after=False),
+       ]
+# def get_TupleForKwArgs_expected_parts():
 #    return  [
 #            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
 #                                           # seems to work for now to allow both (a,) and (a)
@@ -461,14 +469,14 @@ def get_Lambda_expected_parts():
 #                exclude_last_after=False),
 #        ]
 
-def get_Tuple_expected_parts():
-    return [
-        #TextPlaceholder(r'\(\s*', '('),
-        SeparatedListFieldPlaceholder(
-        'elts',
-                  after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
-        #TextPlaceholder(r'\s*,?\s*', ')', no_transform=True)
-    ]
+# def get_Tuple_expected_parts():
+#     return [
+#         #TextPlaceholder(r'\(\s*', '('),
+#         SeparatedListFieldPlaceholder(
+#         'elts',
+#                   after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
+#         #TextPlaceholder(r'\s*,?\s*', ')', no_transform=True)
+#     ]
 
 def get_List_expected_parts():
     return [

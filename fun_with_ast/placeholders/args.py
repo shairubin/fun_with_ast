@@ -1,3 +1,4 @@
+import ast
 import re
 
 from fun_with_ast.manipulate_node.call_args_node import CallArgs
@@ -6,6 +7,22 @@ from fun_with_ast.placeholders.list_placeholder import SeparatedListFieldPlaceho
 from fun_with_ast.placeholders.node import NodePlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
+
+
+class AstListForKwArg(ast.List):
+    def __init__(self):
+        pass
+
+
+class AstTupleForKwArg(ast.Tuple):
+    def __init__(self, source):
+        self.ctx = source.ctx
+        self.elts = source.elts
+        self.dims = source.dims
+        self.col_offset = source.col_offset
+        self.lineno = source.lineno
+        self.end_col_offset = source.end_col_offset
+        self.end_lineno = source.end_lineno
 
 
 class ArgsDefaultsPlaceholder(CompositePlaceholder):
@@ -40,6 +57,8 @@ class ArgsDefaultsPlaceholder(CompositePlaceholder):
     def _GetArgsKwargs(self, node):
         kwargs = list(zip(node.args[len(node.args) - len(node.defaults):], node.defaults))
         args = node.args[:-len(kwargs)] if kwargs else node.args
+        #kwargs = self._handle_collection_in_kwargs(kwargs)
+        
         return args, kwargs
 
     def GetElements(self, node):
@@ -68,6 +87,18 @@ class ArgsDefaultsPlaceholder(CompositePlaceholder):
                 'and kwargs with "{}" _id:{}'
                 .format(self.arg_separator_placeholder,
                         self.kwarg_separator_placeholder, self._id))
+
+    def _handle_collection_in_kwargs(self, kwargs):
+        new_wkwargs = []
+        for kwarg in kwargs:
+            if isinstance(kwarg[1], ast.List):
+                kwarg[1] = AstListForKwArg()
+            elif isinstance(kwarg[1], ast.Dict):
+                raise NotImplementedError('not implemented yet')
+            elif isinstance(kwarg[1], ast.Tuple):
+                X = AstTupleForKwArg(kwarg[1])
+                new_wkwargs.append((kwarg[0], X))
+        return new_wkwargs
 
 
 class KeysValuesPlaceholder(ArgsDefaultsPlaceholder):

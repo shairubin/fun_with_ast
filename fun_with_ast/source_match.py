@@ -64,11 +64,20 @@ def get_alias_expected_parts():
 
 
 
+# def get_Tuple_expected_parts():
+#     return  [
+#             SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
+#                                            # seems to work for now to allow both (a,) and (a)
+#                 'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
+#         ]
+
 def get_Tuple_expected_parts():
     return  [
-            SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
+            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
                                            # seems to work for now to allow both (a,) and (a)
-                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
+                'elts',
+                after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
+                exclude_last_after=False),
         ]
 
 def get_And_expected_parts():

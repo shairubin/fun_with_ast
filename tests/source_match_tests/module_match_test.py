@@ -485,6 +485,13 @@ class HierarchicalModelAverager(averagers.ModelAverager):
         )
 """
 
+module_33 = """
+def forward(
+    ctx, # pyre-ignore[2]: Parameter must be annotated.
+    self: DT,
+    ) -> DT:
+    ctx.previous_placement = self.placements
+"""
 
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
@@ -815,7 +822,12 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputModule33(self):
+    def testFromInputModule32(self):
         string = module_32
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule33(self):
+        string = module_33
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

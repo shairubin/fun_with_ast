@@ -91,14 +91,14 @@ def get_LambdaArg_expected_parts():
 def get_arguments_expected_parts():
     return [ # note the ',?'. This is a hack to support tuples in the arguments. Tuples are 'eating' the comma
         ArgsDefaultsPlaceholder(
-            TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True),
+            TextPlaceholder(r'\s*,?\s*', ', ', no_transform=False),
             TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'vararg',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *', no_transform=True),
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *', no_transform=False),
             after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True)),
         KwOnlyArgsPlaceholder( # kwonlyargs
-            TextPlaceholder(r'\s*,?\s*', ',', no_transform=True),
+            TextPlaceholder(r'\s*,?\s*', ',', no_transform=False),
             TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'kwarg',

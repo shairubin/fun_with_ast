@@ -2,11 +2,12 @@
 import _ast
 import sys
 
+import fun_with_ast.placeholders.ast_tuple_for_kwargs
+
 import fun_with_ast.manipulate_node.call_args_node
 import fun_with_ast.manipulate_node.create_node
 import fun_with_ast.manipulate_node.nodes_for_jstr
 import fun_with_ast.manipulate_node.syntax_free_line_node
-import fun_with_ast.placeholders.ast_tuple_for_kwargs
 
 
 def GetDynamicMatcher(node, starting_parens=None, parent_node=None, parts_in=None):
@@ -117,10 +118,7 @@ _dynamic_matchers = {
     _ast.Subscript: ['get_Subscript_expected_parts', 'fun_with_ast.source_match'],
     _ast.Constant: ['ConstantSourceMatcher', 'fun_with_ast.source_match'],
     _ast.Tuple: ['get_Tuple_expected_parts', 'fun_with_ast.source_match'],
-    fun_with_ast.placeholders.ast_tuple_for_kwargs.AstTupleForKwArgs: ['get_TupleForKwArgs_expected_parts', 'fun_with_ast.source_match'],
-    #fun_with_ast.placeholders.args.AstTupleForKwArgs: ['get_Tuple_expected_parts', 'fun_with_ast.source_match'],
     _ast.JoinedStr: ['JoinedStrSourceMatcherNew', 'fun_with_ast.source_matchers.joined_str_new'],
-#    _ast.JoinedStr: ['JoinedStrSourceMatcher', 'fun_with_ast.source_matchers.joined_str'],
     _ast.Try: ['get_TryExcept_expected_parts', 'fun_with_ast.source_match'],
     _ast.Starred: ['get_Starred_expected_parts', 'fun_with_ast.source_match'],
     _ast.FormattedValue: ['get_FormattedValue_expected_parts', 'fun_with_ast.source_match'],

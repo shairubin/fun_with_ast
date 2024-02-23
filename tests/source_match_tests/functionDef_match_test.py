@@ -426,7 +426,6 @@ def _generate_continue(self, sequences, model, tokenizer):
         self._verify_match(node, string)
 
 
-    #@pytest.mark.skip(reason="issue 234")
     def testStarArgs5(self):
         string = 'def impl(qualname, *, device_types=("cpu", "cuda"), func=None):\n  pass\n'
         node = GetNodeFromInput(string)
@@ -451,13 +450,11 @@ def _generate_continue(self, sequences, model, tokenizer):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 234")
     def testStarArgs5_4(self):
         string = 'def impl(d=("D", "c") ,x=7):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 234")
     def testStarArgs5_5(self):
         string = 'def impl(kw1=("D",a), kw2=7):\n  pass\n'
         node = GetNodeFromInput(string)
@@ -468,7 +465,6 @@ def _generate_continue(self, sequences, model, tokenizer):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    #@pytest.mark.skip(reason="issue 234")
     def testStarArgs5_7(self):
         string = 'def impl(kw1=[(1, kw_name),r],):\n  pass\n'
         node = GetNodeFromInput(string)

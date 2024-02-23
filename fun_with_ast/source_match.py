@@ -452,12 +452,32 @@ def get_Lambda_expected_parts():
         FieldPlaceholder('body'),
     ]
 
+# def get_Tuple_expected_parts():
+#    return  [
+#            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
+#                                           # seems to work for now to allow both (a,) and (a)
+#                'elts',
+#                after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
+#                exclude_last_after=False),
+#        ]
+
+def get_Tuple_expected_parts():
+    return [
+        #TextPlaceholder(r'\(\s*', '('),
+        SeparatedListFieldPlaceholder(
+        'elts',
+                  after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
+        #TextPlaceholder(r'\s*,?\s*', ')', no_transform=True)
+    ]
 
 def get_List_expected_parts():
     return [
         TextPlaceholder(r'\[\s*', '['),
         SeparatedListFieldPlaceholder(
-            'elts', TextPlaceholder(r'\s*,\s*', ', ')),
+            'elts', TextPlaceholder(r'\s*,?\s*', ', ')), # note that the '?' might allow incorrect syntax like ((a,b c)
+                                                                                 # -- but it is nessary to
+                                                                                 # allow both [(1,2), (3,4)]
+                                                                                 # issue 234
         TextPlaceholder(r'\s*,?\s*\]', ']')]
 
 

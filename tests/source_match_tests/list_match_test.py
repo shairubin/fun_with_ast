@@ -175,11 +175,17 @@ class ListTest(BaseTestUtils):
         string = "[(1),3,]"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    @pytest.mark.skip(reason="issue 234")
+    #@pytest.mark.skip(reason="issue 234")
     def testListTrailingComma4(self):
         string = "[(1,a),3]"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    #@pytest.mark.skip(reason="issue 234")
+    def testListTrailingComma4(self):
+        string = "[(1,a),(3,b)]"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testListTrailingComma5(self):
         string = "[[1,a],3]"
         node = GetNodeFromInput(string)

@@ -468,7 +468,7 @@ def _generate_continue(self, sequences, model, tokenizer):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue 234")
+    #@pytest.mark.skip(reason="issue 234")
     def testStarArgs5_7(self):
         string = 'def impl(kw1=[(1, kw_name),r],):\n  pass\n'
         node = GetNodeFromInput(string)

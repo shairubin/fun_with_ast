@@ -40,6 +40,7 @@ class ArgsDefaultsPlaceholder(CompositePlaceholder):
     def _GetArgsKwargs(self, node):
         kwargs = list(zip(node.args[len(node.args) - len(node.defaults):], node.defaults))
         args = node.args[:-len(kwargs)] if kwargs else node.args
+        
         return args, kwargs
 
     def GetElements(self, node):
@@ -68,6 +69,7 @@ class ArgsDefaultsPlaceholder(CompositePlaceholder):
                 'and kwargs with "{}" _id:{}'
                 .format(self.arg_separator_placeholder,
                         self.kwarg_separator_placeholder, self._id))
+
 
 
 class KeysValuesPlaceholder(ArgsDefaultsPlaceholder):

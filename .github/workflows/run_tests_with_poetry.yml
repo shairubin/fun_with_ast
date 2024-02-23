@@ -3,8 +3,6 @@ name: lint-and-unit-tests
 on:
   push:
     branches: ['*']
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   lint-and-unit-test:
@@ -52,7 +50,7 @@ jobs:
           # stop on unused imports 
           flake8 . --count --select=F401 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore=E226,E231,E391,E302,E261,E301,E303
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------

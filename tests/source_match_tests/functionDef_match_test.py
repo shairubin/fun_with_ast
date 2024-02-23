@@ -424,3 +424,53 @@ def _generate_continue(self, sequences, model, tokenizer):
         string = 'def test_fun(*,a, c, **d):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+
+    def testStarArgs5(self):
+        string = 'def impl(qualname, *, device_types=("cpu", "cuda"), func=None):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_1(self):
+        string = 'def impl(qualname, *, device_types="cpu", func=None):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_2(self):
+        string = 'def impl(*, device_types=("cpu", "cuda")):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testStarArgs5_3(self):
+        string = 'def impl(device_types=("cpu", "cuda")):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_3_1(self):
+        string = 'def impl(device_types=("cpu", "cuda"), ):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_4(self):
+        string = 'def impl(d=("D", "c") ,x=7):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_5(self):
+        string = 'def impl(kw1=("D",a), kw2=7):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_6(self):
+        string = 'def impl(kw1=[(1, kw_name),r]):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs5_7(self):
+        string = 'def impl(kw1=[(1, kw_name),r],):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testStarArgs6(self):
+        string = 'def impl(qualname, *,  func=None):\n  pass\n'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

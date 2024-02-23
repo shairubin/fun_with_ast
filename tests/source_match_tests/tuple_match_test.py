@@ -98,6 +98,15 @@ class TupleTest(BaseTestUtils):
         string = '(-1,)'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
+    def testCreateNodeFromInput7(self):
+        string = '(1),'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInput7(self):
+        string = '((1),),'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
 
     def testCreateNodeFromInputTupleWithEOL(self):
         string = '((1,2), (3,4))'
@@ -136,6 +145,16 @@ class TupleTest(BaseTestUtils):
     def testCreateNodeFromInputTupleWithEOL31(self):
         string = '(1,\n 2)'
         node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTrailingComma(self):
+        string = '(1,2),'
+        node = GetNodeFromInput(string)
+        self._assert_match(node, string)
+    #while the below test passes the implementation is not correct in hamdling the commas
+    def testCreateNodeFromInputTrailingComma2(self):
+        string = '((1,2),(3,4),)'
+        node = GetNodeFromInput(string)
         self._assert_match(node, string)
 
     def testCreateNodeFromInputTupleWithJoinedStr(self):

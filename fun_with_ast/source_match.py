@@ -63,12 +63,13 @@ def get_alias_expected_parts():
     ]
 
 
-
 def get_Tuple_expected_parts():
     return  [
-            SeparatedListFieldPlaceholder( #note that the '?' might allopw incorrect syntax like ((a,b c) -- but it
+            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
                                            # seems to work for now to allow both (a,) and (a)
-                'elts', after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', '')),
+                'elts',
+                after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
+                exclude_last_after=False),
         ]
 
 def get_And_expected_parts():
@@ -88,17 +89,17 @@ def get_LambdaArg_expected_parts():
 
 
 def get_arguments_expected_parts():
-    return [
+    return [ # note the ',?'. This is a hack to support tuples in the arguments. Tuples are 'eating' the comma
         ArgsDefaultsPlaceholder(
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*=\s*', '=')),
+            TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True),
+            TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'vararg',
-            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *'),
-            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ')),
+            before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *', no_transform=True),
+            after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True)),
         KwOnlyArgsPlaceholder( # kwonlyargs
-            TextPlaceholder(r'\s*,\s*', ', '),
-            TextPlaceholder(r'\s*=\s*', '=')),
+            TextPlaceholder(r'\s*,?\s*', ',', no_transform=True),
+            TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'kwarg',
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\*\s*', ', **'))
@@ -443,12 +444,23 @@ def get_Lambda_expected_parts():
         FieldPlaceholder('body'),
     ]
 
+def get_Tuple_expected_parts():
+   return  [
+           SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
+                                          # seems to work for now to allow both (a,) and (a)
+               'elts',
+               after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
+               exclude_last_after=False),
+       ]
 
 def get_List_expected_parts():
     return [
         TextPlaceholder(r'\[\s*', '['),
         SeparatedListFieldPlaceholder(
-            'elts', TextPlaceholder(r'\s*,\s*', ', ')),
+            'elts', TextPlaceholder(r'\s*,?\s*', ', ')), # note that the '?' might allow incorrect syntax like ((a,b c)
+                                                                                 # -- but it is nessary to
+                                                                                 # allow both [(1,2), (3,4)]
+                                                                                 # issue 234
         TextPlaceholder(r'\s*,?\s*\]', ']')]
 
 

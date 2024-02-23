@@ -2,8 +2,6 @@
 import _ast
 import sys
 
-import fun_with_ast.placeholders.ast_tuple_for_kwargs
-
 import fun_with_ast.manipulate_node.call_args_node
 import fun_with_ast.manipulate_node.create_node
 import fun_with_ast.manipulate_node.nodes_for_jstr

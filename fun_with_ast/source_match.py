@@ -106,7 +106,7 @@ def get_arguments_expected_parts():
             before_placeholder=TextPlaceholder(r'\s*,?\s*\*\s*', ', *', no_transform=True),
             after_placeholder=TextPlaceholder(r'\s*,?\s*', ', ', no_transform=True)),
         KwOnlyArgsPlaceholder( # kwonlyargs
-            TextPlaceholder(r'\s*,\s*', ',', no_transform=True),
+            TextPlaceholder(r'\s*,?\s*', ',', no_transform=True),
             TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),
         FieldPlaceholder(
             'kwarg',

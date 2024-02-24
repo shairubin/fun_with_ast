@@ -492,6 +492,12 @@ def forward(
     ) -> DT:
     ctx.previous_placement = self.placements
 """
+module_34 = """
+def trace_cond(proxy_mode, func_overload, pred, true_fn, false_fn, operands):
+    assert isinstance(
+        operands, (list, tuple)
+    ), "Cond operands must be a list or tuple of tensors"
+"""
 
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
@@ -829,5 +835,9 @@ def dot_product_attention_weights():
 
     def testFromInputModule33(self):
         string = module_33
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule34(self):
+        string = module_34
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

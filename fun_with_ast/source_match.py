@@ -116,7 +116,7 @@ def get_Assert_expected_parts():
     return [
         TextPlaceholder(r' *assert *', 'assert '),
         FieldPlaceholder('test'),
-        # the '?' is a hack to support tupple in the assert statement that is 'eating' the comma
+        # the '?' is a hack to support tuple in the assert statement that is 'eating' the comma
         FieldPlaceholder(
             'msg', before_placeholder=TextPlaceholder(r',?[ \t]*', ', ')),
     ]

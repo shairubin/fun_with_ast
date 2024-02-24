@@ -37,3 +37,11 @@ class AssertMatcherTest(BaseTestUtils):
     ), "Cond" """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testNoMatchWithMessage4(self):
+        string = """assert Foo((a, b)), "Cond" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testNoMatchWithMessage4_1(self):
+        string = """assert Foo(a, b), "Cond" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

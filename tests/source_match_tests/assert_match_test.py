@@ -34,7 +34,7 @@ class AssertMatcherTest(BaseTestUtils):
     def testNoMatchWithMessage3(self):
         string = """assert isinstance(
         operands, (list, tuple)
-    ), "Cond" """
+    ),  "Cond" """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testNoMatchWithMessage4(self):

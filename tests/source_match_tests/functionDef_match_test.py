@@ -474,3 +474,11 @@ def _generate_continue(self, sequences, model, tokenizer):
         string = 'def impl(qualname, *,  func=None):\n  pass\n'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testListAndTuple(self):
+        string = """isinstance(
+    operands, (list, tuple)
+    )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

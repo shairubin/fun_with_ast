@@ -493,6 +493,13 @@ def forward(
     ctx.previous_placement = self.placements
 """
 module_34 = """
+def modify_low_high() -> Tuple[float, float]:
+    if any(isinstance(value, float) and math.isnan(value) for value in [low, high]):
+            raise ValueError(
+            f"low and high cannot be NaN, but got {low=} and {high=}"
+    )
+"""
+module_35 = """
 def trace_cond(proxy_mode, func_overload, pred, true_fn, false_fn, operands):
     assert isinstance(
         operands, (list, tuple)
@@ -839,5 +846,10 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule34(self):
         string = module_34
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule35(self):
+        string = module_35
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

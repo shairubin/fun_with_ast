@@ -597,7 +597,11 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testTBD(self):
+    def testJstr1(self):
         string = """f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testJstr2(self):
+        string = """f"and {high=}" """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

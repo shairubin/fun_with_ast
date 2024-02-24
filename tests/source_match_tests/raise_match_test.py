@@ -108,3 +108,10 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
+    def testRais1(self):
+        string = """raise ValueError(
+            f"low and high cannot be NaN, but got {low=} and {high=}"
+    )
+"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)

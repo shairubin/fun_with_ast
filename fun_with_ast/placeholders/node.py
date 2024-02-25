@@ -37,15 +37,19 @@ class NodePlaceholder(Placeholder):
         except BadlySpecifiedTemplateError as e:
 
             if isinstance(self.node, (ast.Constant)):
-                stripped_matched, stripped_original = _get_stripped_strings(string, node_src)
-                semantic_match =  self._is_semantic_equivalent_strings(string, node_src,
-                                                                       stripped_matched, stripped_original)
-                if not semantic_match:
-                    raise e
-                else:
-                    original_quote = stripped_original[0]
-                    current_quote = node_src[0]
-                    node_src = node_src.replace(current_quote, original_quote)
+                node_src = self._handle_semantic_equivalent_constants(e, node_src, string)
+        return node_src
+
+    def _handle_semantic_equivalent_constants(self, e, node_src, string):
+        stripped_matched, stripped_original = _get_stripped_strings(string, node_src)
+        semantic_match = self._is_semantic_equivalent_strings(string, node_src,
+                                                              stripped_matched, stripped_original)
+        if not semantic_match:
+            raise e
+        else:
+            original_quote = stripped_original[0]
+            current_quote = node_src[0]
+            node_src = node_src.replace(current_quote, original_quote)
         return node_src
 
     def GetSource(self, unused_node):

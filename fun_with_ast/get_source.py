@@ -41,6 +41,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
         return str(field)
+        #return _handle_scientific_notation(field, text)
     if isinstance(field, ast.Constant) and field.value == Ellipsis:
         return "..."
 
@@ -53,6 +54,15 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         _set_elif(assume_elif, field)
         source_code = field.node_matcher.GetSource()
         return source_code
+
+
+def _handle_scientific_notation(field, text):
+    if text is None:
+        return str(field)
+    value = str(field)
+    if float(value) == float(text):
+        return text
+    return value
 
 
 def _set_elif(assume_elif, field):

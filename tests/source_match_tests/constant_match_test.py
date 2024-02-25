@@ -229,3 +229,8 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "..."
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testNumSci1(self):
+        string = "1e-6"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

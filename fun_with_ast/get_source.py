@@ -1,5 +1,6 @@
 import _ast
 import ast
+import re
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
@@ -40,8 +41,8 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
     if isinstance(field, int):
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
-        return str(field)
-        #return _handle_scientific_notation(field, text)
+        #return str(field)
+        return _handle_scientific_notation(field, text)
     if isinstance(field, ast.Constant) and field.value == Ellipsis:
         return "..."
 
@@ -59,10 +60,15 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
 def _handle_scientific_notation(field, text):
     if text is None:
         return str(field)
-    value = str(field)
-    if float(value) == float(text):
-        return text
-    return value
+    scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', text)
+    if scientific_notation:
+        value_from_text = scientific_notation.group(0)
+        str_value = str(field)
+        if float(str_value) == float(value_from_text):
+            return value_from_text
+        return str(field) # TODO -- should we raise an exception here?
+    else:
+        return str(field)
 
 
 def _set_elif(assume_elif, field):

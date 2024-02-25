@@ -35,9 +35,10 @@ class NodePlaceholder(Placeholder):
         try:
             ValidateStart(string, node_src)
         except BadlySpecifiedTemplateError as e:
-
             if isinstance(self.node, (ast.Constant)):
                 node_src = self._handle_semantic_equivalent_constants(e, node_src, string)
+            elif isinstance(self.node, float) or isinstance(self.node, int):
+                node_src = self._handle_semantic_equivalent_float(e, node_src, string)
         return node_src
 
     def _handle_semantic_equivalent_constants(self, e, node_src, string):
@@ -74,3 +75,6 @@ class NodePlaceholder(Placeholder):
         if original_quote == matched_string[0] or original_quote == matched_string[-1]:
             raise ValueError("mismatched quotes -- why did we get BadlySpecifiedTemplateError?")
         return True
+
+    def _handle_semantic_equivalent_float(self, e, node_src, string):
+        return node_src

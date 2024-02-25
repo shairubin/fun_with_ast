@@ -362,8 +362,16 @@ def get_Global_expected_parts():
         SeparatedListFieldPlaceholder(
             r'names',
             TextPlaceholder(r'\s*,\s*', ', ')),
-        TextPlaceholder(r' *\n', '\n')
     ]
+
+def get_Nonlocal_expected_parts():
+    return [
+        TextPlaceholder(r'[ \t]*nonlocal [ \t]*', 'global '),
+        SeparatedListFieldPlaceholder(
+            r'names',
+            TextPlaceholder(r'\s*,\s*', ', ')),
+    ]
+
 
 
 def get_Gt_expected_parts():

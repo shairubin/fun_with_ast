@@ -24,7 +24,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             node, expected_parts, starting_parens)
         self.padding_quote = None
         self.jstr_meta_data = []
-        #self.end_whitespace_matchers = [TextPlaceholder(r'[ \t\n]*', '')]
 
 
     def _match(self, string):

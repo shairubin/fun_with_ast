@@ -605,3 +605,8 @@ def main() -> None:
         string = """f"and {high=}" """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testJstr3(self):
+        string = """f"{high=}" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

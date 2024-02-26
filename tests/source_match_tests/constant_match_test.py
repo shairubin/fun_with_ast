@@ -254,3 +254,33 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "4e6"
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
+
+    def testComplex(self):
+        string = "a=1+2j"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testComplex2(self):
+        string = "a=1 + 2j"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testComplex3(self):
+        string = "a=1 + 2j # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testComplex4(self):
+        string = "a=1 -2j # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testComplex5(self):
+        string = "a=1.23 -2j # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testComplex6(self):
+        string = "a=-2j # comment"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

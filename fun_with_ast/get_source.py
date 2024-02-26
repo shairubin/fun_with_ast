@@ -41,6 +41,9 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
         return str(field)
+    if isinstance(field, complex):
+        return str(field)
+
     if isinstance(field, ast.Constant) and field.value == Ellipsis:
         return "..."
 

@@ -43,6 +43,8 @@ class ConstantSourceMatcher(SourceMatcher):
             return self.num_matcher._match(string)
         if self.node.n == Ellipsis:
             return self.num_matcher._match(string)
+        if isinstance(self.node.n, complex) and isinstance(self.node.s, complex):
+            return self.num_matcher._match(string)
         raise NotImplementedError('Unknown constant type')
 
     def GetSource(self):
@@ -59,5 +61,7 @@ class ConstantSourceMatcher(SourceMatcher):
             return self.num_matcher.GetSource()
         if isinstance(self.node.n, str) and isinstance(self.node.s, str):
             return self.str_matcher.GetSource()
+        if isinstance(self.node.n, complex) and isinstance(self.node.s, complex):
+            return self.num_matcher.GetSource()
 
-        raise NotImplementedError
+        raise NotImplementedError("cannot find get source for constant node")

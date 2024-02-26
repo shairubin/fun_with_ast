@@ -80,7 +80,9 @@ class NodePlaceholder(Placeholder):
     def _handle_semantic_equivalent_float(self, e, node_source, original_source):
         if not isinstance(self.parent, ast.Constant):
             raise e
-        scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', original_source)
+
+#        scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', original_source)
+        scientific_notation = re.match(r'^[0-9]*\.?[0-9]+[eE][+-]?[0-9]+', original_source)
         if scientific_notation:
             str_from_source = scientific_notation.group(0)
             value_from_source = float(str_from_source)
@@ -94,4 +96,4 @@ class NodePlaceholder(Placeholder):
         else:
             raise e
 
-        return node_src
+

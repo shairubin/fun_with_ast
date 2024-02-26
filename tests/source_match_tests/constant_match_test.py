@@ -38,11 +38,6 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '1e-06'
         self._assert_match(node, string)
 
-    @pytest.mark.skip('not implemented yet - 1 digit exponent')
-    def testBasicMatchNumSci4(self):
-        node = create_node.Num('1e-6')
-        string = '1e-6'
-        self._assert_match(node, string)
 
     def testBasicMatchNumSci2(self):
         node = create_node.Num('0.2')
@@ -232,5 +227,30 @@ class ConstantNumMatcherTest(BaseTestUtils):
 
     def testNumSci1(self):
         string = "1e-6"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSci2(self):
+        string = "-9.99E+9"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSci3(self):
+        string = "4.2e-06"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSci4(self):
+        string = "-.2E-4"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSci5(self):
+        string = "4e6660"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSci6(self):
+        string = "4e6"
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)

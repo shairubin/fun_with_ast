@@ -1,4 +1,5 @@
 import ast
+import re
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
@@ -37,7 +38,7 @@ class NodePlaceholder(Placeholder):
         except BadlySpecifiedTemplateError as e:
             if isinstance(self.node, (ast.Constant)):
                 node_src = self._handle_semantic_equivalent_constants(e, node_src, string)
-            elif isinstance(self.node, float) or isinstance(self.node, int):
+            elif isinstance(self.node, float):
                 node_src = self._handle_semantic_equivalent_float(e, node_src, string)
         return node_src
 
@@ -76,5 +77,21 @@ class NodePlaceholder(Placeholder):
             raise ValueError("mismatched quotes -- why did we get BadlySpecifiedTemplateError?")
         return True
 
-    def _handle_semantic_equivalent_float(self, e, node_src, string):
+    def _handle_semantic_equivalent_float(self, e, node_source, original_source):
+        if not isinstance(self.parent, ast.Constant):
+            raise e
+        scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', original_source)
+        if scientific_notation:
+            str_from_source = scientific_notation.group(0)
+            value_from_source = float(str_from_source)
+            value_from_node_source = float(node_source)
+            if value_from_source == value_from_node_source:
+                self.parent.node_matcher.matched = True
+                self.parent.node_matcher.matched_source = str_from_source
+                return str_from_source
+            else:
+                raise e
+        else:
+            raise e
+
         return node_src

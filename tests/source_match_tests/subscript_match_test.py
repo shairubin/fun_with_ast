@@ -64,21 +64,24 @@ class SubscriptMatcherTest(BaseTestUtils):
         source = GetSource(node.value)
         assert source == string
 
-    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+    # "GetSource Without getting string to match cannot support all scenarios"
     def testSubscriptGetSource1(self):
         string = 'k[1:]'
         node = GetNodeFromInput(string)
-        source = GetSource(node.value)
-        assert source == string
-    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+        with pytest.raises(AssertionError):
+            source = GetSource(node.value)
+            assert source == string
+    # "GetSource Without getting string to match cannot support all scenarios"
     def testSubscriptGetSource2(self):
         string = 'k[1:2]'
         node = GetNodeFromInput(string)
-        source = GetSource(node.value)
-        assert source == string
-    @pytest.mark.skip(reason="GetSource Without getting string to match cannot support all scenarios")
+        with pytest.raises(AssertionError):
+            source = GetSource(node.value)
+            assert source == string
+    # "GetSource Without getting string to match cannot support all scenarios"
     def testSubscriptGetSource3(self):
         string = 'k[:2]'
         node = GetNodeFromInput(string)
-        source = GetSource(node.value)
-        assert source == string
+        with pytest.raises(AssertionError):
+            source = GetSource(node.value)
+            assert source == string

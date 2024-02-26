@@ -1,4 +1,5 @@
 import ast
+import re
 
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.placeholders.base_placeholder import Placeholder
@@ -35,17 +36,22 @@ class NodePlaceholder(Placeholder):
         try:
             ValidateStart(string, node_src)
         except BadlySpecifiedTemplateError as e:
-
             if isinstance(self.node, (ast.Constant)):
-                stripped_matched, stripped_original = _get_stripped_strings(string, node_src)
-                semantic_match =  self._is_semantic_equivalent_strings(string, node_src,
-                                                                       stripped_matched, stripped_original)
-                if not semantic_match:
-                    raise e
-                else:
-                    original_quote = stripped_original[0]
-                    current_quote = node_src[0]
-                    node_src = node_src.replace(current_quote, original_quote)
+                node_src = self._handle_semantic_equivalent_constants(e, node_src, string)
+            elif isinstance(self.node, float):
+                node_src = self._handle_semantic_equivalent_float(e, node_src, string)
+        return node_src
+
+    def _handle_semantic_equivalent_constants(self, e, node_src, string):
+        stripped_matched, stripped_original = _get_stripped_strings(string, node_src)
+        semantic_match = self._is_semantic_equivalent_strings(string, node_src,
+                                                              stripped_matched, stripped_original)
+        if not semantic_match:
+            raise e
+        else:
+            original_quote = stripped_original[0]
+            current_quote = node_src[0]
+            node_src = node_src.replace(current_quote, original_quote)
         return node_src
 
     def GetSource(self, unused_node):
@@ -70,3 +76,24 @@ class NodePlaceholder(Placeholder):
         if original_quote == matched_string[0] or original_quote == matched_string[-1]:
             raise ValueError("mismatched quotes -- why did we get BadlySpecifiedTemplateError?")
         return True
+
+    def _handle_semantic_equivalent_float(self, e, node_source, original_source):
+        if not isinstance(self.parent, ast.Constant):
+            raise e
+
+#        scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', original_source)
+        scientific_notation = re.match(r'^[0-9]*\.?[0-9]+[eE][+-]?[0-9]+', original_source)
+        if scientific_notation:
+            str_from_source = scientific_notation.group(0)
+            value_from_source = float(str_from_source)
+            value_from_node_source = float(node_source)
+            if value_from_source == value_from_node_source:
+                self.parent.node_matcher.matched = True
+                self.parent.node_matcher.matched_source = str_from_source
+                return str_from_source
+            else:
+                raise e
+        else:
+            raise e
+
+

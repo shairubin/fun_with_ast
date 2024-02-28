@@ -499,6 +499,20 @@ def trace_cond(proxy_mode, func_overload, pred, true_fn, false_fn, operands):
     ), "Cond operands must be a list or tuple of tensors"
 """
 
+module_35 = """
+def get_type_line(source):
+
+    type_pattern = re.compile("# type:\\ ignore(\\[[a-zA-Z-]+\\])?$")
+
+    if len(type_lines) == 0:
+        wrong_type_pattern = re.compile("#[\t ]*type[\t ]*(?!: ignore(\\[.*\\])?$):")
+
+"""
+module_36 = """
+def get_type_line(source):
+    type_pattern = re.compile("# type:\\ ignore(\\[[a-zA-Z-]+\\])?$")
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -839,5 +853,16 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule34(self):
         string = module_34
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule35(self):
+        string = module_35
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testFromInputModule36(self):
+        string = module_36
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

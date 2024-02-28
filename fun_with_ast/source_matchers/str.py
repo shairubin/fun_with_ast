@@ -83,11 +83,16 @@ class StrSourceMatcher(SourceMatcher):
     def __handle_special_chars(self, string_body):
         if (not '\n' in self.original_s and
                 not '\t' in self.original_s and
-                not '\r' in self.original_s and not "\\\'" in string_body):
-            raise NotImplementedError('special characters besides \\n or \\t in string body are not supported yet')
+                not '\r' in self.original_s and
+                not "\\\'" in string_body and
+                not '\\' in string_body):
+            raise NotImplementedError('special characters besides \\ or \\n or \\t in string body are not supported yet')
         else:
-            clean_string = string_body.replace('\\n', '\n').replace('\\t', '\t').replace('\\r', '\r').replace("\\\'",
-                                                                                                              "'")
+            clean_string = (string_body.replace('\\n', '\n').
+                            replace('\\t', '\t').
+                            replace('\\r', '\r').
+                            replace("\\\'",
+                                                                                                              "'"))
             if clean_string != self.original_s:
                 raise BadlySpecifiedTemplateError(
                     f'String body: {string_body} does not match node.s: {self.original_s}')

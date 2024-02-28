@@ -91,8 +91,8 @@ class StrSourceMatcher(SourceMatcher):
             clean_string = (string_body.replace('\\n', '\n').
                             replace('\\t', '\t').
                             replace('\\r', '\r').
-                            replace("\\\'",
-                                                                                                              "'"))
+                            replace("\\\'","'").
+                            replace("\\\\","\\"))
             if clean_string != self.original_s:
                 raise BadlySpecifiedTemplateError(
                     f'String body: {string_body} does not match node.s: {self.original_s}')

@@ -510,8 +510,10 @@ def get_type_line(source):
 """
 module_36 = """
 def get_type_line(source):
-    type_pattern = re.compile("# type:\\ ignore(\\[[a-zA-Z-]+\\])?$")
+    type_pattern = re.compile("# type:\\\\ ignore(\[[a-zA-Z-]+\\\\])?$")
 """
+
+module_37 = 'def get_type_line(source):\n   type_pattern = re.compile("# type:\\ ignore(\[[a-zA-Z-]+\\])?$")'
 
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
@@ -864,5 +866,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule36(self):
         string = module_36
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule37(self):
+        string = module_37
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

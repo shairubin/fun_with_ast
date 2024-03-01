@@ -78,7 +78,7 @@ class DefaultSourceMatcher(SourceMatcher):
 
     def GetSource(self):
         self.validated_call_to_match()
-        if self.matched and True:
+        if self.matched and False: # TODO remove these two lines
             return self.matched_source
         source_list = []
         for part in self.expected_parts:

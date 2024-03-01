@@ -58,7 +58,8 @@ class JoinedStrSourceMatcher(DefaultSourceMatcher):
         return matched_text
 
     def GetSource(self):
-        if self.matched:
+        raise NotImplementedError('Depricated - use JoinedStrSourceMatcherNew')
+        if self.matched and False:
             return self.matched_source
         matched_source = super(JoinedStrSourceMatcher, self).GetSource()
         matched_source = self._convert_to_single_part_string(matched_source)

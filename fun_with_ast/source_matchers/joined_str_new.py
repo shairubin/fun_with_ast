@@ -35,21 +35,14 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if len(self.jstr_meta_data) > 1: # this is multi line jstr
             self._mark_node_values_as_potentially_matched()
             for index, line in enumerate(self.jstr_meta_data):
-                string_to_match = line.full_jstr_including_prefix.removeprefix(line.prefix_str)
+                string_to_match = line.full_jstr_including_prefix
                 if index != len(self.jstr_meta_data)-1:
                     string_to_match += "\n"
-                one_line_node =GetNodeFromInput(string_to_match)
+                one_line_node = GetNodeFromInput(string_to_match.removeprefix(line.prefix_str))
                 matcher = GetDynamicMatcher(one_line_node)
-                matched_line_text = line.prefix_str +  matcher._match(string_to_match)
+                matched_line_text = matcher._match(string_to_match)
                 matcher.matched_source = matched_line_text
                 source += matched_line_text
-
-                # if index != len(self.jstr_meta_data)-1:
-                #     matcher.matched_source = matched_line_text
-                #     source += matched_line_text
-                # else:
-                #     matcher.matched_source = matched_line_text
-                #     source += matched_line_text
                 self.expected_parts.insert(index + 1, NodePlaceholder(one_line_node))
             self.expected_parts.pop(0)
             self.expected_parts.pop()

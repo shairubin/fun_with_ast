@@ -1,3 +1,5 @@
+import re
+
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
@@ -37,7 +39,9 @@ class BodyManipulator:
     def _add_newlines(self):
         for index, node in enumerate(self.body_block):
             node_source = node.node_matcher.GetSource()
-            if node_source.endswith("\n"):
+            ends_with_new_line = re.search(r'\s*\n\s*$', node_source)
+            if ends_with_new_line:
+            #if node_source.endswith("\n"):
                 continue
             if index == len(self.body_block) - 1:
                 continue

@@ -86,6 +86,25 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
         c = a
 """ , True),
 
+('a.b()\n', 0, """if first_card == 100:
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down
+""",  # 27
+     """if first_card == 100:
+        a.b()
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down
+""" , True),
+('a.b()\n', 0, """if first_card == 100:
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down
+""",  # 28
+     """if first_card == 100:
+        a.b()
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down)
+""" , False),
+
 ])
 def injected_source(request):
     yield request.param

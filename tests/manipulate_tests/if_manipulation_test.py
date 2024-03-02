@@ -93,7 +93,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
      """if first_card == 100:
         a.b()
         self.direction = -1
-        self.can_add_card = self.can_add_card_down     
+        self.can_add_card = self.can_add_card_down
 """ , True),
 
 ])

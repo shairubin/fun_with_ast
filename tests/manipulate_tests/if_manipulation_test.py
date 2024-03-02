@@ -14,79 +14,79 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
 
 
 @pytest.fixture(params=[
-#     ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True),  # 0
-#     ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True),  # 1
-#     ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True),  # 2
-#     ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),
-#     # 3
-#     ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 4
-#     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),  # 5
-#     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),  # 6
-#     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 7
-#     ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 8
-#     ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 9
-#     ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
-#     ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True),
-#     ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),  # 12
-#     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),  # 13
-#     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),  # 14
-#     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),  # 15
-#     ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
-#      'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True),
-#     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
-#      'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True),
-#     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
-#      'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
-#     ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
-#      'if (c.d()):\n   a.b()\n\n   a=1', True),  # TODO: this is currently a weird behavior in which
-#     # empty line is counted as a line
-#     ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
-#      'if (c.d()):\n\n   a.b()\n   a=1', True),  # TODO: this is currently a weird behavior in
-#     # which empty line is counted as a line #24
-#     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
-#      'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
-#     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
-#      'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
-#     ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
-#     'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
-#     ('a.b()\n', 0, """if _utils.is_sparse(A):
-#         if len(A.shape) != 2:
-#             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
-#         c = torch.sparse.sum(A, dim=(-2,)) / m
-# """,  # 24
-#      """if _utils.is_sparse(A):
-#         a.b()
-#         if len(A.shape) != 2:
-#             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
-#         c = torch.sparse.sum(A, dim=(-2,)) / m
-# """
-#      , True),
-#
-#     ('a.b()\n', 0, """if True:
-#             if False:
-#                 raise ValueError("test")
-#             c = a
-# """,  # 25
-#                 """if True:
-#             a.b()
-#             if False:
-#                 raise ValueError("test")
-#             c = a
-# """, True),
-#
-#     ('a.b()\n', 0, """if True:
-#         if False:
-#             a=1
-#         c = a
-# """,  # 26
-#      """if True:
-#         a.b()
-#         if False:
-#             a=1
-#         c = a
-# """ , True),
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True),  # 0
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True),  # 1
+    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True),  # 2
+    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),
+    # 3
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 4
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),  # 5
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),  # 6
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 7
+    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 8
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 9
+    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
+    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True),
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),  # 12
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),  # 13
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),  # 14
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),  # 15
+    ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True),
+    ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
+     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True),
+    ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
+     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
+    ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
+     'if (c.d()):\n   a.b()\n\n   a=1', True),  # TODO: this is currently a weird behavior in which
+    # empty line is counted as a line
+    ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
+     'if (c.d()):\n\n   a.b()\n   a=1', True),  # TODO: this is currently a weird behavior in
+    # which empty line is counted as a line #24
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
+     'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
+     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
+    ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
+    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
+    ('a.b()\n', 0, """if _utils.is_sparse(A):
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+""",  # 24
+     """if _utils.is_sparse(A):
+        a.b()
+        if len(A.shape) != 2:
+            raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
+        c = torch.sparse.sum(A, dim=(-2,)) / m
+"""
+     , True),
 
-    ('a.b()\n', 0, """if first_card == 100:
+    ('a.b()\n', 0, """if True:
+            if False:
+                raise ValueError("test")
+            c = a
+""",  # 25
+                """if True:
+            a.b()
+            if False:
+                raise ValueError("test")
+            c = a
+""", True),
+
+    ('a.b()\n', 0, """if True:
+        if False:
+            a=1
+        c = a
+""",  # 26
+     """if True:
+        a.b()
+        if False:
+            a=1
+        c = a
+""" , True),
+
+('a.b()\n', 0, """if first_card == 100:
         self.direction = -1
         self.can_add_card = self.can_add_card_down
 """,  # 27
@@ -95,6 +95,15 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
         self.direction = -1
         self.can_add_card = self.can_add_card_down
 """ , True),
+('a.b()\n', 0, """if first_card == 100:
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down
+""",  # 28
+     """if first_card == 100:
+        a.b()
+        self.direction = -1
+        self.can_add_card = self.can_add_card_down)
+""" , False),
 
 ])
 def injected_source(request):

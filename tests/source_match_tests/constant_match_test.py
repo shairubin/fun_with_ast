@@ -255,6 +255,20 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
 
+    def testNumSciEndOfCall(self):
+        string = 'npt.assert_allclose(workspace.blobs[output], ref(), rtol=1e-3)'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+    def testNumSciEndOfCall1(self):
+        string = 'allclose(rtol=1e-3)'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+    def testNumSciEndOfCall2(self):
+        string = '(1e-3)'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
     def testComplex(self):
         string = "a=1+2j"
         node = GetNodeFromInput(string)

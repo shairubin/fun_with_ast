@@ -488,3 +488,7 @@ def _generate_continue(self, sequences, model, tokenizer):
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testNLWithWhiteSpaces1(self):
+        string = """def test_fun():\n  table = Table(show_header=True, header_style="bold magenta")\n \n  pass"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

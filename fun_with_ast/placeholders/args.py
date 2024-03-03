@@ -96,6 +96,7 @@ class ArgsKeywordsPlaceholder(ArgsDefaultsPlaceholder):
             elements.extend(self.args_matcher.expected_parts)
             elements.extend(self.args_matcher.end_paren_matchers)
             elements.extend(self.args_matcher.EOL_comment_matcher)
+            elements.extend(self.args_matcher.end_whitespace_matchers)
             if self.args_matcher.EOL_matcher:
                 elements.append(self.args_matcher.EOL_matcher)
 

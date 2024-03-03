@@ -544,3 +544,9 @@ l(a)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testCaLLNLWithWhiteSpaces01(self):
+        string = """Table(a)\n \n 
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

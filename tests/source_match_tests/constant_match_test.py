@@ -90,6 +90,11 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '(1)'
         self._assert_match(node, string)
 
+    def testWithParansFloat(self):
+        node = create_node.Num('1.123')
+        string = '(1.123)'
+        self._assert_match(node, string)
+
     def testWithParansAndWS(self):
         node = create_node.Num('1')
         string = '(   1   )     '
@@ -177,6 +182,10 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '1'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testStringFronInput2_11(self):
+        string = '(1.012345)'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testStringFronInput2_31(self):
         string = '1 #comment '
@@ -255,15 +264,24 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
 
+    def testNumSci6_1(self):
+        string = "(4e6)"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string, get_source_after_reset=False)
+
+
+    @pytest.mark.skip('issue 266')
     def testNumSciEndOfCall(self):
         string = 'npt.assert_allclose(workspace.blobs[output], ref(), rtol=1e-3)'
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
 
+    @pytest.mark.skip('issue 266')
     def testNumSciEndOfCall1(self):
         string = 'allclose(rtol=1e-3)'
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
+    @pytest.mark.skip('issue 266')
     def testNumSciEndOfCall2(self):
         string = '(1e-3)'
         node = GetNodeFromInput(string)

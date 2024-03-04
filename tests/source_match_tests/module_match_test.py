@@ -515,6 +515,7 @@ def get_type_line(source):
 
 module_37 = 'def get_type_line(source):\n   type_pattern = re.compile("# type:\\ ignore(\[[a-zA-Z-]+\\])?$")'
 
+module_38 = 'npt.assert_allclose(workspace.blobs[output], ref(), rtol=1e-3)'
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -871,5 +872,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule37(self):
         string = module_37
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule38(self):
+        string = module_38
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

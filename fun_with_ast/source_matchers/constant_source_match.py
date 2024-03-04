@@ -16,6 +16,8 @@ class ConstantSourceMatcher(SourceMatcher):
         self.num_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),
         ])
+        self.num_matcher.is_non_standard_scientific_notation = False
+        self.num_matcher.is_non_standard_scientific_text = None
 
         self.bool_matcher = DefaultSourceMatcher(node, [
                                                        FieldPlaceholder('value'),

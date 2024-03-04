@@ -81,16 +81,16 @@ class NodePlaceholder(Placeholder):
         if not isinstance(self.parent, ast.Constant):
             raise e
 
-#        scientific_notation = re.match(r'^[0-9]+[eE][+-]?[0-9]+', original_source)
         scientific_notation = re.match(r'^[0-9]*\.?[0-9]+[eE][+-]?[0-9]+', original_source)
         if scientific_notation:
             str_from_source = scientific_notation.group(0)
             value_from_source = float(str_from_source)
             value_from_node_source = float(node_source)
             if value_from_source == value_from_node_source:
-                self.parent.node_matcher.num_matcher.matched = True
-                self.parent.node_matcher.num_matcher.matched_source = str_from_source
+#                self.parent.node_matcher.num_matcher.matched = True
+#                self.parent.node_matcher.num_matcher.matched_source = str_from_source
                 self.parent.node_matcher.num_matcher.is_non_standard_scientific_notation = True
+                self.parent.node_matcher.num_matcher.is_non_standard_scientific_text = str_from_source
                 return str_from_source
             else:
                 raise e

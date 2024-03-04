@@ -60,7 +60,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
 
 def _handle_non_standard_scientific_notation(field, parent_node):
     if parent_node.node_matcher.num_matcher.is_non_standard_scientific_notation:
-        return parent_node.node_matcher.num_matcher.matched_source
+        return parent_node.node_matcher.num_matcher.is_non_standard_scientific_text
     return str(field)
 
 

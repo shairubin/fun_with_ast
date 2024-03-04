@@ -273,19 +273,16 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
 
-
-    @pytest.mark.skip('issue 266')
     def testNumSciEndOfCall(self):
         string = 'npt.assert_allclose(workspace.blobs[output], ref(), rtol=1e-3)'
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
 
-    @pytest.mark.skip('issue 266')
     def testNumSciEndOfCall1(self):
         string = 'allclose(rtol=1e-3)'
         node = GetNodeFromInput(string)
         self._verify_match(node, string, get_source_after_reset=False)
-    @pytest.mark.skip('issue 266')
+
     def testNumSciEndOfCall2(self):
         string = '(1e-3)'
         node = GetNodeFromInput(string)

@@ -67,3 +67,13 @@ class LambdaMatcherTest(BaseTestUtils):
         string = """lambda x:a"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testMatchNoArgs(self):
+        string = """lambda :a"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testMatchNoArgs2(self):
+        string = """lambda :a()"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

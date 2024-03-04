@@ -40,7 +40,7 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
     if isinstance(field, int):
         return _str_from_int(field, parent_node, text)
     if isinstance(field, float):
-        return str(field)
+        return _handle_non_standard_scientific_notation(field, parent_node)
     if isinstance(field, complex):
         return str(field)
 
@@ -56,6 +56,12 @@ def GetSource(field, text=None, starting_parens=None, assume_no_indent=False,
         _set_elif(assume_elif, field)
         source_code = field.node_matcher.GetSource()
         return source_code
+
+
+def _handle_non_standard_scientific_notation(field, parent_node):
+    if parent_node.node_matcher.num_matcher.is_non_standard_scientific_notation:
+        return parent_node.node_matcher.num_matcher.matched_source
+    return str(field)
 
 
 def _set_elif(assume_elif, field):

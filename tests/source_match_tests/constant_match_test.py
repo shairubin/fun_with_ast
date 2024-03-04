@@ -186,6 +186,10 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = '(1.012345)'
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testStringFronInput2_12(self):
+        string = '(1)'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testStringFronInput2_31(self):
         string = '1 #comment '

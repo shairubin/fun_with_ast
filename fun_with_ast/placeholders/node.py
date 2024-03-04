@@ -88,8 +88,9 @@ class NodePlaceholder(Placeholder):
             value_from_source = float(str_from_source)
             value_from_node_source = float(node_source)
             if value_from_source == value_from_node_source:
-                self.parent.node_matcher.matched = True
-                self.parent.node_matcher.matched_source = str_from_source
+                self.parent.node_matcher.num_matcher.matched = True
+                self.parent.node_matcher.num_matcher.matched_source = str_from_source
+                self.parent.node_matcher.num_matcher.is_non_standard_scientific_notation = True
                 return str_from_source
             else:
                 raise e

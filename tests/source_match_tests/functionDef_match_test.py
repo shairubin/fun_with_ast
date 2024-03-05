@@ -518,3 +518,7 @@ def _generate_continue(self, sequences, model, tokenizer):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testNLWithAnyVarArg(self):
+        string = """def test_fun(a, *_):\n  pass"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

@@ -18,6 +18,7 @@ from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.source_matchers.if_source_match import IfSourceMatcher
 from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.joined_str_new import JoinedStrSourceMatcherNew
+from fun_with_ast.source_matchers.lambda_matcher import LambdaSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
 from fun_with_ast.source_matchers.with_matcher import WithSourceMatcher
 from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
@@ -25,7 +26,7 @@ from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher,
                 JoinedStrSourceMatcher, JoinedStrSourceMatcherNew, ConstantJstrMatcher,
-                 ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher):
+                 ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher, LambdaSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):
         pass
@@ -82,10 +83,10 @@ def get_arg_expected_parts():
               FieldPlaceholder('annotation')
             ]
     return result
-def get_LambdaArg_expected_parts():
-    result = [FieldPlaceholder('arg'),
-            ]
-    return result
+# def get_LambdaArg_expected_parts():
+#     result = [FieldPlaceholder('arg'),
+#             ]
+#     return result
 
 
 def get_arguments_expected_parts():
@@ -445,13 +446,13 @@ def get_KWKeyword_expected_parts():
     ]
 
 
-def get_Lambda_expected_parts():
-    return [
-        TextPlaceholder(r'lambda\s*', 'lambda '),
-        FieldPlaceholder('args'),
-        #TextPlaceholder(r'\s*:\s*', ': '),
-        FieldPlaceholder('body'),
-    ]
+# def get_Lambda_expected_parts():
+#     return [
+#         TextPlaceholder(r'lambda\s*', 'lambda '),
+#         FieldPlaceholder('args'),
+#         #TextPlaceholder(r'\s*:\s*', ': '),
+#         FieldPlaceholder('body'),
+#     ]
 
 def get_Tuple_expected_parts():
    return  [

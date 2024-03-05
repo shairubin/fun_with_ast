@@ -90,7 +90,7 @@ _dynamic_matchers = {
     _ast.Is: ['get_Is_expected_parts', 'fun_with_ast.source_match'],
     _ast.IsNot: ['get_IsNot_expected_parts', 'fun_with_ast.source_match'],
     _ast.keyword: ['get_keyword_expected_parts', 'fun_with_ast.source_match'],
-    _ast.Lambda: ['get_Lambda_expected_parts', 'fun_with_ast.source_match'],
+    _ast.Lambda:['LambdaSourceMatcher', 'fun_with_ast.source_matchers.lambda_matcher'],
     _ast.List: ['get_List_expected_parts', 'fun_with_ast.source_match'],
     _ast.ListComp: ['get_ListComp_expected_parts', 'fun_with_ast.source_match'],
     _ast.LShift: ['get_LShift_expected_parts', 'fun_with_ast.source_match'],

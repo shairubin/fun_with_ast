@@ -1,5 +1,7 @@
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
@@ -69,7 +71,7 @@ class LambdaMatcherTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testMatchNoArgs(self):
-        string = """lambda :a"""
+        string = """lambda : a"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
@@ -77,3 +79,13 @@ class LambdaMatcherTest(BaseTestUtils):
         string = """lambda :a()"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testMatchMultiArgs(self):
+        string = """lambda x,y, z  :   a(x,y)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testMatchArgsAnnotation(self):
+        string = """lambda x:int :   a(x)"""
+        with pytest.raises(FailedToCreateNodeFromInput):
+            node = GetNodeFromInput(string)

@@ -521,6 +521,15 @@ module_39 = """def initialize(self) -> None:
     a.b(lambda: self.terminate())
 """
 
+module_40 = """def init(
+    self,
+    strict=False,
+    should_fallback_fn=lambda *_: False,
+    prims_mode_cls=nullcontext,
+    ):
+        pass
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -887,5 +896,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule39(self):
         string = module_39
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule40(self):
+        string = module_40
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

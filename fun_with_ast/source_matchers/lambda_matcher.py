@@ -22,4 +22,6 @@ class LambdaSourceMatcher(DefaultSourceMatcher):
             else:
                 raise ValueError(f'arg is not an instance of ast.arg. arg: {arg}')
         node.args.args = new_args
+        if node.args.vararg:
+            node.args.vararg = LambdaArg(node.args.vararg)
         super(LambdaSourceMatcher, self).__init__(node, expected_parts, starting_parens)

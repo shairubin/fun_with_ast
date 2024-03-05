@@ -89,3 +89,9 @@ class LambdaMatcherTest(BaseTestUtils):
         string = """lambda x:int :   a(x)"""
         with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
+
+    def testMatchVarargs(self):
+        string = """lambda *_ :   a(x)"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+

@@ -83,10 +83,10 @@ def get_arg_expected_parts():
               FieldPlaceholder('annotation')
             ]
     return result
-# def get_LambdaArg_expected_parts():
-#     result = [FieldPlaceholder('arg'),
-#             ]
-#     return result
+def get_LambdaArg_expected_parts():
+    result = [FieldPlaceholder('arg'),
+            ]
+    return result
 
 
 def get_arguments_expected_parts():

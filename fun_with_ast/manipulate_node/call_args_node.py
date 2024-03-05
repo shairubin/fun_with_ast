@@ -40,6 +40,6 @@ class CallArgs(_ast.stmt):
         else:
             raise ValueError('incorrect type for kw_keyword.arg')
 
-class LambdaArg(ast.arg):
-    def __init__(self, arg):
-        super(LambdaArg, self).__init__(arg, None, None)
+# class LambdaArg(ast.arg):
+#     def __init__(self, arg):
+#         super(LambdaArg, self).__init__(arg, None, None)

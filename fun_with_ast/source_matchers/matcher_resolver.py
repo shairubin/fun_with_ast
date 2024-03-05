@@ -131,7 +131,7 @@ _dynamic_matchers = {
     fun_with_ast.manipulate_node.syntax_free_line_node.SyntaxFreeLine: ['SyntaxFreeLineMatcher',
                                                                         'fun_with_ast.source_matchers.syntaxfreeline'],
     fun_with_ast.manipulate_node.create_node.Comment: ['get_Comment_expected_parts', 'fun_with_ast.source_match'],
-    fun_with_ast.manipulate_node.call_args_node.LambdaArg: ['get_LambdaArg_expected_parts', 'fun_with_ast.source_match'],
+#    fun_with_ast.manipulate_node.call_args_node.LambdaArg: ['get_LambdaArg_expected_parts', 'fun_with_ast.source_match'],
     fun_with_ast.manipulate_node.call_args_node.CallArgs: ['get_CallArgs_expected_parts', 'fun_with_ast.source_match'],
 
     fun_with_ast.manipulate_node.call_args_node.KWKeyword: ['get_KWKeyword_expected_parts', 'fun_with_ast.source_match'],
@@ -139,5 +139,4 @@ _dynamic_matchers = {
                                                                      'fun_with_ast.source_matchers.constant_jstr_matcher'],
     fun_with_ast.manipulate_node.nodes_for_jstr.NameForJstr: ['NameJstrMatcher',
                                                                'fun_with_ast.source_matchers.name_jstr_matcher'],
-
 }

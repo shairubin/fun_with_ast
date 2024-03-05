@@ -446,13 +446,6 @@ def get_KWKeyword_expected_parts():
     ]
 
 
-# def get_Lambda_expected_parts():
-#     return [
-#         TextPlaceholder(r'lambda\s*', 'lambda '),
-#         FieldPlaceholder('args'),
-#         #TextPlaceholder(r'\s*:\s*', ': '),
-#         FieldPlaceholder('body'),
-#     ]
 
 def get_Tuple_expected_parts():
    return  [

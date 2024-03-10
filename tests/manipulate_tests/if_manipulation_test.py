@@ -17,12 +17,12 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
     ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, ''),  # 0
     ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, ''),  # 1
     ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, ''),  # 2
-    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),
+    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True, ''),
     # 3
     ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 4
     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, ''),  # 5
     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, ''),  # 6
-    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 7
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 7
     ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 8
     ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 9
     ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, ''),
@@ -72,7 +72,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
             if False:
                 raise ValueError("test")
             c = a
-""", True),
+""", True, ''),
 
     ('a.b()\n', 0, """if True:
         if False:
@@ -84,7 +84,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
         if False:
             a=1
         c = a
-""" , True),
+""" , True, ''),
 
 ('a.b()\n', 0, """if first_card == 100:
         self.direction = -1
@@ -94,7 +94,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
         a.b()
         self.direction = -1
         self.can_add_card = self.can_add_card_down
-""" , True),
+""" , True, ''),
 ('a.b()\n', 0, """if first_card == 100:
         self.direction = -1
         self.can_add_card = self.can_add_card_down
@@ -103,7 +103,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
         a.b()
         self.direction = -1
         self.can_add_card = self.can_add_card_down)
-""" , False),
+""" , False, ''),
 
 ])
 def injected_source(request):
@@ -145,7 +145,8 @@ class TestIfManupulation:
     def test_If_Manipulation(self, injected_source, capsys):
         dict_input = _get_tuple_as_dict(injected_source)
         parsed_node = ast.parse(dict_input['original-if'])
-        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
+        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'],
+                                                    dict_input['injected_second_source'])
         manipulator = ManipulateIfNode(if_node,
                                        IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
         manipulator.add_nodes([injected_node])

@@ -10,45 +10,45 @@ from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfMani
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
-input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected')
+input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected', 'injected_second_source')
 
 
 @pytest.fixture(params=[
-    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True),  # 0
-    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True),  # 1
-    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True),  # 2
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, ''),  # 0
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, ''),  # 1
+    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, ''),  # 2
     ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True),
     # 3
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 4
-    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True),  # 5
-    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True),  # 6
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 4
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, ''),  # 5
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, ''),  # 6
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True),  # 7
-    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 8
-    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False),  # 9
-    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False),
-    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True),
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False),  # 12
-    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False),  # 13
-    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False),  # 14
-    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False),  # 15
+    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 8
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 9
+    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, ''),
+    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True, ''),
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False, ''),  # 12
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False, ''),  # 13
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False, ''),  # 14
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False, ''),  # 15
     ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
-     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True),
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, ''),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
-     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True),
+     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True, ''),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
-     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False),
+     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False, ''),
     ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
-     'if (c.d()):\n   a.b()\n\n   a=1', True),  # TODO: this is currently a weird behavior in which
+     'if (c.d()):\n   a.b()\n\n   a=1', True, ''),  # TODO: this is currently a weird behavior in which
     # empty line is counted as a line
     ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
-     'if (c.d()):\n\n   a.b()\n   a=1', True),  # TODO: this is currently a weird behavior in
+     'if (c.d()):\n\n   a.b()\n   a=1', True, ''),  # TODO: this is currently a weird behavior in
     # which empty line is counted as a line #24
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
-     'if (c.d()):\n   a.b()\n   a=1\n # comment', True),
+     'if (c.d()):\n   a.b()\n   a=1\n # comment', True, ''),
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
-     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True),
+     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True, ''),
     ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
-    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True),
+    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True, ''),
     ('a.b()\n', 0, """if _utils.is_sparse(A):
         if len(A.shape) != 2:
             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
@@ -60,7 +60,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
         c = torch.sparse.sum(A, dim=(-2,)) / m
 """
-     , True),
+     , True, ''),
 
     ('a.b()\n', 0, """if True:
             if False:
@@ -199,6 +199,19 @@ class TestIfManupulation:
         else:
             raise ValueError("body index can be only 0 or 1")
 
+    def test_If_Manipulation_multiple_intections(self, injected_source, capsys):
+        dict_input = _get_tuple_as_dict(injected_source)
+        parsed_node = ast.parse(dict_input['original-if'])
+        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
+        manipulator = ManipulateIfNode(if_node,
+                                       IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
+        manipulator.add_nodes([injected_node])
+        composed_source = self._source_after_composition(if_node, capsys)
+        if dict_input['match-expected']:
+            assert composed_source == dict_input['expected']
+        else:
+            assert dict_input['expected'] != composed_source
+
     def test_switch_body_else(self, body_and_orelse, capsys):
         body, body_index, orelse, test = self._get_test_pastameters(body_and_orelse)
         if not orelse:
@@ -234,15 +247,19 @@ class TestIfManupulation:
         self._capture_source(capsys, actual_new_if_source, 'New If Source', bcolors.OKCYAN, True)
         assert expected_new_if_source == actual_new_if_source
 
-    def _create_nodes(self, capsys, injected_source, original_if_source):
+    def _create_nodes(self, capsys, injected_source, original_if_source, injected_second_source=''):
         self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
         if_node = self._create_if_node(original_if_source)
-        injected_node, injected_node_source = self._create_injected_node(injected_source)
+        injected_node, injected_node_source = self._create_injected_node(injected_source, injected_second_source)
         return if_node, injected_node
 
-    def _create_injected_node(self, injected_source):
+    def _create_injected_node(self, injected_source, injected_second_source):
         injected_node_source = injected_source
-        injected_node = GetNodeFromInput(injected_node_source)
+        moudle = False
+        if injected_second_source:
+            injected_node_source += '\n' + injected_second_source
+            mudule=True
+        injected_node = GetNodeFromInput(injected_node_source, get_module=moudle)
         injected_node_matcher = GetDynamicMatcher(injected_node)
         injected_node_matcher.do_match(injected_node_source)
         source_from_matcher = injected_node_matcher.GetSource()

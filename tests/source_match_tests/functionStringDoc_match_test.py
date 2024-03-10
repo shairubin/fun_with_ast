@@ -35,7 +35,6 @@ class FunctionDefWithDocStringMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #13")
     def testNotRealDocString8(self):
         string = """def from_journal(cls, other: "Journal") -> "Journal":
     \"\"\"Creates a new journal by copying configuration and entries from
@@ -45,7 +44,6 @@ class FunctionDefWithDocStringMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #13")
     def testNotRealDocString9(self):
         string = """def from_journal(cls, other: "Journal") -> "Journal":
     \"\"\"Creates
@@ -55,7 +53,6 @@ class FunctionDefWithDocStringMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #13")
     def testNotRealDocString10(self):
         string = """def from_journal(cls, other: "Journal") -> "Journal":
     \"\"\"4\n4\"\"\"
@@ -72,9 +69,16 @@ class FunctionDefWithDocStringMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip(reason="issue #13")
     def testNotRealDocString10_2(self):
         string = """def foo(a: "int"):
+    pass
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    def testNotRealDocString10_3(self):
+        string = """def foo(a:"int"):
     pass
 """
         node = GetNodeFromInput(string)

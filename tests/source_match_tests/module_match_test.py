@@ -530,6 +530,15 @@ module_40 = """def init(
         pass
 """
 
+module_41 = """
+class Journal:
+    @classmethod
+    def from_journal(cls, other: "Journal") -> "Journal":
+        \"\"\"Creates a new journal by copying configuration and entries from
+        another journal object\"\"\"
+        new_journal = cls(other.name, **other.config)
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -901,5 +910,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule40(self):
         string = module_40
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule41(self):
+        string = module_41
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

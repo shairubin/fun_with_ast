@@ -49,8 +49,8 @@ class ManipulateIfNode():
         return source
 
     def _validate_rules_for_insertion(self, nodes):
-        if len(nodes) > 1:
-            raise NotImplementedError("only one node can be added at a time")
+#        if len(nodes) > 1:
+#            raise NotImplementedError("only one node can be added at a time")
         if self.config.location_in_body_index > len(self.node.body):
             raise ValueError("location is out of range")
         if self.config.location_in_body_index < 0:

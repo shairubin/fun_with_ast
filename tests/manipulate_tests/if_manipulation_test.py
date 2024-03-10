@@ -14,7 +14,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
 
 
 @pytest.fixture(params=[
-    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, ''),  # 0
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, 'b.a()'),  # 0
     ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, ''),  # 1
     ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, ''),  # 2
     ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True, ''),
@@ -146,7 +146,7 @@ class TestIfManupulation:
         dict_input = _get_tuple_as_dict(injected_source)
         parsed_node = ast.parse(dict_input['original-if'])
         if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'],
-                                                    dict_input['injected_second_source'])
+                                                    '')
         manipulator = ManipulateIfNode(if_node,
                                        IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
         manipulator.add_nodes([injected_node])
@@ -203,10 +203,11 @@ class TestIfManupulation:
     def test_If_Manipulation_multiple_intections(self, injected_source, capsys):
         dict_input = _get_tuple_as_dict(injected_source)
         parsed_node = ast.parse(dict_input['original-if'])
-        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'])
+        if_node, injected_node = self._create_nodes(capsys, dict_input['inject-source'], dict_input['original-if'],
+                                                            dict_input['injected_second_source']  )
         manipulator = ManipulateIfNode(if_node,
                                        IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
-        manipulator.add_nodes([injected_node])
+        manipulator.add_nodes(injected_node.body)
         composed_source = self._source_after_composition(if_node, capsys)
         if dict_input['match-expected']:
             assert composed_source == dict_input['expected']
@@ -256,11 +257,11 @@ class TestIfManupulation:
 
     def _create_injected_node(self, injected_source, injected_second_source):
         injected_node_source = injected_source
-        moudle = False
+        module = False
         if injected_second_source:
             injected_node_source += '\n' + injected_second_source
-            mudule=True
-        injected_node = GetNodeFromInput(injected_node_source, get_module=moudle)
+            module=True
+        injected_node = GetNodeFromInput(injected_node_source, get_module=module)
         injected_node_matcher = GetDynamicMatcher(injected_node)
         injected_node_matcher.do_match(injected_node_source)
         source_from_matcher = injected_node_matcher.GetSource()

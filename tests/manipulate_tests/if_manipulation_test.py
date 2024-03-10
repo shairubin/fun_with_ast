@@ -164,7 +164,7 @@ class TestIfManupulation:
         composed_source = self._source_after_composition(if_node, capsys)
 
         add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
-        if not IsEmptyModule(injected_node):
+        if not IsEmptyModule([injected_node]):
             expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
             expected_source = original_if_source
@@ -177,7 +177,7 @@ class TestIfManupulation:
         manipulator.add_nodes([injected_node])
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
-        if not IsEmptyModule(injected_node):
+        if not IsEmptyModule([injected_node]):
             expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
             expected_source = original_if_source

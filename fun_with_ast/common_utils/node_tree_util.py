@@ -18,10 +18,10 @@ TYPE_TO_INDENT_FIELD = {
 }
 
 
-def IsEmptyModule(node):
-    if not isinstance(node, _ast.Module):
+def IsEmptyModule(nodes):
+    if nodes and not isinstance(nodes[0], _ast.Module):
         return False
-    return len(node.body) == 0
+    return len(nodes[0].body) == 0
 
 
 

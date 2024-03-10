@@ -34,7 +34,8 @@ class ManipulateIfNode():
 
     def add_nodes(self, nodes: list):
         self._validate_rules_for_insertion(nodes)
-        node_to_inject = self._get_nodes_to_inject(nodes)
+        #node_to_inject = self._get_nodes_to_inject(nodes)
+        node_to_inject = nodes
         body_block_to_manipulate = self._get_block(self.config.body_index)
         body_manipulator = BodyManipulator(body_block_to_manipulate)
         body_manipulator.inject_node(node_to_inject, self.config.location_in_body_index)

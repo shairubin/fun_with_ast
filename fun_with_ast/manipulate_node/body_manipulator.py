@@ -11,18 +11,19 @@ class BodyManipulator:
     """ Class for manipulating the body of a node. (the If body, orelse body, etc.)"""
     def __init__(self, body_block):
         self.body_block = body_block
-    def inject_node(self,node_to_inject, index):
-        if IsEmptyModule(node_to_inject):
+    def inject_node(self, nodes_to_inject, index):
+        if IsEmptyModule(nodes_to_inject):
             return
         ident = self._get_indentation()
-
-        source = GetSource(node_to_inject, assume_no_indent=True)
-        # if not isinstance(node_to_inject, ast.Expr):
-        #     node_to_inject.node_matcher.FixIndentation(ident)
-        # else:
-        #     node_to_inject.value.node_matcher.FixIndentation(ident)
-        node_to_inject.node_matcher.FixIndentation(ident)
-        self.body_block.insert(index, node_to_inject)
+        if index != 0:
+            pass
+        for node_index, node in enumerate(nodes_to_inject):
+            source = GetSource(node, assume_no_indent=True)  # This is debug code
+            node.node_matcher.FixIndentation(ident)
+            self.body_block.insert(index+node_index, node)
+        # source = GetSource(nodes_to_inject, assume_no_indent=True) # This is debug code
+        # nodes_to_inject.node_matcher.FixIndentation(ident)
+        # self.body_block.insert(index, nodes_to_inject)
         self._add_newlines()
 
     def replace_body(self,source_of_new_body):

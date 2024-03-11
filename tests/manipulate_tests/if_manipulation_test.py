@@ -25,14 +25,14 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'pass'),  # 7
     ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a.b.c'),  # 8
     ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a=99'),  # 9
-    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, 'pass'),
+    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, ''),
     ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True, 'raise'),
     ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False, 'a<b'),  # 12
     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False, 'pass'),  # 13
     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False, 'pass'),  # 14
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False, ''),  # 15
     ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
-     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, ' # another comment'),
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, '   # another comment'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
      'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True, 'pass'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
@@ -60,7 +60,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
         c = torch.sparse.sum(A, dim=(-2,)) / m
 """
-     , True, ''),
+     , True, 'b.a()'),
 
     ('a.b()\n', 0, """if True:
             if False:
@@ -306,10 +306,17 @@ class TestIfManupulation:
         for index , line in enumerate(lines):
             if dict_input['inject-source'] != '' and dict_input['inject-source'] in line +'\n':
                 next_added_line = 1
-                if dict_input['injected_second_source'] in lines[index+1]+'\n':
+                if dict_input['injected_second_source'] and dict_input['injected_second_source'] in lines[index+1]+'\n':
                     self._validate_manipilation_multi_lines(added_lines, dict_input, index, lines,
                                                             next_added_line)
                     return True
+                elif dict_input['injected_second_source'] == '':
+                    next_added_line = 0
+                    self._validate_manipilation_multi_lines(added_lines, dict_input, index, lines,
+                                                            next_added_line)
+                    return True
+                else:
+                    raise ValueError('not implemented yet')
             elif dict_input['inject-source'] == '' and dict_input['injected_second_source'] in line +'\n':
                 next_added_line = 0
                 self._validate_manipilation_multi_lines(added_lines, dict_input, index, lines,

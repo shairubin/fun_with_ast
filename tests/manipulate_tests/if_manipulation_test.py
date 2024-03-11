@@ -15,12 +15,12 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
 
 @pytest.fixture(params=[
     ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, 'b.a()'),  # 0
-    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, ''),  # 1
-    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, ''),  # 2
-    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True, ''),
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, 'print(test)'),  # 1
+    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, 'pass # comment'),  # 2
+    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True, 'raise(test)'),
     # 3
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 4
-    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, ''),  # 5
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'a.x()'),  # 4
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, 'False'),  # 5
     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, ''),  # 6
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 7
     ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 8
@@ -210,7 +210,7 @@ class TestIfManupulation:
         manipulator.add_nodes(injected_node.body)
         composed_source = self._source_after_composition(if_node, capsys)
         if dict_input['match-expected']:
-            assert composed_source == dict_input['expected']
+            self._validate_multi_lines_added(dict_input, composed_source)
         else:
             assert dict_input['expected'] != composed_source
 
@@ -259,7 +259,7 @@ class TestIfManupulation:
         injected_node_source = injected_source
         module = False
         if injected_second_source:
-            injected_node_source += '\n' + injected_second_source
+            injected_node_source +=  injected_second_source
             module=True
         injected_node = GetNodeFromInput(injected_node_source, get_module=module)
         injected_node_matcher = GetDynamicMatcher(injected_node)
@@ -297,3 +297,30 @@ class TestIfManupulation:
         body_index = body_and_orelse['inject_to']
         test = body_and_orelse['condition']
         return body, body_index, orelse, test
+
+    def _validate_multi_lines_added(self, dict_input, composed_source):
+        #if dict_input['location'] != 0:
+        #    raise ValueError('Only location 0 is supported for multiple lines')
+        added_lines = []
+        lines = composed_source.split('\n')
+        for index , line in enumerate(lines):
+            if dict_input['inject-source']:
+                if dict_input['inject-source'] in line+'\n':
+                    if dict_input['injected_second_source'] in lines[index+1]+'\n':
+                        added_lines.extend([index, index+1])
+                        self._validate_original_source(lines.copy(), added_lines, dict_input)
+                        self._validate_same_indentation(lines[index], lines[index+1])
+                        return True
+            else:
+                raise ValueError('multi_lines failed - not supported yet')
+        raise ValueError('multi_lines failed')
+
+    def _validate_same_indentation(self, line1, line2):
+        count1 = len(line1) - len(line1.lstrip())
+        count2 = len(line2) - len(line2.lstrip())
+        assert count1 == count2
+
+    def _validate_original_source(self, lines, added_lines, dict_input):
+        del lines[added_lines[0]:added_lines[1]+1]
+        original_source = '\n'.join(lines)
+        assert original_source == dict_input['original-if']

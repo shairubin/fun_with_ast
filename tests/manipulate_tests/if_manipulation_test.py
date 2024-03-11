@@ -160,7 +160,7 @@ class TestIfManupulation:
         original_if_source = 'if ( c.d() ):\n   a=1\nelse:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1, 1))
-        manipulator.add_nodes([injected_node])
+        manipulator.add_nodes(injected_node.body)
         composed_source = self._source_after_composition(if_node, capsys)
 
         add_new_line = '\n' if not injected_source[0].endswith('\n') else ''

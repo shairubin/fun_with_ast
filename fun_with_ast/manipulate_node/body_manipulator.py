@@ -10,22 +10,19 @@ class BodyManipulator:
     """ Class for manipulating the body of a node. (the If body, orelse body, etc.)"""
     def __init__(self, body_block):
         self.body_block = body_block
+
     def inject_node(self, nodes_to_inject, index):
-        #if IsEmptyModule(nodes_to_inject):
-        #    return
+        """ note that the nodes_to_inject must be a list of nodes, not a single node.
+        note that the nodes represent a SINGLE line statements -- NOT structural nodes like If, For, etc."""
         ident = self._get_indentation()
-        #if index != 0:
-        #    pass
         for node_index, node in enumerate(nodes_to_inject):
             source = GetSource(node, assume_no_indent=True)  # This is debug code
             node.node_matcher.FixIndentation(ident)
             self.body_block.insert(index+node_index, node)
-        # source = GetSource(nodes_to_inject, assume_no_indent=True) # This is debug code
-        # nodes_to_inject.node_matcher.FixIndentation(ident)
-        # self.body_block.insert(index, nodes_to_inject)
+        # source = GetSource(self.body_block, assume_no_indent=True)  # This is debug code
         self._add_newlines()
 
-    def replace_body(self,source_of_new_body):
+    def replace_body(self, source_of_new_body):
         if source_of_new_body == '':
             raise ValueError('source_of_new_body cannot be empty')
         new_body = self._create_body_from_source(source_of_new_body)
@@ -41,7 +38,6 @@ class BodyManipulator:
             node_source = node.node_matcher.GetSource()
             ends_with_new_line = re.search(r'\s*\n\s*$', node_source)
             if ends_with_new_line:
-            #if node_source.endswith("\n"):
                 continue
             if index == len(self.body_block) - 1:
                 continue

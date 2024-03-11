@@ -149,7 +149,7 @@ class TestIfManupulation:
                                                     '')
         manipulator = ManipulateIfNode(if_node,
                                        IfManipulatorConfig(body_index=0, location_in_body_index=dict_input['location']))
-        manipulator.add_nodes([injected_node])
+        manipulator.add_nodes(injected_node.body)
         composed_source = self._source_after_composition(if_node, capsys)
         if dict_input['match-expected']:
             assert composed_source == dict_input['expected']

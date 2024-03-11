@@ -34,10 +34,11 @@ class ManipulateIfNode():
 
     def add_nodes(self, nodes: list):
         self._validate_rules_for_insertion(nodes)
-        node_to_inject = self._get_nodes_to_inject(nodes)
+        #node_to_inject = self._get_nodes_to_inject(nodes)
+        nodes_to_inject = nodes
         body_block_to_manipulate = self._get_block(self.config.body_index)
         body_manipulator = BodyManipulator(body_block_to_manipulate)
-        body_manipulator.inject_node(node_to_inject, self.config.location_in_body_index)
+        body_manipulator.inject_node(nodes_to_inject, self.config.location_in_body_index)
 
     def get_body_orelse_source(self):
         if self.config.body_index ==0:
@@ -49,8 +50,8 @@ class ManipulateIfNode():
         return source
 
     def _validate_rules_for_insertion(self, nodes):
-        if len(nodes) > 1:
-            raise NotImplementedError("only one node can be added at a time")
+        if len(nodes) > 2:
+            raise NotImplementedError("only two node can be added at a time")
         if self.config.location_in_body_index > len(self.node.body):
             raise ValueError("location is out of range")
         if self.config.location_in_body_index < 0:

@@ -1,6 +1,5 @@
 import re
 
-from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
@@ -11,21 +10,19 @@ class BodyManipulator:
     """ Class for manipulating the body of a node. (the If body, orelse body, etc.)"""
     def __init__(self, body_block):
         self.body_block = body_block
-    def inject_node(self,node_to_inject, index):
-        if IsEmptyModule(node_to_inject):
-            return
-        ident = self._get_indentation()
 
-        source = GetSource(node_to_inject, assume_no_indent=True)
-        # if not isinstance(node_to_inject, ast.Expr):
-        #     node_to_inject.node_matcher.FixIndentation(ident)
-        # else:
-        #     node_to_inject.value.node_matcher.FixIndentation(ident)
-        node_to_inject.node_matcher.FixIndentation(ident)
-        self.body_block.insert(index, node_to_inject)
+    def inject_node(self, nodes_to_inject, index):
+        """ note that the nodes_to_inject must be a list of nodes, not a single node.
+        note that the nodes represent a SINGLE line statements -- NOT structural nodes like If, For, etc."""
+        ident = self._get_indentation()
+        for node_index, node in enumerate(nodes_to_inject):
+            source = GetSource(node, assume_no_indent=True)  # This is debug code
+            node.node_matcher.FixIndentation(ident)
+            self.body_block.insert(index+node_index, node)
+        # source = GetSource(self.body_block, assume_no_indent=True)  # This is debug code
         self._add_newlines()
 
-    def replace_body(self,source_of_new_body):
+    def replace_body(self, source_of_new_body):
         if source_of_new_body == '':
             raise ValueError('source_of_new_body cannot be empty')
         new_body = self._create_body_from_source(source_of_new_body)
@@ -41,7 +38,6 @@ class BodyManipulator:
             node_source = node.node_matcher.GetSource()
             ends_with_new_line = re.search(r'\s*\n\s*$', node_source)
             if ends_with_new_line:
-            #if node_source.endswith("\n"):
                 continue
             if index == len(self.body_block) - 1:
                 continue

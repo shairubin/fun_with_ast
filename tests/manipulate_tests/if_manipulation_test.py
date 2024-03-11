@@ -21,34 +21,34 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
     # 3
     ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'a.x()'),  # 4
     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, 'False'),  # 5
-    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, ''),  # 6
-    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, ''),  # 7
-    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 8
-    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, ''),  # 9
-    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, ''),
-    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True, ''),
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False, ''),  # 12
-    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False, ''),  # 13
-    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False, ''),  # 14
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, '   # only comment'),  # 6
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'pass'),  # 7
+    ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a.b.c'),  # 8
+    ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a=99'),  # 9
+    ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, 'pass'),
+    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True, 'raise'),
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False, 'a<b'),  # 12
+    ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False, 'pass'),  # 13
+    ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False, 'pass'),  # 14
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False, ''),  # 15
     ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
-     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, ''),
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, ' # another comment'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
-     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True, ''),
+     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True, 'pass'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
-     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False, ''),
+     'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
-     'if (c.d()):\n   a.b()\n\n   a=1', True, ''),  # TODO: this is currently a weird behavior in which
+     'if (c.d()):\n   a.b()\n\n   a=1', True, 'pass'),  # TODO: this is currently a weird behavior in which
     # empty line is counted as a line
     ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
-     'if (c.d()):\n\n   a.b()\n   a=1', True, ''),  # TODO: this is currently a weird behavior in
+     'if (c.d()):\n\n   a.b()\n   a=1', True, 'pass'),  # TODO: this is currently a weird behavior in
     # which empty line is counted as a line #24
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
-     'if (c.d()):\n   a.b()\n   a=1\n # comment', True, ''),
+     'if (c.d()):\n   a.b()\n   a=1\n # comment', True, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
-     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True, ''),
+     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
-    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True, ''),
+    'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True, 'pass'),
     ('a.b()\n', 0, """if _utils.is_sparse(A):
         if len(A.shape) != 2:
             raise ValueError("pca_lowrank input is expected to be 2-dimensional tensor")
@@ -174,7 +174,7 @@ class TestIfManupulation:
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
         manipulator = ManipulateIfNode(if_node, IfManipulatorConfig(1, 1))
-        manipulator.add_nodes([injected_node])
+        manipulator.add_nodes(injected_node.body)
         composed_source = self._source_after_composition(if_node, capsys)
         add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
         if not IsEmptyModule([injected_node]):
@@ -257,11 +257,11 @@ class TestIfManupulation:
 
     def _create_injected_node(self, injected_source, injected_second_source):
         injected_node_source = injected_source
-        module = False
-        if injected_second_source:
-            injected_node_source +=  injected_second_source
-            module=True
-        injected_node = GetNodeFromInput(injected_node_source, get_module=module)
+        #module = False
+        #if injected_second_source:
+        injected_node_source +=  injected_second_source
+        #    module=True
+        injected_node = GetNodeFromInput(injected_node_source, get_module=True)
         injected_node_matcher = GetDynamicMatcher(injected_node)
         injected_node_matcher.do_match(injected_node_source)
         source_from_matcher = injected_node_matcher.GetSource()
@@ -304,23 +304,30 @@ class TestIfManupulation:
         added_lines = []
         lines = composed_source.split('\n')
         for index , line in enumerate(lines):
-            if dict_input['inject-source']:
-                if dict_input['inject-source'] in line+'\n':
-                    if dict_input['injected_second_source'] in lines[index+1]+'\n':
-                        added_lines.extend([index, index+1])
-                        self._validate_original_source(lines.copy(), added_lines, dict_input)
-                        self._validate_same_indentation(lines[index], lines[index+1])
-                        return True
-            else:
-                raise ValueError('multi_lines failed - not supported yet')
+            if dict_input['inject-source'] != '' and dict_input['inject-source'] in line +'\n':
+                next_added_line = 1
+                if dict_input['injected_second_source'] in lines[index+1]+'\n':
+                    self._validate_manipilation_multi_lines(added_lines, dict_input, index, lines,
+                                                            next_added_line)
+                    return True
+            elif dict_input['inject-source'] == '' and dict_input['injected_second_source'] in line +'\n':
+                next_added_line = 0
+                self._validate_manipilation_multi_lines(added_lines, dict_input, index, lines,
+                                                        next_added_line)
+                return True
         raise ValueError('multi_lines failed')
+
+    def _validate_manipilation_multi_lines(self, added_lines, dict_input, index, lines, next_added_line):
+        added_lines.extend([index, index + next_added_line])
+        self._validate_original_source(lines.copy(), added_lines, dict_input)
+        self._validate_same_indentation(lines[index], lines[index + next_added_line])
 
     def _validate_same_indentation(self, line1, line2):
         count1 = len(line1) - len(line1.lstrip())
         count2 = len(line2) - len(line2.lstrip())
-        assert count1 == count2
+        assert count1 == count2, 'Indentation is not the same for the two lines'
 
     def _validate_original_source(self, lines, added_lines, dict_input):
         del lines[added_lines[0]:added_lines[1]+1]
         original_source = '\n'.join(lines)
-        assert original_source == dict_input['original-if']
+        assert original_source == dict_input['original-if'], 'Original source is not as expected'

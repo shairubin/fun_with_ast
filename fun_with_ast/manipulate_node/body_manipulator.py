@@ -1,6 +1,5 @@
 import re
 
-from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
@@ -12,11 +11,11 @@ class BodyManipulator:
     def __init__(self, body_block):
         self.body_block = body_block
     def inject_node(self, nodes_to_inject, index):
-        if IsEmptyModule(nodes_to_inject):
-            return
+        #if IsEmptyModule(nodes_to_inject):
+        #    return
         ident = self._get_indentation()
-        if index != 0:
-            pass
+        #if index != 0:
+        #    pass
         for node_index, node in enumerate(nodes_to_inject):
             source = GetSource(node, assume_no_indent=True)  # This is debug code
             node.node_matcher.FixIndentation(ident)

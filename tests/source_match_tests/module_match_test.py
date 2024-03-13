@@ -538,7 +538,9 @@ class Journal:
         another journal object\"\"\"
         new_journal = cls(other.name, **other.config)
 """
-
+module_42 = """def new_entry(self, raw: str, date=None, sort: bool = True) -> Entry:
+    raw = raw.replace("\\\\n ", "\\n").replace("\\\\n", "\\n")
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -915,5 +917,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule41(self):
         string = module_41
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule42(self):
+        string = module_42
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -89,6 +89,7 @@ class StrSourceMatcher(SourceMatcher):
             raise NotImplementedError('special characters besides \\ or \\n or \\t in string body are not supported yet')
         else:
             clean_string = (string_body.replace('\\n', '\n').
+                            replace('\\\n', '\\n').
                             replace('\\t', '\t').
                             replace('\\r', '\r').
                             replace("\\\'","'").

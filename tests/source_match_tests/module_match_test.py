@@ -554,6 +554,18 @@ module_43 = """def argument():
     """
 
 
+module_44 = """
+should_default = not is_out
+if isinstance(a, Argument):
+    if True:
+        pass
+        a=1
+elif False:
+    if should_default:
+        default = "{}"
+    """
+
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -944,3 +956,8 @@ def dot_product_attention_weights():
         string = module_43
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def testFromInputModule44(self):
+        string = module_44
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+

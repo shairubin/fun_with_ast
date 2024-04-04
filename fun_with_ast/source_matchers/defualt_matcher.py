@@ -71,9 +71,10 @@ class DefaultSourceMatcher(SourceMatcher):
         return result
 
     def _conclude_match(self, remaining_string):
+        remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
         remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])  # EOL
         remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])  # EOF
-        remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
+#        remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
         remaining_string = self.MatchNewLine(remaining_string)
 
     def GetSource(self):
@@ -92,10 +93,10 @@ class DefaultSourceMatcher(SourceMatcher):
 
         if self.start_whitespace_matchers:
             source = '{}{}'.format(self.GetWhiteSpaceText(self.start_whitespace_matchers), source)
-        if self.end_whitespace_matchers:
-            source = '{}{}'.format(source, self.GetWhiteSpaceText(self.end_whitespace_matchers))
         if self.end_of_line_comment:
             source = '{}{}'.format(source, self.end_of_line_comment)
+        if self.end_whitespace_matchers:
+            source = '{}{}'.format(source, self.GetWhiteSpaceText(self.end_whitespace_matchers))
         if self.EOL_matcher:
             source = '{}{}'.format(source, self.EOL_matcher.GetSource(None))
 

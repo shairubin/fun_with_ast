@@ -129,7 +129,8 @@ def get_Starred_expected_parts():
 
 def get_Assign_expected_parts():
     return [
-        SeparatedListFieldPlaceholder('targets',   after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
+        SeparatedListFieldPlaceholder('targets',
+                                      after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder('value'),
     ]
 def get_AnnAssign_expected_parts():

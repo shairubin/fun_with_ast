@@ -541,6 +541,19 @@ class Journal:
 module_42 = """def new_entry(self, raw: str, date=None, sort: bool = True) -> Entry:
     raw = raw.replace("\\\\n ", "\\n").replace("\\\\n", "\\n")
 """
+
+module_43 = """def argument():
+    should_default = not is_out
+    if isinstance(a, Argument):
+        if True:
+            pass
+            return []
+    elif False:
+        if should_default:
+            default = "{}"
+    """
+
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -922,5 +935,12 @@ def dot_product_attention_weights():
 
     def testFromInputModule42(self):
         string = module_42
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    # issue 284
+    def testFromInputModule43(self):
+        string = module_43
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

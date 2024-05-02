@@ -104,4 +104,4 @@ class IfSourceMatcher(SourceMatcher):
         if not self.node.orelse:
             self.node.body[-1].node_matcher.add_newline_to_source()
         else:
-            self.node.body[-1].node_matcher.add_newline_to_source()
+            self.node.orelse[-1].node_matcher.add_newline_to_source()

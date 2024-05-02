@@ -47,8 +47,6 @@ class ManipulateIfNode():
             source = self.node.node_matcher.orelse_placeholder.GetSource(self.node)
         else:
             raise ValueError('Illegal body index')
-        #if not source.endswith('\n'):
-        #    source += '\n' # we will add new line at the end of the source
         return source
 
 

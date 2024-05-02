@@ -219,14 +219,7 @@ class TestIfManupulation:
                 assert composed_source_lines[index] + '\n' == injected_source[0]
             if index ==  3 and injected_source[0]:
                 assert composed_source_lines[-2] + '\n' == injected_source[0]
-
         return
-#        add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
-#        if not IsEmptyModule([injected_node]):
-#            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
-#        else:
-#            expected_source = original_if_source
-#        assert composed_source == expected_source
 
     def test_If_elif_AddNode(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'

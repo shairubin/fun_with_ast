@@ -51,7 +51,7 @@ jobs:
           flake8 . --count --select=F401 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics \
-          --ignore=W391,E271,E265,E122,E226,E231,E391,E302,E261,E301,E303,E251, E127
+          --ignore=W391,E271,E265,E122,E226,E231,E391,E302,E261,E301,E303,E251,E127
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------

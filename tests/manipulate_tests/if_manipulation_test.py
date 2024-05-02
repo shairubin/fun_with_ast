@@ -5,6 +5,7 @@ import pytest
 
 from fun_with_ast.common_utils.node_tree_util import IsEmptyModule
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.if_manipulator import ManipulateIfNode, IfManipulatorConfig
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -204,6 +205,23 @@ class TestIfManupulation:
             expected_source = original_if_source
         assert composed_source == expected_source
 
+    def test_Module_Body_Manipulation(self, injected_source, capsys):
+        original_module_source = 'a=1\na=2\nif c.d():\n   b=1\n   b=2\nelse:\n   c=1\n   c=2'
+        for index in [3]:
+            module_node, injected_node = self._create_nodes(capsys, injected_source[0], original_module_source,
+                                                        is_module=True)
+            manipulator = BodyManipulator(module_node.body)
+            manipulator.inject_node([injected_node], index)
+            print("\n insert in index:" + str(index))
+            composed_source = self._source_after_composition(module_node, capsys)
+        return
+#        add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
+#        if not IsEmptyModule([injected_node]):
+#            expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
+#        else:
+#            expected_source = original_if_source
+#        assert composed_source == expected_source
+
     def test_If_elif_AddNode(self, injected_source, capsys):
         original_if_source = 'if ( c.d() ):\n   a=1\nelif e==2:\n   b=2'
         if_node, injected_node = self._create_nodes(capsys, injected_source[0], original_if_source)
@@ -283,9 +301,9 @@ class TestIfManupulation:
         self._capture_source(capsys, actual_new_if_source, 'New If Source', bcolors.OKCYAN, True)
         assert expected_new_if_source == actual_new_if_source
 
-    def _create_nodes(self, capsys, injected_source, original_if_source, injected_second_source=''):
-        self._capture_source(capsys, original_if_source, 'original source:', bcolors.OKBLUE)
-        if_node = self._create_if_node(original_if_source)
+    def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):
+        self._capture_source(capsys, original_source, 'original source:', bcolors.OKBLUE)
+        if_node = self._create_if_node(original_source, is_module)
         injected_node, injected_node_source = self._create_injected_node(injected_source, injected_second_source)
         return if_node, injected_node
 
@@ -304,18 +322,21 @@ class TestIfManupulation:
         assert source_from_get_source == injected_node_source
         return injected_node, injected_node_source
 
-    def _create_if_node(self, original_if_source):
-        if_node = GetNodeFromInput(original_if_source)
-        if_node_matcher = GetDynamicMatcher(if_node)
-        if_node_matcher.do_match(original_if_source)
-        if_node_source = if_node_matcher.GetSource()
-        assert if_node_source == original_if_source
+    def _create_if_node(self, original_source, is_module):
+        node = GetNodeFromInput(original_source, get_module=is_module)
+        node_matcher = GetDynamicMatcher(node)
+        node_matcher.do_match(original_source)
+        if_node_source = node_matcher.GetSource()
+        assert if_node_source == original_source
         # if_node.matcher = if_node_matcher
-        return if_node
+        return node
 
     def _capture_source(self, capsys, source, title, color, ignore_ident=False):
         if not ignore_ident:
-            compile(source, '<string>', mode='exec')
+            try:
+                compile(source, '<string>', mode='exec')
+            except Exception as e:
+                assert False, f'Error in source compilation'
         print(color + '\n' + title + '\n' + source + bcolors.ENDC)
         out, _ = capsys.readouterr()
         sys.stdout.write(out)

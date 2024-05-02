@@ -207,13 +207,19 @@ class TestIfManupulation:
 
     def test_Module_Body_Manipulation(self, injected_source, capsys):
         original_module_source = 'a=1\na=2\nif c.d():\n   b=1\n   b=2\nelse:\n   c=1\n   c=2'
-        for index in [3]:
+        for index in [0,1,2,3]:
             module_node, injected_node = self._create_nodes(capsys, injected_source[0], original_module_source,
                                                         is_module=True)
             manipulator = BodyManipulator(module_node.body)
             manipulator.inject_node([injected_node], index)
             print("\n insert in index:" + str(index))
             composed_source = self._source_after_composition(module_node, capsys)
+            composed_source_lines = composed_source.split('\n')
+            if index in [0,1,2] and injected_source[0]:
+                assert composed_source_lines[index] + '\n' == injected_source[0]
+            if index ==  3 and injected_source[0]:
+                assert composed_source_lines[-2] + '\n' == injected_source[0]
+
         return
 #        add_new_line = '\n' if not injected_source[0].endswith('\n') else ''
 #        if not IsEmptyModule([injected_node]):

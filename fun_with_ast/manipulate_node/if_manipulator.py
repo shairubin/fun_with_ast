@@ -47,7 +47,10 @@ class ManipulateIfNode():
             source = self.node.node_matcher.orelse_placeholder.GetSource(self.node)
         else:
             raise ValueError('Illegal body index')
+        #if not source.endswith('\n'):
+        #    source += '\n' # we will add new line at the end of the source
         return source
+
 
     def _validate_rules_for_insertion(self, nodes):
         if len(nodes) > 2:
@@ -102,9 +105,9 @@ class ManipulateIfNode():
         return nodes[0]
 
     def rerplace_body(self, source):
-        body_block_to_manipulate = self._get_block(self.config.body_index)
-        body_manipulator = BodyManipulator(body_block_to_manipulate)
-        new_body = body_manipulator.replace_body(source)
+        if not source.endswith('\n'): # we will add new line at the end of the when replacing body
+            source += '\n'
+        new_body = self._prepare_body_nodes(source)
 
         if self.config.body_index == 0:
             self.node.body = new_body
@@ -118,5 +121,11 @@ class ManipulateIfNode():
             return new_else_node_source
         else:
             raise ValueError('Illegal body index')
+
+    def _prepare_body_nodes(self, source):
+        body_block_to_manipulate = self._get_block(self.config.body_index)
+        body_manipulator = BodyManipulator(body_block_to_manipulate)
+        new_body = body_manipulator.replace_body(source)
+        return new_body
 
 

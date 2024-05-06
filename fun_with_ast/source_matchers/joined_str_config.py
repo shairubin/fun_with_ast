@@ -30,12 +30,7 @@ class JstrConfig:
         self.prefix_str = ''
         self._set_quote_type()
         self._set_f_prefix()
-        self.end_quote_location = self.orig_single_line_string.rfind(self.quote_type)
-        self.start_quote_location = self.orig_single_line_string.find(self.quote_type)
-        if self.start_quote_location == self.end_quote_location:
-            raise ValueError('joined str string in which start and end quote locations are the same')
-        if self.end_quote_location == -1:
-            raise ValueError('Could not find ending quote')
+        self._set_start_end_quotes()
         self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
         if self.prefix_str.strip() != '':
@@ -53,6 +48,15 @@ class JstrConfig:
             self.conversion = conversion.group(0)[0:2]
         self.jstr_length = len(self.full_jstr_including_prefix)
 
+    def _set_start_end_quotes(self):
+        start = self.orig_single_line_string.find(self.quote_type)
+        end = self.orig_single_line_string[start+1:].find(self.quote_type)
+        self.end_quote_location = end + start + 1
+        self.start_quote_location = start
+        if self.start_quote_location == self.end_quote_location:
+            raise ValueError('joined str string in which start and end quote locations are the same')
+        if self.end_quote_location == -1:
+            raise ValueError('Could not find ending quote')
 
     def _set_quote_type(self):
         for quote in SUPPORTED_QUOTES:

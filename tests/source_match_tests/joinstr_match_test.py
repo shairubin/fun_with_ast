@@ -603,7 +603,23 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testTBD(self):
+    def test_bwd(self):
         string = """f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def test_op_in_string(self):
+        string = """f'_{index}' + '\\n'"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def test_op_in_string2(self):
+        string = """f"_{index}" + '\\n'"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def test_op_in_string3(self):
+        string = """f"_{index}" + "\\n" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def test_func_call(self):
+        string = """f'_{index}'.add()"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

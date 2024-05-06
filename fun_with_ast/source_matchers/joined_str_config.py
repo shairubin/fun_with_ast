@@ -64,10 +64,6 @@ class JstrConfig:
         if end != rend:
             if self.orig_single_line_string[end+1] == '\\':
                 end = rend
-            # if self.orig_single_line_string[start + 1:].find("\\'") != -1:
-            #     end = rend
-            # elif self.orig_single_line_string[start + 1:].find("\"") != -1:
-            #     end = rend
         return end
 
     def _set_quote_type(self):

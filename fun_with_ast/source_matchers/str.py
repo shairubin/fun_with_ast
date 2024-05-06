@@ -93,7 +93,7 @@ class StrSourceMatcher(SourceMatcher):
                             replace('\\t', '\t').
                             replace('\\r', '\r').
                             replace("\\\'","'").
-                            replace("\\\\","\\")))
+                            replace("\\\\","\\")).replace('\\"','"' ))
             if clean_string != self.original_s:
                 raise BadlySpecifiedTemplateError(
                     f'String body: {string_body} does not match node.s: {self.original_s}')

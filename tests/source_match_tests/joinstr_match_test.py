@@ -628,3 +628,13 @@ def main() -> None:
         string = """f'unsupported autocast device_type \\'{dev}\\''"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def test_internal_quote2(self):
+        string = """f"unsupported autocast device_type \\'{dev}\\'" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_internal_quote3(self):
+        string = """f"unsupported autocast device_type \\"{dev}\\"" """
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

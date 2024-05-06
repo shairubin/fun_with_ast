@@ -51,12 +51,20 @@ class JstrConfig:
     def _set_start_end_quotes(self):
         start = self.orig_single_line_string.find(self.quote_type)
         end = self.orig_single_line_string[start+1:].find(self.quote_type)
+        end = self._check_for_escaped_quotes(end, start)
         self.end_quote_location = end + start + 1
         self.start_quote_location = start
         if self.start_quote_location == self.end_quote_location:
             raise ValueError('joined str string in which start and end quote locations are the same')
         if self.end_quote_location == -1:
             raise ValueError('Could not find ending quote')
+
+    def _check_for_escaped_quotes(self, end, start):
+        rend = self.orig_single_line_string[start + 1:].rfind(self.quote_type)
+        if end != rend:
+            if self.orig_single_line_string[end+1] == '\\':
+                end = rend
+        return end
 
     def _set_quote_type(self):
         for quote in SUPPORTED_QUOTES:

@@ -571,6 +571,10 @@ def _get_source_code_to_add(self, node):
         source_to_add += line + self.source_suffix.removesuffix('\\n') + f'_{index}' + '\\n'
     return source_to_add
 """
+
+#module_46 = """SHA256_REGEX = re.compile(r"\ssha256\s=\s*'"[\\'"]\s*,")"""
+module_46 = """SHA256_REGEX = re.compile(r"\s*sha256\s*=\s*['\\"](?P<sha256>[a-zA-Z0-9]{64})['\\"]\s*,")"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -969,5 +973,9 @@ def dot_product_attention_weights():
 
     def testFromInputModule45(self):
         string = module_45
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule46(self):
+        string = module_46
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

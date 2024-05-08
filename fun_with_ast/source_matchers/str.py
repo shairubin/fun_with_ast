@@ -88,14 +88,18 @@ class StrSourceMatcher(SourceMatcher):
                 not '\\' in string_body):
             raise NotImplementedError('special characters besides \\ or \\n or \\t in string body are not supported yet')
         else:
-            clean_string = ((string_body.replace('\\n', '\n').
+            clean_string = (
+                            string_body.replace('\\n', '\n').
                             replace('\\\n', '\\n').
                             replace('\\t', '\t').
                             replace('\\r', '\r').
                             replace("\\\'","'").
-                            replace("\\\\","\\")).replace('\\"','"' ))
+                            replace("\\\\","\\")   # TODO: frankly this is a mess
+                            )
             if clean_string != self.original_s:
-                raise BadlySpecifiedTemplateError(
+                clean_string = clean_string.replace('\\"','"')
+                if clean_string != self.original_s:
+                    raise BadlySpecifiedTemplateError(
                     f'String body: {string_body} does not match node.s: {self.original_s}')
             string_body = clean_string
         return string_body

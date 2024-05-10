@@ -106,5 +106,10 @@ class RaiseMatcherTest(BaseTestUtils):
     def testRaiseWithNewLine2(self):
         string = """raise x\n     """
         node = GetNodeFromInput(string, get_module=False)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
 
+    def testRaiseWithNewLine2_1(self):
+        string = """raise x\n     """
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError): # 'Expr node does not support training white spaces'
+            self._verify_match(node, string, trim_suffix_spaces=False)

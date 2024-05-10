@@ -50,5 +50,14 @@ class AnnAssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testAnnAssignFromSourceWithModule(self):
+        string = 'self.exec_info: Optional[_ExecutionInfo] = None\n  \ndef foo():\n  pass'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testAnnAssignFromSourceWithModule2(self):
+        string = 'a: int =1\n   \nb: int =2  \n  '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def _assert_matched_source(self, node, string):
         self._verify_match(node, string)

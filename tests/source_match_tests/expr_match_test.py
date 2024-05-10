@@ -1,3 +1,5 @@
+import pytest
+
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -63,7 +65,18 @@ class ExprMatcherTest(BaseTestUtils):
     def testSimpleExpr8(self):
         string = "'7'\n   "
         node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
+
+    def testSimpleExpr8_1(self):
+        string = "'7'\n   "
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testSimpleExpr8_2(self):
+        string = "'7'\n   "
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError): # 'Expr node does not support training white spaces'
+            self._verify_match(node, string, trim_suffix_spaces=False)
 
     def testSimpleExpr9(self):
         string = "'7'\n   "

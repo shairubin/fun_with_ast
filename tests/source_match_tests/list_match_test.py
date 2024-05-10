@@ -67,7 +67,12 @@ class ListTest(BaseTestUtils):
     def testCreateNodeFromInputListWithEOL24(self):
         string = '[1,2]\n     '
         node =GetNodeFromInput(string, get_module=False)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
+
+    def testCreateNodeFromInputListWithEOL25(self):
+        string = '[1,2]\n     '
+        node =GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
 
     def testCreateNodeFromInputListWithEOL3(self):
         string = '[[1,2],\n [3,4]]'

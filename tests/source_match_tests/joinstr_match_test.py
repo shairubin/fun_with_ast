@@ -157,8 +157,8 @@ class JoinStrMatcherTests(BaseTestUtils):
         self._verify_match(node, string)
 
     def testMatchMultilLine2(self):
-        node = GetNodeFromInput("f'X'")
-        string = "f'X'    " # WS at the end of line not supported
+        node = GetNodeFromInput("f'X'", get_module=True)
+        string = "f'X'    "
         self._verify_match(node, string)
     def testMatchMultilLine2_1(self):
         node = GetNodeFromInput("f'X'", get_module=True)
@@ -520,7 +520,7 @@ f\"for {root}\")"""
 
     def testSubscriptWithConstant(self):
         string =  """f"{c['Name']}\\n" """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
     def testSubscriptWithConstant2(self):
         string =  "f\"{c['Name']}\\n\""
@@ -529,7 +529,7 @@ f\"for {root}\")"""
 
     def testSubscriptWithConstant3(self):
         string =  "f\"{c['Name']}\\n\" "
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testBinOp(self):
@@ -562,8 +562,24 @@ f\"for {root}\")"""
         string = """"The"
 
         """
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        node = GetNodeFromInput(string, get_module=False) # this is inconsistent with the
+                                                          # fact that Expr should not match multiline
+        self._verify_match(node, string, trim_suffix_spaces=True)
+    def testQuotesInJstStr4_0(self):
+        string = """"The"
+
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testQuotesInJstStr4_0_1(self):
+        string = """"The"
+
+        """
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError): # 'Expr node does not support trailing white spaces'
+            self._verify_match(node, string, trim_suffix_spaces=False)
+
     @pytest.mark.skip("not supported yet - issue TBD")
     def testQuotesInJstStr4_1(self):
         string = """\"The\"\n\"problem\"
@@ -605,8 +621,14 @@ def main() -> None:
 
     def test_bwd(self):
         string = """f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}" """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+    def test_bwd2(self):
+        string = """f"{suite_name}[{test_name}]:{'bwd' if bwd else 'fwd'}" """
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError): # 'Expr node does not support trailing white spaces'
+            self._verify_match(node, string)
+
     def test_op_in_string(self):
         string = """f'_{index}' + '\\n'"""
         node = GetNodeFromInput(string)
@@ -617,7 +639,7 @@ def main() -> None:
         self._verify_match(node, string)
     def test_op_in_string3(self):
         string = """f"_{index}" + "\\n" """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
     def test_func_call(self):
         string = """f'_{index}'.add()"""
@@ -636,10 +658,18 @@ def main() -> None:
 
     def test_internal_quote2(self):
         string = """f"unsupported autocast device_type \\'{dev}\\'" """
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string, trim_suffix_spaces=True)
+
+    def test_internal_quote2_1(self):
+        string = """f"unsupported autocast device_type \\'{dev}\\'" """
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(AssertionError): # 'Expr node does not support trailing white spaces'
+            self._verify_match(node, string, trim_suffix_spaces=False)
 
     def test_internal_quote3(self):
         string = """f"unsupported autocast device_type \\"{dev}\\"" """
-        node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+

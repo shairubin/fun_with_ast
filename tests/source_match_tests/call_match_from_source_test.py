@@ -435,6 +435,26 @@ l(a)
         string = """a() #comment """
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
+    def testCall1_3(self):
+        string = """a() #comment\n"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def testCall1_4(self):
+        string = """a() #comment
+        
+        
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCall1_5(self):
+        string = """a() #comment
+
+
+        #another comment"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testCall2(self):
         string = """a.b()"""

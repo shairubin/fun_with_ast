@@ -59,5 +59,35 @@ class RetrunMatcherTest(BaseTestUtils):
         string = "return a,b"
         self._assert_match(node, string)
 
+    def testStringWithParathesis(self):
+        string = """def foo(): 
+        return (
+        a.b  # type:ignore[attr-defined
+    )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testStringWithParathesis_2(self):
+        string = """return (a.b  # type:ignore[attr-defined]
+        )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testStringWithParathesis_2_1(self):
+        string = """return (0 # comment
+        )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringWithParathesis_3(self):
+        string = """return a.b  # type:ignore[attr-defined]
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringWithParathesis_4(self):
+        string = """return 0  # type:ignore[attr-defined]
+        """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def _assert_match(self, node, string):
         self._verify_match(node, string)

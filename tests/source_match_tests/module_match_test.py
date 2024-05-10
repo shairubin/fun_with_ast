@@ -579,6 +579,10 @@ module_47 = """class _ExecOrderTracer:
   def patch_tracer():
     pass
 """
+module_48 = """def get_sharding_prop_cache_info():
+    return (
+        DTensor._propagator.propagate_op_sharding.cache_info()  # type:ignore[attr-defined
+    )"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -985,5 +989,10 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule47(self):
         string = module_47
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule48(self):
+        string = module_48
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

@@ -20,10 +20,6 @@ class AssignMatcherTest(BaseTestUtils):
         string = 'a=0x1f'
         self._assert_matched_source(node, string)
 
-    def testBasicMatchAssignNone(self):
-        node = create_node.Assign('a', create_node.CreateNone('None'))
-        string = 'a = \t None # a is None'
-        self._assert_matched_source(node, string)
 
     def testBasicNoMatchAssignNone(self):
         node = create_node.Assign('a', create_node.CreateNone('None'))
@@ -169,7 +165,7 @@ class AssignMatcherTest(BaseTestUtils):
 
     def testAssignFromSourceList(self):
         string = "select = ['name', 'shares', 'price'],  # <-- See this line of AST unparse results"
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
 

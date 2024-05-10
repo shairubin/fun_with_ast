@@ -196,6 +196,12 @@ class ConstantNumMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testStringParanthesis(self):
+        string = """(1 #comment '
+                  )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testStringFronInput2_2(self):
         string = '1\n'
         node = GetNodeFromInput(string)

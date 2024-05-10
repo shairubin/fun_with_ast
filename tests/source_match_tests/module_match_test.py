@@ -572,9 +572,13 @@ def _get_source_code_to_add(self, node):
     return source_to_add
 """
 
-#module_46 = """SHA256_REGEX = re.compile(r"\ssha256\s=\s*'"[\\'"]\s*,")"""
 module_46 = """SHA256_REGEX = re.compile(r"\s*sha256\s*=\s*['\\"](?P<sha256>[a-zA-Z0-9]{64})['\\"]\s*,")"""
-
+module_47 = """class _ExecOrderTracer:
+  def init(self) -> None:
+    self.exec_info: Optional[_ExecutionInfo] = None
+  def patch_tracer():
+    pass
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -977,5 +981,9 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule46(self):
         string = module_46
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule47(self):
+        string = module_47
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

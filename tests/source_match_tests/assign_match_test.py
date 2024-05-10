@@ -67,7 +67,7 @@ class AssignMatcherTest(BaseTestUtils):
     def testBasicMatchAssignWithWSAndTab(self):
         node = create_node.Assign('a', create_node.Num('1'))
         string = 'a  =  1  \t'
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
 
     def testMatchMultiAssign(self):
         node = create_node.Assign(['a', 'b'], create_node.Num('2'))
@@ -143,13 +143,13 @@ class AssignMatcherTest(BaseTestUtils):
     def testAssignFromSource1_3(self):
         string = 'a=1\n     '
         node = GetNodeFromInput(string, get_module=False)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
 
 
     def testAssignFromSource1_4(self):
         string = 'a=(1)\n     '
         node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=False)
 
     def testAssignFromSource2(self):
         string = "a='str'"

@@ -1,3 +1,4 @@
+import ast
 from unittest import TestCase
 
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
@@ -12,11 +13,20 @@ class BaseTestUtils(TestCase):
     # get_source_after_reset: if True, then we will get source after reset_match. it will not be the same
     # as the original source in some specific cases. For example, 'a=1e-6' MUST be matched before calling to GetSource.
     # Otherwise, the result would be a=1e-06
-    def _verify_match(self, node, string, get_source_after_reset=True):
+    def _verify_match(self, node, string, get_source_after_reset=True, trim_suffix_spaces=False):
+        if trim_suffix_spaces:
+            assert not isinstance(node,ast.Module)
+
+        trimmed_string = string
+        while trimmed_string and trimmed_string[-1] in [' ', '\t']:
+            trimmed_string = trimmed_string[:-1]
         matcher = GetDynamicMatcher(node)
         assert hasattr(node, 'node_matcher')
         result_from_matcher = matcher.do_match(string)
-        self.assertEqual(result_from_matcher, string, 'matcher do_match does not equal to original string')
+        if trim_suffix_spaces:
+            self.assertEqual(result_from_matcher, trimmed_string, 'matcher do_match does not equal to original string')
+        else:
+            self.assertEqual(result_from_matcher, string, 'matcher do_match does not equal to original string')
         matcher_source = matcher.GetSource()
         node_matcher_source = node.node_matcher.GetSource()
         self.assertEqual(matcher_source, node_matcher_source,

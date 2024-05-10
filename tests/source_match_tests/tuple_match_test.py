@@ -135,7 +135,18 @@ class TupleTest(BaseTestUtils):
     def testCreateNodeFromInputTupleWithEOL24(self):
         string = '(1,2)\n     '
         node =GetNodeFromInput(string, get_module=False)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
+
+    def testCreateNodeFromInputTupleWithEOL25(self):
+        string = '(1,2)\n     '
+        node =GetNodeFromInput(string,  get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testCreateNodeFromInputTupleWithEOL26(self):
+        string = '(1,2)\n     '
+        node =GetNodeFromInput(string,  get_module=True)
+        with pytest.raises(AssertionError): # 'Module SHOULD catch training spaces'
+            self._verify_match(node, string, trim_suffix_spaces=True)
 
     def testCreateNodeFromInputTupleWithEOL3(self):
         string = '((1,2),\n (3,4))'

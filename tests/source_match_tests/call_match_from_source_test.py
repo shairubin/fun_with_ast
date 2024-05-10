@@ -385,7 +385,17 @@ l(a)
         )
         """
         node = GetNodeFromInput(string, get_module=False) # note the False
-        self._verify_match(node, string)
+        with pytest.raises(AssertionError): # 'Expr node does not support training white spaces'
+            self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testCallWithTuple1_1_1(self):
+        string = """lax(
+            (0,1),
+            (2, 3),
+        )
+        """
+        node = GetNodeFromInput(string, get_module=True) # note the False
+        self._verify_match(node, string, trim_suffix_spaces=False)
 
     def testCallWithTuple1(self):
         string = """lax.dynamic_slice(

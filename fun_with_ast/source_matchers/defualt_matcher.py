@@ -73,9 +73,9 @@ class DefaultSourceMatcher(SourceMatcher):
     def _conclude_match(self, remaining_string):
         remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
         remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[0])  # EOL
-        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])  # EOF
+#        remaining_string = self.MatchWhiteSpaces(remaining_string, self.end_whitespace_matchers[1])  # EOF
 #        remaining_string = self.MatchCommentEOL(remaining_string)  # TODO: move it before get source
-        remaining_string = self.MatchNewLine(remaining_string)
+#        remaining_string = self.MatchNewLine(remaining_string)
 
     def GetSource(self):
         self.validated_call_to_match()

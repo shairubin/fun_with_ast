@@ -72,7 +72,7 @@ class ConstantNumMatcherTest(BaseTestUtils):
     def testBasicMatchWithdWS(self):
         node = create_node.Num('1')
         string = '1   '
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
 
 
     def testBasicMatchWithdWSExpr(self):
@@ -214,18 +214,41 @@ class ConstantNumMatcherTest(BaseTestUtils):
     def testStringFronInput2_41(self):
         string = '1 # comment \n   '
         node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string,trim_suffix_spaces=True)
+
+    def testStringFronInput2_42(self):
+        string = '1 # comment \n   '
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testStringFronInput2_43(self):
+        string = '1 # comment \n   \n2 # comment \n   '
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testStringFronInput2_44(self):
+        string = """1      
+
+2"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testStringFronInput2_45(self):
+        string = """1      
+
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testStringFronInput2_5(self):
         string = '1\n   '
         node = GetNodeFromInput(string)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=True)
 
     def testStringFronInput2_6(self):
         string = '1\n   '
         node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string)
+        self._verify_match(node, string, trim_suffix_spaces=False)
 
 
     def testStringFronInput3(self):

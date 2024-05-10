@@ -140,7 +140,7 @@ def get_AnnAssign_expected_parts():
         FieldPlaceholder('annotation'),
         TextPlaceholder(r'([ \t]*=[ \t]*)*', '='),
         FieldPlaceholder('value'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
+        #TextPlaceholder(r'[ \t]*(#+.*)*\n?', '') # this is the official comment regex
     ]
 
 def get_Attribute_expected_parts():

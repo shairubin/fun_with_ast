@@ -59,5 +59,15 @@ class AnnAssignMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testAnnAssignFromSourceWithModule3(self):
+        string = """class bar():
+        def foo1(): 
+          a: int =1   
+        def foo2(): 
+          b: int =2
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def _assert_matched_source(self, node, string):
         self._verify_match(node, string)

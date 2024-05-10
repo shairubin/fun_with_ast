@@ -59,8 +59,6 @@ class RetrunMatcherTest(BaseTestUtils):
         string = "return a,b"
         self._assert_match(node, string)
 
-
-    #pytest.mark.skip(reason="issue 303")
     def testStringWithParathesis(self):
         string = """def foo(): 
         return (
@@ -68,13 +66,11 @@ class RetrunMatcherTest(BaseTestUtils):
     )"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    #@pytest.mark.skip(reason="issue 303")
     def testStringWithParathesis_2(self):
         string = """return (a.b  # type:ignore[attr-defined]
         )"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    #@pytest.mark.skip(reason="issue 303")
     def testStringWithParathesis_2_1(self):
         string = """return (0 # comment
         )"""

@@ -19,7 +19,6 @@ class EOLPlaceholder(TextPlaceholder):
 
 class EOLCommentMatcher(TextPlaceholder):
     def __init__(self):
-        #([ \t] *)(  # [^\n]*)\n
         #super(EOLCommentMatcher, self).__init__(r'([ \t]*)(#.*)$', default='', longest_match=False)
         super(EOLCommentMatcher, self).__init__(r'([ \t]*)(#[^\n]*)\n?', default='',
                                                 longest_match=False, no_transform=True)

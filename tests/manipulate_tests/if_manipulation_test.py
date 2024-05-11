@@ -15,39 +15,39 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
 
 
 @pytest.fixture(params=[
-    ('a.b()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1', True, 'b.a()'),  # 0
+    ('a.b()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.b()\n   a=1\n', True, 'b.a()'),  # 0
     ('a.c()\n', 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a.c()\n   a=1\n', True, 'print(test)'),  # 1
-    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1', True, 'pass # comment'),  # 2
-    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast'\n   a=1", True, 'raise(test)'),
+    ('a=44\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n   a=1\n', True, 'pass # comment'),  # 2
+    ("s='fun_with_ast'\n", 0, 'if (c.d()):\n   a=1\n', "if (c.d()):\n   s='fun_with_ast'\n   a=1\n", True, 'raise(test)'),
     # 3
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'a.x()'),  # 4
+    ("", 0, 'if (c.d()):\n   a=1\n', 'if (c.d()):\n   a=1\n', True, 'a.x()'),  # 4
     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', True, 'False'),  # 5
     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.c()\n', True, '   # only comment'),  # 6
-    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1', True, 'pass'),  # 7
+    ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n', True, 'pass'),  # 7
     ('a.bb()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a.b.c'),  # 8
     ('a.c()\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a.b()\n   a=1\n', False, 'a=99'),  # 9
     ('a=45\n', 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=44\n\n   a=1\n', False, ''),
-    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1", True, 'raise'),
-    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1', False, 'a<b'),  # 12
+    ("s='fun_with_ast2'\n", 0, 'if (c.d()):\n   a=1', "if (c.d()):\n   s='fun_with_ast2'\n   a=1\n", True, 'raise'),
+    ("", 0, 'if (c.d()):\n   a=1', 'if (c.d()):\n    a=1\n', False, 'a<b'),  # 12
     ('a.b()\n', 1, 'if (c.d()):\n   a=1', 'if (c.x()):\n   a=1\n   a.b()\n', False, 'pass'),  # 13
     ('a.c()\n', 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=1\n   a.b()\n', False, 'pass'),  # 14
     ("", 1, 'if (c.d()):\n   a=1', 'if (c.d()):\n   a=2', False, ''),  # 15
     ('a.b()\n', 0, 'if (c.d()):\n #comment-line\n   a=1',  # 16
-     'if (c.d()):\n   a.b()\n #comment-line\n   a=1', True, '   # another comment'),
+     'if (c.d()):\n   a.b()\n #comment-line\n   a=1\n', True, '   # another comment'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 17
-     'if (c.d()):\n #comment-line\n   a.b()\n   a=1', True, 'pass'),
+     'if (c.d()):\n #comment-line\n   a.b()\n   a=1\n', True, 'pass'),
     ('a.b()\n', 1, 'if (c.d()):\n #comment-line\n   a=1',  # 18
      'if (c.d()):\n #comment----line\n   a.b()\n   a=1\n', False, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n\n   a=1',  # 19
-     'if (c.d()):\n   a.b()\n\n   a=1', True, 'pass'),  # TODO: this is currently a weird behavior in which
+     'if (c.d()):\n   a.b()\n\n   a=1\n', True, 'pass'),  # TODO: this is currently a weird behavior in which
     # empty line is counted as a line
     ('a.b()\n', 1, 'if (c.d()):\n\n   a=1',  # 20
-     'if (c.d()):\n\n   a.b()\n   a=1', True, 'pass'),  # TODO: this is currently a weird behavior in
+     'if (c.d()):\n\n   a.b()\n   a=1\n', True, 'pass'),  # TODO: this is currently a weird behavior in
     # which empty line is counted as a line #24
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n # comment',  # 21
-     'if (c.d()):\n   a.b()\n   a=1\n # comment', True, 'pass'),
+     'if (c.d()):\n   a.b()\n   a=1\n # comment\n', True, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n   a=1\n   b=1',  # 22
-     'if (c.d()):\n   a.b()\n   a=1\n   b=1', True, 'pass'),
+     'if (c.d()):\n   a.b()\n   a=1\n   b=1\n', True, 'pass'),
     ('a.b()\n', 0, 'if (c.d()):\n   if True:\n      a=111\n   b=11\n   c=12\n',  # 23
     'if (c.d()):\n   a.b()\n   if True:\n      a=111\n   b=11\n   c=12\n', True, 'pass'),
     ('a.b()\n', 0, """if _utils.is_sparse(A):
@@ -202,7 +202,7 @@ class TestIfManupulation:
         if not IsEmptyModule([injected_node]):
             expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
-            expected_source = original_if_source
+            expected_source = original_if_source + '\n'
         assert composed_source == expected_source
 
     def test_Module_Body_Manipulation(self, injected_source, capsys):
@@ -231,7 +231,7 @@ class TestIfManupulation:
         if not IsEmptyModule([injected_node]):
             expected_source = original_if_source.replace('b=2', 'b=2\n   ' + injected_source[0] + add_new_line)
         else:
-            expected_source = original_if_source
+            expected_source = original_if_source + '\n'
         assert composed_source == expected_source
 
     def test_get_source_body(self, body_and_orelse, capsys):
@@ -391,4 +391,7 @@ class TestIfManupulation:
     def _validate_original_source(self, lines, added_lines, dict_input):
         del lines[added_lines[0]:added_lines[1]+1]
         original_source = '\n'.join(lines)
-        assert original_source == dict_input['original-if'], 'Original source is not as expected'
+        if dict_input['original-if'].endswith('\n'):
+            assert original_source == dict_input['original-if'], 'Original source is not as expected'
+        else:
+            assert original_source  == dict_input['original-if'] + '\n', 'Original source is not as expected'

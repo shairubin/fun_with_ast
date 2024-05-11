@@ -249,7 +249,7 @@ def a():
 
     def testFunctionLevelAnnotation2(self):
         string = "def test_fun()     \t->     my_class\t:\n  pass\n"
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testFunctionLevelAnnotation3(self):

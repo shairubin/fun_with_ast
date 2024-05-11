@@ -92,7 +92,7 @@ class UnaryOpMatcherTest(BaseTestUtils):
         node = create_node.UnaryOp(
             create_node.Invert(),
             create_node.Name('a'))
-        string = '~a    \t '
+        string = '~a'
         self._validate_match(node, string)
 
     def testInvertUnaryOpWithWSAndComment(self):

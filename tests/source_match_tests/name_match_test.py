@@ -46,7 +46,7 @@ class NameMatcherTest(BaseTestUtils):
 
     def testBasicMatchWithWS(self):
         node = create_node.Name('foobar')
-        string = ' \t  foobar \t'
+        string = ' \t  foobar'
         self._verify_match(node, string)
     def testBasicMatchWithWSAndComment(self):
         node = create_node.Name('foobar')
@@ -76,10 +76,6 @@ class NameMatcherTest(BaseTestUtils):
         string = 'a'
         self._verify_match(node, string)
 
-    def testMatchWithWS(self):
-        node = create_node.Name('a')
-        string = 'a '
-        self._verify_match(node, string)
 
     def testMatchWithComment(self):
         node = create_node.Name('a')

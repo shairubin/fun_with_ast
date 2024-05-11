@@ -255,7 +255,7 @@ def get_Delete_expected_parts():
     return [
         TextPlaceholder(r' *del *'),
         ListFieldPlaceholder('targets', after_placeholder= TextPlaceholder('[ \t]*,[ \t]*', ', '), exclude_last_after=True),
-        TextPlaceholder(r'\n*', ''),
+        #TextPlaceholder(r'\n*', ''),
     ]
 
 
@@ -345,7 +345,7 @@ def get_FunctionDef_expected_parts():
         FieldPlaceholder('args'),
         TextPlaceholder(r',?\s*\)([ \t]*->[ \t*])?',')'),
         FieldPlaceholder('returns'),
-        TextPlaceholder(r':\n', ':\n'),
+        TextPlaceholder(r'[ \t]*:[ \t]*\n', ':\n'),
         BodyPlaceholder('body')
     ]
 
@@ -507,7 +507,8 @@ def get_Mult_expected_parts():
 def get_Name_expected_parts():
     return [TextPlaceholder(r'[ \t]*', ''),
             FieldPlaceholder('id'),
-            TextPlaceholder(r'([ \t]*)(#.*)*', '')]
+            TextPlaceholder(r'([ \t]*)(#.*)*', '')
+     ]
 
 
 def get_NotEq_expected_parts():
@@ -690,7 +691,7 @@ def get_UnaryOp_expected_parts():
         FieldPlaceholder('op'),
         TextPlaceholder(r' *', ' '),
         FieldPlaceholder('operand'),
-        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')
+#        TextPlaceholder(r'[ \t]*(#+.*)*\n?', '')
 #        TextPlaceholder(r'[ \t]*#*.*\n*', '')
     ]
 

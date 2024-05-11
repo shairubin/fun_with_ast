@@ -583,6 +583,13 @@ module_48 = """def get_sharding_prop_cache_info():
     return (
         DTensor._propagator.propagate_op_sharding.cache_info()  # type:ignore[attr-defined
     )"""
+module_49 = """def ref_lambda_rank_loss():
+    def log_sigm(x):
+        return -np.log(1 + np.exp(-x))
+    dy = np.zeros(n)
+    loss = 0
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -994,5 +1001,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule48(self):
         string = module_48
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule49(self):
+        string = module_49
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

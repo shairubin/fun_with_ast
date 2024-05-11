@@ -19,7 +19,7 @@ class BodyManipulator:
             source = GetSource(node, assume_no_indent=True)  # This is debug code
             node.node_matcher.FixIndentation(ident)
             self.body_block.insert(index+node_index, node)
-        # source = GetSource(self.body_block, assume_no_indent=True)  # This is debug code
+        #source = GetSource(self.body_block, assume_no_indent=True)  # This is debug code
         self._add_newlines()
 
     def replace_body(self, source_of_new_body):
@@ -39,8 +39,8 @@ class BodyManipulator:
             ends_with_new_line = re.search(r'\s*\n\s*$', node_source)
             if ends_with_new_line:
                 continue
-            if index == len(self.body_block) - 1:
-                continue
+            #if index == len(self.body_block) - 1:
+            #    continue
             node.node_matcher.add_newline_to_source()
 
 

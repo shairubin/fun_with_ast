@@ -73,7 +73,7 @@ class BinOpMatcherTest(BaseTestUtils):
             create_node.Name('a'),
             create_node.Div(),
             create_node.Name('b'))
-        string = ' a    /        b '
+        string = ' a    /        b'
         self._verify_match(node, string)
 
     def testFloorDivBinOp(self):
@@ -81,7 +81,7 @@ class BinOpMatcherTest(BaseTestUtils):
             create_node.Name('a'),
             create_node.FloorDiv(),
             create_node.Name('b'))
-        string = '  \t a // \t b  \t'
+        string = '  \t a // \t b'
         self._verify_match(node, string)
 
     def testFloorDivBinOpWithComment(self):
@@ -97,7 +97,7 @@ class BinOpMatcherTest(BaseTestUtils):
             create_node.Name('a'),
             create_node.Mod(),
             create_node.Name('b'))
-        string = 'a % b    '
+        string = 'a % b'
         self._verify_match(node, string)
 
     def testModBinOpWithComment(self):

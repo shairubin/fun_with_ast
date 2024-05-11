@@ -118,7 +118,17 @@ module_1 = """class foo():
     c=4"""
 
 @pytest.fixture(params=[
-    ({"source": module_1, "injected_source": "d=10", "inject_to_indexes": [(0,0),(1,6)]}),
+    ({"source": module_1, "injected_source": "d=10",
+      "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
+    ({"source": module_1, "injected_source": "d=11",
+      "inject_into_body": "module_node.body[0].body", "inject_to_indexes": [(0, 1,2), (1,6,2)]}),
+    ({"source": module_1, "injected_source": "d=12",
+      "inject_into_body": "module_node.body[0].body[0].body",
+      "inject_to_indexes": [(0, 2, 4), (1, 3, 4), (2,5,4), (3,6,4)]}),
+    ({"source": module_1, "injected_source": "d=13",
+      "inject_into_body": "module_node.body[0].body[0].body[1].body",
+      "inject_to_indexes": [(0, 4, 8), (1,6,8)]}),
+
 ])
 def module_source_2(request):
     yield request.param
@@ -135,7 +145,7 @@ class TestIfManupulation:
         for index in [0,1,2,3]:
             module_node, injected_node = self._create_nodes(capsys, module_source[0], original_module_source,
                                                             is_module=True)
-            manipulator = BodyManipulator(module_node.body)
+            manipulator = BodyManipulator(eval(module_node.body))
             manipulator.inject_node([injected_node], index)
             print("\n insert in index:" + str(index))
             composed_source = self._source_after_composition(module_node, capsys)
@@ -152,12 +162,13 @@ class TestIfManupulation:
             injected_source = module_source_2['injected_source']
             for index in module_source_2['inject_to_indexes']:
                 module_node, injected_node = self._create_nodes(capsys, injected_source, source, is_module=True)
-                manipulator = BodyManipulator(module_node.body)
-                manipulator.inject_node([injected_node], index[0])
+                inject_to_body = eval(module_source_2['inject_into_body'])
+                manipulator = BodyManipulator(inject_to_body)
+                manipulator.inject_node(injected_node.body, index[0])
                 print("\n insert in index:" + str(index))
                 composed_source = self._source_after_composition(module_node, capsys)
                 composed_source_lines = composed_source.split('\n')
-                assert composed_source_lines[index[1]]  == injected_source
+                assert composed_source_lines[index[1]]  == ' '*index[2] +injected_source
                 ast.parse(composed_source)
 
     def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):

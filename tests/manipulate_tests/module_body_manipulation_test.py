@@ -116,7 +116,12 @@ module_1 = """class foo():
     def bar(self):
         b=2
     c=4"""
-
+module_2 = """class foo():
+    def bar():
+        with a as p:
+            a=1
+            b=2
+            c=3"""
 @pytest.fixture(params=[
     ({"source": module_1, "injected_source": "d=10\n",
       "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
@@ -128,6 +133,18 @@ module_1 = """class foo():
     ({"source": module_1, "injected_source": "d=13\n",
       "inject_into_body": "module_node.body[0].body[0].body[1].body",
       "inject_to_indexes": [(0, 4, 8), (1,5,8)]}),
+    ({"source": module_2, "injected_source": "d=14\n",
+      "inject_into_body": "module_node.body[0].body[0].body",
+      "inject_to_indexes": [(0, 2, 8), (1, 6, 8)]}),
+    ({"source": module_2, "injected_source": "d=14\n",
+      "inject_into_body": "module_node.body[0].body[0].body",
+      "inject_to_indexes": [(0, 2, 8), (1, 6, 8)]}),
+    ({"source": module_2, "injected_source": "d=15\n",
+      "inject_into_body": "module_node.body[0].body[0].body[0].body",
+      "inject_to_indexes": [(0, 3, 12), (1, 4, 12), (2, 5, 12) , (3, 6, 12)]}),
+    ({"source": module_2, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 1, 4), (1, 6, 4)]}),
 
 ])
 def module_source_2(request):

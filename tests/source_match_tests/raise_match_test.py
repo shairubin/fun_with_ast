@@ -108,6 +108,12 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string, trim_suffix_spaces=True)
 
+    def testRaiseWithQuotes(self):
+        string = """raise ValueError(f"mode '{mode}' is not supported")"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string, trim_suffix_spaces=True)
+
+
     def testRaiseWithNewLine2_1(self):
         string = """raise x\n     """
         node = GetNodeFromInput(string, get_module=False)

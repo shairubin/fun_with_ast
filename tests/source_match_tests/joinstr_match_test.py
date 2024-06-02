@@ -673,3 +673,8 @@ def main() -> None:
         self._verify_match(node, string, trim_suffix_spaces=False)
 
 
+    def test_internal_quote4(self):
+        string = """f"mode '{mode}' is not supported" """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+

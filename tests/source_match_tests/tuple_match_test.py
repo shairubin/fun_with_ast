@@ -240,3 +240,47 @@ class TupleTest(BaseTestUtils):
         string = """(f"-DPYTHON_EXECUTABLE:FILEPATH={sys.executable}",f"-DPYTHON_INCLUDE_DIR={sysconfig.get_path('include')}",)"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine(self):
+        string = """(
+                        "Old",
+                        "cu",
+                    )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine2(self):
+        string = """("Old",   
+    "cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine2_1(self):
+        string = """("Old"     ,
+    "cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine3(self):
+        string = """("Old",
+"cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceMultiLine4(self):
+        string = """("Old"
+,"cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine4_1(self):
+        string = """("Old"
+    ,   "cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceMultiLine4_2(self):
+        string = """"Old"
+,"cu" """
+        with pytest.raises(FailedToCreateNodeFromInput):
+            node = GetNodeFromInput(string)

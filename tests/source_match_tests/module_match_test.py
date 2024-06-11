@@ -589,7 +589,15 @@ module_49 = """def ref_lambda_rank_loss():
     dy = np.zeros(n)
     loss = 0
 """
-
+module_50 ="""choices=[
+                    ("Bulgarian", "bg"),
+                    (
+                        "Old Church Slavonic, Church Slavic",
+                        "cu",
+                    ),
+                    ("Malagasy", "mg"),
+                ],
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1006,5 +1014,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule49(self):
         string = module_49
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    import pytest
+    @pytest.mark.skip(reason="issue #318")
+    def testFromInputModule50(self):
+        string = module_50
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

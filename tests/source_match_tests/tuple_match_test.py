@@ -284,3 +284,25 @@ class TupleTest(BaseTestUtils):
 ,"cu" """
         with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
+#((1, 2, 2), (2, 2)),  # Different dim, non-zerodim
+#            ((1, 2, 2), ()),  # one zerodim
+#            ((), ()),  # both zerodim
+
+
+    def testAssignFromSourceNestedTuples(self):
+        string = "((1, 2, 2), (2, 2)),  # Different dim, non-zerodim"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceNestedEmptyTuples(self):
+        string = "((1, 2, 2), ()),  # one zerodim"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceNestedEmptyTuples_2(self):
+        string = "((1,2),(1)),  # one zerodim"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceNestedEmptyTuples_3(self):
+        string = "((1,2),()),  # one zerodim"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

@@ -598,6 +598,15 @@ module_50 ="""choices=[
                     ("Malagasy", "mg"),
                 ],
 """
+module_51 ="""class TestDeviceAnalysis(JitTestCase):
+    def zerodim_test_core(self, device_pairs):
+        input_shapes = [
+            ((1, 2, 2), (2, 2)),  # Different dim, non-zerodim
+            ((1, 2, 2), ()),  # one zerodim
+            ((), ()),  # both zerodim
+        ]
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1016,9 +1025,13 @@ def dot_product_attention_weights():
         string = module_49
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    import pytest
-    @pytest.mark.skip(reason="issue #318")
+
     def testFromInputModule50(self):
         string = module_50
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule51(self):
+        string = module_51
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

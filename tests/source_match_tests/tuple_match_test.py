@@ -65,6 +65,9 @@ class TupleTest(BaseTestUtils):
         node = create_node.Tuple(['a', 1])
         string = ' (\t   a\t, 1 \t) \t #comment'
         self._assert_match(node, string)
+    ###############################################################
+    #################   Get Node From Input   ####################
+    ###############################################################
     def testCreateNodeFromInput(self):
         string = '(\t   a\t, 1 \t) \t #comment'
         node =GetNodeFromInput(string)
@@ -284,9 +287,6 @@ class TupleTest(BaseTestUtils):
 ,"cu" """
         with pytest.raises(FailedToCreateNodeFromInput):
             node = GetNodeFromInput(string)
-#((1, 2, 2), (2, 2)),  # Different dim, non-zerodim
-#            ((1, 2, 2), ()),  # one zerodim
-#            ((), ()),  # both zerodim
 
 
     def testAssignFromSourceNestedTuples(self):
@@ -295,14 +295,44 @@ class TupleTest(BaseTestUtils):
         self._verify_match(node, string)
 
     def testAssignFromSourceNestedEmptyTuples(self):
-        string = "((1, 2, 2), ()),  # one zerodim"
+        string = "((1, 2), ()),  # one zerodim"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
     def testAssignFromSourceNestedEmptyTuples_2(self):
-        string = "((1,2),(1)),  # one zerodim"
+        string = "((1,2,4),(1)),  # one zerodim"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
     def testAssignFromSourceNestedEmptyTuples_3(self):
         string = "((1,2),()),  # one zerodim"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceNestedEmptyTuples_3_1(self):
+        string = "((1,2),()),"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceNestedEmptyTuples_3_2(self):
+        string = "((1,2),())"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceEmptyTuple(self):
+        string = "(),"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceEmptyTuple1(self):
+        string = "(())"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceEmptyTuple2(self):
+        string = "((), ()),"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceEmptyTuple3(self):
+        string = "((()), ())"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceEmptyTuple4(self):
+        string = "(((), ()))"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

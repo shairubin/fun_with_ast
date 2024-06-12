@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fun-with-ast"
-version = "0.2.99"
+version = "0.2.100"
 description = ""
 authors = ["Shai Rubin <shai@ownbackup.com>"]
 readme = "README.md"

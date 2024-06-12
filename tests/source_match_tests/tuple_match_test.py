@@ -333,7 +333,6 @@ class TupleTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 324')
     def testAssignFromSourceSubscript(self):
         string = """NSFusionElType = Union[
     Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
@@ -344,32 +343,38 @@ class TupleTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 324')
     def testAssignFromSourceSubscript1_1(self):
         string = """Union[
         Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
         Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
     ]
-    """
+"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 324')
     def testAssignFromSourceSubscript1_2(self):
         string = """(
         Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
         Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
     )
-    """
+"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
     def testAssignFromSourceSubscript1_3(self):
         string = """(
-        Callable,  # call_function 
-        Tuple_a,  # call_method 
+        Callable,  # comment 1
+        Tuple_a,  \t \t # comment 2
     )
-    """
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceSubscript1_4(self):
+        string = """(
+        Callable, 
+        Tuple_a,
+        )
+"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 

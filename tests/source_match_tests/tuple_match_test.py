@@ -332,7 +332,57 @@ class TupleTest(BaseTestUtils):
         string = "((()), ())"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-    def testAssignFromSourceEmptyTuple4(self):
-        string = "(((), ()))"
+
+    def testAssignFromSourceSubscript(self):
+        string = """NSFusionElType = Union[
+    Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
+    str,  # call_method name, example: "dequantize"
+    Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
+]
+"""
         node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceSubscript1_1(self):
+        string = """Union[
+        Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
+        Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
+    ]
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceSubscript1_2(self):
+        string = """(
+        Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
+        Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
+    )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceSubscript1_3(self):
+        string = """(
+        Callable,  # comment 1
+        Tuple_a,  \t \t # comment 2
+    )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testAssignFromSourceSubscript1_4(self):
+        string = """(
+        Callable, 
+        Tuple_a,
+        )
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testAssignFromSourceSubscript2(self):
+        string = """Union[
+        Callable, 
+        Tuple[str, Any]
+    ]
+    """
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

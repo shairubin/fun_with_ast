@@ -607,6 +607,12 @@ module_51 ="""class TestDeviceAnalysis(JitTestCase):
         ]
 """
 
+module_52 = """NSFusionElType = Union[
+    Callable,  # call_function or call_module type, example: F.linear or nn.Conv2d
+    str,  # call_method name, example: "dequantize"
+    Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
+]
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -657,7 +663,7 @@ class ModuleMatcherTest(BaseTestUtils):
         node = GetNodeFromInput('a=1', get_module=True)
         string = 'a=1'
         self._verify_match(node, string)
-    #@pytest.mark.skip(reason="issue #41")
+
     def testTupleOperation(self):
         node = GetNodeFromInput('(1,)+tuple(ch_mult)', get_module=True)
         string = '(1,)+tuple(ch_mult)'
@@ -754,7 +760,7 @@ a.b('cpu')
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputModule51(self):
+    def testFromInputModule5_1(self):
         string = """
 def dot_product_attention_weights():
     attn_weights -= a(attn_weights)
@@ -762,8 +768,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-
-    def testFromInputModule52(self):
+    def testFromInputModule5_2(self):
         string = """
 def dot_product_attention_weights():
     attn_weights -= a
@@ -771,7 +776,7 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputModule53(self):
+    def testFromInputModule5_3(self):
         string = """
 def dot_product_attention_weights():
     attn_weights -= a()
@@ -1033,5 +1038,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule51(self):
         string = module_51
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule52(self):
+        string = module_52
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

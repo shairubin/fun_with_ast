@@ -453,7 +453,7 @@ def get_Tuple_expected_parts():
            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
                                           # seems to work for now to allow both (a,) and (a)
                'elts',
-               after__separator_placeholder=TextPlaceholder(r'([\n \t]*,([ \t]#.*)?[\n \t]*\n?)?', '',
+               after__separator_placeholder=TextPlaceholder(r'([\n \t]*,([ \t]*#.*)?[\n \t]*\n?)?', '',
                no_transform=True),
                exclude_last_after=False),
        ]

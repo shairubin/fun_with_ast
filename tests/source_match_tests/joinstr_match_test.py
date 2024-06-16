@@ -678,3 +678,9 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
 
+
+    def test_JstrHTTP(self):
+        string = "f'https://{cognito_domain}/oauth2/token'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+

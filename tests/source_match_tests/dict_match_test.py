@@ -290,3 +290,22 @@ class DictMatcherTest(BaseTestUtils):
     }"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    @pytest.mark.skip("issue #327")
+    def testBasicDictHTTP(self):
+        string = """token_request = {
+        'url': f'https://{cognito_domain}/oauth2/token',
+        'method': 'POST',
+        'auth': (client_id, client_secret),
+        'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("issue #327")
+    def testBasicDictHTTP2(self):
+        string = """token_request = {
+        'url': f'https://{cognito_domain}/oauth2/token'}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

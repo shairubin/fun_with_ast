@@ -17,8 +17,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
-         TextPlaceholder(r'[ \t]*f[\'\"]', 'f\''),
-         TextPlaceholder(r'[\'\"]', '\'')
+            TextPlaceholder(r'[ \t]*(f"""|f["\'])', 'f\''),
+            #TextPlaceholder(r'[ \t]*f[\'\"]', 'f\''),
+         TextPlaceholder(r'(\"\"\"|[\'\"])', '\'')
      ]
         super(JoinedStrSourceMatcherNew, self).__init__(
             node, expected_parts, starting_parens)

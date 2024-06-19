@@ -130,6 +130,10 @@ class ConstantStrMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testTripleQ(self):
+        string = "\"\"\"ABC\"\"\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
     def testNativeGetSource(self):
         string = "'abc' "
@@ -144,3 +148,4 @@ class ConstantStrMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         source = GetSource(node.value)
         assert source == string
+

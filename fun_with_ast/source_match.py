@@ -16,7 +16,7 @@ from fun_with_ast.source_matchers.constant_jstr_matcher import ConstantJstrMatch
 from fun_with_ast.source_matchers.constant_source_match import ConstantSourceMatcher
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
 from fun_with_ast.source_matchers.if_source_match import IfSourceMatcher
-from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
+# from fun_with_ast.source_matchers.joined_str import JoinedStrSourceMatcher
 from fun_with_ast.source_matchers.joined_str_new import JoinedStrSourceMatcherNew
 from fun_with_ast.source_matchers.lambda_matcher import LambdaSourceMatcher
 from fun_with_ast.source_matchers.syntaxfreeline import SyntaxFreeLineMatcher
@@ -25,7 +25,7 @@ from fun_with_ast.source_matchers.withitem import WithItemSourceMatcher
 
 
 class DummyNode(BoolOpSourceMatcher, IfSourceMatcher, WithSourceMatcher,
-                JoinedStrSourceMatcher, JoinedStrSourceMatcherNew, ConstantJstrMatcher,
+             JoinedStrSourceMatcherNew, ConstantJstrMatcher,
                  ConstantSourceMatcher, SyntaxFreeLineMatcher, WithItemSourceMatcher, LambdaSourceMatcher):
     """A dummy node that can be used for matching."""
     def __init__(self):

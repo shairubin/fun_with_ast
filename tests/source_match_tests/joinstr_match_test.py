@@ -689,3 +689,12 @@ def main() -> None:
         string = "logger.info(f'{task_id=}')"
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_JstrTripleQuote(self):
+        string = "f\"\"\"test\"\"\""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrTripleQuote2(self):
+        string = "f\"test\""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)

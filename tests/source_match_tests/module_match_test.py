@@ -613,6 +613,18 @@ module_52 = """NSFusionElType = Union[
     Tuple[str, Any],  # call_method name and first argument, example: ("to", torch.float16)
 ]
 """
+module_53 = """
+@staticmethod
+def get_endpoint_priorities(secrets: dict,
+                            gpt_endpoint_table_name: str,
+                            model_name: str):
+    with db_conn.cursor() as cursor:
+        cursor.execute(f\"\"\"
+                        SELECT endpoint
+                        FROM {gpt_endpoint_table_name}
+                        WHERE runtime = (SELECT MAX(runtime) FROM {gpt_endpoint_table_name} WHERE modelname='{model_name}') and modelname='{model_name}'
+                        ORDER BY avgtime ASC
+         \"\"\")"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1043,5 +1055,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule52(self):
         string = module_52
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule53(self):
+        string = module_53
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

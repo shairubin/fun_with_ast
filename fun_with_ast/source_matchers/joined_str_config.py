@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-SUPPORTED_QUOTES = ['\'', "\""]
+SUPPORTED_QUOTES = ['"""', '\'', "\""] # order in list is import triple should go first
 
 
 @dataclass
@@ -31,7 +31,7 @@ class JstrConfig:
         self._set_quote_type()
         self._set_f_prefix()
         self._set_start_end_quotes()
-        self.suffix_str = self.orig_single_line_string[self.end_quote_location+1:]
+        self.suffix_str = self.orig_single_line_string[self.end_quote_location+len(self.quote_type):]
         self.prefix_str = self.orig_single_line_string[:self.f_part_location]
         if self.prefix_str.strip() != '':
             raise ValueError('joined str string in which prefix is not white spaces')
@@ -49,14 +49,15 @@ class JstrConfig:
         self.jstr_length = len(self.full_jstr_including_prefix)
 
     def _set_start_end_quotes(self):
+        len_of_q = len(self.quote_type)
         start = self.orig_single_line_string.find(self.quote_type)
-        end = self.orig_single_line_string[start+1:].find(self.quote_type)
+        end = self.orig_single_line_string[start+ len_of_q:].find(self.quote_type)
         end = self._check_for_escaped_quotes(end, start)
-        self.end_quote_location = end + start + 1
+        self.end_quote_location = end + start + len_of_q
         self.start_quote_location = start
         if self.start_quote_location == self.end_quote_location:
             raise ValueError('joined str string in which start and end quote locations are the same')
-        if self.end_quote_location == -1:
+        if self.end_quote_location == -len_of_q:
             raise ValueError('Could not find ending quote')
 
     def _check_for_escaped_quotes(self, end, start):
@@ -67,6 +68,7 @@ class JstrConfig:
         return end
 
     def _set_quote_type(self):
+
         for quote in SUPPORTED_QUOTES:
              if re.match(r'[ \t]*f?'+quote, self.orig_single_line_string):
                 self.quote_type = quote
@@ -76,7 +78,7 @@ class JstrConfig:
     def _set_f_prefix(self):
         (f_type, location) = self._set_prefix_type()
         if f_type == 'f':
-            self.f_part = self.orig_single_line_string[location:location+2]
+            self.f_part = self.orig_single_line_string[location:location+len(self.quote_type)+1]
             self.f_part_location = location
             self.f_part_type = 'f'
         elif f_type == 'quote_only':

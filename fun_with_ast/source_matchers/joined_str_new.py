@@ -86,21 +86,37 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return self.jstr_meta_data[0].quote_type
 
     def _split_jstr_into_lines(self, orig_string):
-        if isinstance(self.node.parent_node, ast.Dict):
-            lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
-        elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
-            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
-        else:
-            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+        lines = self._split_into_syntactic_lines(orig_string)
         jstr_lines = []
+
+        quote_type = self._determine_quote_type(orig_string)
+
         for index, line in enumerate(lines):
-            if self._is_jstr(line, index):
+            if self._is_jstr(line, index, quote_type):
                 jstr_lines.append(line)
             else:
                 break
         if len(jstr_lines) >= self.MAX_LINES_IN_JSTR-1:
             raise ValueError('too many lines in jstr string')
         self._update_jstr_meta_data_based_on_context(jstr_lines, lines)
+
+    def _split_into_syntactic_lines(self, orig_string):
+        if isinstance(self.node.parent_node, ast.Dict):
+            lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+        elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
+            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+        else:
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+        return lines
+
+    def _determine_quote_type(self, orig_string):
+        quote_type = None
+        for quote in SUPPORTED_QUOTES:
+            if re.match(r'[ \t]*f?' + quote, orig_string):
+                quote_type = quote
+                break
+        assert quote_type is not None
+        return quote_type
     # not clear why we need this fucntion below
     def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines): # this function mostly for debugging purposes
         if len(jstr_lines) == 0:
@@ -129,14 +145,18 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for line_index, line in enumerate(jstr_lines):
             self.jstr_meta_data.append(JstrConfig(line, line_index))
 
-    def _is_jstr(self, line, line_index):
+    def _is_jstr(self, line, line_index, quote_type):
         if line_index > 0 and isinstance(self.node.parent_node, (ast.Dict, ast.List, ast.Tuple)):
-            return False # we assume that the dict /listhas only one-liners as jstr
+            return False # we assume that the dict/list has only one-liners as jstr
+        if line_index == 0 and quote_type == '"""':
+            return True
         for quote in SUPPORTED_QUOTES:
             expr = r'^[ \t]*f?' + quote
             match = re.match(expr, line)
             if match:
                 return True
+        if quote_type == '"""' and '{' not in line:
+            return True
         return False
 
     def _match_format_parts(self, format_parts):

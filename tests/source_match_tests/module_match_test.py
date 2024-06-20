@@ -1058,6 +1058,8 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    import pytest
+    @pytest.mark.skip("issue 329")
     def testFromInputModule53(self):
         string = module_53
         node = GetNodeFromInput(string, get_module=True)

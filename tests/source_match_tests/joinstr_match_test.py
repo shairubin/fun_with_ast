@@ -698,3 +698,28 @@ def main() -> None:
         string = "f\"test\""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
+
+    @pytest.mark.skip("issue #329")
+    def test_JstrTripleQuote3(self):
+        string = """f\"\"\"
+                        SELECT endpoint
+                        FROM {gpt_endpoint_table_name}
+                        WHERE runtime = (SELECT MAX(runtime) FROM {gpt_endpoint_table_name} WHERE modelname='{model_name}') and modelname='{model_name}'
+                        ORDER BY avgtime ASC
+         \"\"\""""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrTripleQuote4(self):
+        string = """f\"\"\"
+                        SELECT endpoint
+                        FROM test
+         \"\"\""""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_JstrTripleQuote4_1(self):
+        string = """f\"\"\"
+                      SELECT
+                        \"\"\""""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)

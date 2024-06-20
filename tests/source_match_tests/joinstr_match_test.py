@@ -699,7 +699,7 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
 
-    @pytest.mark.skip("issue #329")
+
     def test_JstrTripleQuote3(self):
         string = """f\"\"\"
                         SELECT endpoint

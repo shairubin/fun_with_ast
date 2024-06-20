@@ -86,10 +86,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return self.jstr_meta_data[0].quote_type
 
     def _split_jstr_into_lines(self, orig_string):
-        lines = self._split_into_syntactic_lines(orig_string)
+        quote_type = self._determine_quote_type(orig_string)
+        if quote_type == '"""':
+            lines = [orig_string]
+        else:
+            lines = self._split_into_syntactic_lines(orig_string)
         jstr_lines = []
 
-        quote_type = self._determine_quote_type(orig_string)
 
         for index, line in enumerate(lines):
             if self._is_jstr(line, index, quote_type):
@@ -126,16 +129,18 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         len_jstr_lines = len(jstr_lines)
-        if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line):      # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+        if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line): # this is call_args context
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)      # closing ')' at the end of a line
             return
         elif len_jstr_lines < len(lines)  and re.match(r'[ \t\n]*\)', lines[len_jstr_lines]):
-            self.__appnd_jstr_lines_to_metadata(jstr_lines) # this is call_args context
-            return
+            self.__appnd_jstr_lines_to_metadata(jstr_lines) # this is call_args context - single ')'
+            return                                          # at separate line
         elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)            # ')' and a following comment
             return
         elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
+            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+        elif re.search(r'[ \t]*"""$', last_jstr_line):  # this is raise context
             self.__appnd_jstr_lines_to_metadata(jstr_lines)
 
         else:

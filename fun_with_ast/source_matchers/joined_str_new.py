@@ -17,8 +17,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     MAX_LINES_IN_JSTR = 10
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
-         TextPlaceholder(r'[ \t]*f[\'\"]', 'f\''),
-         TextPlaceholder(r'[\'\"]', '\'')
+            TextPlaceholder(r'[ \t]*(f"""|f["\'])', 'f\''),
+         TextPlaceholder(r'(\"\"\"|[\'\"])', '\'')
      ]
         super(JoinedStrSourceMatcherNew, self).__init__(
             node, expected_parts, starting_parens)
@@ -85,57 +85,80 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return self.jstr_meta_data[0].quote_type
 
     def _split_jstr_into_lines(self, orig_string):
-        if isinstance(self.node.parent_node, ast.Dict):
-            lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
-        elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
-            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR*2)
+        quote_type = self._determine_quote_type(orig_string)
+        if quote_type == '"""':
+            lines = [orig_string]
         else:
-            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+            lines = self._split_into_syntactic_lines(orig_string)
         jstr_lines = []
+
+
         for index, line in enumerate(lines):
-            if self._is_jstr(line, index):
+            if self._is_jstr(line, index, quote_type):
                 jstr_lines.append(line)
             else:
                 break
         if len(jstr_lines) >= self.MAX_LINES_IN_JSTR-1:
             raise ValueError('too many lines in jstr string')
         self._update_jstr_meta_data_based_on_context(jstr_lines, lines)
+
+    def _split_into_syntactic_lines(self, orig_string):
+        if isinstance(self.node.parent_node, ast.Dict):
+            lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+        elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
+            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+        else:
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+        return lines
+
+    def _determine_quote_type(self, orig_string):
+        quote_type = None
+        for quote in SUPPORTED_QUOTES:
+            if re.match(r'[ \t]*f?' + quote, orig_string):
+                quote_type = quote
+                break
+        assert quote_type is not None
+        return quote_type
     # not clear why we need this fucntion below
     def _update_jstr_meta_data_based_on_context(self, jstr_lines, lines): # this function mostly for debugging purposes
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
         if len(jstr_lines) == 1: # simple case
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__append_jstr_lines_to_metadata(jstr_lines)
             return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         len_jstr_lines = len(jstr_lines)
-        if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line):      # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+        if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line): # this is call_args context
+            self.__append_jstr_lines_to_metadata(jstr_lines)      # closing ')' at the end of a line
             return
         elif len_jstr_lines < len(lines)  and re.match(r'[ \t\n]*\)', lines[len_jstr_lines]):
-            self.__appnd_jstr_lines_to_metadata(jstr_lines) # this is call_args context
-            return
+            self.__append_jstr_lines_to_metadata(jstr_lines) # this is call_args context - single ')'
+            return                                          # at separate line
         elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__append_jstr_lines_to_metadata(jstr_lines)            # ')' and a following comment
             return
         elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__append_jstr_lines_to_metadata(jstr_lines)
 
         else:
             raise ValueError("Not supported - jstr string not in call_args context ")
 
-    def __appnd_jstr_lines_to_metadata(self, jstr_lines):
+    def __append_jstr_lines_to_metadata(self, jstr_lines):
         for line_index, line in enumerate(jstr_lines):
             self.jstr_meta_data.append(JstrConfig(line, line_index))
 
-    def _is_jstr(self, line, line_index):
+    def _is_jstr(self, line, line_index, quote_type):
         if line_index > 0 and isinstance(self.node.parent_node, (ast.Dict, ast.List, ast.Tuple)):
-            return False # we assume that the dict /listhas only one-liners as jstr
+            return False # we assume that the dict/list has only one-liners as jstr
+        if line_index == 0 and quote_type == '"""':
+            return True
         for quote in SUPPORTED_QUOTES:
             expr = r'^[ \t]*f?' + quote
             match = re.match(expr, line)
             if match:
                 return True
+        if quote_type == '"""' and '{' not in line:
+            return True
         return False
 
     def _match_format_parts(self, format_parts):

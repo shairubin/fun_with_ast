@@ -130,6 +130,32 @@ class ConstantStrMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testTripleQ(self):
+        string = "\"\"\"ABC\"\"\""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testTripleQ_2(self):
+        string = """\"\"\"ABC\"\"\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testTripleQ_2_1(self):
+        string = """\"\"\"A
+        B   C
+        D\"\"\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testTripleQ_3(self):
+        string = """\"\"\"
+                        SELECT endpoint
+                        FROM {gpt_endpoint_table_name}
+                        WHERE runtime = (SELECT MAX(runtime) FROM {gpt_endpoint_table_name} WHERE modelname='{model_name}') and modelname='{model_name}'
+                        ORDER BY avgtime ASC
+         \"\"\""""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
 
     def testNativeGetSource(self):
         string = "'abc' "
@@ -144,3 +170,4 @@ class ConstantStrMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         source = GetSource(node.value)
         assert source == string
+

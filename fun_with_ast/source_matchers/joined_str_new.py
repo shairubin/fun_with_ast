@@ -18,7 +18,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def __init__(self, node, starting_parens=None, parent=None):
         expected_parts = [
             TextPlaceholder(r'[ \t]*(f"""|f["\'])', 'f\''),
-            #TextPlaceholder(r'[ \t]*f[\'\"]', 'f\''),
          TextPlaceholder(r'(\"\"\"|[\'\"])', '\'')
      ]
         super(JoinedStrSourceMatcherNew, self).__init__(
@@ -125,28 +124,26 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if len(jstr_lines) == 0:
             raise ValueError('could not find jstr lines')
         if len(jstr_lines) == 1: # simple case
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__append_jstr_lines_to_metadata(jstr_lines)
             return
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         len_jstr_lines = len(jstr_lines)
         if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line): # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)      # closing ')' at the end of a line
+            self.__append_jstr_lines_to_metadata(jstr_lines)      # closing ')' at the end of a line
             return
         elif len_jstr_lines < len(lines)  and re.match(r'[ \t\n]*\)', lines[len_jstr_lines]):
-            self.__appnd_jstr_lines_to_metadata(jstr_lines) # this is call_args context - single ')'
+            self.__append_jstr_lines_to_metadata(jstr_lines) # this is call_args context - single ')'
             return                                          # at separate line
         elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)            # ')' and a following comment
+            self.__append_jstr_lines_to_metadata(jstr_lines)            # ')' and a following comment
             return
         elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
-        elif re.search(r'[ \t]*"""$', last_jstr_line):  # this is raise context
-            self.__appnd_jstr_lines_to_metadata(jstr_lines)
+            self.__append_jstr_lines_to_metadata(jstr_lines)
 
         else:
             raise ValueError("Not supported - jstr string not in call_args context ")
 
-    def __appnd_jstr_lines_to_metadata(self, jstr_lines):
+    def __append_jstr_lines_to_metadata(self, jstr_lines):
         for line_index, line in enumerate(jstr_lines):
             self.jstr_meta_data.append(JstrConfig(line, line_index))
 

@@ -625,6 +625,18 @@ def get_endpoint_priorities(secrets: dict,
                         WHERE runtime = (SELECT MAX(runtime) FROM {gpt_endpoint_table_name} WHERE modelname='{model_name}') and modelname='{model_name}'
                         ORDER BY avgtime ASC
          \"\"\")"""
+
+
+module_54 = """
+def to_dot(self) -> str:
+    return f\"\"\"\
+digraph G {{
+rankdir = LR;
+node [shape=box];
+{edges}
+}}
+\"\"\""""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1061,5 +1073,11 @@ def dot_product_attention_weights():
     #@pytest.mark.skip("issue 329")
     def testFromInputModule53(self):
         string = module_53
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    import pytest
+    @pytest.mark.skip("issue 332")
+    def testFromInputModule54(self):
+        string = module_54
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

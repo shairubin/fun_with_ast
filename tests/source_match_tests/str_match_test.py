@@ -171,3 +171,19 @@ class ConstantStrMatcherTest(BaseTestUtils):
         source = GetSource(node.value)
         assert source == string
 
+    def test_strTripleQuote5(self):
+        string = """\"\"\"
+digraph G {{
+rankdir = LR;
+node [shape=box];
+{edges}
+}}\"\"\""""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_strTripleQuote5_1(self):
+        string = """\"\"\"
+digraph G {{
+rankdir = LR;
+}}\"\"\""""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string, trim_suffix_spaces=False)

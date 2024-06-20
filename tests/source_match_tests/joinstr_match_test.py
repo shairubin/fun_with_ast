@@ -723,3 +723,35 @@ def main() -> None:
                         \"\"\""""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
+
+    @pytest.mark.skip("issue #332")
+    def test_JstrTripleQuote5(self):
+        string = """f\"\"\"\
+digraph G {{
+rankdir = LR;
+node [shape=box];
+{edges}
+}}
+\"\"\"
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    @pytest.mark.skip("issue #332")
+    def test_JstrTripleQuote5_1(self):
+        string = """f\"\"\"\
+digraph G {{
+rankdir = LR;
+}}
+\"\"\"
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrTripleQuote5_2(self):
+        string = """f' \
+digraph G {{ \
+rankdir = LR; \
+}} \
+'
+"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)

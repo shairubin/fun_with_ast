@@ -83,7 +83,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _get_format_parts(self, format_string):
         format_parts = list(Formatter().parse(format_string))
         if '{{' in format_string:
-            format_parts = self._consolidate_parts(format_parts)
+            mew_parts = []
+            self._consolidate_parts(format_parts, new_parts=mew_parts)
+            return  mew_parts
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type
@@ -181,6 +183,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              if field_name_part[0] is not None:
                 format_string_field_name = self._handle_jstr_field_name(index_in_jstr_values,
                                                                         conversion_part, field_name_part)
+                #if not literal_part:
                 index_in_jstr_values += 1
              format_string += format_string_literal + format_string_field_name
          return format_string
@@ -250,13 +253,54 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             return True
         return False
 
-    def _consolidate_parts(self, format_parts):
-        consolidated_parts = []
-        for part in format_parts:
-            if part[0] is not None and part[1] is None:
-                #new_part = (part[0].replace('{', '{{').replace('}','}}'), None, None, None)
-                consolidated_parts.append(part)
-            #else:
-            #    consolidated_parts.append(part)
-        consolidated_part = (''.join([part[0] for part in consolidated_parts]), None, None, None)
-        return [consolidated_part]
+    def _consolidate_parts(self, format_parts, new_parts=[]):
+        if not format_parts:
+            return
+        if len(format_parts) == 1:
+            part_1 = format_parts[0]
+            part_0 = new_parts[-1]
+            if part_0[0] and not part_0[1]:
+                if part_1[0]:
+                    new_part = self._merge_parts(part_0, part_1)
+                    new_parts[-1] = new_part
+                    return
+        part_0  = format_parts[0]
+        part_1 = format_parts[1]
+        if part_0[0] and not part_0[1]:
+            if part_1[0]:
+                new_part = self._merge_parts(part_0, part_1)
+                new_parts.append(new_part)
+                self._consolidate_parts(format_parts[2:], new_parts)
+    def _merge_parts(self, part_0, part_1):
+        return (part_0[0] + part_1[0], part_1[1], None, None)
+
+#             index += 1
+        #             continue
+        #         start_sequence = True
+        #         if part[0] is not None and part[1] is not None:
+        #             consolidated_parts.append(index)
+        #             break
+        #         if part[0] is not None and part[1] is None:
+        #             consolidated_parts.append(index)
+        # for index, part in enumerate(format_parts):
+        #     if '{' not in part[0] and start_sequence == False:
+        #         continue
+        #     start_sequence = True
+        #     if part[0] is not None and part[1] is not None:
+        #         consolidated_parts.append(index)
+        #         break
+        #     if part[0] is not None and part[1] is None:
+        #         #new_part = (part[0].replace('{', '{{').replace('}','}}'), None, None, None)
+        #         consolidated_parts.append(index)
+        # start_part=consolidated_parts[0]
+        # end_part=consolidated_parts[-1]
+        # nested_format = format_parts[end_part][1]
+        # consolidated_part = (''.join([part[0] for part in format_parts[start_part:end_part+1]]), None, None, None)
+        # nested_format_value =('', nested_format, None, None)
+        # if len(consolidated_parts) < len(format_parts):
+        #     #raise ValueError('consolidated part is empty')
+        #     result =  [consolidated_part,nested_format_value,  *format_parts[end_part+1:]]
+        # else:
+        #     result = [consolidated_part]
+        # return result
+

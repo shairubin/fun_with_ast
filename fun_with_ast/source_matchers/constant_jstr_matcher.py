@@ -9,8 +9,10 @@ class ConstantJstrMatcher(ConstantSourceMatcher):
     def _match(self, string):
         if string.find('"') != -1 and self.node.n.find('"') != -1:
             self.added_quote = '\''
-        if string.endswith('{') or string.startswith('{'):
-        #    raise NotImplementedError('Jstr does not support ending with {')
+        if '{' in string:
+            if '}' not in string:
+                raise ValueError('Jstr must have both { and }')
+            string = string.replace('{', '{{').replace('}','}}')
             self.curly_parenthesis = self.node.value
             self.node.s = self.node.n = self.node.value = string
         string = self.added_quote + string + self.added_quote

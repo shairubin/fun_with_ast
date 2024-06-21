@@ -58,6 +58,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_string = self._get_format_string(index)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
+        #if '}' in format_string_source or '{' in format_string_source:
+        #    raise ValueError('format string source should not contain }')
         self.matched = False  # ugly hack to force the next line to work
         self.matched_source = None
         remaining_string = remaining_string[len(format_string_source):]
@@ -79,10 +81,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return format_string
 
     def _get_format_parts(self, format_string):
-        #if '{{' in format_string:
-        #    raise NotImplementedError('nested format strings are not supported')
         format_parts = list(Formatter().parse(format_string))
-        format_parts = self._consolidate_parts(format_parts)
+        if '{{' in format_string:
+            format_parts = self._consolidate_parts(format_parts)
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type
@@ -214,10 +215,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _handle_jstr_constant(self, index, format_part_source):
         constant_node = self.node.values[index]
         value = constant_node.value
-        if format_part_source.endswith('{') or format_part_source.startswith('}'):
-            raise NotImplementedError('Jstr does not support ending with {')
-        if not isinstance(value, str):
-            raise ValueError("in joined str only str constants are supported")
+        # if format_part_source.endswith('{') or format_part_source.startswith('}'):
+        #     raise NotImplementedError('Jstr does not support ending with {')
+        # if not isinstance(value, str):
+        #     raise ValueError("in joined str only str constants are supported")
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
         matcher = GetDynamicMatcher(constant_node_for_jstr)
@@ -250,8 +251,12 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return False
 
     def _consolidate_parts(self, format_parts):
-        result = [("",None,None,None)]
+        consolidated_parts = []
         for part in format_parts:
-            if part[0] and not part[1] and not part[2] and not part[3]:
-                result[0] = (result[0][0]+part[0], None, None, None)
-        return format_parts
+            if part[0] is not None and part[1] is None:
+                #new_part = (part[0].replace('{', '{{').replace('}','}}'), None, None, None)
+                consolidated_parts.append(part)
+            #else:
+            #    consolidated_parts.append(part)
+        consolidated_part = (''.join([part[0] for part in consolidated_parts]), None, None, None)
+        return [consolidated_part]

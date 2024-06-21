@@ -750,8 +750,7 @@ rankdir = LR;
         string = """f' \
 digraph G {{ \
 rankdir = LR; \
-}} \
-'
+}}'
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

@@ -187,3 +187,8 @@ rankdir = LR;
 }}\"\"\""""
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_strTripleQuote5_2(self):
+        string = """('digraph G {{'\n'rankdir = LR;}}')"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)

@@ -79,7 +79,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         return format_string
 
     def _get_format_parts(self, format_string):
+        #if '{{' in format_string:
+        #    raise NotImplementedError('nested format strings are not supported')
         format_parts = list(Formatter().parse(format_string))
+        format_parts = self._consolidate_parts(format_parts)
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type
@@ -164,6 +167,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match_format_parts(self, format_parts):
          format_string = ''
          index_in_jstr_values = 0
+         #if len(format_parts) != len(self.node.values):
+         #       raise ValueError('number of format parts does not match number of values')
          for part in format_parts:
              literal_part = part[0]
              conversion_part = part[3]
@@ -206,15 +211,17 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
         return format_string
 
-    def _handle_jstr_constant(self, index, source_from_format):
+    def _handle_jstr_constant(self, index, format_part_source):
         constant_node = self.node.values[index]
         value = constant_node.value
+        if format_part_source.endswith('{') or format_part_source.startswith('}'):
+            raise NotImplementedError('Jstr does not support ending with {')
         if not isinstance(value, str):
             raise ValueError("in joined str only str constants are supported")
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
         matcher = GetDynamicMatcher(constant_node_for_jstr)
-        matched_string = matcher._match(source_from_format)
+        matched_string = matcher._match(format_part_source)
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
         return matched_string
@@ -241,24 +248,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if with_escape == source_from_format:
             return True
         return False
-#co-pilot code
-#         if source_from_format.startswith('"') and source_from_format.endswith('"'):
-#             param = source_from_format.replace('"', '')
-#         elif source_from_format.startswith("'") and source_from_format.endswith("'"):
-#             param = source_from_format.replace("'", '')
-#         else:
-#             raise ValueError('format string does not match')
-#         if param != matched_string:
-#             raise ValueError('format string does not match')
-#         return param
-# #co-pilot code
-        # if stripped_format.startswith('"') and stripped_format.endswith('"'):
-        #     param = param.replace('"', '')
-        # elif stripped_format.startswith("'") and stripped_format.endswith("'"):
-        #     param = param.replace("'", '')
-        # else:
-        #     raise ValueError('format string does not match')
-        # return param
 
-
-
+    def _consolidate_parts(self, format_parts):
+        result = [("",None,None,None)]
+        for part in format_parts:
+            if part[0] and not part[1] and not part[2] and not part[3]:
+                result[0] = (result[0][0]+part[0], None, None, None)
+        return format_parts

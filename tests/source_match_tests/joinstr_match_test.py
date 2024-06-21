@@ -753,5 +753,15 @@ rankdir = LR; \
 }} \
 '
 """
-        node = GetNodeFromInput(string, get_module=True)
-        self._verify_match(node, string, trim_suffix_spaces=False)
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_JstrTripleQuote5_2_1(self):
+        string = """f' \
+digraph G  \
+rankdir = LR; \
+ \
+'
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

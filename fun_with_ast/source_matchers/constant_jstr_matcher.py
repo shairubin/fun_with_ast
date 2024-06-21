@@ -5,9 +5,14 @@ class ConstantJstrMatcher(ConstantSourceMatcher):
     def __init__(self, node, starting_parens=None, parent_node=None):
         ConstantSourceMatcher.__init__(self, node, starting_parens, parent_node)
         self.added_quote = '"'
+        self.curly_parenthesis = ""
     def _match(self, string):
         if string.find('"') != -1 and self.node.n.find('"') != -1:
             self.added_quote = '\''
+        if string.endswith('{') or string.startswith('{'):
+        #    raise NotImplementedError('Jstr does not support ending with {')
+            self.curly_parenthesis = self.node.value
+            self.node.s = self.node.n = self.node.value = string
         string = self.added_quote + string + self.added_quote
         result = super(ConstantJstrMatcher, self)._match(string)
         result = self.GetSource()

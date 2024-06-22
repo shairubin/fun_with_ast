@@ -8,6 +8,9 @@ class ConstantJstrMatcher(ConstantSourceMatcher):
     def _match(self, string):
         if string.find('"') != -1 and self.node.n.find('"') != -1:
             self.added_quote = '\''
+        if '{' in string or '}' in string:
+            string = string.replace('{', '{{').replace('}','}}')
+            self.node.s = self.node.n = self.node.value = string
         string = self.added_quote + string + self.added_quote
         result = super(ConstantJstrMatcher, self)._match(string)
         result = self.GetSource()

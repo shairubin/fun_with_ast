@@ -80,6 +80,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
 
     def _get_format_parts(self, format_string):
         format_parts = list(Formatter().parse(format_string))
+        if '{{' in format_string:
+            mew_parts = []
+            self._consolidate_parts(format_parts, new_parts=mew_parts)
+            return  mew_parts
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type
@@ -164,6 +168,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match_format_parts(self, format_parts):
          format_string = ''
          index_in_jstr_values = 0
+         #if len(format_parts) != len(self.node.values):
+         #       raise ValueError('number of format parts does not match number of values')
          for part in format_parts:
              literal_part = part[0]
              conversion_part = part[3]
@@ -175,6 +181,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
              if field_name_part[0] is not None:
                 format_string_field_name = self._handle_jstr_field_name(index_in_jstr_values,
                                                                         conversion_part, field_name_part)
+                #if not literal_part:
                 index_in_jstr_values += 1
              format_string += format_string_literal + format_string_field_name
          return format_string
@@ -183,8 +190,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         value_node = format_value_node.value
-        #if not isinstance(value_node, (ast.ListComp, ast.BinOp,  ast.Name, ast.Constant, ast.Attribute, ast.Subscript , ast.Call)):
-        #    raise NotImplementedError('only Name , Constant, Attribute and Call nodes are supported')
 
         stripped_format  = GetSource(value_node, text=field_name_part[0])
         ws_parts = field_name_part[0].split(stripped_format)
@@ -206,15 +211,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         self.expected_parts.insert(index + 1, NodePlaceholder(format_value_node))
         return format_string
 
-    def _handle_jstr_constant(self, index, source_from_format):
+    def _handle_jstr_constant(self, index, format_part_source):
         constant_node = self.node.values[index]
         value = constant_node.value
-        if not isinstance(value, str):
-            raise ValueError("in joined str only str constants are supported")
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
         matcher = GetDynamicMatcher(constant_node_for_jstr)
-        matched_string = matcher._match(source_from_format)
+        matched_string = matcher._match(format_part_source)
         self.node.values[index] = constant_node_for_jstr
         self.expected_parts.insert(index + 1, NodePlaceholder(constant_node_for_jstr))
         return matched_string
@@ -223,8 +226,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
                 for child in ast.walk(node):
-                    #if isinstance(child, (ast.Name, ast.Attribute, ast.Call, ast.Subscript, ast.Constant, ast.BinOp,
-                    #                      ast.ListComp)):
                     child.no_matchers_ok = True
             node.no_matchers_ok = True
 
@@ -241,24 +242,24 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if with_escape == source_from_format:
             return True
         return False
-#co-pilot code
-#         if source_from_format.startswith('"') and source_from_format.endswith('"'):
-#             param = source_from_format.replace('"', '')
-#         elif source_from_format.startswith("'") and source_from_format.endswith("'"):
-#             param = source_from_format.replace("'", '')
-#         else:
-#             raise ValueError('format string does not match')
-#         if param != matched_string:
-#             raise ValueError('format string does not match')
-#         return param
-# #co-pilot code
-        # if stripped_format.startswith('"') and stripped_format.endswith('"'):
-        #     param = param.replace('"', '')
-        # elif stripped_format.startswith("'") and stripped_format.endswith("'"):
-        #     param = param.replace("'", '')
-        # else:
-        #     raise ValueError('format string does not match')
-        # return param
 
-
-
+    def _consolidate_parts(self, format_parts, new_parts=[]):
+        if not format_parts:
+            return
+        if len(format_parts) == 1:
+            part_1 = format_parts[0]
+            part_0 = new_parts[-1]
+            if part_0[0] and not part_0[1]:
+                if part_1[0]:
+                    new_part = self._merge_parts(part_0, part_1)
+                    new_parts[-1] = new_part
+                    return
+        part_0  = format_parts[0]
+        part_1 = format_parts[1]
+        if part_0[0] and not part_0[1]:
+            if part_1[0]:
+                new_part = self._merge_parts(part_0, part_1)
+                new_parts.append(new_part)
+                self._consolidate_parts(format_parts[2:], new_parts)
+    def _merge_parts(self, part_0, part_1):
+        return (part_0[0] + part_1[0], part_1[1], None, None)

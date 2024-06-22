@@ -724,7 +724,6 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
 
-    #@pytest.mark.skip("issue #332")
     def test_JstrTripleQuote5(self):
         string = """f\"\"\"\
 digraph G {{

@@ -58,8 +58,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         format_string = self._get_format_string(index)
         format_parts = self._get_format_parts(format_string)
         format_string_source = self._match_format_parts(format_parts)
-        #if '}' in format_string_source or '{' in format_string_source:
-        #    raise ValueError('format string source should not contain }')
         self.matched = False  # ugly hack to force the next line to work
         self.matched_source = None
         remaining_string = remaining_string[len(format_string_source):]
@@ -192,8 +190,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if not isinstance(format_value_node, ast.FormattedValue):
             raise ValueError('value node is not FormattedValue')
         value_node = format_value_node.value
-        #if not isinstance(value_node, (ast.ListComp, ast.BinOp,  ast.Name, ast.Constant, ast.Attribute, ast.Subscript , ast.Call)):
-        #    raise NotImplementedError('only Name , Constant, Attribute and Call nodes are supported')
 
         stripped_format  = GetSource(value_node, text=field_name_part[0])
         ws_parts = field_name_part[0].split(stripped_format)
@@ -218,10 +214,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _handle_jstr_constant(self, index, format_part_source):
         constant_node = self.node.values[index]
         value = constant_node.value
-        # if format_part_source.endswith('{') or format_part_source.startswith('}'):
-        #     raise NotImplementedError('Jstr does not support ending with {')
-        # if not isinstance(value, str):
-        #     raise ValueError("in joined str only str constants are supported")
         constant_node_for_jstr = ConstantForJstr(value)
         constant_node_for_jstr.default_quote = self._get_quote_type()
         matcher = GetDynamicMatcher(constant_node_for_jstr)
@@ -234,8 +226,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         for node in self.node.values:
             if isinstance(node, ast.FormattedValue):
                 for child in ast.walk(node):
-                    #if isinstance(child, (ast.Name, ast.Attribute, ast.Call, ast.Subscript, ast.Constant, ast.BinOp,
-                    #                      ast.ListComp)):
                     child.no_matchers_ok = True
             node.no_matchers_ok = True
 
@@ -273,34 +263,3 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 self._consolidate_parts(format_parts[2:], new_parts)
     def _merge_parts(self, part_0, part_1):
         return (part_0[0] + part_1[0], part_1[1], None, None)
-
-#             index += 1
-        #             continue
-        #         start_sequence = True
-        #         if part[0] is not None and part[1] is not None:
-        #             consolidated_parts.append(index)
-        #             break
-        #         if part[0] is not None and part[1] is None:
-        #             consolidated_parts.append(index)
-        # for index, part in enumerate(format_parts):
-        #     if '{' not in part[0] and start_sequence == False:
-        #         continue
-        #     start_sequence = True
-        #     if part[0] is not None and part[1] is not None:
-        #         consolidated_parts.append(index)
-        #         break
-        #     if part[0] is not None and part[1] is None:
-        #         #new_part = (part[0].replace('{', '{{').replace('}','}}'), None, None, None)
-        #         consolidated_parts.append(index)
-        # start_part=consolidated_parts[0]
-        # end_part=consolidated_parts[-1]
-        # nested_format = format_parts[end_part][1]
-        # consolidated_part = (''.join([part[0] for part in format_parts[start_part:end_part+1]]), None, None, None)
-        # nested_format_value =('', nested_format, None, None)
-        # if len(consolidated_parts) < len(format_parts):
-        #     #raise ValueError('consolidated part is empty')
-        #     result =  [consolidated_part,nested_format_value,  *format_parts[end_part+1:]]
-        # else:
-        #     result = [consolidated_part]
-        # return result
-

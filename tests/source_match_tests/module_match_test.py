@@ -637,6 +637,25 @@ node [shape=box];
 }}
 \"\"\""""
 
+module_55 = """def ts_lowering_body(schema: LazyIrSchema) -> str:
+    return f\"\"\"
+    std::vector<torch::jit::NamedValue> arguments;
+    std::vector<torch::jit::NamedValue> kwarguments;
+    arguments.reserve({len(emplace_arguments)});
+    kwarguments.reserve({len(emplace_kwarg_values + emplace_kwarg_scalars)});
+    size_t i = 0;
+    {emplace_arguments_str}
+    {emplace_kwarguments}
+    torch::lazy::TSOpVector {schema.aten_name}_out = torch::lazy::LowerTSBuiltin(function, op().op, arguments, kwarguments);
+    TORCH_CHECK_EQ({schema.aten_name}_out.size(), {len(schema.returns)});
+
+    return {schema.aten_name}_out;
+\"\"\"
+"""
+
+
+
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1078,5 +1097,9 @@ def dot_product_attention_weights():
 
     def testFromInputModule54(self):
         string = module_54
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule55(self):
+        string = module_55
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

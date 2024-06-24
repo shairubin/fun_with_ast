@@ -762,3 +762,22 @@ rankdir = LR; \
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def test_JstrIssue337_CallNotInLastLine(self):
+        string = """{'statusCode': 200, 'body': json.dumps(f'Deleted company {company_id} from session {session_id}'),
+        'headers': {'Access-Control-Allow-Origin': '*'}}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    def test_JstrIssue337_CallNotInLastLine_2(self):
+        string = """{'body': json.dumps(f'A {B} C {D}'),
+        'a': 'b'}"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def test_JstrIssue337_CallNotInLastLine_2_1(self):
+        string = """{'body': json.dumps(f'A {B} C {D}'),
+        'a': 'b'  } """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

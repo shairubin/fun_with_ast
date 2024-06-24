@@ -653,7 +653,10 @@ module_55 = """def ts_lowering_body(schema: LazyIrSchema) -> str:
 \"\"\"
 """
 
-
+module_56 = """def foo():  
+    return {'statusCode': 200, 'body': json.dumps(f'Deleted company {company_id} from session {session_id}'),
+        'headers': {'Access-Control-Allow-Origin': '*'}}
+"""
 
 
 class ModuleMatcherTest(BaseTestUtils):
@@ -1101,5 +1104,9 @@ def dot_product_attention_weights():
         self._verify_match(node, string)
     def testFromInputModule55(self):
         string = module_55
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule56(self):
+        string = module_56
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

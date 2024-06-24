@@ -3,6 +3,7 @@ import re
 from string import Formatter
 
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.call_args_node import CallArgs
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.manipulate_node.nodes_for_jstr import ConstantForJstr
 from fun_with_ast.placeholders.base_match import MatchPlaceholder
@@ -111,6 +112,10 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
         elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
             lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+        elif isinstance(self.node.parent_node, CallArgs):
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+            if len(lines) >1 and lines[1] != '':
+                pass
         else:
             lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
         return lines
@@ -130,6 +135,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         if len(jstr_lines) == 1: # simple case
             self.__append_jstr_lines_to_metadata(jstr_lines)
             return
+
         last_jstr_line = jstr_lines[len(jstr_lines)-1]
         len_jstr_lines = len(jstr_lines)
         if re.search(r'[ \t]*\)[ \t]*$', last_jstr_line): # this is call_args context
@@ -143,7 +149,8 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             return
         elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
             self.__append_jstr_lines_to_metadata(jstr_lines)
-
+        elif re.search(r'[ \t]*\'.*?\':[ \t]*\'.*\'[ \t]*\}', last_jstr_line): # dict context
+            self.__append_jstr_lines_to_metadata(jstr_lines)
         else:
             raise ValueError("Not supported - jstr string not in call_args context ")
 
@@ -152,8 +159,15 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             self.jstr_meta_data.append(JstrConfig(line, line_index))
 
     def _is_jstr(self, line, line_index, quote_type):
+        # TODO: this is really ugly -- we simply need to build a parser that identifies the end of the f string
         if line_index > 0 and isinstance(self.node.parent_node, (ast.Dict, ast.List, ast.Tuple)):
             return False # we assume that the dict/list has only one-liners as jstr
+        if line_index > 0 and isinstance(self.node.parent_node, CallArgs):
+            call_node = self.node.parent_node.parent_node.parent_node
+            if isinstance(call_node, ast.Dict):
+                return False
+#        if line_index > 0 and line and line.endswith('}'):
+#            return False
         if line_index == 0 and quote_type == '"""':
             return True
         for quote in SUPPORTED_QUOTES:

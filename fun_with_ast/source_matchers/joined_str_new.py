@@ -110,6 +110,9 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _split_into_syntactic_lines(self, orig_string):
         if isinstance(self.node.parent_node, ast.Dict):
             lines = re.split(r'[\n:]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+            if 'http' in lines[0]:
+                full_http_string = lines[0] + ':' +lines[1]
+                lines = [full_http_string] + lines[2:]
         elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
             lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
         elif isinstance(self.node.parent_node, CallArgs):
@@ -182,8 +185,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
     def _match_format_parts(self, format_parts):
          format_string = ''
          index_in_jstr_values = 0
-         #if len(format_parts) != len(self.node.values):
-         #       raise ValueError('number of format parts does not match number of values')
          for part in format_parts:
              literal_part = part[0]
              conversion_part = part[3]

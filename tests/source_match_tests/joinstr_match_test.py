@@ -781,12 +781,12 @@ rankdir = LR; \
         'a': 'b'  } """
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    def test_JstrIssue327_start_equal_end(self):
+    def test_JstrIssue327_HTTP(self):
         string = """f'https://{cognito_domain}/oauth2/token'"""
         node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
-    def test_JstrIssue327_start_equal_end_1(self):
+    def test_JstrIssue327_HTTP_1(self):
         string = """token_request = {
         'url': f'https://{cognito_domain}/oauth2/token',
         }"""

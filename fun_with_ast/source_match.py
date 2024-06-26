@@ -185,7 +185,7 @@ def get_BitXor_expected_parts():
 
 
 def get_Break_expected_parts():
-    return [TextPlaceholder(r' *break *\n', 'break\n')]
+    return [TextPlaceholder(r'[ \t]*break[ \t]*\n?', 'break\n')]
 
 
 def get_Call_expected_parts():

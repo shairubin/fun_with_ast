@@ -1,3 +1,4 @@
+import ast
 import re
 
 from fun_with_ast.get_source import GetSource
@@ -8,7 +9,8 @@ from fun_with_ast.manipulate_node.syntax_free_line_node import SyntaxFreeLine
 
 class BodyManipulator:
     """ Class for manipulating the body of a node. (the If body, orelse body, etc.)"""
-    def __init__(self, body_block):
+    def __init__(self, body_block, node_type=ast.Module):
+        self.node_type = node_type
         self.body_block = body_block
 
     def inject_node(self, nodes_to_inject, index):
@@ -81,3 +83,15 @@ class BodyManipulator:
             result = line_ident
             break
         return result
+
+    def remove_node(self, index, removed_source):
+        if self.node_type != ast.Module:
+            raise ValueError('remove_node only implemented for ast.Module')
+        if index >= len(self.body_block):
+            raise ValueError('index out of range of body size')
+        node =  self.body_block[index]
+        node_source = node.node_matcher.GetSource()
+        if node_source != removed_source:
+            raise ValueError('Removed source does not match index')
+        self.body_block.pop(index)
+        print(self.body_block)

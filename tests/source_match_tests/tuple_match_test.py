@@ -152,7 +152,12 @@ class TupleTest(BaseTestUtils):
             self._verify_match(node, string, trim_suffix_spaces=True)
 
     def testCreateNodeFromInputTupleWithEOL3(self):
-        string = '((1,2),\n (3,4))'
+        string = '((1,2),\n        (3,4))'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+
+    def testCreateNodeFromInputTupleWithEOL32(self):
+        string = '((1,2),\n        {"a":1})'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 

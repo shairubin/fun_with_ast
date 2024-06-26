@@ -291,19 +291,27 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #327")
-    def testBasicDictHTTP(self):
+    @pytest.mark.skip("issue #340")
+    def test_Dict_DictAfterTupple(self):
         string = """token_request = {
-        'url': f'https://{cognito_domain}/oauth2/token',
-        'method': 'POST',
-        'auth': (client_id, client_secret),
+        'auth': (A, B),
         'headers': {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }}"""
+            'C': 'D'
+        }
+        }"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #327")
+    def test_Dict_TupleAfterDict(self):
+        string = """token_request = {
+        'headers': {
+            'C': 'D'
+        },
+        'auth': (A, B),
+        }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testBasicDictHTTP2(self):
         string = """token_request = {
         'url': f'https://{cognito_domain}/oauth2/token'}"""

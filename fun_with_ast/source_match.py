@@ -64,15 +64,6 @@ def get_alias_expected_parts():
     ]
 
 
-def get_Tuple_expected_parts():
-    return  [
-            SeparatedListFieldPlaceholder( #note that the '?' might allow incorrect syntax like ((a,b c) -- but it
-                                           # seems to work for now to allow both (a,) and (a)
-                'elts',
-                after__separator_placeholder=TextPlaceholder(r'([ \t]*,[ \t]*\n?)?', ''),
-                exclude_last_after=False),
-        ]
-
 def get_And_expected_parts():
     return [TextPlaceholder(r'and')]
 
@@ -91,6 +82,7 @@ def get_LambdaArg_expected_parts():
 
 def get_arguments_expected_parts():
     return [ # note the ',?'. This is a hack to support tuples in the arguments. Tuples are 'eating' the comma
+            # similar to issue 340
         ArgsDefaultsPlaceholder(
             TextPlaceholder(r'\s*,?\s*', ', ', no_transform=False),
             TextPlaceholder(r'\s*=\s*', '=', no_transform=True)),

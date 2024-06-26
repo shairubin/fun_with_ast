@@ -192,3 +192,21 @@ rankdir = LR;
         string = """('digraph G {{'\n'rankdir = LR;}}')"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_strIn_Parenthesis(self):
+        string = "  7"
+        with pytest.raises(FailedToCreateNodeFromInput):
+            node = GetNodeFromInput(string)
+
+    def test_strIn_Parenthesis_2(self):
+        string = ("(   "
+                  "7)")
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+
+    def test_strIn_Parenthesis_3(self):
+        string = ("(   "
+                  "'aaa')")
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

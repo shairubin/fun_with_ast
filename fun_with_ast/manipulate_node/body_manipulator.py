@@ -84,10 +84,14 @@ class BodyManipulator:
             break
         return result
 
-    def remove_node(self, index):
+    def remove_node(self, index, removed_source):
         if self.node_type != ast.Module:
             raise ValueError('remove_node only implemented for ast.Module')
         if index >= len(self.body_block):
             raise ValueError('index out of range of body size')
+        node =  self.body_block[index]
+        node_source = node.node_matcher.GetSource()
+        if node_source != removed_source:
+            raise ValueError('Removed source does not match index')
         self.body_block.pop(index)
         print(self.body_block)

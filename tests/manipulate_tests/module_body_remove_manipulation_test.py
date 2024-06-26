@@ -38,6 +38,7 @@ class TestRemoveNodeManipulation:
             source = source_for_remove_tests['source']
             expected = source_for_remove_tests['expected']
             node_index = source_for_remove_tests['node_index']
+            removed_source = source_for_remove_tests['removed_source']
             ast.parse(source)
             module_node = GetNodeFromInput(source, get_module=True)
 
@@ -45,12 +46,9 @@ class TestRemoveNodeManipulation:
             original_source_after_match = module_matcher.do_match(source)
             assert original_source_after_match == source
             body_manipulator = BodyManipulator(module_node.body)
-            body_manipulator.remove_node(node_index)
+            body_manipulator.remove_node(node_index, removed_source)
             source_after_remove = GetSource(module_node)
             assert source_after_remove == expected
-            # for index in source_for_remove_tests['inject_to_indexes']:
-            #     ast.parse(injected_source)
-            #     body_block = module_node.body
 
     #
     # def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):

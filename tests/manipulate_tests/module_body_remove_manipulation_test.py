@@ -4,6 +4,8 @@ import sys
 import pytest
 
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 
 input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected', 'injected_second_source')
@@ -51,12 +53,20 @@ def source_for_remove_tests(request):
 
 class TestRemoveNodeManipulation:
 
-    def test_dynamic_Module_Body_Remove_Manipulation(self, source_for_remove_tests, capsys):
+    def test_Module_Body_Remove_Manipulation(self, source_for_remove_tests, capsys):
             source = source_for_remove_tests['source']
             ast.parse(source)
-            injected_source = source_for_remove_tests['injected_source']
-            for index in source_for_remove_tests['inject_to_indexes']:
-                ast.parse(injected_source)
+            module_node = GetNodeFromInput(source, get_module=True)
+
+            module_matcher  = GetDynamicMatcher(module_node)
+            original_source_after_match = module_matcher.do_match(source)
+
+            # for index in source_for_remove_tests['inject_to_indexes']:
+            #     ast.parse(injected_source)
+            #     body_block = module_node.body
+            #     body_manipulator = BodyManipulator(body_block)
+            #     body_manipulator.remove_node(7)
+
     #
     # def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):
     #     self._capture_source(capsys, original_source, 'original source:', bcolors.OKBLUE)

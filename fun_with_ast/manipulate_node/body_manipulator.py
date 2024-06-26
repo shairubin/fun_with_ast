@@ -81,3 +81,6 @@ class BodyManipulator:
             result = line_ident
             break
         return result
+
+    def remove_node(self, index):
+        pass

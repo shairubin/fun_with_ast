@@ -4,6 +4,7 @@ import sys
 import pytest
 
 from fun_with_ast.get_source import GetSource
+from fun_with_ast.manipulate_node.body_manipulator import BodyManipulator
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 from tests.manipulate_tests.base_test_utils_manipulate import bcolors
@@ -11,41 +12,21 @@ from tests.manipulate_tests.base_test_utils_manipulate import bcolors
 input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-expected', 'injected_second_source')
 
 
-module_1 = """class foo():
-  def __init__(self):
-    a=1
-    def bar(self):
-        b=2
-    c=4"""
-module_2 = """class foo():
-    def bar():
-        with a as p:
-            a=1
-            b=2
-            c=3"""
+module_1 = """
+import module
+a=1
+b=2
+c = a-b
+"""
 @pytest.fixture(params=[
-    ({"source": module_1, "injected_source": "d=10\n",
-      "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
-    ({"source": module_1, "injected_source": "d=11\n",
-      "inject_into_body": "module_node.body[0].body", "inject_to_indexes": [(0, 1,2), (1,6,2)]}),
-    ({"source": module_1, "injected_source": "d=12\n",
-      "inject_into_body": "module_node.body[0].body[0].body",
-      "inject_to_indexes": [(0, 2, 4), (1, 3, 4), (2,5,4), (3,6,4)]}),
-    ({"source": module_1, "injected_source": "d=13\n",
-      "inject_into_body": "module_node.body[0].body[0].body[1].body",
-      "inject_to_indexes": [(0, 4, 8), (1,5,8)]}),
-    ({"source": module_2, "injected_source": "d=14\n",
-      "inject_into_body": "module_node.body[0].body[0].body",
-      "inject_to_indexes": [(0, 2, 8), (1, 6, 8)]}),
-    ({"source": module_2, "injected_source": "d=14\n",
-      "inject_into_body": "module_node.body[0].body[0].body",
-      "inject_to_indexes": [(0, 2, 8), (1, 6, 8)]}),
-    ({"source": module_2, "injected_source": "d=15\n",
-      "inject_into_body": "module_node.body[0].body[0].body[0].body",
-      "inject_to_indexes": [(0, 3, 12), (1, 4, 12), (2, 5, 12) , (3, 6, 12)]}),
-    ({"source": module_2, "injected_source": "d=16\n",
-      "inject_into_body": "module_node.body[0].body",
-      "inject_to_indexes": [(0, 1, 4), (1, 6, 4)]}),
+    ({"source": module_1, "removed_source": "import module\n", 'node_index':1,
+     "expected":module_1.replace("import module\n", "")}),
+    ({"source": module_1, "removed_source": "a=1\n", 'node_index': 2,
+      "expected": module_1.replace("a=1\n", "")}),
+    ({"source": module_1, "removed_source": "b=2\n", 'node_index': 3,
+      "expected": module_1.replace("b=2\n", "")}),
+    ({"source": module_1, "removed_source": "c = a-b\n", 'node_index': 4,
+      "expected": module_1.replace("c = a-b\n", "")}),
 
 ])
 def source_for_remove_tests(request):
@@ -55,17 +36,21 @@ class TestRemoveNodeManipulation:
 
     def test_Module_Body_Remove_Manipulation(self, source_for_remove_tests, capsys):
             source = source_for_remove_tests['source']
+            expected = source_for_remove_tests['expected']
+            node_index = source_for_remove_tests['node_index']
             ast.parse(source)
             module_node = GetNodeFromInput(source, get_module=True)
 
             module_matcher  = GetDynamicMatcher(module_node)
             original_source_after_match = module_matcher.do_match(source)
-
+            assert original_source_after_match == source
+            body_manipulator = BodyManipulator(module_node.body)
+            body_manipulator.remove_node(node_index)
+            source_after_remove = GetSource(module_node)
+            assert source_after_remove == expected
             # for index in source_for_remove_tests['inject_to_indexes']:
             #     ast.parse(injected_source)
             #     body_block = module_node.body
-            #     body_manipulator = BodyManipulator(body_block)
-            #     body_manipulator.remove_node(7)
 
     #
     # def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):

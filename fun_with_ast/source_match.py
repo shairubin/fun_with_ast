@@ -125,6 +125,12 @@ def get_Assign_expected_parts():
                                       after__separator_placeholder=TextPlaceholder(r'\s*=\s*', '=')),
         FieldPlaceholder('value'),
     ]
+def get_NamedExpr_expected_parts():
+    return [
+        FieldPlaceholder('target'),
+        TextPlaceholder(r'[ \t]*:=[ \t]*', ':='),
+        FieldPlaceholder('value'),
+    ]
 def get_AnnAssign_expected_parts():
     return [
         FieldPlaceholder('target'),

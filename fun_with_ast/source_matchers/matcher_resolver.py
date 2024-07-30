@@ -100,6 +100,7 @@ _dynamic_matchers = {
     _ast.Module: ['get_Module_expected_parts', 'fun_with_ast.source_match'],
     _ast.Mult: ['get_Mult_expected_parts', 'fun_with_ast.source_match'],
     _ast.Name: ['get_Name_expected_parts', 'fun_with_ast.source_match'],
+    _ast.NamedExpr: ['get_NamedExpr_expected_parts', 'fun_with_ast.source_match'],
     _ast.Nonlocal: ['get_Nonlocal_expected_parts', 'fun_with_ast.source_match'],
     _ast.Not: ['get_Not_expected_parts', 'fun_with_ast.source_match'],
     _ast.NotIn: ['get_NotIn_expected_parts', 'fun_with_ast.source_match'],

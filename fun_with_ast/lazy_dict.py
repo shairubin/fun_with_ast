@@ -4,10 +4,6 @@ class LazyDict(Mapping):
     def __init__(self, *args, **kw):
         self._raw_dict = dict(*args, **kw)
 
-    # def __getitem__(self, key):
-    #     func, arg = self._raw_dict.__getitem__(key)
-    #     return func(arg)
-
     def __getitem__(self, key):
         func = self._raw_dict.__getitem__(key)
         return func

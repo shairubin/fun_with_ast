@@ -225,10 +225,6 @@ class TestIfManupulation:
                 assert composed_source_lines[index[2][0]] + "\n" == ' '*index[2][1] +injected_source
                 ast.parse(composed_source)
 
-
-            #     assert composed_source_lines[index[1]] + "\n" == ' '*index[2] +injected_source
-            #     ast.parse(composed_source)
-
     def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):
         self._capture_source(capsys, original_source, 'original source:', bcolors.OKBLUE)
         if_node = self._create_if_node(original_source, is_module)

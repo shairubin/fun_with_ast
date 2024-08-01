@@ -122,6 +122,15 @@ module_2 = """class foo():
             a=1
             b=2
             c=3"""
+
+module_3 = """def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = F.relu(x)
+        x = self.dropout2(x)
+        x = self.fc2(x)
+        output = F.log_softmax(x, dim=1)
+        return output"""
 @pytest.fixture(params=[
     ({"source": module_1, "injected_source": "d=10\n",
       "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
@@ -142,9 +151,18 @@ module_2 = """class foo():
     ({"source": module_2, "injected_source": "d=15\n",
       "inject_into_body": "module_node.body[0].body[0].body[0].body",
       "inject_to_indexes": [(0, 3, 12), (1, 4, 12), (2, 5, 12) , (3, 6, 12)]}),
-    ({"source": module_2, "injected_source": "d=16\n",
+    ({"source": module_3, "injected_source": "d=16\n",
       "inject_into_body": "module_node.body[0].body",
-      "inject_to_indexes": [(0, 1, 4), (1, 6, 4)]}),
+      "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
+      "double_injection": [((1, 5), (2, 8), (6, 8))] }),
+    ({"source": module_3, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
+      "double_injection": [((1, 1), (2, 8), (3, 8))]}),
+    ({"source": module_3, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
+      "double_injection": [((3, 9), (4, 8), (9, 8))]}),
 
 ])
 def module_source_2(request):
@@ -153,8 +171,6 @@ def module_source_2(request):
 def _get_tuple_as_dict(in_tuple):
     return dict(zip(input_legend, in_tuple))
 
-
-# @pytest.mark.usefixtures(body_and_orelse)
 class TestIfManupulation:
 
     def test_Module_Body_Manipulation(self, module_source, capsys):
@@ -186,6 +202,27 @@ class TestIfManupulation:
                 composed_source = self._source_after_composition(module_node, capsys)
                 composed_source_lines = composed_source.split('\n')
                 assert composed_source_lines[index[1]] + "\n" == ' '*index[2] +injected_source
+                ast.parse(composed_source)
+
+    def test_dynamic_Module_Body_double_Manipulation(self, module_source_2, capsys):
+            source = module_source_2['source']
+            ast.parse(source)
+            injected_source = module_source_2['injected_source']
+            if not module_source_2.get("double_injection", None):
+                pytest.skip("double injection not defined")
+            for index in module_source_2['double_injection']:
+                module_node, injected_node = self._create_nodes(capsys, injected_source, source, is_module=True)
+                inject_to_body = eval(module_source_2['inject_into_body'])
+                manipulator = BodyManipulator(inject_to_body)
+                manipulator.inject_node(injected_node.body, index[0][0])
+                print("\n insert in index:" + str(index[0][0]))
+                composed_source = self._source_after_composition(module_node, capsys)
+                manipulator.inject_node(injected_node.body, index[0][1])
+                print("\n insert in index:" + str(index[0][1]))
+                composed_source = self._source_after_composition(module_node, capsys)
+                composed_source_lines = composed_source.split('\n')
+                assert composed_source_lines[index[1][0]] + "\n" == ' '*index[1][1] +injected_source
+                assert composed_source_lines[index[2][0]] + "\n" == ' '*index[2][1] +injected_source
                 ast.parse(composed_source)
 
     def _create_nodes(self, capsys, injected_source, original_source, injected_second_source='', is_module=False):

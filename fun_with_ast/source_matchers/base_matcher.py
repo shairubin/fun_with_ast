@@ -64,6 +64,7 @@ class SourceMatcher(object):
             self.start_whitespace_matchers[0].matched_text = ' ' * new_ident
         self.matched = False
         self.matched_source = None
+        self.node.col_offset = new_ident
         self.GetSource()
 
 

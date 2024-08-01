@@ -122,6 +122,7 @@ module_2 = """class foo():
             a=1
             b=2
             c=3"""
+
 module_3 = """def forward(self, x):
         x = self.conv1(x)
         x = F.relu(x)
@@ -153,7 +154,15 @@ module_3 = """def forward(self, x):
     ({"source": module_3, "injected_source": "d=16\n",
       "inject_into_body": "module_node.body[0].body",
       "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
-      "double_injection": [((1, 5), (1, 8), (3, 7))] }),
+      "double_injection": [((1, 5), (2, 8), (6, 8))] }),
+    ({"source": module_3, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
+      "double_injection": [((1, 1), (2, 8), (3, 8))]}),
+    ({"source": module_3, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
+      "double_injection": [((3, 9), (4, 8), (9, 8))]}),
 
 ])
 def module_source_2(request):
@@ -201,21 +210,22 @@ class TestIfManupulation:
             injected_source = module_source_2['injected_source']
             if not module_source_2.get("double_injection", None):
                 pytest.skip("double injection not defined")
-            for index in list(reversed(module_source_2['double_injection'])):
+            for index in module_source_2['double_injection']:
                 module_node, injected_node = self._create_nodes(capsys, injected_source, source, is_module=True)
                 inject_to_body = eval(module_source_2['inject_into_body'])
                 manipulator = BodyManipulator(inject_to_body)
                 manipulator.inject_node(injected_node.body, index[0][0])
                 print("\n insert in index:" + str(index[0][0]))
                 composed_source = self._source_after_composition(module_node, capsys)
-                print(composed_source)
                 manipulator.inject_node(injected_node.body, index[0][1])
                 print("\n insert in index:" + str(index[0][1]))
                 composed_source = self._source_after_composition(module_node, capsys)
-                print(composed_source)
+                composed_source_lines = composed_source.split('\n')
+                assert composed_source_lines[index[1][0]] + "\n" == ' '*index[1][1] +injected_source
+                assert composed_source_lines[index[2][0]] + "\n" == ' '*index[2][1] +injected_source
+                ast.parse(composed_source)
 
 
-            #     composed_source_lines = composed_source.split('\n')
             #     assert composed_source_lines[index[1]] + "\n" == ' '*index[2] +injected_source
             #     ast.parse(composed_source)
 

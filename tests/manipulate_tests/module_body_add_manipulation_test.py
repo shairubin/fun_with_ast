@@ -180,10 +180,11 @@ module_4= """def _tensorpipe_construct_rpc_backend_options_handler(
     ({"source": module_3, "injected_source": "d=16\n",
       "inject_into_body": "module_node.body[0].body",
       "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
-      "double_injection": [((3, 9), (4, 8), (9, 8))]}),
-    # ({"source": module_4, "injected_source": "d=16\n",
-    #   "inject_into_body": "module_node.body[0].body",
-    #   "inject_to_indexes": [(0, 1, 8)]}),
+      "double_injection": [((3, 8), (4, 8), (9, 8))]}),
+    ({"source": module_4, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 8, 4), (1, 10, 4)],
+      "double_injection": [((1, 3), (10, 4), (18, 4))]}),
 
 ])
 def module_source_2(request):

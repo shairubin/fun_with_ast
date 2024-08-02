@@ -16,6 +16,8 @@ class BodyManipulator:
     def inject_node(self, nodes_to_inject, index):
         """ note that the nodes_to_inject must be a list of nodes, not a single node.
         note that the nodes represent a SINGLE line statements -- NOT structural nodes like If, For, etc."""
+        if index > len(self.body_block):
+            raise ValueError(f'index {index} out of range of body size {len(self.body_block)}')
         ident = self._get_indentation()
         for node_index, node in enumerate(nodes_to_inject):
             source = GetSource(node, assume_no_indent=True)  # This is debug code

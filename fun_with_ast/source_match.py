@@ -409,7 +409,7 @@ def get_ImportFrom_expected_parts(): # TODO: Handle path before names better
         SeparatedListFieldPlaceholder(
             'names', TextPlaceholder(r'[ \t]*,\n?[ \t]*\n*', '')),
 #        TextPlaceholder(r'([ \t]*\n*[ \t]*,?\n*\)?\n?)*', '\n', no_transform=True)
-        TextPlaceholder(r'([ \t]*\n*[ \t]*,\n*\)?\n?)|'
+        TextPlaceholder(r'([ \t]*\n*[ \t]*,[\n \t]*\)[ \t]*\n?)|'
                                 r'([ \t]*\)[ \t]*\n)|'
                                 r'(\n)|([ \t]*\))|'
                                 #r'^(?![\s\S])'

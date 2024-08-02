@@ -64,11 +64,11 @@ class ImportMatcherTest(BaseTestUtils):
     def testImportListWithParenthese24_1(self):
         string = """from transformers.modeling_flax_outputs import (
     A,
-
-    B,
-    )
+    
+    b,
+    )  
     """
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
     def testImportListWithParenthese24_2(self):

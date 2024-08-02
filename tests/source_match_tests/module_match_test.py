@@ -685,6 +685,25 @@ module_58 = """def get_cognito_token(client_id,
 
     }
 """
+
+module_59 = """def _tensorpipe_construct_rpc_backend_options_handler(
+    rpc_timeout,
+    init_method,
+    num_worker_threads=rpc_constants.DEFAULT_NUM_WORKER_THREADS,
+    _transports=None,
+    _channels=None,
+    **kwargs
+):
+    from . import TensorPipeRpcBackendOptions
+
+    return TensorPipeRpcBackendOptions(
+        rpc_timeout=rpc_timeout,
+        init_method=init_method,
+        num_worker_threads=num_worker_threads,
+        _transports=_transports,
+        _channels=_channels,
+    )
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1145,5 +1164,10 @@ def dot_product_attention_weights():
     @pytest.mark.skip("issue 340")
     def testFromInputModule58(self):
         string = module_58
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule59(self):
+        string = module_59
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

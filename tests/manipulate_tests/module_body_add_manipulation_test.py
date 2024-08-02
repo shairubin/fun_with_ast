@@ -131,6 +131,24 @@ module_3 = """def forward(self, x):
         x = self.fc2(x)
         output = F.log_softmax(x, dim=1)
         return output"""
+module_4= """def _tensorpipe_construct_rpc_backend_options_handler(
+    rpc_timeout,
+    init_method,
+    num_worker_threads=rpc_constants.DEFAULT_NUM_WORKER_THREADS,
+    _transports=None,
+    _channels=None,
+    **kwargs
+):
+    from . import TensorPipeRpcBackendOptions
+    
+    return TensorPipeRpcBackendOptions(
+        rpc_timeout=rpc_timeout,
+        init_method=init_method,
+        num_worker_threads=num_worker_threads,
+        _transports=_transports,
+        _channels=_channels,
+    )
+"""
 @pytest.fixture(params=[
     ({"source": module_1, "injected_source": "d=10\n",
       "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
@@ -162,7 +180,11 @@ module_3 = """def forward(self, x):
     ({"source": module_3, "injected_source": "d=16\n",
       "inject_into_body": "module_node.body[0].body",
       "inject_to_indexes": [(0, 1, 8), (1, 2, 8)],
-      "double_injection": [((3, 9), (4, 8), (9, 8))]}),
+      "double_injection": [((3, 8), (4, 8), (9, 8))]}),
+    ({"source": module_4, "injected_source": "d=16\n",
+      "inject_into_body": "module_node.body[0].body",
+      "inject_to_indexes": [(0, 8, 4), (1, 10, 4)],
+      "double_injection": [((1, 3), (10, 4), (18, 4))]}),
 
 ])
 def module_source_2(request):

@@ -2,7 +2,18 @@ from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
 
-class ImportMatcherTest(BaseTestUtils):
+class ImportFromMatcherTest(BaseTestUtils):
+
+    def testBasicMatchImportFromTwoLines(self):
+        string = 'from x import a\nfrom y import b\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testBasicMatchImportFromTwoLines2(self):
+        string = 'from x import a\n     \nfrom y import b\n'
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
 
     def testBasicMatchImportFrom(self):
         string = 'from x import a\n'

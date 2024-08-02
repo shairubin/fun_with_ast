@@ -61,7 +61,23 @@ class ImportMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testImportListWithParenthese24_1(self):
+        string = """from transformers.modeling_flax_outputs import (
+    A,
+    
+    b,
+    )  
+    """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
+    def testImportListWithParenthese24_2(self):
+        string = """from transformers.modeling_flax_outputs import (
+    A,
+    )
+    """
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
 
     def testImporWithNoPath(self):
         string = """from configuration import DalleBartConfig"""

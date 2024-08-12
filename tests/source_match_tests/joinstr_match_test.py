@@ -684,9 +684,21 @@ def main() -> None:
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
 
-    @pytest.mark.skip("issue #328")
     def test_JstrEqualInVariable(self):
         string = "logger.info(f'{task_id=}')"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrEqualInVariable2(self):
+        string = "logger.info(f'a {task_id=}')"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrEqualInVariable3(self):
+        string = "f'{a=}, {task_id=}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_JstrNoEqualInVariable(self):
+        string = "logger.info(f'{task_id}')"
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
 

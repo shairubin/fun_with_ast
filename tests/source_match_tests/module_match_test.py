@@ -704,6 +704,29 @@ module_59 = """def _tensorpipe_construct_rpc_backend_options_handler(
         _channels=_channels,
     )
 """
+module_60 = """def create_session(self, session_id, session_source, start_time, username, client_id, tenant_id, user_id):
+        data = {'id': session_id, 'session_source': session_source, 'start_time': start_time,
+                'username': username, 'client_id': client_id, 'tenant_id': tenant_id, 'user_id': user_id}
+        logger.info(f'create_session: {session_id=}, {session_source=}, '
+                    f'{start_time=}, {client_id=}, {tenant_id=}, {user_id=}')
+        url = self._get_url('chatbot_session')
+        response = None
+        try:
+            response = self.session.post(url, json=data)
+            response.raise_for_status()
+        except Exception as e:
+            if hasattr(e, 'response'):
+                response_json = e.response.json()
+                if response_json.get('id') == ['chatbot session with this id already exists.']:
+                    logger.info(f'Session already exists {session_id=}')
+                    raise SessionAlreadyExists()
+                else:
+                    logger.error(f'{response_json=}')
+            logger.exception(f'Failed to create session {e}')
+            raise FailedToCreateSession()
+        logger.info(f'create_session returns: {session_id=} ')
+        return response.json()
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1169,5 +1192,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule59(self):
         string = module_59
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule60(self):
+        string = module_60
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

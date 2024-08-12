@@ -10,7 +10,7 @@ from fun_with_ast.placeholders.base_match import MatchPlaceholder
 from fun_with_ast.placeholders.node import NodePlaceholder
 from fun_with_ast.placeholders.text import TextPlaceholder
 from fun_with_ast.source_matchers.defualt_matcher import DefaultSourceMatcher
-from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig
+from fun_with_ast.source_matchers.joined_str_config import SUPPORTED_QUOTES, JstrConfig, MARKER_FOR_JSTR_STRING_LITERAL
 from fun_with_ast.source_matchers.matcher_resolver import GetDynamicMatcher
 
 
@@ -85,6 +85,26 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             mew_parts = []
             self._consolidate_parts(format_parts, new_parts=mew_parts)
             return  mew_parts
+        # handling fomated string with '='
+        self._handle_equal_literal_in_formatted_value(format_parts)
+        return format_parts
+
+    def _handle_equal_literal_in_formatted_value(self, format_parts):
+        new_parts = []
+        literal_found = 0
+        for index, part in enumerate(format_parts):
+            if part[1] and part[1].endswith('='):
+                const_part = MARKER_FOR_JSTR_STRING_LITERAL + part[0] + '{' + part[1] + '}'
+                name_part = None
+                new_parts.append((index, (const_part, name_part, part[2], part[3])))
+                del self.node.values[index + 1]
+                literal_found += 1
+        if new_parts == []:
+            return
+        for new_part in new_parts:
+            format_parts[new_part[0]] = new_part[1]
+        if len(format_parts) > 1:
+            self._consolidate_parts(format_parts, new_parts=new_parts)
         return format_parts
     def _get_quote_type(self):
         return self.jstr_meta_data[0].quote_type

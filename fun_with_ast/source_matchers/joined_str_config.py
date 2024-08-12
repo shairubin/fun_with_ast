@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 
 SUPPORTED_QUOTES = ['"""', '\'', "\""] # order in list is import triple should go first
-
+MARKER_FOR_JSTR_STRING_LITERAL = "xtFrg_" # marker for f-string WITH {a=1} in it
 
 @dataclass
 class JstrConfig:

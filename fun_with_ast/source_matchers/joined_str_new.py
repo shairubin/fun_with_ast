@@ -93,7 +93,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         new_parts = []
         literal_found = 0
         for index, part in enumerate(format_parts):
-            if part[1] and part[1].endswith('='):
+            if part[1] and part[1].endswith('=') and part[2] == '':
                 const_part = MARKER_FOR_JSTR_STRING_LITERAL + part[0] + '{' + part[1] + '}'
                 name_part = None
                 new_parts.append((index, (const_part, name_part, part[2], part[3])))

@@ -696,6 +696,28 @@ def main() -> None:
         string = "f'{a=}, {task_id=}'"
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrEqualInVariable4(self):
+        string = "f'{a=}, {task_id=}, {c=}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def test_JstrEqualInVariable5(self):
+        string = "f'{a=}, task_id={task_id}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrEqualInVariable6(self):
+        string = "f'{a=},text,  task_id={task_id}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    def test_JstrEqualInVariable7(self):
+        string = "f'{a=},{c=},  task_id={task_id}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
+    @pytest.mark.skip("not supported yet - corner case of both old and new literals in the same string")
+    def test_JstrEqualInVariable8(self):
+        string = "f'{a=},task_id={task_id}, c={d}'"
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string, trim_suffix_spaces=False)
 
     def test_JstrNoEqualInVariable(self):
         string = "logger.info(f'{task_id}')"

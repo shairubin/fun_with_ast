@@ -13,15 +13,12 @@ class ConstantJstrMatcher(ConstantSourceMatcher):
         if string.startswith(MARKER_FOR_JSTR_STRING_LITERAL):
             string = string.replace(MARKER_FOR_JSTR_STRING_LITERAL, '')
             self.node.s = self.node.n = self.node.value = string
-            string_literal_marker= True
         elif '{' in string or '}'  in string:
             string = string.replace('{', '{{').replace('}','}}')
             self.node.s = self.node.n = self.node.value = string
         string = self.added_quote + string + self.added_quote
         result = super(ConstantJstrMatcher, self)._match(string)
         result = self.GetSource()
-        #if string_literal_marker:
-        #    result = '{' + result + '}'
         return result
 
     def GetSource(self):

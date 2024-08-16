@@ -727,6 +727,19 @@ module_60 = """def create_session(self, session_id, session_source, start_time, 
         logger.info(f'create_session returns: {session_id=} ')
         return response.json()
 """
+
+module_61 = """def run(self, backtests: list, verbose=False):
+    \"\"\"
+    run backtests
+    \"\"\"
+    start_time = time.time()
+
+    end_time = time.time()
+    time_ellapsed = end_time - start_time
+    if verbose: print(f"finished backtests in {time_ellapsed} sec.")
+    return results
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1197,5 +1210,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule60(self):
         string = module_60
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("issue 359")
+    def testFromInputModule61(self):
+        string = module_61
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

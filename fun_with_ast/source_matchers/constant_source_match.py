@@ -47,7 +47,11 @@ class ConstantSourceMatcher(SourceMatcher):
             return self.num_matcher._match(string)
         if isinstance(self.node.n, complex) and isinstance(self.node.s, complex):
             return self.num_matcher._match(string)
-        raise NotImplementedError('Unknown constant type')
+
+        if isinstance(self.node.n, bytes) :
+            raise NotImplementedError('bytes tye not supported yet')
+
+        raise NotImplementedError(f'Unknown constant type: {type(self.node.n)}')
 
     def GetSource(self):
         self.validated_call_to_match()

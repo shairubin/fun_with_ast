@@ -346,3 +346,13 @@ class ConstantNumMatcherTest(BaseTestUtils):
         string = "a=-2j # comment"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testByteString(self):
+        string = '"hello world"'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip('Not implemented yet, issue #363')
+    def testByteString1(self):
+        string = 'b"hello world"'
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

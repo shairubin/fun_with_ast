@@ -210,3 +210,15 @@ rankdir = LR;
                   "'aaa')")
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+    def test_str_rexex(self):
+        string = """def has_url(text, strict_match_protocol=False):
+        bare_url_regex = r"(?:[a-z]{3,9}:\/\/?[\-;:&=\+\$,\w]+?[a-z0-9\.\-]+|[\/a-z0-9]+\.|[\-;:&=\+\$,\w]+@)[a-z0-9\.\-]+(?:(?:\/[\+~%\/\.\w\-_]*)?\??[\-\+=&;%@\.\w_]*#?[\.\!\/\\\w]*)?"
+"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_str_rexex2(self):
+            string = 'b = r"\\\w"'
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)

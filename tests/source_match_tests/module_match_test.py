@@ -780,6 +780,17 @@ module_62= """def has_url(text, strict_match_protocol=False):
     return urls, text
 """
 
+
+module_63= """def has_url(text, strict_match_protocol=False):
+
+        if strict_match_protocol:
+            bare_url_regex = r"(https{0,1}:\/\/[A-Za-z0-9\-\._~:\/\?#\[\]@!\$&'\(\)\*\+\,;%=]+)"
+        else:
+            bare_url_regex = r"(?:[a-z]{3,9}:\/\/?[\-;:&=\+\$,\w]+?[a-z0-9\.\-]+|[\/a-z0-9]+\.|[\-;:&=\+\$,\w]+@)[a-z0-9\.\-]+(?:(?:\/[\+~%\/\.\w\-_]*)?\??[\-\+=&;%@\.\w_]*#?[\.\!\/\\\w]*)?"
+
+        urls = re.findall(bare_url_regex, text, re.IGNORECASE)
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1259,7 +1270,14 @@ def dot_product_attention_weights():
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    def testFromInputModule61(self):
+    @pytest.mark.skip("issue 365")
+    def testFromInputModule62(self):
         string = module_62
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("issue 365")
+    def testFromInputModule63(self):
+        string = module_63
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

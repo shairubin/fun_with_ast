@@ -740,6 +740,57 @@ module_61 = """def run(self, backtests: list, verbose=False):
     return results
 """
 
+
+module_62= """def has_url(text, strict_match_protocol=False):
+    # remove markdown *
+    text = text.replace('*','')
+
+    # Anything that isn't a square closing bracket
+    name_regex = "[^]]+"
+
+    # http:// or https:// followed by anything but a closing paren
+    url_in_markup_regex = "http[s]?://[^)]+"
+
+    # first look for markup urls
+    markup_regex = f"\[({name_regex})]\(\s*({url_in_markup_regex})\s*\)"
+
+    urls = re.findall(markup_regex, text, re.IGNORECASE)
+
+    if len(urls) > 0:
+        replacechars = "[]()"
+
+        for url in urls:
+            text = re.sub(markup_regex, "", text)
+            for ch in replacechars:
+                text.replace(ch, '')
+
+    # if none found, look for url without markup
+    else:
+        if strict_match_protocol:
+            bare_url_regex = r"(https{0,1}:\/\/[A-Za-z0-9\-\._~:\/\?#\[\]@!\$&'\(\)\*\+\,;%=]+)"
+        else:
+            bare_url_regex = r"(?:[a-z]{3,9}:\/\/?[\-;:&=\+\$,\w]+?[a-z0-9\.\-]+|[\/a-z0-9]+\.|[\-;:&=\+\$,\w]+@)[a-z0-9\.\-]+(?:(?:\/[\+~%\/\.\w\-_]*)?\??[\-\+=&;%@\.\w_]*#?[\.\!\/\\\w]*)?"
+
+        urls = re.findall(bare_url_regex, text, re.IGNORECASE)
+
+        for i, url in enumerate(urls):
+            urls[i] = [url, url]
+
+    # # return what was found (could be just text)
+    return urls, text
+"""
+
+
+module_63= """def has_url(text, strict_match_protocol=False):
+
+        if strict_match_protocol:
+            bare_url_regex = r"(https{0,1}:\/\/[A-Za-z0-9\-\._~:\/\?#\[\]@!\$&'\(\)\*\+\,;%=]+)"
+        else:
+            bare_url_regex = r"(?:[a-z]{3,9}:\/\/?[\-;:&=\+\$,\w]+?[a-z0-9\.\-]+|[\/a-z0-9]+\.|[\-;:&=\+\$,\w]+@)[a-z0-9\.\-]+(?:(?:\/[\+~%\/\.\w\-_]*)?\??[\-\+=&;%@\.\w_]*#?[\.\!\/\\\w]*)?"
+
+        urls = re.findall(bare_url_regex, text, re.IGNORECASE)
+"""
+
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1216,5 +1267,15 @@ def dot_product_attention_weights():
     @pytest.mark.skip("issue 359")
     def testFromInputModule61(self):
         string = module_61
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule62(self):
+        string = module_62
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule63(self):
+        string = module_63
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

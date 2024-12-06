@@ -15,6 +15,7 @@ class StrSourceMatcher(SourceMatcher):
         self.separator_placeholder = TextPlaceholder(r'([ \t]*)(#.*)*\n*[ \t]*', '', no_transform=True)
         self.quote_parts = []
         self.separators = []
+        self.raw_string = False
 
         if  hasattr(node, 'default_quote'):
             self.quote_type = node.default_quote
@@ -29,6 +30,7 @@ class StrSourceMatcher(SourceMatcher):
                        for p in self.quote_parts)
 
     def _match(self, string):
+        self._set_raw_string(string)
         remaining_string = self.MatchStartParens(string)
         self._get_original_string()
         part = self._part_place_holder()
@@ -65,7 +67,7 @@ class StrSourceMatcher(SourceMatcher):
         return parsed_string
 
     def _construct_parsed_string(self, end_paran_text, end_quote, start_paran_text, start_quote, string_body):
-        if '\\' in string_body:
+        if '\\' in string_body and self.raw_string == False:
             string_body = self.__handle_special_chars(string_body)
         if len(string_body) != len(self.original_s):
             raise BadlySpecifiedTemplateError(
@@ -154,3 +156,8 @@ class StrSourceMatcher(SourceMatcher):
 
     def _part_place_holder(self):
         return StringPartPlaceholder(self.accept_multiparts_string)
+
+    def _set_raw_string(self, string):
+        match = re.match(r'[rR][\'"]', string)
+        if match:
+            self.raw_string = True

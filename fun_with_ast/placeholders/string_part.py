@@ -16,7 +16,6 @@ class StringPartPlaceholder(Placeholder):
         self.prefix_placeholder = TextPlaceholder(r'ur|uR|Ur|UR|u|r|U|R|', '')
         self.quote_match_placeholder = TextPlaceholder(r'"""|\'\'\'|"|\'')
         self.inner_text_placeholder = TextPlaceholder(r'.*', '')
-#        self.join_str_prefix_placeholder = TextPlaceholder(r'f', 'f')
         self.accept_multiparts_string = accept_multiparts_string
 
     def _match(self, node, string):

@@ -1,6 +1,6 @@
 import pytest
 
-from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
+from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput, FailedToCreateNodeFromInput
 from fun_with_ast.source_matchers.base_matcher import SourceMatcher
 from tests.source_match_tests.base_test_utils import BaseTestUtils
 
@@ -291,7 +291,6 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #340")
     def test_Dict_DictAfterTupple(self):
         string = """token_request = {
         'auth': (A, B),
@@ -311,6 +310,90 @@ class DictMatcherTest(BaseTestUtils):
         }"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+
+
+    def test_Dict_TupleAfterTuple(self):
+        string =  """{
+    "version": (1, 7),
+                   "blender": (3, 0),
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple_1(self):
+        string = """{
+        "version": (1, 8,),
+                       "blender": (3, 0),
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple_1_1(self):
+        string = """{
+        "version": (1, 8,)
+                       "blender": (3, 0),
+    }"""
+        with pytest.raises(FailedToCreateNodeFromInput):
+            node = GetNodeFromInput(string)
+
+    def test_Dict_TupleAfterTuple2(self):
+        string = """a={
+        "version": (1, 1)
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_1(self):
+            string = """
+a={
+            "version": 1
+}"""
+            node = GetNodeFromInput(string, get_module=True)
+            self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_1_1(self):
+        string = """a={
+                "version": (1, 0),
+            }"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_1_2(self):
+        string = """
+a={
+                    "version": (1, 0),
+            }"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_2(self):
+            string = """a={"version": 1}"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple3(self):
+        string = """
+{
+           "version": (1, 1, 0),
+       }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_4(self):
+            string = """a={
+                "version":(1,0),
+            }"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_5(self):
+            string = """a={
+                "version":(1,0,),
+            }"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+
 
     def testBasicDictHTTP2(self):
         string = """token_request = {

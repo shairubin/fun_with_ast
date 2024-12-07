@@ -106,8 +106,12 @@ class TupleTest(BaseTestUtils):
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 
-    def testCreateNodeFromInput7(self):
+    def testCreateNodeFromInput7_1(self):
         string = '((1),),'
+        node =GetNodeFromInput(string)
+        self._assert_match(node, string)
+    def testCreateNodeFromInput7_2(self):
+        string = '(1,2),'
         node =GetNodeFromInput(string)
         self._assert_match(node, string)
 

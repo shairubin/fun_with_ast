@@ -352,13 +352,11 @@ a={
             node = GetNodeFromInput(string, get_module=True)
             self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #368")
     def test_Dict_TupleAfterTuple2_1_1(self):
-        string = """
-a={
+        string = """a={
                 "version": (1, 0),
             }"""
-        node = GetNodeFromInput(string)
+        node = GetNodeFromInput(string, get_module=False)
         self._verify_match(node, string)
 
     def test_Dict_TupleAfterTuple2_1_2(self):

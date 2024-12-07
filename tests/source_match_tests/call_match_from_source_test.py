@@ -579,4 +579,39 @@ l(a)
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testCallwithJStrTuple(self):
+        string = """handle_error(
+        f"timeout1",
+        "timeout"
+    )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
 
+    def testCallwithJStrTuple1(self):
+        string = """handle_error(
+        f"timeout1",
+        f"timeout",
+    )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallwithJStrTuple2(self):
+        string = """handle_error(
+        f"timeout1",
+        "timeout",
+    )"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testCallwithJStrTuple2_1(self):
+        string = """handle_error(
+        f"timeout1","timeout")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallwithJStrTuple2_2(self):
+        string = """handle_error(
+        f"timeout1"
+        ,
+    "timeout")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)

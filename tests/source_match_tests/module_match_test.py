@@ -803,6 +803,22 @@ bl_info = {
     "tracker_url": "https://github.com/benrugg/AI-Render/issues",
     "category": "Render",
 }"""
+
+module_65 = """
+def generate(params, img_file, filename_prefix, props):
+
+    # send the API request
+    try:
+        response = requests.post(
+            timeout=request_timeout(),
+        )
+    except requests.exceptions.ReadTimeout:
+        img_file.close()
+        return operators.handle_error(
+            f"The server timed out. Try again in a moment, or get help. [Get help with timeouts]({config.HELP_WITH_TIMEOUTS_URL})",
+            "timeout",
+        )
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1293,5 +1309,10 @@ def dot_product_attention_weights():
 
     def testFromInputModule64(self):
         string = module_64
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testFromInputModule65(self):
+        string = module_65
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

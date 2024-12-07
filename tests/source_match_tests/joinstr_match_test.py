@@ -826,3 +826,8 @@ rankdir = LR; \
         }"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
+
+    def test_JstrTrailingComma(self):
+        string = """f'{a}',"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)

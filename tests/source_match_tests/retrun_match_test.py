@@ -89,5 +89,40 @@ class RetrunMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+
+    def testCallwithJstrs(self):
+        string = """return operators.handle_error(
+        f"The server timed out. Try again in a moment, or get help. [Get help with timeouts]({config.HELP_WITH_TIMEOUTS_URL})",
+        "timeout",
+    )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testCallwithJstrs1(self):
+        string = """return operators.handle_error(
+        f"{config.HELP_WITH_TIMEOUTS_URL}",
+        "timeout",
+    )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def testCallwithJstrs2(self):
+        string = """return operators.handle_error(
+        "timeout1",
+        "timeout2",
+    )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+
+    def testReturnCallwithJstrs3(self):
+        string = """return operators.handle_error(
+        f"timeout1",
+        "timeout",
+    )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def _assert_match(self, node, string):
         self._verify_match(node, string)
+
+

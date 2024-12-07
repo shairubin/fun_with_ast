@@ -579,8 +579,6 @@ l(a)
 """
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
-
-    @pytest.mark.skip('issue 371')
     def testCallwithJStrTuple(self):
         string = """handle_error(
         f"timeout1",
@@ -589,7 +587,6 @@ l(a)
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip('issue 371')
     def testCallwithJStrTuple1(self):
         string = """handle_error(
         f"timeout1",
@@ -609,5 +606,12 @@ l(a)
     def testCallwithJStrTuple2_1(self):
         string = """handle_error(
         f"timeout1","timeout")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+    def testCallwithJStrTuple2_2(self):
+        string = """handle_error(
+        f"timeout1"
+        ,
+    "timeout")"""
         node = GetNodeFromInput(string)
         self._verify_match(node, string)

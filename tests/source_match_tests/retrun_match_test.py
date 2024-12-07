@@ -1,5 +1,3 @@
-import pytest
-
 from fun_with_ast.manipulate_node import create_node
 from fun_with_ast.manipulate_node.get_node_from_input import GetNodeFromInput
 from tests.source_match_tests.base_test_utils import BaseTestUtils
@@ -91,7 +89,7 @@ class RetrunMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #371")
+
     def testCallwithJstrs(self):
         string = """return operators.handle_error(
         f"The server timed out. Try again in a moment, or get help. [Get help with timeouts]({config.HELP_WITH_TIMEOUTS_URL})",
@@ -99,7 +97,6 @@ class RetrunMatcherTest(BaseTestUtils):
     )"""
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
-    @pytest.mark.skip("issue #371")
     def testCallwithJstrs1(self):
         string = """return operators.handle_error(
         f"{config.HELP_WITH_TIMEOUTS_URL}",
@@ -116,7 +113,7 @@ class RetrunMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #371")
+
     def testReturnCallwithJstrs3(self):
         string = """return operators.handle_error(
         f"timeout1",

@@ -291,7 +291,6 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
-    @pytest.mark.skip("issue #340")
     def test_Dict_DictAfterTupple(self):
         string = """token_request = {
         'auth': (A, B),

@@ -218,6 +218,18 @@ class ListTest(BaseTestUtils):
             node = GetNodeFromInput(string)
             self._verify_match(node, string)
 
+    def testListTrailingComma4_2_3(self):
+            string = """[(1,a,),     
+            (3,b,)]"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+    def testListTrailingComma4_2_4(self):
+            string = """[(1,5,),     
+            (3,6,)]"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
     def testListTrailingComma5(self):
         string = "[[1,a],3]"
         node = GetNodeFromInput(string)

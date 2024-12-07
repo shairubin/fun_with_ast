@@ -261,7 +261,10 @@ def get_Dict_expected_parts():
     return [
         TextPlaceholder(r'\s*{\s*', '{'),
         KeysValuesPlaceholder(
-            TextPlaceholder(r'\s*,[ \t\n]*(#+.*)?(\n[ \t]*)?', ',', no_transform=True),
+            # this is the seperator between key:value pairs
+            # note that the '?' might allow incorrect syntax like {"key1":(1,2,) "key2":(3,4)} --
+            # see test_Dict_TupleAfterTuple_1_1 -- but the assumption is that we do get valid python
+            TextPlaceholder(r'\s*,?[ \t\n]*(#+.*)?(\n[ \t]*)?', ',', no_transform=True),
             #This is the key:value pair
             TextPlaceholder(r'(\*\*\s*)|(\s*:\s*)', ': ', no_transform=True)),
         #last value?
@@ -460,6 +463,7 @@ def get_Tuple_expected_parts():
                'elts',
                after__separator_placeholder=TextPlaceholder(r'([\n \t]*,([ \t]*#.*)?[\n \t]*\n?)?', '',
                no_transform=True),
+               #exclude_last_after=True),
                exclude_last_after=False),
        ]
 

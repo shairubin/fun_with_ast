@@ -819,6 +819,20 @@ def generate(params, img_file, filename_prefix, props):
             "timeout",
         )
 """
+module_66 = """
+def parse_message_for_error(message):
+    if '"Authorization" is missing' in message:
+        return "Your DreamStudio API key is missing. Please enter it above.", "api_key"
+    elif (
+        "Incorrect API key" in message
+        or "Unauthenticated" in message
+        or "Unable to find corresponding account" in message
+    ):
+        return (
+            f"Your DreamStudio API key is incorrect. Please find it on the DreamStudio website, and re-enter it above. [DreamStudio website]({config.DREAM_STUDIO_URL})",
+            "api_key",
+        )
+"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1314,5 +1328,9 @@ def dot_product_attention_weights():
 
     def testFromInputModule65(self):
         string = module_65
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+    def testFromInputModule66(self):
+        string = module_66
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

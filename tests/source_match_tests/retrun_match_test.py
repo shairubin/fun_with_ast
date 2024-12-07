@@ -122,6 +122,14 @@ class RetrunMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)
 
+    def testReturnCallwithJstrs4(self):
+        string = """return (
+            f"Your DreamStudio API key is incorrect. Please find it on the DreamStudio website, and re-enter it above. [DreamStudio website]({config.DREAM_STUDIO_URL})",
+            "api_key",
+        )"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
     def _assert_match(self, node, string):
         self._verify_match(node, string)
 

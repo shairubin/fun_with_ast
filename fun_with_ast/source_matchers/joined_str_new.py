@@ -134,9 +134,17 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 full_http_string = lines[0] + ':' +lines[1]
                 lines = [full_http_string] + lines[2:]
         elif isinstance(self.node.parent_node, (ast.List, ast.Tuple)):
-            lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR *2 )
+            for index, line in enumerate(lines):
+                match = re.search(r'[ \t]*,\s*$', line)
+                if match:
+                    lines[index] = line[:match.start()]
+                    lines = lines[:index+1]
+                    break
+
+            #lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
         elif isinstance(self.node.parent_node, CallArgs):
-            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR * 2 )
             for index, line in enumerate(lines):
                 match = re.search(r'[ \t]*,\s*$', line)
                 if match:

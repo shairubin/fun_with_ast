@@ -137,8 +137,13 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             lines = re.split(r'[\n,]', orig_string, maxsplit=self.MAX_LINES_IN_JSTR * 2)
         elif isinstance(self.node.parent_node, CallArgs):
             lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
-            if len(lines) >1 and lines[1] != '':
-                pass
+            for index, line in enumerate(lines):
+                match = re.search(r'[ \t]*,\s*$', line)
+                if match:
+                    lines[index] = line[:match.start()]
+                    lines = lines[:index+1]
+                    break
+
         else:
             lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
         return lines

@@ -790,7 +790,19 @@ module_63= """def has_url(text, strict_match_protocol=False):
 
         urls = re.findall(bare_url_regex, text, re.IGNORECASE)
 """
-
+module_64 = """
+bl_info = {
+    "name": "AI Render - Stable Diffusion in Blender",
+    "description": "Create amazing images using Stable Diffusion AI",
+    "author": "Ben Rugg",
+    "version": (1, 1, 0),
+    "blender": (3, 0, 0), # this is the line that is failing
+    "location": "Render Properties > AI Render",
+    "warning": "",
+    "doc_url": "https://github.com/benrugg/AI-Render#readme",
+    "tracker_url": "https://github.com/benrugg/AI-Render/issues",
+    "category": "Render",
+}"""
 class ModuleMatcherTest(BaseTestUtils):
     def testModuleBasicFailed(self):
         node = create_node.Module(create_node.FunctionDef(name='myfunc', body=[
@@ -1277,5 +1289,11 @@ def dot_product_attention_weights():
 
     def testFromInputModule63(self):
         string = module_63
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    @pytest.mark.skip("issue 368")
+    def testFromInputModule64(self):
+        string = module_64
         node = GetNodeFromInput(string, get_module=True)
         self._verify_match(node, string)

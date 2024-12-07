@@ -190,6 +190,33 @@ class ListTest(BaseTestUtils):
         string = "[(1,a),(3,b)]"
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
+    def testListTrailingComma4_1(self):
+        string = "[(1,a),\n     (3,b)]"
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def testListTrailingComma4_2(self):
+        string = """
+[(1,a),     
+        (3,b)]"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    # At this point while this is a valid expression,
+    # we support expression only inside a context of a module
+    def testListTrailingComma4_2_2(self):
+        string = """
+[(1,a),     
+        (3,b)]"""
+        node = GetNodeFromInput(string, get_module=False)
+        with pytest.raises(Exception):
+            self._verify_match(node, string)
+
+    def testListTrailingComma4_2_1(self):
+            string = """[(1,a),     
+            (3,b)]"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
 
     def testListTrailingComma5(self):
         string = "[[1,a],3]"

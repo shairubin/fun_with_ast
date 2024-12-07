@@ -262,7 +262,9 @@ def get_Dict_expected_parts():
         TextPlaceholder(r'\s*{\s*', '{'),
         KeysValuesPlaceholder(
             TextPlaceholder(r'\s*,[ \t\n]*(#+.*)?(\n[ \t]*)?', ',', no_transform=True),
+            #This is the key:value pair
             TextPlaceholder(r'(\*\*\s*)|(\s*:\s*)', ': ', no_transform=True)),
+        #last value?
         TextPlaceholder(r'\s*,?\s*}', '}')
     ]
 

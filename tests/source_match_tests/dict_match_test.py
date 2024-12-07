@@ -312,6 +312,69 @@ class DictMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    @pytest.mark.skip("issue #368")
+    def test_Dict_TupleAfterTuple(self):
+        string =  """{
+    "version": (1, 1),
+                   "blender": (3, 0),
+}"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2(self):
+        string = """a={
+        "version": (1, 1)
+    }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_1(self):
+            string = """
+a={
+            "version": 1
+}"""
+            node = GetNodeFromInput(string, get_module=True)
+            self._verify_match(node, string)
+
+    @pytest.mark.skip("issue #368")
+    def test_Dict_TupleAfterTuple2_1_1(self):
+        string = """
+a={
+                "version": (1, 0),
+            }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_1_2(self):
+        string = """
+a={
+                    "version": (1, 0),
+            }"""
+        node = GetNodeFromInput(string, get_module=True)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_2(self):
+            string = """a={"version": 1}"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple3(self):
+        string = """
+{
+           "version": (1, 1, 0),
+       }"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
+    def test_Dict_TupleAfterTuple2_4(self):
+            string = """a={
+                "version":(1,0),
+            }"""
+            node = GetNodeFromInput(string)
+            self._verify_match(node, string)
+
+
+
     def testBasicDictHTTP2(self):
         string = """token_request = {
         'url': f'https://{cognito_domain}/oauth2/token'}"""

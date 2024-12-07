@@ -291,6 +291,12 @@ class TupleTest(BaseTestUtils):
         node = GetNodeFromInput(string)
         self._verify_match(node, string)
 
+    def testAssignFromSourceMultiLine4_1_1(self):
+        string = """(f"Old"
+    ,   "cu")"""
+        node = GetNodeFromInput(string)
+        self._verify_match(node, string)
+
     def testAssignFromSourceMultiLine4_2(self):
         string = """"Old"
 ,"cu" """

@@ -25,7 +25,7 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             node, expected_parts, starting_parens)
         self.padding_quote = None
         self.jstr_meta_data = []
-        #self.end_whitespace_matchers = [TextPlaceholder(r'[ \t\n]*', '')]
+        self.jstr_in_call_args = False
 
 
     def _match(self, string):
@@ -134,15 +134,21 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
                 full_http_string = lines[0] + ':' +lines[1]
                 lines = [full_http_string] + lines[2:]
         elif isinstance(self.node.parent_node, (ast.List, ast.Tuple, CallArgs)):
-            lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR *2 )
-            for index, line in enumerate(lines):
-                match = re.search(r'[ \t]*,\s*$', line)
-                if match:
-                    lines[index] = line[:match.start()]
-                    lines = lines[:index+1]
-                    break
+            lines = self._identify_jstr_in_compound_structure(orig_string)
         else:
             lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR)
+        return lines
+
+    def _identify_jstr_in_compound_structure(self, orig_string):
+        lines = orig_string.split('\n', self.MAX_LINES_IN_JSTR * 2)
+        for index, line in enumerate(lines):
+            match = re.search(r'[ \t]*,\s*$', line)
+            if match:
+                lines[index] = line[:match.start()]
+                lines = lines[:index + 1]
+                break
+        if isinstance(self.node.parent_node, CallArgs):
+            self.jstr_in_call_args = True
         return lines
 
     def _determine_quote_type(self, orig_string):
@@ -169,13 +175,16 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
         elif len_jstr_lines < len(lines)  and re.match(r'[ \t\n]*\)', lines[len_jstr_lines]):
             self.__append_jstr_lines_to_metadata(jstr_lines) # this is call_args context - single ')'
             return                                          # at separate line
-        elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
+        elif self.jstr_in_call_args :
+#        elif re.search(r'[ \t]*\)[ \t]*#.*$', last_jstr_line):  # this is call_args context
             self.__append_jstr_lines_to_metadata(jstr_lines)            # ')' and a following comment
             return
-        elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
-            self.__append_jstr_lines_to_metadata(jstr_lines)
-        elif re.search(r'[ \t]*\'.*?\':[ \t]*\'.*\'[ \t]*\}', last_jstr_line): # dict context
-            self.__append_jstr_lines_to_metadata(jstr_lines)
+        # elif re.search(r'[ \t]*\)[ \t]*from.*$', last_jstr_line):  # this is raise context
+        #     if not self.jstr_in_call_args:
+        #         raise ValueError('not in call_args context')
+        #     self.__append_jstr_lines_to_metadata(jstr_lines)
+        # elif re.search(r'[ \t]*\'.*?\':[ \t]*\'.*\'[ \t]*\}', last_jstr_line): # dict context
+        #     self.__append_jstr_lines_to_metadata(jstr_lines)
         else:
             raise ValueError("Not supported - jstr string not in call_args context ")
 
@@ -191,8 +200,6 @@ class JoinedStrSourceMatcherNew(DefaultSourceMatcher):
             call_node = self.node.parent_node.parent_node.parent_node
             if isinstance(call_node, ast.Dict):
                 return False
-#        if line_index > 0 and line and line.endswith('}'):
-#            return False
         if line_index == 0 and quote_type == '"""':
             return True
         for quote in SUPPORTED_QUOTES:

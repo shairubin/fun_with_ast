@@ -50,31 +50,6 @@ jobs:
       - name: Run tests
         run: |
           pytest ./tests
-      #----------------------------------------------
-      #              bump version
-      #----------------------------------------------
-#      - name: Bump-Version
-#        run: |
-#          poetry version patch
-
-      #----------------------------------------------
-      #              create pull request
-      #----------------------------------------------
-#      - name: Create Pull Request
-#        id: cpr
-#        uses: peter-evans/create-pull-request@v5
-#        with:
-#          branch-suffix: random
-#      #----------------------------------------------
-#      #              commit and push to a new branch
-#      #----------------------------------------------
-#      - name: Commit and Push Version Bump
-#        uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          commit_message: Bump version
-      #----------------------------------------------
-      #              build new version
-      #----------------------------------------------
 
       - name: publish to pypi
         run: |

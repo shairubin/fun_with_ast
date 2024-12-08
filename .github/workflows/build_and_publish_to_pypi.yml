@@ -75,10 +75,8 @@ jobs:
       #----------------------------------------------
       #              build new version
       #----------------------------------------------
-      - name: Build New Version
-        run: |
-          poetry build
+
       - name: publish to test pypi
         run: |
-          poetry config pypi-token.pypi  "__token__" ${{ secrets.PYPI_API_KEY }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_API_KEY }}
           poetry publish --build

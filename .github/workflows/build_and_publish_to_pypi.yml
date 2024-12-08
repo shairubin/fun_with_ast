@@ -80,5 +80,5 @@ jobs:
           poetry build
       - name: publish to test pypi
         run: |
-          poetry config pypi-token.testpypi ${{ secrets.PYPI_API_KEY }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_API_KEY }}
           poetry publish --build

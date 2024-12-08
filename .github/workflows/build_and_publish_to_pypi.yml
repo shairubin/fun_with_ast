@@ -1,4 +1,4 @@
-name: build-and-publish-to-pipy
+name: build-and-publish-to-pypi
 # source: https://github.com/marketplace/actions/install-poetry-action
 
 on: workflow_dispatch

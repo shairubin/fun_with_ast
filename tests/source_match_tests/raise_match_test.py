@@ -119,3 +119,26 @@ class RaiseMatcherTest(BaseTestUtils):
         node = GetNodeFromInput(string, get_module=False)
         with pytest.raises(AssertionError): # 'Expr node does not support training white spaces'
             self._verify_match(node, string, trim_suffix_spaces=False)
+
+    def testRaiseWithSplitJstr(self):
+        string = """raise TypeError(
+            f"tree_unflatten(leaves, treespec): Expected `treespec` to be "
+            f"instance of TreeSpec but got item of type {type(treespec)}.",
+        )
+"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+    def testRaiseWithSplitJstr2(self):
+        string = """raise TypeError(
+            f"tree_unflatten(leaves, treespec): Expected `treespec` to be "
+            f"instance of TreeSpec but got item of type {type(treespec)}."
+        )
+"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)
+
+    def testRaiseWithSplitJstr3(self):
+        string = """raise TypeError(f"tree_unflatten(leaves, treespec): Expected `treespec` to be "
+            f"instance of TreeSpec but got item of type {type(treespec)}.")"""
+        node = GetNodeFromInput(string, get_module=False)
+        self._verify_match(node, string)

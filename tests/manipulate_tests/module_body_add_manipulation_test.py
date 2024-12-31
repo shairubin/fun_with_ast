@@ -106,6 +106,7 @@ input_legend = ('inject-source', 'location', 'original-if', 'expected', 'match-e
 
 
 ('injected.code()\n', 0, """""" , True, ''),
+
 ])
 def module_source(request):
     yield request.param
@@ -150,6 +151,9 @@ module_4= """def _tensorpipe_construct_rpc_backend_options_handler(
     )
 """
 @pytest.fixture(params=[
+    ({"source": module_1, "injected_source": """a.b()\nc.d()\n""",
+      "inject_into_body": "module_node.body[0].body[0].body", "inject_to_indexes": [(0, 2, 4), (2, 5, 4),
+                                                                                    (3, 6, 4), (1, 3, 4)]}),
     ({"source": module_1, "injected_source": "d=10\n",
       "inject_into_body":"module_node.body" , "inject_to_indexes": [(0,0,0),(1,6,0)]}),
     ({"source": module_1, "injected_source": "d=11\n",
@@ -185,6 +189,23 @@ module_4= """def _tensorpipe_construct_rpc_backend_options_handler(
       "inject_into_body": "module_node.body[0].body",
       "inject_to_indexes": [(0, 8, 4), (1, 10, 4)],
       "double_injection": [((1, 3), (10, 4), (18, 4))]}),
+    ({"source": module_1, "injected_source": "a.b()\n",
+      "inject_into_body": "module_node.body[0].body[0].body", "inject_to_indexes": [(0, 2, 4), (2, 5, 4),
+                                                                                    (3, 6, 4), (1,3,4)]}),
+    ({"source": module_1, "injected_source": "a.b(f'test string {test}')\n",
+      "inject_into_body": "module_node.body[0].body[0].body", "inject_to_indexes": [(0, 2, 4), (2, 5, 4),
+                                                                                    (3, 6, 4), (1, 3, 4)]}),
+    ({"source": module_1, "injected_source": """a.b(f'test string '
+   '{test}')\n""",
+   'multiline_string': True,
+   "inject_into_body": "module_node.body[0].body[0].body", "inject_to_indexes": [(0, 2, 4), (2, 5, 4),
+                                                                                    (3, 6, 4), (1, 3, 4)]}),
+    ({"source": module_1, "injected_source": """a.b(f'test string '
+'{test1}'
+     'test2')""",
+      'multiline_string': True,
+      "inject_into_body": "module_node.body[0].body[0].body", "inject_to_indexes": [(0, 2, 4), (2, 5, 4),
+                                                                                    (3, 6, 4), (1, 3, 4)]}),
 
 ])
 def module_source_2(request):
@@ -215,15 +236,24 @@ class TestIfManupulation:
             source = module_source_2['source']
             ast.parse(source)
             injected_source = module_source_2['injected_source']
+            injected_source_lines = injected_source.split('\n')
+            injected_source_lines = [x for x in injected_source_lines if x != '']
             for index in module_source_2['inject_to_indexes']:
                 module_node, injected_node = self._create_nodes(capsys, injected_source, source, is_module=True)
                 inject_to_body = eval(module_source_2['inject_into_body'])
                 manipulator = BodyManipulator(inject_to_body)
-                manipulator.inject_node(injected_node.body, index[0])
+                inject_to_index = index[0]
+                manipulator.inject_node(injected_node.body, inject_to_index)
                 print("\n insert in index:" + str(index))
                 composed_source = self._source_after_composition(module_node, capsys)
                 composed_source_lines = composed_source.split('\n')
-                assert composed_source_lines[index[1]] + "\n" == ' '*index[2] +injected_source
+                multiline_string = module_source_2.get('multiline_string', False)
+                for line_n, line in enumerate(injected_source_lines):
+                    if not multiline_string or line_n == 0:
+                        assert composed_source_lines[index[1]+line_n] + "\n" == ' '*index[2] + line + "\n"
+                    else:
+                        assert composed_source_lines[index[1]+line_n] + "\n" == line + "\n"
+
                 ast.parse(composed_source)
 
     def test_dynamic_Module_Body_double_Manipulation(self, module_source_2, capsys):
